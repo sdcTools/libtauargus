@@ -1,0 +1,26 @@
+HKCR
+{
+	NewTauArgus.TauArgCtrl.1 = s 'TauArgCtrl Class'
+	{
+		CLSID = s '{C6EAC6DC-76A5-4ED5-A665-D1DF21B1CB16}'
+	}
+	NewTauArgus.TauArgCtrl = s 'TauArgCtrl Class'
+	{
+		CLSID = s '{C6EAC6DC-76A5-4ED5-A665-D1DF21B1CB16}'
+		CurVer = s 'NewTauArgus.TauArgCtrl.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {C6EAC6DC-76A5-4ED5-A665-D1DF21B1CB16} = s 'TauArgCtrl Class'
+		{
+			ProgID = s 'NewTauArgus.TauArgCtrl.1'
+			VersionIndependentProgID = s 'NewTauArgus.TauArgCtrl'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{8B57DFA6-1AF4-43B3-ACA8-47483ADB4DE3}'
+		}
+	}
+}

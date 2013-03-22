@@ -1,0 +1,70 @@
+
+// This file can be included in the IDL file of the project
+// with the statement
+//    import "TopicHelp.idl";
+// This allows the use of readible constants as HelpContext()
+
+// HelpContexts may be taken from original IDL
+
+// Library ID starts with 0000
+
+// HelpContexts may be taken from original IDL
+const int  IDH_NEWTAUARGUSLib = 51;
+
+// Classes start with 1000
+const int  IDH_TauArgCtrl = 1001;
+
+// Methods start with 3000
+const int  IDH_ApplyRecode = 3007;
+const int  IDH_CheckRealizedLowerAndUpperValues = 3050;
+const int  IDH_CleanAll = 3008;
+const int  IDH_CompletedTable = 3045;
+const int  IDH_ComputeCodesToIndices = 3051;
+const int  IDH_ComputeTables = 3005;
+const int  IDH_DoActiveRecode = 3019;
+const int  IDH_DoRecode = 3006;
+const int  IDH_ExploreFile = 3012;
+const int  IDH_GetCellDistance = 3035;
+const int  IDH_GetCellStatusStatistics = 3033;
+const int  IDH_GetMaxnUc = 3013;
+const int  IDH_GetStatusAndCostPerDim = 3016;
+const int  IDH_GetTableCellValue = 3052;
+const int  IDH_GetTableCell = 3022;
+const int  IDH_GetTableRow = 3010;
+const int  IDH_GetTotalTabelSize = 3039;
+const int  IDH_GetVarCode = 3027;
+const int  IDH_GetVarCodeProperties = 3029;
+const int  IDH_GetVarNumberOfCodes = 3018;
+const int  IDH_PrepareCellDistance = 3034;
+const int  IDH_PrepareHITAS = 3024;
+const int  IDH_SetHierarchicalCodelist = 3026;
+const int  IDH_SetHierarchicalDigits = 3009;
+const int  IDH_SetInCodeList = 3041;
+const int  IDH_SetInTable = 3044;
+const int  IDH_SetNumberTab = 3004;
+const int  IDH_SetNumberVar = 3003;
+const int  IDH_SetCTAValues = 3053;
+const int  IDH_SetRealizedLowerAndUpper = 3049;
+const int  IDH_SetSecondaryGHMITER = 3032;
+const int  IDH_SetSecondaryHITAS = 3025;
+const int  IDH_SetSecondaryJJFORMAT = 3038;
+const int  IDH_SetTable = 3021;
+const int  IDH_SetTableCellStatus = 3015;
+const int  IDH_SetTableSafety = 3023;
+const int  IDH_SetTableSafetyInfo = 3047;
+const int  IDH_SetTotalsInCodeList = 3042;
+const int  IDH_SetVarCodeActive = 3017;
+const int  IDH_SetVariable = 3020;
+const int  IDH_SetVariableForTable = 3046;
+const int  IDH_ThroughTable = 3043;
+const int  IDH_UndoRecode = 3014;
+const int  IDH_UndoSecondarySuppress = 3048;
+const int  IDH_UnsafeVariable = 3011;
+const int  IDH_UnsafeVariableCodes = 3028;
+const int  IDH_WriteCSV = 3036;
+const int  IDH_WriteCellRecords = 3040;
+const int  IDH_WriteGHMITERDataCell = 3031;
+const int  IDH_WriteGHMITERSteuer = 3030;
+const int  IDH_WriteJJFormat = 3037;
+const int  IDH_WriteTableInAMPLFormat = 3038;
+const int  IDH_SetInFileInfo		= 3039;

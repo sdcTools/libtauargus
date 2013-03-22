@@ -1,0 +1,156 @@
+// NewTauArgus.idl : IDL source for NewTauArgus.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (NewTauArgus.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "TopicHelp.idl";
+	[
+		object,
+		uuid(52B30EC2-76C0-4874-A99D-7B0411988B93),
+		dual,
+		nonextensible,
+		helpstring("ITauArgCtrl Interface"),
+		pointer_default(unique)
+	]
+	interface ITauArgCtrl : IDispatch
+	{
+		[id(1), helpcontext(IDH_SetNumberVar), helpstring("method SetNumberVar")] HRESULT SetNumberVar([in] long nVar, [retval,out] VARIANT_BOOL *pVal);
+		[id(2), helpcontext(IDH_SetNumberTab), helpstring("method SetNumberTab")] HRESULT SetNumberTab([in] long nTab, [retval,out] VARIANT_BOOL *pVal);
+		[id(3), helpcontext(IDH_ComputeTables), helpstring("method ComputeTables")] HRESULT ComputeTables([in,out] long * ErrorCode, [in,out] long * TableIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(4), helpcontext(IDH_DoRecode), helpstring("method DoRecode")] HRESULT DoRecode([in] long VarIndex, [in] BSTR RecodeString, [in] long nMissing, [in] BSTR eMissing1, [in] BSTR eMissing2,  [in,out] long *ErrorType, [in,out] long * ErrorLine, [in,out] long * ErrorPos, [in,out] BSTR * WarningString, [retval,out] VARIANT_BOOL *pVal);
+		[id(5), helpcontext(IDH_ApplyRecode), helpstring("method ApplyRecode")] HRESULT ApplyRecode();
+		[id(6), helpcontext(IDH_CleanAll), helpstring("method CleanAll")] HRESULT CleanAll();
+		[id(7), helpcontext(IDH_SetHierarchicalDigits), helpstring("method SetHierarchicalDigits")] HRESULT SetHierarchicalDigits([in] long VarIndex, [in] long nDigitPairs, [in] long *nDigits, [retval,out] VARIANT_BOOL *pVal);
+		[id(8), helpcontext(IDH_GetTableRow), helpstring("method GetTableRow")] HRESULT GetTableRow([in] long TableIndex, [in,out] long * DimIndex, [in,out] double * Cell, [in,out] long *Status, [in] long CountType, [retval,out] VARIANT_BOOL *pVal);
+		[id(9), helpcontext(IDH_UnsafeVariable), helpstring("method UnsafeVariable")] HRESULT UnsafeVariable([in] long VarIndex, [in,out] long *Count, [in,out] long * UCArray, [retval,out] VARIANT_BOOL *pVal);
+		[id(10),helpcontext(IDH_ExploreFile), helpstring("method ExploreFile")] HRESULT ExploreFile([in] BSTR FileName, [in,out] long * ErrorCode,  [in,out] long * LineNumber, [in,out] long * VarIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(11),helpcontext(IDH_GetMaxnUc), helpstring("method GetMaxnUc")] HRESULT GetMaxnUc([retval,out] long *pVal);
+		[id(12),helpcontext(IDH_UndoRecode), helpstring("method UndoRecode")] HRESULT UndoRecode([in] long VarIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(13),helpcontext(IDH_SetTableCellStatus), helpstring("method SetTableCellStatus")] HRESULT SetTableCellStatus([in] long TableIndex, [in,out] long * DimIndex, [in] long CelStatus, [retval,out] VARIANT_BOOL *pVal);
+		[id(15),helpcontext(IDH_GetStatusAndCostPerDim), helpstring("method GetStatusAndCostPerDim")] HRESULT GetStatusAndCostPerDim([in] long TableIndex, [in,out] long *Status, [in,out] double *Cost, [retval,out] VARIANT_BOOL  *pVal);
+		[id(16),helpcontext(IDH_SetVarCodeActive), helpstring("method SetVarCodeActive")] HRESULT SetVarCodeActive([in] long VarIndex, [in] long CodeIndex, [in] VARIANT_BOOL Active, [retval,out] VARIANT_BOOL *pVal);
+		[id(17),helpcontext(IDH_GetVarNumberOfCodes), helpstring("method GetVarNumberOfCodes")] HRESULT GetVarNumberOfCodes([in] long VarIndex, [in,out] long *NumberOfCodes, [in,out] long * NumberOfActiveCodes, [retval,out] VARIANT_BOOL *pVal);
+		[id(18),helpcontext(IDH_DoActiveRecode), helpstring("method DoActiveRecode")] HRESULT DoActiveRecode([in] long VarIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(19),helpcontext(IDH_SetVariable), helpstring("method SetVariable")] HRESULT SetVariable([in] long VarIndex, [in] long bPos, [in] long nPos, [in] long nDec, [in] long nMissing, [in] BSTR Missing1, [in] BSTR Missing2, [in] BSTR TotalCode, [in] VARIANT_BOOL IsPeeper, [in] BSTR PeeperCode1,[in] BSTR PeeperCode2, [in] VARIANT_BOOL IsCategorical, [in]  VARIANT_BOOL IsNumeric, [in]  VARIANT_BOOL IsWeight, [in] VARIANT_BOOL IsHierarchical, [in] VARIANT_BOOL IsHolding, [retval,out]  VARIANT_BOOL *pVal);
+		[id(20),helpcontext(IDH_SetTable), helpstring("method SetTable")] HRESULT SetTable([in] long Index, [in] long nDim, [in,out] long * ExplanatoryVarList, [in] VARIANT_BOOL IsFrequencyTable, 
+																			[in]  long ResponseVar, [in] long ShadowVar, [in] long CostVar, 
+																			[in] double Lambda, [in] double MaxScaledCost,
+																			[in] long PeepVarnr, [in]  VARIANT_BOOL SetMissingAsSafe,[retval,out] VARIANT_BOOL *pVal);
+
+		[id(21),helpcontext(IDH_GetTableCellValue), helpstring("method GetTableCellValue")] HRESULT GetTableCellValue([in] long TableIndex, [in] long CellIndex, [in,out] double *CellResponse, [retval,out] VARIANT_BOOL *pVal);
+		[id(22),helpcontext(IDH_GetTableCell), helpstring("method GetTableCell")] HRESULT GetTableCell([in] long TableIndex, [in,out] long * DimIndex, 
+																			[in,out] double *CellResponse, [in,out] long *CellRoundedResp, [in,out] double *CellCTAResp, [in,out] double * CellShadow, 
+																			[in,out] double * CellCost, [in,out] long * CellFreq, 
+																			[in,out] long * CellStatus, [in,out]  double * CellMaxScore, [in,out] double * CellMaxScoreWeight, 
+																			[in,out] long *HoldingFreq,
+																			[in,out] double *HoldingMaxScore, [in,out] long *HoldingNrPerMaxScore,
+																			[in,out] double * PeepCell, [in,out] double * PeepHolding, [in,out] long * PeepSortCell, [in,out] long * PeepSortHolding,
+																			[in,out] double * Lower, [in,out] double * Upper, [in,out] double * RealizedLower, [in,out] double * RealizedUpper, [retval,out] VARIANT_BOOL *pVal);
+		[id(23),helpcontext(IDH_SetTableSafety), helpstring("method SetTableSafety")] HRESULT SetTableSafety([in] long Index, [in] VARIANT_BOOL DominanceRule,
+																											[in,out] long * DominanceNumber,[in,out] long * DominancePerc,
+																											[in] VARIANT_BOOL PQRule,[in,out] long * PriorPosteriorP,
+																											[in,out] long * PriorPosteriorQ,
+																											[in,out] long * PriorPosteriorN,
+																											[in,out] long * SafeMinRecAndHoldings,
+																											[in,out] long * PeepPerc, [in,out] long * PeepSafetyRange, [in,out]long * PeepMinFreqCellAndHolding,
+																											[in] VARIANT_BOOL ApplyPeep,[in] VARIANT_BOOL ApplyWeight, [in] VARIANT_BOOL ApplyWeightOnSafetyRule,
+																											[in] VARIANT_BOOL ApplyHolding,[in] VARIANT_BOOL ApplyZeroRule,
+																											[in] VARIANT_BOOL EmptyCellAsNonStructural, [in] long NSEmptySafetyRange,
+																											[in] long ZeroSafetyRange,	[in] long ManualSafetyPerc,
+																											[in,out] long * CellAndHoldingFreqSafetyPerc, 
+																											[retval,out] VARIANT_BOOL *pVal);
+		[id(24),helpcontext(IDH_PrepareHITAS), helpstring("method PrepareHITAS")] HRESULT PrepareHITAS([in] long TableIndex, [in] BSTR NameParameterFile, [in] BSTR NameFilesFile, [in] BSTR TauTemp, [retval,out] VARIANT_BOOL *pVal);
+		[id(25),helpcontext(IDH_SetSecondaryHITAS), helpstring("method SetSecondaryHITAS")] HRESULT SetSecondaryHITAS([in] long TableIndex, [in,out] long *nSetSecondary, [retval,out] VARIANT_BOOL *pVal);
+		[id(26),helpcontext(IDH_SetHierarchicalCodelist), helpstring("method SetHierarchicalCodelist")] HRESULT SetHierarchicalCodelist([in]  long VarIndex, [in] BSTR FileName, [in] BSTR LevelString, [retval,out] long *pVal);
+		[id(27),helpcontext(IDH_GetVarCode), helpstring("method GetVarCode")] HRESULT GetVarCode([in] long VarIndex, [in] long CodeIndex, [in,out] long * CodeType, [in,out] BSTR * CodeString, [in,out] long * IsMissing, [in,out] long * Level, [retval,out]  VARIANT_BOOL *pVal);
+		[id(28),helpcontext(IDH_UnsafeVariableCodes), helpstring("method UnsafeVariableCodes")] HRESULT UnsafeVariableCodes([in]  long VarIndex, [in] long CodeIndex, [in,out] long * IsMissing, [in,out] long *  Freq, [in,out] BSTR * Code, [in,out] long * Count, [in,out] long * UCArray, [retval,out] VARIANT_BOOL *pVal);
+		[id(29),helpcontext(IDH_GetVarCodeProperties), helpstring("method GetVarCodeProperties")] HRESULT GetVarCodeProperties([in] long VarIndex, [in] long CodeIndex, [in,out]  long * IsParent, [in,out]  long * IsActive, [in,out] long * IsMissing, [in,out] long * Level, [in,out] long * nChildren, [in,out] BSTR * Code, [retval,out] VARIANT_BOOL *pVal);
+		[id(30),helpcontext(IDH_WriteGHMITERSteuer), helpstring("method WriteGHMITERSteuer")] HRESULT WriteGHMITERSteuer([in] BSTR FileName, [in] BSTR EndString1, [in] BSTR EndString2, [in] long TableIndex, [retval,out] long *pVal);
+		[id(31),helpcontext(IDH_WriteGHMITERDataCell), helpstring("method WriteGHMITERDataCell")] HRESULT WriteGHMITERDataCell([in] BSTR FileName, [in] long TableIndex,[in] VARIANT_BOOL IsSingleton, [retval,out] long *pVal);
+		[id(32),helpcontext(IDH_SetSecondaryGHMITER), helpstring("method SetSecondaryGHMITER")] HRESULT SetSecondaryGHMITER([in] BSTR FileName, [in] long TableIndex, [in,out] long *nSetSecondary,[in] VARIANT_BOOL IsSingleton, [retval,out] long *pVal );
+		//[id(32),helpcontext(IDH_GetCellStatusFreq), helpstring("method GetCellStatusFreq")] HRESULT GetCellStatusFreq([in] long TabelIndex, [in,out] long * StatusFrequency, [retval,out] VARIANT_BOOL *pVal);
+		[id(34),helpcontext(IDH_PrepareCellDistance), helpstring("method PrepareCellDistance")] HRESULT PrepareCellDistance([in] long TableIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(35),helpcontext(IDH_GetCellDistance), helpstring("method GetCellDistance")] HRESULT GetCellDistance([in] long TableIndex, [in,out] long * Dims, [in,out] long * Distance , [retval,out] VARIANT_BOOL *pVal );
+		[id(36),helpcontext(IDH_WriteCSV), helpstring("method WriteCSV")] HRESULT WriteCSV([in] long TableIndex, [in] BSTR FileName, [in,out] long * DimSequence, [in]  long RespType, [retval,out]  VARIANT_BOOL *pVal);
+		[id(37),helpcontext(IDH_WriteJJFormat), helpstring("method WriteJJFormat")] HRESULT WriteJJFormat([in] long TableIndex, [in] BSTR FileName, [in] double LowerBound,  [in] double UpperBound, [in] VARIANT_BOOL WithBogus , [in] VARIANT_BOOL AsPerc , [in] VARIANT_BOOL ForRounding,[retval,out]  VARIANT_BOOL *pVal);
+		[id(38),helpcontext(IDH_SetSecondaryJJFORMAT), helpstring("method SetSecondaryJJFORMAT")] HRESULT SetSecondaryJJFORMAT([in] long TableIndex, [in] BSTR FileName, [in] VARIANT_BOOL WithBogus, [in,out] long * nSetSecondary, [retval,out] long * pVal);
+		[id(39),helpcontext(IDH_GetTotalTabelSize), helpstring("method GetTotalTabelSize")] HRESULT GetTotalTabelSize([in] long TableIndex,[in,out] long* nCell, [in,out] long * SizeDataCell);
+		[id(40),helpcontext(IDH_WriteCellRecords), helpstring("method WriteCellRecords")] HRESULT WriteCellRecords([in] long TableIndex, [in] BSTR FileName, [in] long SBS, [in] VARIANT_BOOL SBSLevel, [in] VARIANT_BOOL SuppressEmpty, [in] BSTR FirstLine, [in] VARIANT_BOOL ShowUnsafe, [in] long RespType, [retval,out] VARIANT_BOOL *pVal);
+		[id(41),helpcontext(IDH_SetInCodeList), helpstring("method SetInCodeList")] HRESULT SetInCodeList([in] long NumberofVar,  [in] long * VarIndex, [in] VARIANT * sCode, [in,out] long * ErrorCode, [in,out] long * ErrorInVarIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(42),helpcontext(IDH_SetTotalsInCodeList), helpstring("method SetTotalsInCodeList")] HRESULT SetTotalsInCodeList([in] long NumberofVariables,[in]  long * VarIndex,[in,out]  long * ErrorCode, [in,out]  long *  ErrorInVarIndex, [retval,out]  VARIANT_BOOL *pVal);
+		[id(43),helpcontext(IDH_ThroughTable), helpstring("method ThroughTable")] HRESULT ThroughTable();
+		[id(44),helpcontext(IDH_SetInTable), helpstring("method SetInTable")] HRESULT SetInTable([in] long Index, [in] VARIANT * sCode, [in] double Shadow, [in] double Cost, 
+																								[in] double Resp, [in] long Freq, [in,out] double * MaxScoreCell, [in,out] double * MaxScoreHolding,
+																								[in] long Status, [in] double LowerProtectionLevel,[in] double UpperProtectionLevel, [in,out] long * ErrorCode,[in,out] long * ErrNVar, [retval,out] VARIANT_BOOL *pVal);
+		[id(45),helpcontext(IDH_CompletedTable), helpstring("method CompletedTable")] HRESULT CompletedTable([in] long Index, [in,out] long * ErrorCode, [in] BSTR FileName, [in] VARIANT_BOOL CalculateTotals,[in] VARIANT_BOOL SetCalculatedTotalsAsSafe,[in] VARIANT_BOOL ForCoverTable, [retval,out] VARIANT_BOOL *pVal);
+		[id(46),helpcontext(IDH_SetVariableForTable), helpstring("method SetVariableForTable")] HRESULT SetVariableForTable([in] long Index, [in] long nMissing, [in] BSTR Missing1, [in] BSTR Missing2, [in] long nDec,[in] VARIANT_BOOL IsPeeper, [in] BSTR PeeperCode, [in] VARIANT_BOOL IsHierarchical, [in] VARIANT_BOOL IsNumeriek, [in] long nPos, [retval,out] VARIANT_BOOL *pVal);
+		[id(47),helpcontext(IDH_SetTableSafetyInfo), helpstring("method SetTableSafetyInfo")] HRESULT SetTableSafetyInfo([in] long TabIndex,
+																														[in] VARIANT_BOOL HasMaxScore, [in] VARIANT_BOOL DominanceRule,
+																														[in,out] long * DominanceNumber, [in,out] long * DominancePerc,
+																														[in] VARIANT_BOOL PQule, [in,out] long * PriorPosteriorP, [in,out] long * PriorPosteriorQ, [in,out] long * PriorPosteriorN,
+																														[in] VARIANT_BOOL HasFreq,
+																														[in] long	CellFreqSafetyPerc,[in] long SafeMinRec, 
+																														[in] VARIANT_BOOL HasStatus, [in] long ManualSafetyPerc, 
+																														[in] VARIANT_BOOL ApplyZeroRule, [in] long ZeroSafetyRange,
+																														[in] VARIANT_BOOL EmptyCellAsNonStructural, [in] long NSEmptySafetyRange,
+																														[in,out] long *ErrorCode, [retval,out] VARIANT_BOOL *pVal);
+		[id(48),helpcontext(IDH_UndoSecondarySuppress), helpstring("method UndoSecondarySuppress")] HRESULT UndoSecondarySuppress([in] long TableIndex,[in] long SortSuppress, [retval,out] VARIANT_BOOL *pVal);
+		[id(49),helpcontext(IDH_SetCTAValues), helpstring("method SetCTAValues")] HRESULT SetCTAValues([in] long TabNr,[in] long CelNr, [in] double OrgVal, [in] double CTAVal,[in,out] long *Sec, [retval,out] VARIANT_BOOL *pVal);
+		[id(50),helpcontext(IDH_SetRealizedLowerAndUpper), helpstring("method SetRealizedLowerAndUpper")] HRESULT SetRealizedLowerAndUpper([in] long TabNr,[in] long CelNr, [in] double RealizedUpper, [in] double RealizedLower, [retval,out] VARIANT_BOOL *pVal);
+		[id(51),helpcontext(IDH_CheckRealizedLowerAndUpperValues), helpstring("method CheckRealizedLowerAndUpperValues")] HRESULT CheckRealizedLowerAndUpperValues([in] long TabNr, [retval,out]  long *pVal);
+		[id(52),helpcontext(IDH_ComputeCodesToIndices), helpstring("method ComputeCodesToIndices")] HRESULT ComputeCodesToIndices([in] long TableIndex, [in,out] VARIANT *sCode, [in,out] long *dimIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(53),helpcontext(IDH_SetInFileInfo), helpstring("method SetInFileInfo")] HRESULT SetInFileInfo([in] VARIANT_BOOL IsFixedFormat, [in] BSTR Seperator);
+		[id(54),helpcontext(IDH_WriteTableInAMPLFormat), helpstring("method WriteTableInAMPLFormat")] HRESULT WriteTableInAMPLFormat([in] BSTR AMPLFileName, [in] long TableIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(55),helpcontext(IDH_GetCellStatusStatistics), helpstring("method GetCellStatusStatistics")] HRESULT GetCellStatusStatistics([in] long TableIndex, [in,out] long * StatusFreq, [in,out] long * StatusCellFreq,[in,out]  long * StatusHoldingFreq, [in,out] double *StatusCellResponse, [in,out] double * StatusCellCost, [retval,out] VARIANT_BOOL *pVal);
+		[id(56), helpstring("method SetTableCellCost")] HRESULT SetTableCellCost([in] long TableIndex, [in,out] long * DimIndex, [in] double Cost, [retval,out] VARIANT_BOOL *pVal);
+		[id(57), helpstring("method SetProtectionLevelsForFrequencyTable")] HRESULT SetProtectionLevelsForFrequencyTable([in] long TableIndex,[in] long Base, [in] long K, [retval,out] VARIANT_BOOL *pVal);
+		[id(58), helpstring("method MaximumProtectionLevel")] HRESULT MaximumProtectionLevel([in] long TableIndex, [retval,out] double *Maximum);
+		[id(59), helpstring("method SetRoundedResponse")] HRESULT SetRoundedResponse([in]  BSTR RoundedFile,  [in] long TableIndex,   [retval,out]  VARIANT_BOOL *pVal );
+		[id(60), helpstring("method WriteHierarchicalTableInAMPLFormat")] HRESULT WriteHierarchicalTableInAMPLFormat([in] BSTR AMPLFilename, [in] BSTR TempDir, [in]  long Tableindex, [in] double MaxScale, [in,out] long *ErrorCode, [retval,out]  VARIANT_BOOL *pVal);
+		[id(61), helpstring("method SetSecondaryFromHierarchicalAMPL")] HRESULT SetSecondaryFromHierarchicalAMPL([in]  BSTR FileName, [in] long TableIndex,  [in,out] long *ErrorCode, [retval,out] VARIANT_BOOL *pVal);
+		[id(62), helpstring("method SetAllEmptyNonStructural")] HRESULT SetAllEmptyNonStructural([in] long TableIndex, [retval,out]  VARIANT_BOOL *pVal);
+		[id(63), helpstring("method SetSingleEmptyAsNonStructural")] HRESULT SetSingleEmptyAsNonStructural([in] long TableIndex, [in,out] long *DimIndex, [retval,out] VARIANT_BOOL *pVal);
+		[id(64), helpstring("method SetSingleNonStructuralAsEmpty")] HRESULT SetSingleNonStructuralAsEmpty([in] long TableIndex,[in,out]  long *DimIndex,[retval,out]  VARIANT_BOOL *pVal);
+		[id(65), helpstring("method SetAllNonStructuralAsEmpty")] HRESULT SetAllNonStructuralAsEmpty([in] long TableIndex, [retval,out]  VARIANT_BOOL *pVal);
+		[id(66), helpstring("method MaximumProtectionLevel")] HRESULT GetMinimumCellValue([in] long TableIndex,[in,out] double *Maximum, [retval,out] double *Minimum);
+		[id(67), helpstring("method SetProtectionLevelsForResponseTable")] HRESULT SetProtectionLevelsForResponseTable([in] long TableIndex,[in,out] long * DimIndex, [in] double LowerBase, [in] double UpperBase, [retval,out] VARIANT_BOOL *pVal);
+
+	};
+
+[
+	uuid(8B57DFA6-1AF4-43B3-ACA8-47483ADB4DE3),
+	helpfile("newtauargus.chm"),
+	helpcontext(IDH_NEWTAUARGUSLib),
+	version(1.0),
+	helpstring("NewTauArgus 1.0 Type Library")
+]
+library NEWTAUARGUSLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(75850090-B558-4255-974E-F3690C0C1F6B),
+		helpstring("_ITauArgCtrlEvents Interface")
+	]
+	dispinterface _ITauArgCtrlEvents
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method UpdateProgress")] void UpdateProgress(short Perc);
+	};
+
+	[
+		uuid(C6EAC6DC-76A5-4ED5-A665-D1DF21B1CB16),
+		helpcontext(IDH_TauArgCtrl),
+		helpstring("TauArgCtrl Class")
+	]
+	coclass TauArgCtrl
+	{
+		[default] interface ITauArgCtrl;
+		[default, source] dispinterface _ITauArgCtrlEvents;
+	};
+};
