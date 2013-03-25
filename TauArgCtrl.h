@@ -3,16 +3,11 @@
 #ifndef __TAUARGCTRL_H_
 #define __TAUARGCTRL_H_
 
-#include "resource.h"       // main symbols
-#include "Variable.h"
-#include "Table.h"
-#include "DataCell.h"
-#include "Ghmiter.h"
-#include "Hitas.h"
-#include "JJFormat.h"
-#include "NewTauArgusCP.h"
-#include "AMPL.h"
 #include <locale.h>
+
+#include "TauArgus.h"
+#include "resource.h"       // main symbols
+#include "NewTauArgusCP.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CTauArgCtrl
@@ -22,149 +17,19 @@ class ATL_NO_VTABLE CTauArgCtrl :
 	public CComCoClass<CTauArgCtrl, &CLSID_TauArgCtrl>,
 	public IConnectionPointContainerImpl<CTauArgCtrl>,
 	public IDispatchImpl<ITauArgCtrl, &IID_ITauArgCtrl, &LIBID_NEWTAUARGUSLib>,
-	public CProxy_ITauArgCtrlEvents< CTauArgCtrl >
+	public CProxy_ITauArgCtrlEvents< CTauArgCtrl >,
+	public IProgressListener
 {
 private:
-	bool m_CompletedCodeList;
-	CTable * GetTable(int t);
-	int  m_VarNrWeight;
-	int  m_VarNrHolding;
-	char m_ValueSeparator;
-	CString m_ValueTotal;
-
-	CHitas m_hitas;
-	CGhmiter m_ghmiter;
-	CJJFormat m_jjformat;
-	bool m_UsingMicroData;
-	bool m_HasMaxScore;
-	bool m_HasFreq;
-	bool m_HasStatus;
-	long m_nRecFile;
-	long m_fixedlength;
-	long m_fSize;
-
-	long m_ntab;
-	bool InFileIsFixedFormat;
-	CString InFileSeperator;
-
-	CVariable* m_var;
-   CTable* m_tab;
-	long m_nvar;
-	int m_nNoSense;
-	int m_nUntouched;
-	int m_nOverlap;
-	CString m_WarningRecode;
-
-
-   void CleanUp();
-	void CleanTables();
-	void AddTableCells(CTable& t, CDataCell AddCell, int niv, long cellindex);
-	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
-	void FillTables(UCHAR *str);
-	BOOL ConvertNumeric(char *code, double &d);
-	void QuickSortStringArray(CStringArray &s, int first, int last);
-	int  BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool& IsMissing);
-	char m_fname[_MAX_PATH];
-	int  DoMicroRecord(UCHAR *str, int *varindex);
-	int  ReadMicroRecord(FILE *fd, UCHAR *str);
-  // int  MakeSafeGHM(int TableIndex, long *nSetSecondary);
-
-// for export files
-	void WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dims, int niv, char ValueSep, long RespType);
-	void WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueSep);
-	void WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code);
-	void WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, int SBSCode, long RespType);
-	void WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, long SBSCode);
-	void WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel, BOOL SuppressEmpty, bool ShowUnsafe, long RespType);
-   void WriteFirstLine(FILE *fd, LPCTSTR FirstLine);
-   void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, long RespType);
-	void ComputeCellStatuses(CTable &tab);
-	void SetProtectionLevels(CTable &tab);
-
-// for debug
-	void ShowCodeLists();
-	BOOL ShowTable(const char *fname, CTable& tab);
-	void ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable &tab);
-	int  ShowTableLayerCell(char *str, double val, int ndec);
-	int  ShowTableLayerCell(char *str, long val);
-
-
-	// for RECODE
-	bool ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCode);
-	void InitializeHoldingTables();
-	void MergeLastTempShadow();
-	BOOL ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase);
-	BOOL ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* ErrorType, long FAR* ErrorPos, int Phase);
-	int  AddRecode(int varnr, const char *newcode);
-	int  MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR Missing2);
-	int  ReadWord(LPCTSTR str, char* CodeFrom, char *CodeTo, char EndCode, int& fromto, int& pos);
-	void AddSpacesBefore(char *str, int len);
-	void AddSpacesBefore(CString& str, int len);
-	int  SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char *SrcCode2, int fromto);
-	BOOL ComputeRecodeTables();
-	BOOL ComputeRecodeTable(CTable& srctab, CTable& dsttab);
-	void ComputeRecodeTableCells(CTable& srctab, CTable& dsttab, int niv, int iCellSrc, int iCellDst);
-	void AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, long ito);
-	void SetTableHasRecode();
-	BOOL FillInTable(long Index, CString *sCodes, double Cost, double Resp,
-						double Shadow, long Freq, double *TopNCell, double *TopNHolding,
-						double LPL, double UPL,long Status, long & error, long  & ErrorVarNo);
-  	void FireUpdateProgress(short Perc);
-
-
-
-	bool IsTable (CTable *tab);
-	void TestTable(CTable *tab, long fixeddim, long *DimNr, long niv, bool *IsGoodTable);
-	int GetChildren(CVariable &var, int CodeIndex, CUIntArray &Children);
-
-	// To find rand totallen
-	void AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, long niv);
-	void AdjustTable(CTable *tab);
-	long MaxDiepteVanSpanVariablen(CTable *tab);
-
-	// Sub Tables
-	long NumberOfSubTables(long IndexTable);
-	bool SubTableTupleForSubTable(long TableIndex, long SubTableIndex, long *SubCodeIndices);
-	long FindNumberOfElementsInSubTable(long *SubTableTuple, long TableIndex);
-	bool FindCellIndexForSubTable(long *TableCellIndex, long TableIndex, long *SubTableTuple,long CellIndexInSubTable, long *SubTableCellIndex);
-	long FindSubTableForCell(long CellIndex, long TableIndex, long *SubTableTupleIndex);
-	bool WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, double MaxScale);
-	long SubTableForCellDimension(long TableIndex, long *CellDimension, long * SubTableTupleIndex);
-	bool WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind, long varind);
-	bool ArrayCompare (long *arr1, long *arr2, long nDim);
-	bool WriteAllSubTablesInAMPL(FILE *fd, long tabind);
-	long WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long CellNum, FILE *fdtemp, double MaxScale);
-	bool testampl(long ind);
-	bool TestSubCodeList();
+	TauArgus tauArgus;
 
 public:
-	CTauArgCtrl()
+	CTauArgCtrl() : tauArgus()
 	{
-
-		//tyuuf
-		setlocale(LC_NUMERIC,"english");
-		m_var  = 0;
-		m_nvar = 0;
-		m_tab  = 0;
-		m_ntab = 0;
-		m_VarNrHolding = -1;
-		// Initialize HoldingNr;
-		CurrentHoldingNr = -1;
-		LastHoldingCode = "";
-		m_HasFreq = false;
-		m_HasStatus = false;
-		m_HasMaxScore = false;
-		m_UsingMicroData = true;
-		m_CompletedCodeList = false;
-		InFileIsFixedFormat = true;
-
+		tauArgus.SetProgressListener(this);
 	}
-	~CTauArgCtrl()
-	{
-	// TODO: Cleanup your control's instance data here.
 
-		CleanUp();
-	}
+  	void UpdateProgress(short Perc);
 
 DECLARE_REGISTRY_RESOURCEID(IDR_TAUARGCTRL)
 
