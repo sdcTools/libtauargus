@@ -444,9 +444,5 @@ SOURCE=.\Variable.h
 SOURCE=.\TauArgCtrl.rgs
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=.\TauArgus.swg
-# End Source File
 # End Target
 # End Project
