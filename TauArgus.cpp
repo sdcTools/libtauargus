@@ -574,8 +574,6 @@ STDMETHODIMP TauArgus::ApplyRecode()
 STDMETHODIMP TauArgus::CleanAll()
 {
 	CleanUp();
-	printf("bla\n");
-
 	return S_OK;
 }
 

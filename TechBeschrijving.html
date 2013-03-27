@@ -1,0 +1,1754 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator" content="HTML Tidy, see www.w3.org" />
+    <title>
+      Technische documentatie NewTauArg.Dll
+    </title>
+<style type="text/css">
+ body {
+   /* background-color: #b0c4ae;  */
+   background-image: url(lucht.jpg);
+   color: #000000;
+ }
+ h3.c3 {text-align: left}
+ hr.c2 {text-align: left}
+ h2.c1 {text-align: left}
+ td     {vertical-align: top}
+</style>
+  </head>
+  <body>
+    <a id="top" name="top"></a>
+    <h2 class="c49">
+      Technische documentatie NewTauArg.Dll
+    </h2>
+    <table border="0" cellpadding="10" summary="Beschrijving doel component">
+      <tr>
+        <td width="70%">
+          NewTauArgus is een COM DLL die functies en events bevat voor het beveiligen van tabel-bestanden. Als ontwikkelomgeving is gebruikt Visual C++ 6.0.<br />
+          <br />
+           Voor het beveiligen zijn de volgende instrumenten beschikbaar:
+          <ul>
+            <li>
+              Detecteren van onveilige primaire tabelcellen
+              <dl>
+                <dt><em>Dominantieregel</em></dt>
+                  <dd>Gegeven een percentage <var>p</var> en een aantal <var>a</var>: een cel is onveilig als de som van de <var>a</var> grootste bijdragers aan de cel groter of gelijk is aan <var>p</var>% van het totaal van de cel. Voor de bijdragen aan de cel wordt de zogenaamde <i>shadow</i>-variabele gebruikt.</dd>
+                <dt><em>PQ-regel</em></dt>
+                  <dd>Stel de bijdragen aan een cel zijn geordend van groot naar klein
+                     <var>x</var><sub>1</sub>,
+                     <var>x</var><sub>2</sub>,
+                     <var>x</var><sub>3</sub>, ..., <var>N</var> het aantal bijdragen in de cel en <var>T</var> het celtotaal. Eis: een respondent mag een andere respondent tot op <var>p</var>% nauwkeurig kunnen schatten. <br>
+                     De 'worst case' is nummer 2 mag nummer 1 slechts tot op <var>p</var>% kunnen schatten. Zijn beste schatting voor <var>x</var><sub>1</sub> is <var>T</var> - <var>x</var><sub>2</sub>. De eis is nu dat (<var>T</var> - <var>x</var><sub>2</sub>) - <var>x</var><sub>1</sub> &ge; (<var>p</var> / 100)  * <var>x</var><sub>1</sub><br><br>
+                     Als we ook nog rekening houden met coalities, bijvoorbeeld een coalitie <var>n</var> ter grootte van 3:<br><br>
+                     <img src="pq_formule.gif" width="400" height="56"><br><br>
+                     Hierin is <var>p</var> &le; <var>q</var> en <var>n</var> &ge; 1.
+
+                 </dd>
+              </dl>
+            </li>
+            <li>
+              Detecteren van onveilige secundaire tabelcellen
+              <dl>
+                <dt><em>GHMITER</em></dt>
+                  <dd>Een programma ontwikkeld door het <em>Landesamt für Datenverarbeitung und Statistik</em>. Een zeer uitgebreide beschrijving ervan is te vinden in het document <a href="G:\Projects\Casc\GHMITER\GHMITE22i PC.doc">GHMITE22i PC.doc</a>.</dd>
+                <dt><em>HITAS</em></dt>
+                  <dd>Een programma ontwikkeld door PP en JJ. Zie <em>A heuristic approach to cell-suppression in hierarchical tables</em></dd> van Peter-Paul de Wolf, BPA-nummer 1569-99-RSM.
+              </dl>
+            </li>
+          </ul>
+          Voor het beveiligen zijn de volgende events en functies beschikbaar.<br />
+          Elke functie en event bevat:
+          <ol>
+            <li>Een korte beschrijving</li>
+            <li>
+              De parameters zijn van type:
+              <ul type="square">
+              	<li>VARIANT = variant datatype (meestal gebruikt om een string van arrays door tegeven als input)</li>
+                <li>BSTR = string (teruggave en input)</li>
+                <li>double = 8-bytes real</li>
+                <li>long = 4-bytes integer</li>
+                <li>VARIANT_BOOL = VARIANT_TRUE of VARIANT_FALSE (alleen gebruikt als return value)</li>
+                <li>short = 2-bytes integer</li>
+              </ul>
+            <li>Return value</li>
+          </ol>
+        </td>
+        <td width="50%">
+        </td>
+      </tr>
+    </table>
+    <p />
+    <hr width="75%" class="c50" />
+    <h3 class="c51">
+      Events
+    </h3>
+    <p><strong><a id="FireUpdateProgress" name="FireUpdateProgress">FireUpdateProgress</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Geeft aan hoeveel procent van zekere actie is verwerkt.<br />
+         Wordt afgevuurd in de functies <a href="#ExploreFile">ExploreFile</a> en <a href="#ComputeTables">ComputeTables</a>.
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>short&nbsp;</td>
+            <td>perc&nbsp;</td>
+            <td>percentage verwerkt</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>geen</dd>
+    </dl>
+    <p><a href="#top">top</a></p>
+    <hr width="75%" class="c50" />
+    <h3 class="c51">
+      Functies
+    </h3>
+    <a id="topfunc" name="topfunc"></a> In alfabetische volgorde:
+    <ul>
+      <li><a href="#ApplyRecode">ApplyRecode</a></li>
+      <li><a href="#CheckRealizedLowerAndUpperValues">CheckRealizedLowerAndUpperValues</a></li>
+      <li><a href="#CleanAll">CleanAll</a></li>
+      <li><a href="#CompletedTable">CompletedTable</a></li>
+      <li><a href="#ComputeCodesToIndices">ComputeCodesToIndices</a></li>
+      <li><a href="#ComputeTables">ComputeTables</a></li>
+      <li><a href="#DoActiveRecode">DoActiveRecode</a></li>
+      <li><a href="#DoRecode">DoRecode</a></li>
+      <li><a href="#ExploreFile">ExploreFile</a></li>
+      <li><a href="#GetCellDistance">GetCellDistance</a></li>
+      <li><a href="#GetCellStatusFreq">GetCellStatusFreq</a></li>
+      <li><a href="#GetMaxnUC">GetMaxnUC</a></li>
+      <li><a href="#GetStatusAndCostPerDim">GetStatusAndCostPerDim</a></li>
+      <li><a href="#GetTableCell">GetTableCell</a></li>
+      <li><a href="#GetTableDimensions">GetTableDimensions</a></li>
+      <li><a href="#GetTableRow">GetTableRow</a></li>
+      <li><a href="#GetTotalTableSize">GetTotalTableSize</a></li>
+      <li><a href="#GetVarCode">GetVarCode</a></li>
+      <li><a href="#GetVarCodeProperties">GetVarCodeProperties</a></li>
+      <li><a href="#GetVarNumberOfCodes">GetVarNumberOfCodes</a></li>
+      <li><a href="#PrepareHITAS">PrepareHITAS</a></li>
+      <li><a href="#SetHierarchicalCodelist">SetHierarchicalCodelist</a></li>
+      <li><a href="#SetHierarchicalDigits">SetHierarchicalDigits</a></li>
+	  <li><a href="#SetInCodeList">SetInCodeList</a></li>
+	  <li><a href="#SetInTable">SetInTable</a></li>
+      <li><a href="#SetNumberTab">SetNumberTab</a></li>
+      <li><a href="#SetNumberVar">SetNumberVar</a></li>
+      <li><a href="#SetRealizedLowerAndUpper">SetRealizedLowerAndUpper</a></li>
+      <li><a href="#SetSecondaryGHMITER">SetSecondaryGHMITER</a></li>
+      <li><a href="#SetSecondaryHITAS">SetSecondaryHITAS</a></li>
+      <li><a href="#SetSecondaryJJFORMAT">SetSecondaryJJFORMAT</a></li>
+      <li><a href="#SetTable">SetTable</a></li>
+      <li><a href="#SetTableCellStatus">SetTableCellStatus</a></li>
+      <li><a href="#SetTableSafety">SetTableSafety</a></li>
+      <li><a href="#SetTableSafetyInfo">SetTableSafetyInfo</a></li>
+      <li><a href="#SetTotalsInCodeList">SetTotalsInCodeList</a></li>
+      <li><a href="#SetVarCodeActive">SetVarCodeActive</a></li>
+      <li><a href="#SetVariable">SetVariable</a></li>
+      <li><a href="#UndoRecode">UndoRecode</a></li>
+      <li><a href="#UndoSecondarySuppress">UndoSecondarySuppress</a></li>
+      <li><a href="#UnsafeVariable">UnsafeVariable</a></li>
+      <li><a href="#UnsafeVariableCodes">UnsafeVariableCodes</a></li>
+      <li><a href="#WriteCellRecords">WriteCellRecords</a></li>
+      <li><a href="#WriteCSV">WriteCSV</a></li>
+      <li><a href="#WriteGHMITERDataCell">WriteGHMITERDataCell</a></li>
+      <li><a href="#WriteGHMITERSteuer">WriteGHMITERSteuer</a></li>
+      <li><a href="#WriteJJFormat">WriteJJFormat</a></li>
+    </ul>
+    In functionele volgorde:
+    <ol>
+      <li>
+        Variabelen
+        <ul>
+          <li><a href="#ApplyRecode">ApplyRecode</a></li>
+          <li><a href="#DoActiveRecode">DoActiveRecode</a></li>
+          <li><a href="#DoRecode">DoRecode</a></li>
+          <li><a href="#GetVarCode">GetVarCode</a></li>
+          <li><a href="#GetVarCodeProperties">GetVarCodeProperties</a></li>
+          <li><a href="#GetVarNumberOfCodes">GetVarNumberOfCodes</a></li>
+          <li><a href="#SetHierarchicalDigits">SetHierarchicalDigits</a></li>
+          <li><a href="#SetHierarchicalCodelist">SetHierarchicalCodelist</a></li>
+          <li><a href="#SetNumberVar">SetNumberVar</a></li>
+          <li><a href="#SetVarCodeActive">SetVarCodeActive</a></li>
+          <li><a href="#SetVariable">SetVariable</a></li>
+          <li><a href="#UndoRecode">UndoRecode</a></li>
+          <li><a href="#UnsafeVariable">UnsafeVariable</a></li>
+          <li><a href="#UnsafeVariableCodes">UnsafeVariableCodes</a></li>
+        </ul>
+      </li>
+      <li>
+        Tabellen
+        <ul>
+          <li><a href="#ComputeTables">ComputeTables</a></li>
+          <li><a href="#GetCellStatusFreq">GetCellStatusFreq</a></li>
+          <li><a href="#GetMaxnUC">GetMaxnUC</a></li>
+          <li><a href="#GetStatusAndCostPerDim">GetStatusAndCostPerDim</a></li>
+          <li><a href="#GetTableCell">GetTableCell</a></li>
+          <li><a href="#GetTableDimensions">GetTableDimensions</a></li>
+          <li><a href="#GetTableRow">GetTableRow</a></li>
+          <li><a href="#GetTotalTableSize">GetTotalTableSize</a></li>
+          <li><a href="#SetNumberTab">SetNumberTab</a></li>
+          <li><a href="#SetTable">SetTable</a></li>
+          <li><a href="#SetTableCellStatus">SetTableCellStatus</a></li>
+          <li><a href="#SetTableSafety">SetTableSafety</a></li>
+          <li><a href="#UndoSecondarySuppress">UndoSecondarySuppress</a></li>
+          <li><a href="#WriteCellRecords">WriteCellRecords</a></li>
+          <li><a href="#WriteCSV">WriteCSV</a></li>
+        </ul>
+      </li>
+      <li>
+        Bestand onderzoeken
+        <ul>
+          <li><a href="#ExploreFile">ExploreFile</a></li>
+        </ul>
+      </li>
+      <li>
+        Beveiliging
+        <ul>
+          <li><a href="#PrepareHITAS">PrepareHITAS</a></li>
+          <li><a href="#SetSecondaryGHMITER">SetSecondaryGHMITER</a></li>
+          <li><a href="#SetSecondaryHITAS">SetSecondaryHITAS</a></li>
+          <li><a href="#SetSecondaryJJFORMAT">SetSecondaryJJFORMAT</a></li>
+          <li><a href="#WriteGHMITERDataCell">WriteGHMITERDataCell</a></li>
+          <li><a href="#WriteGHMITERSteuer">WriteGHMITERSteuer</a></li>
+          <li><a href="#WriteJJFormat">WriteJJFormat</a></li>
+         </ul>
+      </li>
+      <li>
+        Schoonmaken
+        <ul>
+          <li><a href="#CleanAll">CleanAll</a></li>
+        </ul>
+      </li>
+    </ol>
+
+    <hr width="75%" class="c50" />
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="CleanAll" name="CleanAll">CleanAll</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Wist alle gespecificeerde gegevens en geeft al het gereserveerde geheugen vrij.<br />
+         Wordt ook aangeroepen door <a href="#SetNumberVar">SetNumberVar</a>
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>geen</dd>
+      <dt>Return value:</dt>
+      <dd>geen</dd>
+    </dl>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetNumberVar" name="SetNumberVar">SetNumberVar</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>
+        Specificeert het aantal variabelen; reserveert geheugen voor de administratie van de variabelen.<br />
+         Roept eerst <a href="#cleanall">CleanAll</a> aan, voor het geval er een nieuwe actie plaatsvindt.
+      </dd>
+      <dt>
+        Parameters:
+      </dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>n_var&nbsp;</td>
+            <td>aantal variabelen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>
+        Return value:
+      </dt>
+      <dd>
+        false als n_var onjuist (&lt; 1) of onvoldoende geheugen, anders true
+      </dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetVariable" name="SetVariable">SetVariable</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>
+        Specificeert de eigenschappen van een variabele.
+      </dd>
+      <dt>
+        Parameters:
+      </dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long</td>
+            <td>Index</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>long</td>
+            <td>bPos</td>
+            <td>1, 2, ... startpositie in elk record van het invoerbestand</td>
+          </tr>
+          <tr>
+            <td>long</td>
+            <td>nPos</td>
+            <td>1, 2, ... aantal posities in elk record van het invoerbestand, max. 100</td>
+          </tr>
+          <tr>
+            <td>long</td>
+            <td>nDec</td>
+            <td>0,1,.... aantal decimalen (vooral van belang bij schrijven veilig bestand)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>Missing1</td>
+            <td>code voor eerste missing (alleen van belang bij categorale variabele)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR</td>
+            <td>Missing2</td>
+            <td>code voor tweede missing (alleen van belang bij categorale variabele)</td>
+          </tr>
+          <tr>
+            <td>BOOL</td>
+            <td>IsCategorical&nbsp;</td>
+            <td>is een categoriale variabele</td>
+          </tr>
+          <tr>
+            <td>BOOL</td>
+            <td>IsNumeric&nbsp;</td>
+            <td>is een numerieke variabele</td>
+          </tr>
+          <tr>
+            <td>BOOL</td>
+            <td>IsWeight&nbsp;</td>
+            <td>is een gewicht (moet ook eigenschap IsNumeric hebben)</td>
+          </tr>
+          <tr>
+            <td>BOOL</td>
+            <td>IsHierarchical&nbsp;</td>
+            <td>is een hi&euml;rarchische variabele</td>
+          </tr>
+          <tr>
+            <td>BOOL</td>
+            <td>IsHolding&nbsp;</td>
+            <td>is een variabele die een holding identificeert; alle opeenvolgende records met een gelijke code worden geacht tot eenzelfde holding te behoren</td>
+          </tr>
+        </table>
+        Voor categorale variabelen: Als Missing1 leeg is wordt Missing2 gepromoveerd. Als beide leeg zijn wordt false teruggegeven. Als beide gelijk zijn wordt Missing2 geacht leeg te zijn.<br>
+        Voor niet-categorale variabelen zijn Missings irrelevant.<br>
+        Slechts &eacute;&eacute;n variabele mag de eigenschap IsHolding dan wel IsWeight hebben.<br>
+        Een variabele met eigenschap IsWeight mag niet (IsCategorical of IsHierarchical) zijn.<br>
+        Een variabele met eigenschap IsHolding mag niet (IsCategorical of IsNumeric of IsWeight of IsHierarchical) zijn.<br>
+
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als een of meer parameters fout zijn, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetHierarchicalDigits" name="SetHierarchicalDigits">SetHierarchicalDigits</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Specificeert de eigenschappen van de codes van een hi&euml;rarchische variabele, moet plaatsvinden v&oacute;&oacute;r de aanroep van <a href="#ExploreFile">ExploreFile</a>.<br />
+        Kan niet samengaan met <a href="#SetHierarchicalCodelist">SetHierarchicalCodelist</a>.
+        De som van de array <i>nDigits</i> moet gelijk zijn aan <i>nPos</i> (zie <a href="#SetVariable" >SetVariable</a>). Het aantal groepjes mag niet meer dan 10 zijn.<br />
+        De codelijst van een hi&euml;rarchische variabele wordt vastgesteld uit het invoerbestand &eacute;n uit de gegeven hi&euml;rarchie. <br />
+        Bijvoorbeeld voor een code van 5 tekens met verdeling {2,1,2}
+        <ul>
+          <li>12</li>
+          <li>123</li>
+          <li>12301</li>
+          <li>12302</li>
+          <li>12340</li>
+          <li>12345</li>
+          <li>12349</li>
+          <li>124</li>
+          <li>12401</li>
+          <li>12402</li>
+          <li>12403</li>
+          <li>12404</li>
+          <li>12405</li>
+        </ul>
+        Alle 5-cijferig codes stonden in het invoerbestand, de andere zijn daaruit afgeleid volgens de verdeling {2,1,2}. Code 12 is de som van code 123 en 124; code 123 is de som van code 12301 t/m 12349, code 124 is de som van code 12401 t/m 12405.
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long</td>
+            <td>Index</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>long</td>
+            <td>nDigitPairs&nbsp;&nbsp;</td>
+            <td>aantal groepjes met elk een zeker aantal tekens</td>
+          </tr>
+          <tr>
+            <td>Array long</td>
+            <td>nDigits</td>
+            <td>Array van <i>nDigitsPairs </i> elementen met elk het aantal tekens van de hi&euml;rarchie.</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als een of meer parameters fout zijn, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+    <!-- ****************************************************** -->
+    <p><strong><a id="ExploreFile" name="ExploreFile">ExploreFile</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Onderzoekt voor elke <em>categoriale</em> variabele welke codes voorkomen, zo wordt de codelijst bepaald. Enige                    uitzondering: er is een <a href="#SetHierarchicalCodelist">hi&eumlrarchische codelijst</a> gespecificeerd; dan moeten de aangetroffen codes per se voorkomen in die codelijst.<br>
+          Bepaalt voor elke <em>numerieke</em> variabele de maximale en minimale waarde. <br>
+          In het invoerbestand moeten alle records van gelijke lengte zijn. Als enige uitzondering gelden lege records, die worden zonder waarschuwing overgeslagen.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName</td>
+            <td>Naam te onderzoeken bestand</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>ErrorCode</td>
+            <td>Zie onder</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>LineNumber&nbsp;</td>
+            <td>Regelnummer waar fout optreedt</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>Index van de numeriek geachte variabele, die niet numeriek is (0 = nvt)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>
+        false als een fout optreedt, de aard ervan staat in <a href="#FoutCodes">ErrorCode</a>, anders true
+      </dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetNumberTab" name="SetNumberTab">SetNumberTab</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Specificeert het aantal te maken tabellen. Wist de eerder gespecificeerde tabellen, indien aanwezig.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>nTab</td>
+            <td>Aantal tabellen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>
+        Return value:
+      </dt>
+      <dd>
+        false als nTab onjuist of onvoldoende geheugen, anders true
+      </dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetTable" name="SetTable">SetTable</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Specificeert de eigenschappen van een tabel. Moet direct gevolgd worden door <a href="#SetTableSafety">SetTableSafety</a>, een functie kan nu eenmaal niet meer dan 15 parameters hebben</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>Index</td>
+            <td>Index van de tabel (1, 2, ... nTab)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>nDim</td>
+            <td>Aantal dimensies (max 10)</td>
+          </tr>
+          <tr>
+            <td>Array long&nbsp;</td>
+            <td>ExplanatoryVarList</td>
+            <td>Voor elke dimensie de index van de variabele (1, 2, ... n_var)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>ResponseVar</td>
+            <td>Index van Response variabele (1, 2, ... n_var)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>ShadowVar</td>
+            <td>Index van Shadow variabele (1, 2, ... n_var)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CostVar</td>
+            <td>Index van Cost variabele (1, 2, ... n_var), -1 (aantal records) , -2 (hoe dan ook 1 in tabelcel)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false bij specificatiefouten, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetTableSafety" name="SetTableSafety">SetTableSafety</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft parameters voor de tabelbeveiliging</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>Index&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>SafetyRule</td>
+            <td>Veiligheidsregel: <i>Dominantie</i> (1) of <i>PriorPosteriorRule (PQ-regel)</i> (2)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>DominanceNumber</td>
+            <td>Aantal bij te houden hoogste scores Shadow</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>DominancePerc</td>
+            <td>Max. percentage som hoogste scores t.o.v. som Shadow (0 t/m 100)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>PriorPosteriorP</td>
+            <td>Waarde van P voor de PQ-regel</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>PriorPosteriorQ</td>
+            <td>Waarde van Q voor de PQ-regel (P &le; Q)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>PriorPosteriorN</td>
+            <td>Waarde van N voor de PQ-regel (N &ge;1)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>SafeMinRec</td>
+            <td>Minimaal aantal records per tabelcel dat veilig wordt geacht te zijn</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>ApplyWeight</td>
+            <td>Al dan niet gewicht toepassen op tabelcellen</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>ApplyWeightOnSafetyRule</td>
+            <td>Al dan niet gewicht toepassen op tabelcellen voor 'Safety'</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>ApplyHolding</td>
+            <td>Al dan niet Holdingmaatregelen toepassen</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>ManualSafetyPerc</td>
+            <td>Voor berekening Protectie Levels van <em>handmatig</em> op onveilig gezette tabelcellen (0 t/m 100)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>FreqSafetyPerc</td>
+            <td>Voor berekening Protectie Levels bij schending frequentieregel (0 t/m 100)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false bij specificatiefouten, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="ComputeTables" name="ComputeTables">ComputeTables</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Berekent alle met <a href="#SetTable">SetTable</a> en <a href="#SetTableSafety">SetTableSafety</a> gespecificeerde tabellen uit het invoerbestand.Alle tabellen worden opgeslagen in het geheugen.<br />
+        Per tabelcel wordt bijgehouden:
+        <ul>
+          <li>Resp (Response variabele)</li>
+          <li>Cost (Cost variabele)</li>
+          <li>Freq (frequentie)</li>
+          <li>Shadow (Shadow variabele)</li>
+          <li><a href="#CelStatussen">Status</a></li>
+          <li>nMaxScore (aantal bij te houden hoogste scores) </li>
+          <li>MaxScore (Shadow, ongewogen)</li>
+          <li>MaxScoreWeight (bijbehorend gewicht van ongewogen MaxScores, 0 indien nvt of niet toe te passen)</li>
+        </ul>
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>ErrorCode&nbsp;</td>
+            <td>Zie onder, -1 = nvt</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>TableIndex</td>
+            <td>Index van de tabel waarin de fout optrad (1, 2, ... nTab), -1 = nvt</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>
+        false als een fout optreedt, de aard ervan staat in ErrorCode, zie <a href="#Foutcodes">lijst</a>, anders true
+      </dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="DoRecode" name="DoRecode">DoRecode</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Vermindert het aantal codes van een variabele door meerdere codes samen te nemen. In de RecodeString staan, gescheiden door <em>newlinetekens (\r\n)</em>, regels met achtereenvolgens doelcode, &#39;:&#39; en broncodes.<br />
+         Broncodes die te smal zijn worden verbreed door er spaties voor te zetten.<br />
+         Codes mogen omgeven worden door aanhalingstekens (&quot;3-&nbsp;&quot;), dit kan nodig zijn als een code eindigt op een spatie of als een code een komma of een streepje bevat.<br />
+        <br />
+         Een code wordt altijd als een alfanumerieke behandeld. Daarom is bijvoorbeeld de code &quot;1a&quot; groter dan &quot;19&quot; en de code &quot;1&nbsp;&quot; kleiner dan &quot;11&quot;.<br />
+        <br />
+         Bijvoorbeeld:<br />
+
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>&nbsp;&nbsp;0 : - 90</td>
+            <td>alle codes kleiner dan of gelijk aan 90</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;1 : 91 - 500</td>
+            <td>codes vanaf 91 tot en met 500</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;2 : 501 -</td>
+            <td>codes groter dan of gelijk aan 501</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;3 : 11, &quot;3&nbsp;&quot;, 512, 530-570, 930-970&nbsp;</td>
+            <td>meerdere series toegestaan, scheidingsteken &#39;,&#39;</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>RecodeString</td>
+            <td>De specificatie van de hercodering</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR</td>
+            <td>Missing1</td>
+            <td>De waarde van Missing1</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR</td>
+            <td>Missing2</td>
+            <td>De waarde van Missing2</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>ErrorType</td>
+            <td>Type fout</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>ErrorLine</td>
+            <td>Regel waarin de fout is geconstateerd</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>ErrorPos</td>
+            <td>Positie waarop de fout is geconstateerd</td>
+          </tr>
+          <tr>
+            <td>&rArr;BSTR&nbsp;</td>
+            <td>WarningString&nbsp;</td>
+            <td>Waarschuwing voor overlappende broncodes, niet genoemde codes enz.</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als een of meer parameters fout zijn (bijv. geen categoriale variabele, er blijft niets van een code over), anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="DoActiveRecode" name="DoActiveRecode">DoActiveRecode</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Vermindert het aantal codes van een hi&euml;rarchische variabele door niet-actieve te negeren. Codes kunnen op (in)actief gezet worden met <a href="#SetVarCodeActive">SetVarCodeActive</a></dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als parameter fout is (bijv. geen hi&euml;rarchische variabele), anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetVarCodeActive" name="SetVarCodeActive">SetVarCodeActive</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Zet alle onderliggende (afstammelingen) codes van een oudercode van een hi&euml;rarchische variabele op (in)actief. </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CodeIndex&nbsp;</td>
+            <td>0 (totaal), 1, 2, ... index van code van variabele</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>Active&nbsp;</td>
+            <td>true of false (actief of inactief)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als parameters fout zijn (bijv. geen hi&euml;rarchische variabele, geen oudercode), anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="ApplyRecode" name="ApplyRecode">ApplyRecode</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Herberekent, vanwege een hercodering bijvoorbeeld, de (sub)tabellen. De resultaten kunnen worden opgevraagd met behulp van:
+        <ul>
+          <li><a href="#UnsafeVariable">UnsafeVariable</a></li>
+          <li><a href="#UnsafeVariableCodes">UnsafeVariableCodes</a></li>
+        </ul>
+      </dd>
+      <dt>Parameters:</dt>
+        <dd>geen</dd>
+      <dt>Return value:</dt>
+        <dd>geen</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="UndoRecode" name="UndoRecode">UndoRecode</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Maakt een hercodering ongedaan. Er kan geen hercodering op een hercodering worden uitgevoerd, een hercodering gaat altijd uit van de basiscodelijst van een variabele. Bij een hi&euml;rarchische variabele worden alle codes weer op actief gezet. Een nieuwe hercodering kan ook zonder deze functie eerst aan te roepen uitgevoerd worden.<br />
+        De resultaten kunnen worden opgevraagd met behulp van:
+        <ul>
+          <li><a href="#UnsafeVariable">UnsafeVariable</a></li>
+          <li><a href="#UnsafeVariableCodes">UnsafeVariableCodes</a></li>
+        </ul>
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als de parameter fout is, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetTableRow" name="GetTableRow">GetTableRow</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Geeft de cellen van een tabelrij en berekent hun status volgens de bij <a href="#SetTable">SetTable</a> gegeven SafetyRule</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td width="12%">long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Tabelindex (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>Array long&nbsp;</td>
+            <td>DimIndex&nbsp;&nbsp;</td>
+            <td>-1 = kolomvariabele (precies &eacute;&eacute;n keer), 0,1,... = index in codelijst van dimensievariabele (0 is altijd het dimensietotaal)</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array double</td>
+            <td>Cell&nbsp;</td>
+            <td>Inhoud tabelcel, volgens <i>CountType</i></td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>Status&nbsp;</td>
+            <td>Zie <a href="#CelStatussen">lijst</a></td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CountType&nbsp;</td>
+            <td>1 = Response, 2 = Shadow, 3 = Cost</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetTotalTableSize" name="GetTotalTableSize">GetTotalTableSize</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Berekent geheugenruimte voor alle tabellen samen; er wordt rekening gehouden met het aantal bij te houden scores   (score en het gewicht ervan) per tabelcel</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        geen
+      </dd>
+      <dt>Return value:</dt>
+      <dd>Totaal aantal bytes (long)</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetTableCell" name="GetTableCell">GetTableCell</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Geeft de eigenschappen van een tabelcel</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td width="12%">long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Tabelindex (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>Array long&nbsp;</td>
+            <td>DimIndex&nbsp;&nbsp;</td>
+            <td>0,1,... = index in codelijst van dimensievariabele (0 is altijd het dimensietotaal)</td>
+          </tr>
+          <tr>
+            <td>&rArr;double&nbsp;</td>
+            <td>CellResponse</td>
+            <td>Waarde van de cel <i>response</i></td>
+          </tr>
+          <tr>
+            <td>&rArr;double&nbsp;</td>
+            <td>CellShadow</td>
+            <td>Waarde van de cel <i>shadow</i></td>
+          </tr>
+          <tr>
+            <td>&rArr;double&nbsp;</td>
+            <td>CellCost</td>
+            <td>Waarde van de cel <i>cost</i></td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>CellFreq</td>
+            <td>Waarde van de cel <i>freq</i></td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>CellStatus</td>
+            <td><a href="#CelStatussen">Status </a>van de cel</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array double&nbsp;</td>
+            <td>Array van CellMaxScore&nbsp;</td>
+            <td>De n grootste <i>shadow</i>-contribuanten van de tabelcel, ongewogen</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array double&nbsp;</td>
+            <td>Array van CellMaxScoreWeight&nbsp;</td>
+            <td>De n bijbehorende gewichten</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetTableDimensions" name="GetTableDimensions">GetTableDimensions</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft de grootte van de dimensies van een tabel.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>TableDim&nbsp;</td>
+            <td>Array met dimensies van de tabel, hierbij wordt rekening gehouden met het totaal en de eventuele subtotalen, ook eventuele hercoderingen worden gerespecteerd</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetVarNumberOfCodes" name="GetVarNumberOfCodes">GetVarNumberOfCodes</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft aantal codes van een variabele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>Index variabele (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>NumberOfCodes&nbsp;</td>
+            <td>Aantal codes van een variabele, inclusief missings en (sub)totalen; bij hercodering wordt het aantal van de gehercodeerde variabele gegeven, eveneens inclusief missings en (sub)totalen</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>NumberOfActiveCodes&nbsp;</td>
+            <td>Aantal actieve codes van een variabele, inclusief missings en (sub)totalen; bij hercodering wordt het aantal van de gehercodeerde variabele gegeven, eveneens inclusief missings en totaal (subtotalen of niet-actieve codes komen hier (nog) niet voor)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetVarCode" name="GetVarCode">GetVarCode</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft type en code van een variabele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>Index variabele (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CodeIndex&nbsp;</td>
+            <td>0 (totaal), 1, 2, ... index van code van variabele</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>CodeType&nbsp;</td>
+            <td>1 = elementair, 2 = (sub)totaal</td>
+          </tr>
+          <tr>
+            <td>&rArr;BSTR&nbsp;</td>
+            <td>CodeString&nbsp;</td>
+            <td>String van de code (kan leeg zijn bij totaal)</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>IsMissing&nbsp;</td>
+            <td>0 = Normale code, 1 = Missing code</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>Level&nbsp;</td>
+            <td>Bij hi&euml;rarchische: niveau (0 = totaal, 1, 2, ...), bij niet-hi&euml;rarchische: 0 = totaal, rest = 1</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetVarCodeProperties" name="GetVarCodeProperties">GetVarCodeProperties</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft eigenschappen van de code van een <em>hi&euml;rarchische</em> variabele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>Index variabele (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CodeIndex&nbsp;</td>
+            <td>0 (totaal), 1, 2, ... index van code van variabele</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>IsParent&nbsp;</td>
+            <td>0: geen ouder, andere waarde: wel ouder</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>IsActive&nbsp;</td>
+            <td>0: niet actief, andere waarde wel actief, alleen bij niet-ouders</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>Level&nbsp;</td>
+            <td>hi&euml;rarchisch niveau van code van variabele (0 = totaal, 1, 2, ... )</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>nChildren&nbsp;</td>
+            <td>Aantal kinderen (0 (kan alleen als het geen ouder is), 1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;BSTR&nbsp;</td>
+            <td>Code&nbsp;</td>
+            <td>String van de code (is leeg bij totaal)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ************************************************ -->
+    <p><strong><a id="UnsafeVariable" name="UnsafeVariable">UnsafeVariable</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Berekent voor elke relevante dimensie (1, 2, ..) het aantal onveilige tabelcellen voor een variabele.<br />
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>Count</td>
+            <td>Aantal elementen in UCArray</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>UCArray</td>
+            <td>Array met UCs voor aantal dimensies 1, 2, ... Count</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als een of meer parameters fout zijn, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+    <!-- ************************************************ -->
+    <p><strong><a id="UnsafeVariableCodes" name="UnsafeVariableCodes">UnsafeVariableCodes</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>
+        Geeft per variabelecode-index de frequentie, de code en het aantal onveilige tabelcellen per dimensie.<br />
+      </dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>CodeIndex</td>
+            <td>0 (totaal), 1, 2, ... index van code van variabele</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>IsMissing</td>
+            <td>Wel/geen missing</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>Freq</td>
+            <td>Frequentie code in bestand</td>
+          </tr>
+          <tr>
+            <td>&rArr;BSTR&nbsp;</td>
+            <td>Code</td>
+            <td>Alfanumerieke waarde code</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>Count</td>
+            <td>Aantal elementen in UCArray</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>UCArray</td>
+            <td>Array met aantal onveilige tabelcellen per dimensie</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als een of meer parameters fout zijn, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ************************************************ -->
+    <p><strong><a id="GetMaxnUC" name="GetMaxnUC">GetMaxnUC</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Berekent het totaal aantal onveilige tabelcellen van alle gegeven tabellen.</dd>
+      <dt>Parameters:</dt>
+      <dd>geen</dd>
+      <dt>Return value:</dt>
+      <dd>Aantal onveilige cellen uit de gegeven tabellen (long).</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetTableCellStatus" name="SetTableCellStatus">SetTableCellStatus</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Zet de status van een tabelcel. De toe te kennen status kan niet <i>EMPTY</i> zijn</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array&nbsp;long&nbsp;</td>
+            <td>DimIndex&nbsp;</td>
+            <td>Array met dimensies van de tabel (0 = totaal, 1, 2, ...), bijvoorbeeld het totaal-generaal van een drie-dimensionale tabel: [0, 0, 0]</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>CellStatus&nbsp;</td>
+              <td><a href="#CelStatussen">Status </a>van de cel</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="WriteGHMITERSteuer" name="WriteGHMITERSteuer">WriteGHMITERSteuer</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijven tabelstuurbestand voor GHMITER.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam tabelstuurbestand (steuer)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>EndString1&nbsp;</td>
+            <td>Inhoud voorlaatste regel bestand</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>EndString2&nbsp;</td>
+            <td>Inhoud laatste regel bestand</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>1 : oke, anders een <a href="#FoutCodes">foutcode</a> (long)</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="WriteGHMITERDataCell" name="WriteGHMITERDataCell">WriteGHMITERDataCell</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijven tabelbestand Eingabe voor GHMITER</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam tabelcellenbestand (eingabe)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>1 : oke, anders een <a href="#FoutCodes">foutcode</a> (long)</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetSecondaryGHMITER" name="SetSecondaryGHMITER">SetSecondaryGHMITER</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Verwerken en zetten secundaire tabelcellen (ausgabe) voor GHMITER</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam tabelcellenbestand (ausgabe)</td>
+          </tr>
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>nSetSecondary&nbsp;</td>
+            <td>Aantal secundair gezette tabelcellen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>1 : oke, anders een <a href="#FoutCodes">foutcode</a> (long)</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="PrepareHITAS" name="PrepareHITAS">PrepareHITAS</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Voorbereiden secundaire geheimhouding methode HITAS</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>NameParameterFile&nbsp;</td>
+            <td>Naam van bestand met parameters voor HITAS</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>NameFilesFile&nbsp;</td>
+            <td>Naam van een bestand met aantal dimensies en een aantal bestandsnamen, voor elke dimensie een codelijst, een bestandsnaam voor de tabelcellen (een record per dimensie-indexcombinatie) en een bestandsnaam voor de resultaten</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="WriteJJFormat" name="WriteJJFormat">WriteJJFormat</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijven tabelstuurbestand voor JJ</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam tabelstuurbestand</td>
+          </tr>
+          <tr>
+            <td>double&nbsp;</td>
+            <td>LowerBound&nbsp;</td>
+            <td>Lower factor for protection level (0.5, 0.6, ...)</td>
+          </tr>
+          <tr>
+            <td>double&nbsp;</td>
+            <td>UpperBound&nbsp;</td>
+            <td>Upper factor for protection level (1.5, 1.4, ...)</td>
+          </tr>
+          <tr>
+            <td>Bool&nbsp;</td>
+            <td>WithBogus&nbsp;</td>
+            <td>Wel of geen rekening houden met bogus levels (true wel, false niet)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetSecondaryJJFORMAT" name="SetSecondaryJJFORMAT">SetSecondaryJJFORMAT</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Verwerken en zetten secundaire tabelcellen, formaat bestand is nog onbekend</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam tabelstuurbestand</td>
+          </tr>
+          <tr>
+            <td>Bool&nbsp;</td>
+            <td>WithBogus&nbsp;</td>
+            <td>Wel of geen rekening houden met bogus levels (true wel, false niet)</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>nSetSecondary&nbsp;</td>
+            <td>Aantal secundair gezette tabelcellen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>1 : oke, anders een <a href="#FoutCodes">foutcode</a> (long)</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="UndoSecondarySuppress" name="UndoSecondarySuppress">UndoSecondarySuppress</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Alle secundaire statussen van een tabel terugzetten naar veilig; er wordt rekening gehouden met handmatig dan wel machinaal gezette veilige cellen</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>true als bij correcte be&euml;indiging, anders false</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetStatusAndCostPerDim" name="GetStatusAndCostPerDim">GetStatusAndCostPerDim</a></strong></p>
+    <dl>
+      <dt>Beschrijving:</dt>
+      <dd>Berekent per aantal dimensies de frequenties van alle statussen, daarbenevens ook de som van de Cost-variabelewaarden</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>StatusArray&nbsp;</td>
+            <td>Er dienen ten minste (nDim + 1) * 8 elementen te worden gereserveerd, verantwoordelijkheid aanroeper</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array double&nbsp;</td>
+            <td>CostArray&nbsp;</td>
+            <td>Er dienen ten minste (nDim + 1) * 8 elementen te worden gereserveerd, verantwoordelijkheid aanroeper</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>true als bij correcte be&euml;indiging, anders false</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="WriteCSV" name="WriteCSV">WriteCSV</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijft een tabel in het CSV-formaat, direct te lezen in Excel. Elk record vormt een regel in het spreadsheet, de kolomwaarden worden gescheiden door een komma. De labels worden veiligheidshalve omsloten door dubbele aanhalingstekens, ze kunnen immers een komma bevatten. Staan er dubbele aanhalingstekens in dan worden die vervangen door enkele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam van het resultaatbestand</td>
+          </tr>
+          <tr>
+            <td>Array long&nbsp;</td>
+            <td>DimSequence&nbsp;</td>
+            <td>Volgorde waarin dimensies worden behandeld; eerste .. in de laag, voorlaatste in de rij, laatste in de kolom. Dus bij een driedimensionale tabel met DimSequence = [3,2,1] komt Tabeldimensievariabele 3 in de laag-, idem 2 in de rij-, idem 1 in de kolomdimensie</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="WriteCellRecords" name="WriteCellRecords">WriteCellRecords</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijft voor elke cel van de tabel een record met achtereenvolgens de dimensiecodes en de bijbehorende cel, gescheiden door een komma. De dimensiecodes worden omsloten door dubbele aanhalingstekens, staan er dubbele aanhalingstekens in dan worden die vervangen door enkele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam van het resultaatbestand</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>SuppressEmpty&nbsp;</td>
+            <td>Lege cellen niet (true) of wel (false) schrijven</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetSecondaryHITAS" name="SetSecondaryHITAS">SetSecondaryHITAS</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Zet secundaire tabelcellen m.b.v. door <a href="#PrepareHITAS">PrepareHITAS</a> gegenereerd resultaat.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;long&nbsp;</td>
+            <td>nSetSecondary&nbsp;</td>
+            <td>Aantal secundair gezette tabelcellen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="GetCellStatusFreq" name="GetCellStatusFreq">GetCellStatusFreq</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft frequentieverdeling van de 8 tabelcelstatussen van een tabel</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>&rArr;Array long&nbsp;</td>
+            <td>StatusFrequency&nbsp;</td>
+            <td>Aantal per <a href="#CelStatussen">celstatus</a></td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="SetHierarchicalCodelist" name="SetHierarchicalCodelist">SetHierarchicalCodelist</a></strong></p>
+    <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Specificeert de eigenschappen van de codes van een hi&euml;rarchische variabele, moet plaatsvinden v&oacute;&oacute;r de aanroep van <a href="#ExploreFile">ExploreFile</a>.<br />Kan niet samengaan met <a href="#SetHierarchicalDigits">SetHierarchicalDigits</a>.<br />
+      </dd>
+
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>long&nbsp;</td>
+            <td>VarIndex&nbsp;</td>
+            <td>1, 2, ... n_var, index van variabele</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam van het bestand met de hi&euml;rarchische codelijst; de niveaus worden aangegeven door het aantal <em>LevelStrings</em> aan het begin van een regel. Een generaal-totaal wordt geacht niet aanwezig te zijn, dat wordt door het programma zelf toegevoegd als eerste (lege) code van een codelijst. Bijvoorbeeld:<br />
+<pre>
+01
+..0101
+....0101001
+....0101002
+....0101003
+..0102
+....0102345
+02
+..0201
+....020134
+....020135
+enz.
+</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>LevelString&nbsp;</td>
+            <td>Geeft een hi&euml;rarchisch niveau aan, bijv. "&nbsp;" of "." of "..", in bovenstaand voorbeeld is het laatste voorbeeld gekozen</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>Correct: 1, anders een foutcode (HC_FILENOTFOUND ...), long</dd>
+    </dl>
+    <p><a href="#topfunc">top</a></p>
+
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="FoutCodes" name="FoutCodes">FoutCodes</a></strong></p>
+    <dl>
+      <dt>Algemeen</dt>
+        <dd>FILENOTFOUND = 1000</dd>
+        <dd>CANTOPENFILE</dd>
+        <dd>EMPTYFILE</dd>
+        <dd>WRONGLENGTH</dd>
+        <dd>RECORDTOOSHORT</dd>
+        <dd>WRONGRECORD</dd>
+        <dd>NOVARIABLES</dd>
+        <dd>NOTABLES</dd>
+        <dd>NOTENOUGHMEMORY</dd>
+        <dd>NOTABLEMEMORY</dd>
+        <dd>SUBTABLENOSUB</dd>
+        <dd>SUBTABLEWRONGVAR</dd>
+        <dd>NODATAFILE</dd>
+        <dd>PROGRAMERROR</dd>
+        <dd>WRONGHIERARCHY</dd>
+        <dd>TABLENOTSET</dd>
+        <dd>VARIABLENOTSET</dd>
+        <dd>CODENOTINCODELIST</dd>
+        <dd>ISNOTNUMERIC</dd>
+
+      <dt>Parsing Recode</dt>
+        <dd>E_HARD = 2000</dd>
+        <dd>E_SOFT</dd>
+        <dd>E_NOVARTABDATA</dd>
+        <dd>E_LENGTHWRONG</dd>
+        <dd>E_RANGEWRONG</dd>
+        <dd>E_VARINDEXWRONG</dd>
+        <dd>E_EMPTYSPEC</dd>
+
+      <dt>Codes Recode</dt>
+        <dd>R_FROMTOOBIG = 3000</dd>
+        <dd>R_CODENOTINLIST</dd>
+        <dd>R_NOSENSE</dd>
+        <dd>R_MISSING2VALID</dd>
+
+      <dt>GHMITER</dt>
+        <dd>GHM_TABLEINDEXWRONG = 4000</dd>
+        <dd>GHM_NOTPREPARED</dd>
+        <dd>GHM_CODEWIDTHTOOBIG</dd>
+        <dd>GHM_TABELLEINCORRECT</dd>
+        <dd>GHM_STEUERINCORRECT</dd>
+        <dd>GHM_EINGABEINCORRECT</dd>
+        <dd>GHM_EXECUTEINCORRECT</dd>
+        <dd>GHM_SOURCECELLINCORRECT</dd>
+        <dd>GHM_NOFILEAUSGABE</dd>
+      <dt>Hitas</dt>
+        <dd>HITAS_ = 5000</dd>
+
+      <dt>JJFormat</dt>
+        <dd>JFF_NOFILE = 7000</dd>
+        <dd>JJF_SOURCECELLINCORRECT</dd>
+        <dd>JJF_TABLEINDEXWRONG</dd>
+
+      <dt>Hi&euml;rarchische codelijst</dt>
+        <dd>HC_FILENOTFOUND = 6000</dd>
+        <dd>HC_LEVELSTRINGEMPTY</dd>
+        <dd>HC_CODEISMISSING</dd>
+        <dd>HC_LEVELINCORRECT</dd>
+        <dd>HC_CODEEMPTY</dd>
+        <dd>HC_NOTHIERARCHICAL</dd>
+        <dd>HC_HASSPLITDIGITS</dd>
+
+
+
+    </dl>
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="CelStatussen" name="CelStatussen">CelStatussen</a></strong></p>
+    <dl>
+      <dt>Celstatussen</dt>
+        <dd>CS_SAFE = 1</dd>
+        <dd>CS_SAFE_MANUAL</dd>
+        <dd>CS_UNSAFE</dd>
+        <dd>CS_UNSAFE_MANUAL</dd>
+        <dd>CS_PROTECT_MANUAL</dd>
+        <dd>CS_SECONDARY_UNSAFE</dd>
+        <dd>CS_SECONDARY_UNSAFE_MANUAL</dd>
+        <dd>CS_EMPTY</dd>
+    </dl>
+
+
+    <!-- ****************************************************** -->
+    <p><strong><a id="Constanten programma" name="Constanten programma">Constanten programma</a></strong></p>
+    Er zijn een aantal constanten in het programma opgenomen. Deze zijn ruim genomen, maar kunnen altijd nog ruimer worden gezet. Compileren is daarna vanzelfsprekend een vereiste.
+    <dl>
+      <dt>MAXCODEWIDTH 100</dt>
+        <dd>Maximale aantal posities van een variabele in het invoerbestand, zie <a href="#ExploreFile">ExploreFile</a></dd>
+      <dt>MAXRECORDLENGTH 32000</dt>
+        <dd>Maximaal aantal posities van een record in het invoerbestand</dd>
+      <dt>SEPARATOR "\r\n"</dt>
+        <dd>Scheidingstekens nieuwe regel voor een specificatie van een <a href="#DoRecode">Recode</a></dd>
+      <dt>FIREPROGRESS 1000</dt>
+        <dd>Na het behandelen van .. records wordt een <a href="#FireUpdateProgress">event</a> afgevuurd</dd>
+      <dt>MAXDIM 8</dt>
+        <dd>Grootste aantal dimensies van een tabel. Een hi&euml;rarchische variabele wordt beschouwd als &eacute;&eacute;n dimensie.</dd>
+      <dt>MAXDIGITGROUP 10</dt>
+        <dd>Grootste aantal groepjes van een hi&euml;rarchische variabele, zie <a href="#SetHierarchicalDigits">SetHierarchicalDigits</a></dd>
+      <dt>MAXLEVEL 8</dt>
+        <dd>Grootste aantal groepjes van een hi&euml;rarchische variabele voor GHMITER</dd>
+      <dt>m_ValueSeparator ','</dt>
+        <dd>Teken dat wordt gebruikt in <a href="#WriteCSV">WriteCSV</a> en <a href="#WriteCellRecords">WriteCellRecords</a> om gegevens te scheiden, een komma</dd>
+    </dl>
+
+    <p><a href="#top"><img src="terug.gif" width="44" height="35" border="0" alt="top" /></a></p>
+    <hr width="75%" class="c2" />
+    Opsteller: Aad van de Wetering
+  </body>
+</html>
+
