@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetTableSafetyInfo Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetTableSafetyInfo">
+   <param name="Keyword" value="SetTableSafetyInfo">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetTableSafetyInfo Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetTableSafetyInfo
+</P>
+<P>
+wordt de tabel Safety informatie gegeven. Deze methode wordt geroepen als de tabel wordt direct gegeven een niet opgebouwd van een micro bestand.
+</P>
+<h2>Syntax</h2>
+<code>SetTableSafetyInfo(TabIndex As Long, SafetyRule As Long, HasMaxScore As Boolean, DominanceNumber As Long, DominancePerc As Long, PriorPosteriorP As Long, PriorPosteriorQ As Long, PriorPosteriorN As Long, HasFreq As Boolean, FreqSafetyPerc As Long, SafeMinRec As Long, HasStatus As Boolean, ManualSafetyPerc As Long, ErrorCode As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>TabIndex
+   <dd>Type: Long<br/>
+       <i>Tabel Index(1,2...N)</i></dd>
+   <dt>SafetyRule
+   <dd>Type: Long<br/>
+       <i>Geeft aan welke safety rule wordt gebruikt.Zie <a class="link" href="AICelStatus.html">Rules</A></i></dd>
+   <dt>HasMaxScore
+   <dd>Type: Boolean<br/>
+       <i>Als de tabel de Maximum scores van een cel doorgeeft</i></dd>
+   <dt>DominanceNumber
+   <dd>Type: Long*<br/>
+       <i>De aantal Top Scores dat wordt bewaardNote: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings</i></dd>
+   <dt>DominancePerc
+   <dd>Type: Long*<br/>
+       <i>Dominance percentage Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings</i></dd>
+   <dt>PriorPosteriorP
+   <dd>Type: Long*<br/>
+       <i>P van de PQ regel Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings</i></dd>
+   <dt>PriorPosteriorQ
+   <dd>Type: Long*<br/>
+       <i>Q van de PQ regel.Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings</i></dd>
+   <dt>PriorPosteriorN
+   <dd>Type: Long*<br/>
+       <i>N van de PQ rege lNote: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings</i></dd>
+   <dt>HasFreq
+   <dd>Type: Boolean<br/>
+       <i>al dan niet freq wordt gegeven</i></dd>
+   <dt>FreqSafetyPerc
+   <dd>Type: Long<br/>
+       <i>Frequency Safety Percentage</i></dd>
+   <dt>SafeMinRec
+   <dd>Type: Long<br/>
+       <i>Minimal aantal records</i></dd>
+   <dt>HasStatus
+   <dd>Type: Boolean<br/>
+       <i>Al dan niet status wordt doorgegeven</i></dd>
+   <dt>ManualSafetyPerc
+   <dd>Type: Long<br/>
+       <i>Manual Safety Percentage</i></dd>
+   <dt>ErrorCode
+   <dd>Type: Long<br/>
+       <i>Error Code als iets mis ging. Zie <a class="link" href="AIFoutCodeLijst.html">FoutCodeLijst </a></i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>False als er iets fout ging. Anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

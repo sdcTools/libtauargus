@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetTable Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetTable">
+   <param name="Keyword" value="SetTable">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetTable Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetTable
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>Specificeert de eigenschappen van een tabel. Moet direct gevolgd worden door  <a class = "link" href="MSetTableSafety.html">SetTableSafety</a>, een functie kan nu eenmaal niet meer dan 15 parameters hebben</dd>
+      
+</P>
+<h2>Syntax</h2>
+<code>SetTable(Index As Long, nDim As Long, ExplanatoryVarList As Long, long ResponseVar As , ShadowVar As Long, CostVar As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>Index
+   <dd>Type: Long<br/>
+       <i>Index van de tabel (1, 2, ... nTab)</i></dd>
+   <dt>nDim
+   <dd>Type: Long<br/>
+       <i>Aantal dimensies (max 10)</i></dd>
+   <dt>ExplanatoryVarList
+   <dd>Type: Long<br/>
+       <i>Voor elke dimensie de index van de variabele (1, 2, ... n_var)</i></dd>
+   <dt>long ResponseVar
+   <dd>Type: Long<br/>
+       <i>Index van Response variabele (1, 2, ... n_var)</i></dd>
+   <dt>ShadowVar
+   <dd>Type: Long<br/>
+       <i>Index van Shadow variabele (1, 2, ... n_var)</i></dd>
+   <dt>CostVar
+   <dd>Type: Long<br/>
+       <i>Index van Cost variabele (1, 2, ... n_var)</i></dd>
+<dt>ApplyPeep
+<dd>Type:Boolean<br/>
+<i> Als Table gebruikt de Peep rule</i></dd>
+<dt>Peep Perc Cell_1
+<dd>Type: Long<br/>
+<i> Peep Perc Van de Table</i> </dd>
+<dt>Peep Perc Cell_2
+<dd>Type: Long<br/>
+<i> Peep Perc Van de Table</i> </dd>
+<dt>Peep Perc Holding_1
+<dd>Type: Long<br/>
+<i> Peep Perc Van de Table</i> </dd>
+<dt>Peep Perc Holding_1
+<dd>Type: Long<br/>
+<i> Peep Perc Van de Table</i> </dd>
+<dt> PeepSafetyRangePercCell
+<dd>Type:Boolean<br/>
+<i> Peep safety range Percentage van de tabel </i> </dd>
+<dt> PeepSafetyRangePercCell
+<dd>Type:Boolean<br/>
+<i> Peep safety range Percentage van de tabel </i> </dd>
+<dt> PeepSafetyRangePercHolding
+<dd>Type:Boolean<br/>
+<i> Peep safety range Percentage van de tabel </i> </dd>
+<dt>PeepVarnr
+<dd>Type: long <br/>
+<i>Index van Peep variable (1,2,...n_var)</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false bij specificatiefouten, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

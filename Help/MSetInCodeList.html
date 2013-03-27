@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetInCodeList Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetInCodeList">
+   <param name="Keyword" value="SetInCodeList">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetInCodeList Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetInCodeList
+</P>
+<P>
+Deze methode doet hetzelfde wat het methode Explore File doet. De codes wordt ingelezen om de tabel te intellen. Deze methode wordt gebruikt als een tabel wordt  direct doorgegeven inplaats van een table die wordt  opgebouwd van een micro bestand.
+</P>
+<h2>Syntax</h2>
+<code>SetInCodeList(NumberofVar As Long, VarIndex As Long, sCode As Variant, ErrorCode As Long, ErrorInVarIndex As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>NumberofVar
+   <dd>Type: Long<br/>
+       <i>Geeft het aantal Variabelen</i></dd>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>Geeft aan welke variablen wordt gegeven</i></dd>
+   <dt>sCode
+   <dd>Type: Variant<br/>
+       <i>String Array van codes</i></dd>
+   <dt>ErrorCode
+   <dd>Type: Long<br/>
+       <i>een error code. Zie <a class="link" href="AIFoutCodeLijst.html"> FoutCodeList </a></i></dd>
+   <dt>ErrorInVarIndex
+   <dd>Type: Long<br/>
+       <i>Welke Variable het misging</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>False als er iets fout ging,anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

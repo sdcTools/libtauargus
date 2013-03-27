@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>GetVarCode Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MGetVarCode">
+   <param name="Keyword" value="GetVarCode">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>GetVarCode Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method GetVarCode
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft type en code van een variabele.</dd>
+</P>
+<h2>Syntax</h2>
+<code>GetVarCode(VarIndex As Long, CodeIndex As Long, CodeType As Long, CodeString As String, IsMissing As Long, Level As Long) As Boolean </code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>Index variabele (1, 2, ...)</i></dd>
+   <dt>CodeIndex
+   <dd>Type: Long<br/>
+       <i>0 (totaal), 1, 2, ... index van code van variabele</i></dd>
+   <dt>CodeType
+   <dd>Type: Long<br/>
+       <i>1 = elementair, 2 = (sub)totaal</i></dd>
+   <dt>CodeString
+   <dd>Type: String<br/>
+       <i>String van de code (kan leeg zijn bij totaal)</i></dd>
+   <dt>IsMissing
+   <dd>Type: Long<br/>
+       <i>0 = Normale code, 1 = Missing code</i></dd>
+   <dt>Level
+   <dd>Type: Long<br/>
+       <i>Bij hi&euml;rarchische: niveau (0 = totaal, 1, 2, ...), bij niet-hi&euml;rarchische: 0 = totaal, rest = 1</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean</a><br/>
+       <i>False als er iets fout ging, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

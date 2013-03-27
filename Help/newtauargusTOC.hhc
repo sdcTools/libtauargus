@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction To New TauArgusComponent">
+		<param name="Local" value="IntroductiontoNewTauArg.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="NEWTAUARGUSLib">
+		<param name="Local" value="LNEWTAUARGUSLib.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Reference">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Classes">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="TauArgCtrl Class">
+				<param name="Local" value="CTauArgCtrl.html">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Methods">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="ApplyRecode Method">
+				<param name="Local" value="MApplyRecode.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="CheckRealizedLowerAndUpperValues Method">
+				<param name="Local" value="MCheckRealizedLowerAndUpperValues.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="CleanAll Method">
+				<param name="Local" value="MCleanAll.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="CompletedTable Method">
+				<param name="Local" value="MCompletedTable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="ComputeCodesToIndices Method">
+				<param name="Local" value="MComputeCodesToIndices.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="ComputeTables Method">
+				<param name="Local" value="MComputeTables.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="DoActiveRecode Method">
+				<param name="Local" value="MDoActiveRecode.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="DoRecode Method">
+				<param name="Local" value="MDoRecode.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="ExploreFile Method">
+				<param name="Local" value="MExploreFile.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetCellStatusStatistics">
+				<param name="Local" value="MGetCellStatusStatistics.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetMaxnUc Method">
+				<param name="Local" value="MGetMaxnUc.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetStatusAndCostPerDim Method">
+				<param name="Local" value="MGetStatusAndCostPerDim.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetTableCell Method">
+				<param name="Local" value="MGetTableCell.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetTableRow Method">
+				<param name="Local" value="MGetTableRow.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetTotalTabelSize Method">
+				<param name="Local" value="MGetTotalTabelSize.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetVarCode Method">
+				<param name="Local" value="MGetVarCode.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetVarCodeProperties Method">
+				<param name="Local" value="MGetVarCodeProperties.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="GetVarNumberOfCodes Method">
+				<param name="Local" value="MGetVarNumberOfCodes.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="PrepareCellDistance Method">
+				<param name="Local" value="MPrepareCellDistance.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="PrepareHITAS Method">
+				<param name="Local" value="MPrepareHITAS.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetHierarchicalCodelist Method">
+				<param name="Local" value="MSetHierarchicalCodelist.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetHierarchicalDigits Method">
+				<param name="Local" value="MSetHierarchicalDigits.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetInCodeList Method">
+				<param name="Local" value="MSetInCodeList.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetInFileInfo Method">
+				<param name="Local" value="MSetInFileInfo.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetInTable Method">
+				<param name="Local" value="MSetInTable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetNumberTab Method">
+				<param name="Local" value="MSetNumberTab.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetNumberVar Method">
+				<param name="Local" value="MSetNumberVar.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetRealizedLowerAndUpper Method">
+				<param name="Local" value="MSetRealizedLowerAndUpper.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetSecondaryGHMITER Method">
+				<param name="Local" value="MSetSecondaryGHMITER.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetSecondaryHITAS Method">
+				<param name="Local" value="MSetSecondaryHITAS.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetTable Method">
+				<param name="Local" value="MSetTable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetTableCellStatus Method">
+				<param name="Local" value="MSetTableCellStatus.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetTableSafety Method">
+				<param name="Local" value="MSetTableSafety.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetTableSafetyInfo Method">
+				<param name="Local" value="MSetTableSafetyInfo.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetTotalsInCodeList Method">
+				<param name="Local" value="MSetTotalsInCodeList.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetVarCodeActive Method">
+				<param name="Local" value="MSetVarCodeActive.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetVariable Method">
+				<param name="Local" value="MSetVariable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetVariableForTable Method">
+				<param name="Local" value="MSetVariableForTable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="ThroughTable Method">
+				<param name="Local" value="MThroughTable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="UndoRecode Method">
+				<param name="Local" value="MUndoRecode.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="UndoSecondarySuppress Method">
+				<param name="Local" value="MUndoSecondarySuppress.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="UnsafeVariable Method">
+				<param name="Local" value="MUnsafeVariable.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="SetSecondaryJJFORMAT Method">
+				<param name="Local" value="MSetSecondaryJJFORMAT.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="UnsafeVariableCodes Method">
+				<param name="Local" value="MUnsafeVariableCodes.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteCSV Method">
+				<param name="Local" value="MWriteCSV.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteCellRecords Method">
+				<param name="Local" value="MWriteCellRecords.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteGHMITERDataCell Method">
+				<param name="Local" value="MWriteGHMITERDataCell.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteGHMITERSteuer Method">
+				<param name="Local" value="MWriteGHMITERSteuer.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteJJFormat Method">
+				<param name="Local" value="MWriteJJFormat.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="WriteTable In AMPL Fomat Method">
+				<param name="Local" value="WriteTableInAMPLFormat.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Additional Information">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Fout Code Lijst">
+					<param name="Local" value="AIFoutCodeLijst.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="CelStatus&amp;Rules">
+					<param name="Local" value="AICelStatus.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Constants">
+					<param name="Local" value="AIConstants.html">
+					</OBJECT>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+</BODY></HTML>

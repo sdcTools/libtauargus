@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetInTable Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetInTable">
+   <param name="Keyword" value="SetInTable">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetInTable Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetInTable
+</P>
+<P>
+<P>
+Deze methode doet hetzelfde wat het methode Compute Tables doet. De codes wordt ingelezen en daarna wordt de tabel ingeteld. Deze methode wordt gebruikt als een tabel wordt  direct doorgegeven inplaats van door opgebouwd van een micro bestand. Een false is geretourneert als de array van codes niet komt voor in de codelijst. een false wordt ook geretourneert als de cel was eerder ingevuld. (i.e) dezelfde aanroep niet voor de tweede keer gebeurt.
+</P>
+
+</P>
+<h2>Syntax</h2>
+<code>SetInTable(Index As Long, sCode As Variant, Shadow As Double, Cost As Double, Resp As Double, Freq As Long, MaxScore As Double, Status As Long, ErrorCode As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>Index
+   <dd>Type: Long<br/>
+       <i>Table Index (1,2, 3...N)</i></dd>
+   <dt>sCode
+   <dd>Type: Variant<br/>
+       <i>Array van strings met het code waarde</i></dd>
+   <dt>Shadow
+   <dd>Type: Double<br/>
+       <i>Shadow waarde van het Cel</i></dd>
+   <dt>Cost
+   <dd>Type: Double<br/>
+       <i>Cost waarde van het Cel</i></dd>
+   <dt>Resp
+   <dd>Type: Double<br/>
+       <i>Response waarde van het Cel</i></dd>
+   <dt>Freq
+   <dd>Type: Long<br/>
+       <i>Freq waarde van het Cel</i></dd>
+   <dt>MaxScore
+   <dd>Type: Double*<br/>
+       <i>Array van de maximum waardes van het cel (nodig met PQ rule)</i></dd>
+   <dt>Status
+   <dd>Type: Long<br/>
+       <i>Status van het Cel</i></dd>
+   <dt>ErrorCode
+   <dd>Type: Long<br/>
+       <i>Error code alsiets mis ging.Zie <a class="link" href="AIFoutCodeLijst.html">out Code Lijst </a></i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>False als er iets fout ging anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

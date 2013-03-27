@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetTableSafety Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetTableSafety">
+   <param name="Keyword" value="SetTableSafety">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetTableSafety Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetTableSafety
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft parameters voor de tabelbeveiliging</dd>
+      
+</P>
+<h2>Syntax</h2>
+<code>SetTableSafety(Index As Long, SafetyRule As Long, DominanceNumber As Long, DominancePerc As Long, PriorPosteriorP As Long, PriorPosteriorQ As Long, PriorPosteriorN As Long, SafeMinRec As Long, ApplyWeight As Boolean, ApplyWeightOnSafetyRule As Boolean, ApplyHolding As Boolean, ManualSafetyPerc As Long, FreqSafetyPerc As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>Index
+   <dd>Type: Long<br/>
+       <i>Index tabel (1, 2, ...)</i></dd>
+   <dt>SafetyRule
+   <dd>Type: Long<br/>
+       <i>Veiligheidsregel. Zie <a class="link" href="AICelStatus.html">Rules </a></i> (2)</i></dd>
+   <dt>DominanceNumber
+   <dd>Type: Long *<br/>
+       <i>Aantal bij te houden hoogste scores Shadow (Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>DominancePerc
+   <dd>Type: Long *<br/>
+       <i>Max. percentage som hoogste scores t.o.v. som Shadow (0 t/m 100)  (Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>PriorPosteriorP
+   <dd>Type: Long*<br/>
+       <i>Waarde van P voor de PQ-rege(Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>PriorPosteriorQ
+   <dd>Type: Long*<br/>
+       <i>Waarde van Q voor de PQ-rege(Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>PriorPosteriorN
+   <dd>Type: Long*<br/>
+       <i>Waarde van N voor de PQ-rege(Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>SafeMinRecAndHoldings
+   <dd>Type: Long*<br/>
+       <i>Minimaal aantal records per tabelcel dat veilig wordt geacht te zijn (Note: de interface verwacht een array van 2 longs. 
+waar de eerste is zijn for de Cell en de laatste  voor holdings)</i></dd>
+
+<dt>PeepPec
+   <dd>Type: Long *<br/>
+       <i>PeepPerc(Note: de interface verwacht een array van 4 longs. 
+waar de eerste twee zijn for de Cell en de laatste twee zijn voor holdings)</i></dd>
+   <dt>PeepSafetyRangePerc
+   <dd>Type: Long *<br/>
+       <i>Array van twee safety ranges eerste voor cell tweede voor holding.</i></dd>
+<dt>PeepMinFreqCellAndHolding
+   <dd>Type: Long *<br/>
+       <i>Min PeepFreq for Cell and Holding(array van twee).</i></dd>
+   <dt>ApplyWeight
+   <dd>Type: Boolean<br/>
+       <i>Minimaal aantal records per tabelcel dat veilig wordt geacht te zijn</i></dd>
+   <dt>ApplyWeightOnSafetyRule
+   <dd>Type: Boolean<br/>
+       <i>Al dan niet gewicht toepassen op tabelcellen voor 'Safety</i></dd>
+   <dt>ApplyHolding
+   <dd>Type: Boolean<br/>
+       <i>Al dan niet Holdingmaatregel toepassen</i></dd>
+   <dt>ManualSafetyPerc
+   <dd>Type: Long<br/>
+       <i>Voor berekening Protectie Levels van <em>handmatig</em> op onveilig gezette tabelcellen (0 t/m 100)</i></dd>
+   <dt>CellAndHolding FreqSafetyPerc
+   <dd>Type: Long<br/>
+       <i>Voor berekening Protectie Levels bij schending frequentieregel (0 t/m 100)  Note: de interface verwacht een array van 4 2ongs. 
+waar de eerste is voor de Cell en de laatste  voor holdings</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false bij specificatiefouten, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

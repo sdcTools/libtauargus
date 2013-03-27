@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>ExploreFile Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MExploreFile">
+   <param name="Keyword" value="ExploreFile">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>ExploreFile Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method ExploreFile
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>Onderzoekt voor elke <em>categoriale</em> variabele welke codes voorkomen, zo wordt de codelijst bepaald. Enige                    uitzondering: er is een  <a class = "link" href="MSetHierarchicalCodelist.html">hi&eumlrarchische codelijst</a> gespecificeerd; dan moeten de aangetroffen codes per se voorkomen in die codelijst.<br>
+          Bepaalt voor elke <em>numerieke</em> variabele de maximale en minimale waarde. <br>
+          In het invoerbestand moeten alle records van gelijke lengte zijn. Als enige uitzondering gelden lege records, die worden zonder waarschuwing overgeslagen.</dd>
+    </dl>
+
+</P>
+<h2>Syntax</h2>
+<code>ExploreFile(FileName As String, ErrorCode As Long, LineNumber As Long, VarIndex As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>FileName
+   <dd>Type: String<br/>
+       <i>Naam te onderzoeken bestand</i></dd>
+   <dt>ErrorCode
+   <dd>Type: Long<br/>
+       <i>Fout Code. Zie <a class="link" href="AIFoutCodeLijst.html"> Fout Code Lijst </a></i></dd>
+   <dt>LineNumber
+   <dd>Type: Long<br/>
+       <i>Regelnummer waar fout optreedt</i></dd>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>Index van de numeriek geachte variabele, die niet numeriek is (0 = nvt)</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als een fout optreedt, de aard ervan staat in <a href="#FoutCodes">ErrorCode</a>, anders true
+</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

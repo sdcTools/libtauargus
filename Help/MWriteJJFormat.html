@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>WriteJJFormat Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MWriteJJFormat">
+   <param name="Keyword" value="WriteJJFormat">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>WriteJJFormat Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method WriteJJFormat
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijven tabelstuurbestand voor JJ</dd>
+      
+</P>
+<h2>Syntax</h2>
+<code>WriteJJFormat(TableIndex As Long, FileName As String, LowerBound As Double, UpperBound As Double, WithBogus As Boolean, AsPerc As Boolean) As Boolean </code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>TableIndex
+   <dd>Type: Long<br/>
+       <i>Index tabel (1, 2, ...)</i></dd>
+   <dt>FileName
+   <dd>Type: String<br/>
+       <i>Naam tabelstuurbestand</i></dd>
+   <dt>LowerBound
+   <dd>Type: Double<br/>
+       <i>Lower factor for protection level (0.5, 0.6, ...)</i></dd>
+   <dt>UpperBound
+   <dd>Type: Double<br/>
+       <i>Upper factor for protection level (0.5, 0.6, ...)</i></dd>
+   <dt>WithBogus
+   <dd>Type: Boolean<br/>
+       <i>Wel of geen rekening houden met bogus levels (true wel, false niet)</i></dd>
+   <dt>AsPerc
+   <dd>Type: Boolean<br/>
+       <i>Geeft  Lower en Upper Protection Factors als Perc</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als er iets fout ging, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

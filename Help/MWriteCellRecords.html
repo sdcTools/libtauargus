@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>WriteCellRecords Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MWriteCellRecords">
+   <param name="Keyword" value="WriteCellRecords">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>WriteCellRecords Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method WriteCellRecords
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Schrijft voor elke cel van de tabel een record met achtereenvolgens de dimensiecodes en de bijbehorende cel, gescheiden door een komma. De dimensiecodes worden omsloten door dubbele aanhalingstekens, staan er dubbele aanhalingstekens in dan worden die vervangen door enkele.</dd>
+      <dt>Parameters:</dt>
+      <dd>
+        <table border="0" summary="ParameterSpec"><tr>
+            <td>long&nbsp;</td>
+            <td>TableIndex&nbsp;</td>
+            <td>Index tabel (1, 2, ...)</td>
+          </tr>
+          <tr>
+            <td>LPCTSTR&nbsp;</td>
+            <td>FileName&nbsp;</td>
+            <td>Naam van het resultaatbestand</td>
+          </tr>
+          <tr>
+            <td>BOOL&nbsp;</td>
+            <td>SuppressEmpty&nbsp;</td>
+            <td>Lege cellen niet (true) of wel (false) schrijven</td>
+          </tr>
+        </table>
+      </dd>
+      <dt>Return value:</dt>
+      <dd>false als er iets fout ging, anders true</dd>
+    </dl>
+</P>
+
+<h2>Syntax</h2>
+<code>WriteCellRecords(TableIndex As Long, FileName As String, SuppressEmpty As Boolean, FirstLine As String) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>TableIndex
+   <dd>Type: Long<br/>
+       <i>Index tabel (1, 2, ...)</i></dd>
+   <dt>FileName
+   <dd>Type: String<br/>
+       <i>Naam van het resultaatbestand</i></dd>
+   <dt>SuppressEmpty
+   <dd>Type: Boolean<br/>
+       <i>Lege cellen niet (true) of wel (false) schrijven</i></dd>
+   <dt>FirstLine
+   <dd>Type: String<br/>
+       <i>String die wordt in de eerste regel geprint</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als er iets fout ging, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

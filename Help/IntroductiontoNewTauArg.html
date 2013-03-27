@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="BCube.css" type="text/css">
+<TITLE>Intoduction to the NewTauArg Component</TITLE>
+<Title>Introduction.html</Title>
+</HEAD>
+<BODY>
+<Object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="ALink Name" value="CBeta">
+	<param name="Keyword" value="CBeta">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>Introduction to the NewTauArg Component</H1>
+<P> NewTauArgus is een COM DLL die functies en events bevat voor het beveiligen van tabel-bestanden. Als ontwikkelomgeving is gebruikt Visual C++ 6.0.</P>
+<P>
+<br />
+           Voor het beveiligen zijn de volgende instrumenten beschikbaar:
+          <ul>
+            <li>
+              Detecteren van onveilige primaire tabelcellen
+              <dl>
+                <dt><em>Dominantieregel</em></dt>
+                  <dd>Gegeven een percentage <var>p</var> en een aantal <var>a</var>: een cel is onveilig als de som van de <var>a</var> grootste bijdragers aan de cel groter of gelijk is aan <var>p</var>% van het totaal van de cel. Voor de bijdragen aan de cel wordt de zogenaamde <i>shadow</i>-variabele gebruikt.</dd>
+                <dt><em>PQ-regel</em></dt>
+                  <dd>Stel de bijdragen aan een cel zijn geordend van groot naar klein
+                     <var>x</var><sub>1</sub>,
+                     <var>x</var><sub>2</sub>,
+                     <var>x</var><sub>3</sub>, ..., <var>N</var> het aantal bijdragen in de cel en <var>T</var> het celtotaal. Eis: een respondent mag een andere respondent tot op <var>p</var>% nauwkeurig kunnen schatten. <br>
+                     De 'worst case' is nummer 2 mag nummer 1 slechts tot op <var>p</var>% kunnen schatten. Zijn beste schatting voor <var>x</var><sub>1</sub> is <var>T</var> - <var>x</var><sub>2</sub>. De eis is nu dat (<var>T</var> - <var>x</var><sub>2</sub>) - <var>x</var><sub>1</sub> &ge; (<var>p</var> / 100)  * <var>x</var><sub>1</sub><br><br>
+                     Als we ook nog rekening houden met coalities, bijvoorbeeld een coalitie <var>n</var> ter grootte van 3:<br><br>
+                     <img src="pq_formule.gif" width="400" height="56"><br><br>
+                     Hierin is <var>p</var> &le; <var>q</var> en <var>n</var> &ge; 1.
+	 <dt><em>Piep Regel</em></dt>
+	<dd> Een cel is primair onveilig als een van de bijdrager van de cel is een piep bijdrager en die piep bijdrager
+		is groter dan  <var>p</var>% van de shadow van de cel.</dd>
+ 	<dt><em>Frequentie Regel</em></dt>
+	<dd> Een cel is primair onveilig als de frequentie van de cel is kleiner dan de minimum frequentie.
+                 </dd>
+	<dt><em> Zero Regel</em></dt>
+	<dd> Een cel is primair onveilig als de frequentie van de cel is groter dan nul (heeft meer dan een bijdrager) maar de shadow van de cel is nul
+
+              </dl>
+            </li>
+            <li>
+              Detecteren van onveilige secundaire tabelcellen
+              <dl>
+                <dt><em>GHMITER</em></dt>
+                  <dd>Een programma ontwikkeld door het <em>Landesamt für Datenverarbeitung und Statistik</em>. Een zeer uitgebreide beschrijving ervan is te vinden in het document <a href="G:\Projects\Casc\GHMITER\GHMITE22i PC.doc">GHMITE22i PC.doc</a>.</dd>
+                <dt><em>HITAS</em></dt>
+                  <dd>Een programma ontwikkeld door PP en JJ. Zie <em>A heuristic approach to cell-suppression in hierarchical tables</em></dd> van Peter-Paul de Wolf, BPA-nummer 1569-99-RSM.
+	<dt><em>ROUNDING</em></dt>
+<dd>    </dd>
+	<dt><em>NETWORKING</em></dt>
+ 	<dt><em>Voor het detecteren van onveilige secundaire tabelcellen een LPSolver is gebruikt. Er is een keuze 	<dd> </dd>	
+van twee LPSolvers die zijn:</em></dt>
+	<dt><em>CPLEX</em></dt>
+	<dt><em>XPRESS</em></dt>
+
+
+
+              </dl>
+            </li>
+          </ul>
+</P>
+
+
+
+</BODY>
+</HTML>

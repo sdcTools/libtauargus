@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>GetTableCell Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MGetTableCell">
+   <param name="Keyword" value="GetTableCell">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>GetTableCell Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method GetTableCell
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>Geeft de eigenschappen van een tabelcel</dd>
+      
+</P>
+<h2>Syntax</h2>
+<code>GetTableCell(TableIndex As Long, DimIndex As Long, CellResponse As Double, CellShadow As Double, CellCost As Double, CellFreq As Long, CellStatus As Long, double*  CellMaxScore As , CellMaxScoreWeight As Double, Lower As Double, Upper As Double, RealizedLower As Double, RealizedUpper As Double) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>TableIndex
+   <dd>Type: Long<br/>
+       <i>Tabelindex (1, 2, ...)</i></dd>
+   <dt>DimIndex
+   <dd>Type: Long<br/>
+       <i>0,1,... = index in codelijst van dimensievariabele (0 is altijd het dimensietotaal)</i></dd>
+   <dt>CellResponse
+   <dd>Type: Double<br/>
+       <i>Waarde van de cel response</i></dd>
+   <dt>CellShadow
+   <dd>Type: Double<br/>
+       <i>Waarde van de cel shadow</dd>
+   <dt>CellCost
+   <dd>Type: Double<br/>
+       <i>Waarde van de cel cost</dd>
+   <dt>CellFreq
+   <dd>Type: Long<br/>
+       <i>Waarde van de cel Freq </i></dd>
+   <dt>HoldingFreq
+   <dd>Type: Long<br/>
+       <i>Waarde van de Holding Freq </i></dd>
+   <dt>CellStatus
+   <dd>Type: Long<br/>
+       <i>De Status van de Cel. Zie <a class="link" href="AICelStatus.html">Cel Status </a></i></dd>
+   <dt>double*  CellMaxScore
+   <dd>Type: <a href=".html"></a><br/>
+       <i>De n grootste shadow contribuanten van de tabelcel, ongewogen</i></dd>
+   <dt>CellMaxScoreWeight
+   <dd>Type: Double<br/>
+       <i>De n grootste shadow-contribuanten van de tabelcel,met gewichten</i></dd>
+   <dt>Lower
+   <dd>Type: Double<br/>
+       <i>Lower Response Value van de Cel</i></dd>
+   <dt>Upper
+   <dd>Type: Double<br/>
+       <i>Upper Response Value van de Cel</i></dd>
+   <dt>RealizedLower
+   <dd>Type: Double<br/>
+       <i>Realized Lower Response Value van de Cel</i></dd>
+   <dt>RealizedUpper
+   <dd>Type: Double<br/>
+       <i>Realized Upper Response Value van de Cel</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als er iets fout ging, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

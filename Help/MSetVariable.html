@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetVariable Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetVariable">
+   <param name="Keyword" value="SetVariable">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetVariable Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetVariable
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>
+        Specificeert de eigenschappen van een variabele.
+      </dd>
+      
+</P>
+<h2>Syntax</h2>
+<code>SetVariable(VarIndex As Long, bPos As Long, nPos As Long, nDec As Long, Missing1 As String, Missing2 As String, IsCategorical As Boolean, VARIANT_BOOL IsNumeric As , VARIANT_BOOL IsWeight As , IsHierarchical As Boolean, IsHolding As Boolean) As Boolean </code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>1, 2, ... n_var, index van variabele</i></dd>
+   <dt>bPos
+   <dd>Type: Long<br/>
+       <i>1, 2, ... startpositie in elk record van het invoerbestand</i></dd>
+   <dt>nPos
+   <dd>Type: Long<br/>
+       <i>1, 2, ... aantal posities in elk record van het invoerbestand, max. 100</i></dd>
+   <dt>nDec
+   <dd>Type: Long<br/>
+       <i>0,1,.... aantal decimalen (vooral van belang bij schrijven veilig bestand)</i></dd>
+   <dt>Missing1
+   <dd>Type: String<br/>
+       <i>code voor eerste missing (alleen van belang bij categorale variabele)</i></dd>
+   <dt>Missing2
+   <dd>Type: String<br/>
+       <i>code voor tweede missing (alleen van belang bij categorale variabele)</i></dd>
+<dt>IsPeeper
+<dd>Type:Boolean<br/>
+<i> Geeft aan als de Variable is een Peep Variable</i></dd>
+   <dt>IsCategorical
+   <dd>Type: Boolean<br/>
+       <i>is een categoriale variabele</i></dd>
+   <dt>IsNumeric
+   <dd>Type: Boolean<br/>
+       <i>is een numeriek variabele</i></dd>
+   <dt> IsWeight
+   <dd>Type: Boolean <br/>
+       <i>is een gewicht (moet ook eigenschap IsNumeric hebben)</i></dd>
+   <dt>IsHierarchical
+   <dd>Type: Boolean<br/>
+       <i>is een hi&euml;rarchische variabele</i></dd>
+   <dt>IsHolding
+   <dd>Type: Boolean<br/>
+       <i>s een variabele die een holding identificeert; alle opeenvolgende records met een gelijke code worden geacht tot eenzelfde holding te behoren</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als een of meer parameters fout zijn, anders true</i></dd>
+</dl>
+<dd> Note:Voor categorale variabelen: Als Missing1 leeg is wordt Missing2 gepromoveerd. Als beide leeg zijn wordt false teruggegeven. Als beide gelijk zijn wordt Missing2 geacht leeg te zijn.<br>
+        Voor niet-categorale variabelen zijn Missings irrelevant.<br>
+        Slechts &eacute;&eacute;n variabele mag de eigenschap IsHolding dan wel IsWeight hebben.<br>
+        Een variabele met eigenschap IsWeight mag niet (IsCategorical of IsHierarchical) zijn.<br>
+        Een variabele met eigenschap IsHolding mag niet (IsCategorical of IsNumeric of IsWeight of IsHierarchical) zijn.
+
+    <br/>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

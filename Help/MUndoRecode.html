@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>UndoRecode Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MUndoRecode">
+   <param name="Keyword" value="UndoRecode">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>UndoRecode Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method UndoRecode
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Maakt een hercodering ongedaan. Er kan geen hercodering op een hercodering worden uitgevoerd, een hercodering gaat altijd uit van de basiscodelijst van een variabele. Bij een hi&euml;rarchische variabele worden alle codes weer op actief gezet. Een nieuwe hercodering kan ook zonder deze functie eerst aan te roepen uitgevoerd worden.<br />
+        De resultaten kunnen worden opgevraagd met behulp van:
+        <ul>
+          <li> <a class = "link" href="MUnsafeVariable.html">UnsafeVariable</a></li>
+          <li> <a class = "link" href="MUnsafeVariableCodes.html">UnsafeVariableCodes</a></li>
+        </ul>
+      </dd>
+</P>
+<h2>Syntax</h2>
+<code>UndoRecode(VarIndex As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>1, 2, ... n_var, index van variabele</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als de parameter fout is, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

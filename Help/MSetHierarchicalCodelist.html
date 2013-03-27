@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetHierarchicalCodelist Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetHierarchicalCodelist">
+   <param name="Keyword" value="SetHierarchicalCodelist">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetHierarchicalCodelist Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetHierarchicalCodelist
+</P>
+<P>
+ <dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Specificeert de eigenschappen van de codes van een hi&euml;rarchische variabele, moet plaatsvinden v&oacute;&oacute;r de aanroep van  <a class = "link" href="MExploreFile.html">ExploreFile</a>.<br />Kan niet samengaan met  <a class = "link" href="MSetHierarchicalDigits.html">SetHierarchicalDigits</a>.<br />
+      </dd>
+
+      
+</P>
+<h2>Syntax</h2>
+<code>SetHierarchicalCodelist(long VarIndex As , FileName As String, LevelString As String) As Long</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>long VarIndex
+   <dd>Type: <a href=".html"></a><br/>
+       <i>1, 2, ... n_var, index van variabele</i></dd>
+   <dt>FileName
+   <dd>Type: String<br/>
+       <i>Naam van het bestand met de hi&euml;rarchische codelijst; de niveaus worden aangegeven door het aantal <em>LevelStrings</em> aan het begin van een regel. Een generaal-totaal wordt geacht niet aanwezig te zijn, dat wordt door het programma zelf toegevoegd als eerste (lege) code van een codelijst. Bijvoorbeeld:<br />
+<pre>
+01
+..0101
+....0101001
+....0101002
+....0101003
+..0102
+....0102345
+02
+..0201
+....020134
+....020135
+enz.
+</pre>
+</i></dd>
+   <dt>LevelString
+   <dd>Type: String<br/>
+       <i>Geeft een hi&euml;rarchisch niveau aan, bijv. "&nbsp;" of "." of "..", in bovenstaand voorbeeld is het laatste voorbeeld gekozen</i></dd>
+   <dt>Returns
+   <dd>Type: Long<br/>
+       <i>Correct: 1, anders een foutcode (HC_FILENOTFOUND ...). Zie <a class="link" href="AIFoutCodeLijst.html">Fout Code Lijst </a></i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

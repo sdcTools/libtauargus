@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>DoRecode Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MDoRecode">
+   <param name="Keyword" value="DoRecode">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>DoRecode Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method DoRecode
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Vermindert het aantal codes van een variabele door meerdere codes samen te nemen. In de RecodeString staan, gescheiden door <em>newlinetekens (\r\n)</em>, regels met achtereenvolgens doelcode, &#39;:&#39; en broncodes.<br />
+         Broncodes die te smal zijn worden verbreed door er spaties voor te zetten.<br />
+         Codes mogen omgeven worden door aanhalingstekens (&quot;3-&nbsp;&quot;), dit kan nodig zijn als een code eindigt op een spatie of als een code een komma of een streepje bevat.<br />
+        <br />
+         Een code wordt altijd als een alfanumerieke behandeld. Daarom is bijvoorbeeld de code &quot;1a&quot; groter dan &quot;19&quot; en de code &quot;1&nbsp;&quot; kleiner dan &quot;11&quot;.<br />
+        <br />
+         Bijvoorbeeld:<br />
+
+        <table border="0" summary="ParameterSpec">
+          <tr>
+            <td>&nbsp;&nbsp;0 : - 90</td>
+            <td>alle codes kleiner dan of gelijk aan 90</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;1 : 91 - 500</td>
+            <td>codes vanaf 91 tot en met 500</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;2 : 501 -</td>
+            <td>codes groter dan of gelijk aan 501</td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;3 : 11, &quot;3&nbsp;&quot;, 512, 530-570, 930-970&nbsp;</td>
+            <td>meerdere series toegestaan, scheidingsteken &#39;,&#39;</td>
+          </tr>
+        </table>
+      </dd>
+        </table>
+    </dl>
+
+</P>
+
+<h2>Syntax</h2>
+<code>DoRecode(VarIndex As Long, RecodeString As String, eMissing1 As String, eMissing2 As String, ErrorType As Long, ErrorLine As Long, ErrorPos As Long, WarningString As String) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>1, 2, ... n_var, index van variabele</i></dd>
+   <dt>RecodeString
+   <dd>Type: String<br/>
+       <i>De specificatie van de hercodering</i></dd>
+   <dt>eMissing1
+   <dd>Type: String<br/>
+       <i>De waarde van Missing1.</i></dd>
+   <dt>eMissing2
+   <dd>Type: String<br/>
+       <i>De waarde van Missing2</i></dd>
+   <dt>ErrorType
+   <dd>Type: Long<br/>
+       <i>Type fout. Zie <a class="link" href="AIFoutCodeLijst.html"> FoutCodeLijst</a></i></dd>
+   <dt>ErrorLine
+   <dd>Type: Long<br/>
+       <i>Regel waarin de fout is geconstateerd</i></dd>
+   <dt>ErrorPos
+   <dd>Type: Long<br/>
+       <i>Positie waarin de fout is geconstateerd</i></dd>
+   <dt>WarningString
+   <dd>Type: String<br/>
+       <i>Waarschuwing voor overlappende broncodes, niet genoemde codes enz.</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>>false als een of meer parameters fout zijn (bijv. geen categoriale variabele, er blijft niets van een code over), anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

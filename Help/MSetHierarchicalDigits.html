@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetHierarchicalDigits Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetHierarchicalDigits">
+   <param name="Keyword" value="SetHierarchicalDigits">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetHierarchicalDigits Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetHierarchicalDigits
+</P>
+<P>
+<dl>
+      <dt>Beschrijving:</dt>
+      <dd>
+        Specificeert de eigenschappen van de codes van een hi&euml;rarchische variabele, moet plaatsvinden v&oacute;&oacute;r de aanroep van  <a class = "link" href="MExploreFile.html">ExploreFile</a>.<br />
+        Kan niet samengaan met  <a class = "link" href="MSetHierarchicalCodelist.html">SetHierarchicalCodelist</a>.
+        De som van de array <i>nDigits</i> moet gelijk zijn aan <i>nPos</i>  <a class = "link" href="MSetVariable.html">SetVariable</a>). Het aantal groepjes mag niet meer dan 10 zijn.<br />
+        De codelijst van een hi&euml;rarchische variabele wordt vastgesteld uit het invoerbestand &eacute;n uit de gegeven hi&euml;rarchie. <br />
+        Bijvoorbeeld voor een code van 5 tekens met verdeling {2,1,2}
+        <ul>
+          <li>12</li>
+          <li>123</li>
+          <li>12301</li>
+          <li>12302</li>
+          <li>12340</li>
+          <li>12345</li>
+          <li>12349</li>
+          <li>124</li>
+          <li>12401</li>
+          <li>12402</li>
+          <li>12403</li>
+          <li>12404</li>
+          <li>12405</li>
+        </ul>
+        Alle 5-cijferig codes stonden in het invoerbestand, de andere zijn daaruit afgeleid volgens de verdeling {2,1,2}. Code 12 is de som van code 123 en 124; code 123 is de som van code 12301 t/m 12349, code 124 is de som van code 12401 t/m 12405.
+</P>
+<h2>Syntax</h2>
+<code>SetHierarchicalDigits(VarIndex As Long, nDigitPairs As Long, nDigits As Long) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>1, 2, ... n_var, index van variabele</i></dd>
+   <dt>nDigitPairs
+   <dd>Type: Long<br/>
+       <i>aantal groepjes met elk een zeker aantal tekens</i></dd>
+   <dt>nDigits
+   <dd>Type: Long<br/>
+       <i>Array van <i>nDigitsPairs </i> elementen met elk het aantal tekens van de hi&euml;rarchie.</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>false als een of meer parameters fout zijn, anders true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

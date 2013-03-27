@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>SetTotalsInCodeList Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MSetTotalsInCodeList">
+   <param name="Keyword" value="SetTotalsInCodeList">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>SetTotalsInCodeList Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method SetTotalsInCodeList
+</P>
+<P>
+wordt geroepen als je bent klaar met het opbouwen van codelijst. Dit wordt gedaan als de tabel wordt direct gegeven een niet door een micro bestand opgebouwd.
+</P>
+<h2>Syntax</h2>
+<code>SetTotalsInCodeList(NumberofVariables As Long,   VarIndex As long* , ErrorCode As long*, ErrorInVarIndex As long* ) As Boolean </code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>NumberofVariables
+   <dd>Type: Long<br/>
+       <i>Aantal Variabelen (1,2, 3, ...N)</i></dd>
+   <dt>lVarIndex
+   <dd>Type: Long *<br/>
+       <i>Array van variable indices</i></dd>
+   <dt>ErrorCode
+   <dd>Type: Long *<br/>
+       <i>Error waar het fout ging. Zie <a class="link" href="AIFoutCodeLijst.html">Fout Code Lijst </a></i></dd>
+   <dt>ErrorInVarIndex
+   <dd>Type: Long *<br/>
+       <i>Welke Variable het mis ging</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>False als er iets fout ging. Anders True</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>

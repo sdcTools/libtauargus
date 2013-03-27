@@ -1,0 +1,81 @@
+[OPTIONS]
+Auto Index=Yes
+Compatibility=1.1 or later
+Compiled file=newtauargus.CHM
+Contents file=newtauargusTOC.HHC
+Default Font=Tahoma, 8, 0
+Default topic=LNEWTAUARGUSLib.html
+Display compile progress=No
+Full-text search=Yes
+Index file=newtauargusIDX.HHK
+Language=0x409 Engels (Verenigde Staten)
+Title=Help for NewTauArgus 1.0 Type Library
+
+
+[FILES]
+LNEWTAUARGUSLib.html
+CTauArgCtrl.html
+MApplyRecode.html
+MCheckRealizedLowerAndUpperValues.html
+MCleanAll.html
+MCompletedTable.html
+MComputeCodesToIndices.html
+MComputeTables.html
+MDoActiveRecode.html
+MDoRecode.html
+MExploreFile.html
+MGetCellDistance.html
+MGetCellStatusFreq.html
+MGetMaxnUc.html
+MGetStatusAndCostPerDim.html
+MGetTableCell.html
+MGetTableRow.html
+MGetTotalTabelSize.html
+MGetVarCode.html
+MGetVarCodeProperties.html
+MGetVarNumberOfCodes.html
+MPrepareCellDistance.html
+MPrepareHITAS.html
+MSetHierarchicalCodelist.html
+MSetHierarchicalDigits.html
+MSetInCodeList.html
+MSetInTable.html
+MSetNumberTab.html
+MSetNumberVar.html
+MSetRealizedLowerAndUpper.html
+MSetSecondaryGHMITER.html
+MSetSecondaryHITAS.html
+MSetSecondaryJJFORMAT.html
+MSetTable.html
+MSetTableCellStatus.html
+MSetTableSafety.html
+MSetTableSafetyInfo.html
+MSetTotalsInCodeList.html
+MSetVarCodeActive.html
+MSetVariable.html
+MSetVariableForTable.html
+MThroughTable.html
+MUndoRecode.html
+MUndoSecondarySuppress.html
+MUnsafeVariable.html
+MUnsafeVariableCodes.html
+MWriteCSV.html
+MWriteCellRecords.html
+MWriteGHMITERDataCell.html
+MWriteGHMITERSteuer.html
+MWriteJJFormat.html
+AIConstants.html
+AIFoutCodeLijst.html
+
+[ALIAS]
+#include Topic2HTML.h
+=
+
+[MAP]
+#include Topic2Context.h
+
+[MERGE FILES]
+newtauargus.chm
+
+[INFOTYPES]
+

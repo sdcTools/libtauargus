@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET HREF="newtauargus.css" type="text/css">
+<TITLE>GetVarCodeProperties Method</TITLE>
+</HEAD>
+<BODY>
+<OBJECT type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+   <param name="ALink Name" value="MGetVarCodeProperties">
+   <param name="Keyword" value="GetVarCodeProperties">
+</OBJECT>
+
+<table cellspacing="0" border="0" class="title">
+<TR>
+<TD class="title" width="100%"> <FONT FACE = "ARIAL" SIZE = 4><img src="newtauargus.gif"></TD>
+</TR>
+</TABLE>
+
+<H1>GetVarCodeProperties Method</H1>
+<OBJECT id=1 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Example">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value= "">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<OBJECT id=4 type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11">
+    <PARAM name="Command" value="ALink" > 
+    <PARAM name="Text" value="Text:Applies to">
+    <PARAM name="Flags" value=",,1">
+    <PARAM name="Item1" value="">
+    <PARAM name="Item2" value="CTauArgCtrl;">
+</OBJECT>&nbsp;&nbsp;&nbsp;
+<P>
+method GetVarCodeProperties
+</P>
+<P>
+<dl>
+      <dt>
+        Beschrijving:
+      </dt>
+      <dd>Geeft eigenschappen van de code van een <em>hi&euml;rarchische</em> variabele.</dd>
+</P>
+<h2>Syntax</h2>
+<code>GetVarCodeProperties(VarIndex As Long, CodeIndex As Long, long*  IsParent As , long*  IsActive As , IsMissing As Long, Level As Long, nChildren As Long, Code As String) As Boolean</code>
+
+<h2>Arguments</h2>
+<hr/>
+<dl>
+   <dt>VarIndex
+   <dd>Type: Long<br/>
+       <i>Index variabele (1, 2, ...)</i></dd>
+   <dt>CodeIndex
+   <dd>Type: Long<br/>
+       <i>0 (totaal), 1, 2, ... index van code van variabele</i></dd>
+   <dt>long*  IsParent
+   <dd>Type: <a href=".html"></a><br/>
+       <i>0: geen ouder, andere waarde: wel ouder</i></dd>
+   <dt>long*  IsActive
+   <dd>Type: <a href=".html"></a><br/>
+       <i>0: niet actief, andere waarde wel actief, alleen bij niet-ouders</i></dd>
+   <dt>IsMissing
+   <dd>Type: Long<br/>
+       <i>Explanation...</i></dd>
+   <dt>Level
+   <dd>Type: Long<br/>
+       <i>hi&euml;rarchisch niveau van code van variabele (0 = totaal, 1, 2, ... )</i></dd>
+   <dt>nChildren
+   <dd>Type: Long<br/>
+       <i>Aantal kinderen (0 (kan alleen als het geen ouder is), 1, 2, ...)</i></dd>
+   <dt>Code
+   <dd>Type: String<br/>
+       <i>String van de code (is leeg bij totaal)</i></dd>
+   <dt>Returns
+   <dd>Type: Boolean<br/>
+       <i>False als er iets fout ging else true</i></dd>
+</dl>
+
+<hr/>
+<h6>Member of <a href="LNEWTAUARGUSLib.html">NewTauArgus 1.0 Type Library</a></h6>
+</BODY>
+</HTML>
