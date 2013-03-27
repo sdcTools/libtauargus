@@ -75,7 +75,7 @@ STDMETHODIMP TauArgus::SetNumberVar(long nVar, bool *pVal)
 
 	m_var[m_nvar].nDec =0;   //Anders gaat het schrijven van JJ-files later mis!! Anco 1-6-2004
 
-	*pVal = false;
+	*pVal = true;
 	return S_OK;
 }
 
@@ -574,6 +574,7 @@ STDMETHODIMP TauArgus::ApplyRecode()
 STDMETHODIMP TauArgus::CleanAll()
 {
 	CleanUp();
+	printf("bla\n");
 
 	return S_OK;
 }
@@ -1696,7 +1697,7 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 	// Now Set HoldingVarnr
 
 
-	*pVal = false;
+	*pVal = true;
 	return S_OK;
 }
 

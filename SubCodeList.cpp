@@ -1,4 +1,5 @@
-# include "SubCodeList.h"
+#include "stdafx.h"
+#include "SubCodeList.h"
 
 CString CSubCodeList::GetSubCode(long isubcodenum)
 {

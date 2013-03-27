@@ -115,6 +115,15 @@ SOURCE=.\JJFormat.cpp
 # Begin Source File
 
 SOURCE=.\StdAfx.cpp
+
+!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
+
+# ADD CPP /Yc
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -130,7 +139,7 @@ SOURCE=.\TauArgus.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TauArgusJava_wrap.cxx
+SOURCE=.\TauArgusJava_wrap.cpp
 # End Source File
 # Begin Source File
 
@@ -204,6 +213,23 @@ SOURCE=.\Variable.h
 # Begin Source File
 
 SOURCE=.\TauArgusJava.swg
+
+!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
+
+# Begin Custom Build
+ProjDir=.
+InputPath=.\TauArgusJava.swg
+InputName=TauArgusJava
+
+"$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+
+# End Custom Build
+
+!ENDIF 
+
 # End Source File
 # End Target
 # End Project
