@@ -7,6 +7,7 @@
 
 #define FAR                     __far
 #define STDMETHOD(method)       HRESULT STDMETHODCALLTYPE method
+#define STDMETHODIMP            HRESULT STDMETHODCALLTYPE
 #define STDMETHODCALLTYPE       __stdcall
 
 // Treat the following types as simple output variables in Java

@@ -161,7 +161,7 @@ public:
 	}
 
 public:
-	void SetProgressListener(IProgressListener *ProgressListener);
+	void STDMETHODCALLTYPE SetProgressListener(IProgressListener *ProgressListener);
 	STDMETHOD(SetAllNonStructuralAsEmpty)(/*[in]*/ long TableIndex, /*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(SetSingleNonStructuralAsEmpty)(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex,/*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(SetSingleEmptyAsNonStructural)(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
@@ -174,7 +174,7 @@ public:
 	STDMETHOD(SetTableCellCost)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ double Cost, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(GetCellStatusStatistics)(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(WriteTableInAMPLFormat)(/*[in]*/ BSTR AMPLFileName, /*[in]*/ long TableIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(SetInFileInfo)(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
+	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
 	STDMETHOD(ComputeCodesToIndices)(/*[in]*/ long TableIndex, /*[in,out]*/ VARIANT *sCode, /*[in,out]*/ long *dimIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(CheckRealizedLowerAndUpperValues)(/*[in]*/long TabNr, /*[retval,out]*/  long *pVal);
     STDMETHOD(SetCTAValues)(/*[in]*/ long TabNr, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec, /*[retval,out]*/ VARIANT_BOOL *pVal);
@@ -216,11 +216,11 @@ public:
 	STDMETHOD(WriteGHMITERSteuer)(/*[in]*/ BSTR FileName, /*[in]*/ BSTR EndString1, /*[in]*/ BSTR EndString2, /*[in]*/ long TableIndex, /*[retval,out]*/ long *pVal);
 	STDMETHOD(GetVarCodeProperties)(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ BSTR * Code, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(UnsafeVariableCodes)(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ BSTR * Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(GetVarCode)(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[retval,out]*/  bool *pVal);
-	STDMETHOD(SetHierarchicalCodelist)(/*[in]*/  long VarIndex, /*[in]*/ const char* FileName, /*[in]*/ const char* LevelString, /*[retval,out]*/ long *pVal);
+	bool STDMETHODCALLTYPE GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
+	long STDMETHODCALLTYPE SetHierarchicalCodelist(/*[in]*/  long VarIndex, /*[in]*/ const char* FileName, /*[in]*/ const char* LevelString);
 	STDMETHOD(SetSecondaryHITAS)(/*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(PrepareHITAS)(/*[in]*/ long TableIndex, /*[in]*/ BSTR NameParameterFile, /*[in]*/ BSTR NameFilesFile, /*[in]*/ BSTR TauTemp, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(SetTableSafety)(	long Index, bool DominanceRule,
+	bool STDMETHODCALLTYPE SetTableSafety(	long Index, bool DominanceRule,
 										long * DominanceNumber,long * DominancePerc,
 										bool PQRule,long * PriorPosteriorP,
 										long * PriorPosteriorQ,long * PriorPosteriorN,
@@ -230,45 +230,43 @@ public:
 										bool ApplyHolding,bool ApplyZeroRule,
 										bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 										long ZeroSafetyRange,	long ManualSafetyPerc,
-										long * CellAndHoldingFreqSafetyPerc,
-										bool *pVal);
+										long * CellAndHoldingFreqSafetyPerc);
 	STDMETHOD(GetTableCellValue)(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse, VARIANT_BOOL *pVal);
-	STDMETHOD(GetTableCell)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
+	bool STDMETHODCALLTYPE GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
 										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
 										/*[in,out]*/ long * CellFreq, /*[in,out]*/ long * CellStatus,
 										/*[in,out]*/  double * CellMaxScore, /*[in,out]*/ double * CellMaxScoreWeight,
 										long *HoldingFreq,
 													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
 													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
-										double * Lower, double * Upper, double * RealizedLower, double * RealizedUpper,  bool *pVal);
-	STDMETHOD(SetTable)(/*[in]*/ long Index, /*[in]*/ long nDim,
+										double * Lower, double * Upper, double * RealizedLower, double * RealizedUpper);
+	bool STDMETHODCALLTYPE SetTable(/*[in]*/ long Index, /*[in]*/ long nDim,
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
 		double Lambda, double MaxScaledCost,
-		long PeepVarnr,bool SetMissingAsSafe, bool *pVal);
-	STDMETHOD(SetVariable)(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
+		long PeepVarnr,bool SetMissingAsSafe);
+	bool STDMETHODCALLTYPE SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
 		/*[in]*/ long nDec, long nMissing,/*[in]*/ const char* Missing1, /*[in]*/ const char* Missing2,/*[in]*/ const char* TotalCode,bool IsPeeper, const char* PeeperCode1, const char* PeeperCode2, /*[in]*/ bool IsCategorical,
 		/*[in]*/  bool IsNumeric, /*[in]*/  bool IsWeight, /*[in]*/ bool IsHierarchical,
-		/*[in]*/ bool IsHolding,
-		/*[retval,out]*/  bool *pVal);
+		/*[in]*/ bool IsHolding);
 	STDMETHOD(DoActiveRecode)(/*[in]*/ long VarIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(GetVarNumberOfCodes)(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes, /*[retval,out]*/ bool *pVal);
+	bool STDMETHODCALLTYPE GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
 	STDMETHOD(SetVarCodeActive)(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ VARIANT_BOOL Active, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(GetStatusAndCostPerDim)(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost, /*[retval,out]*/ VARIANT_BOOL  *pVal);
 	STDMETHOD(SetTableCellStatus)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(UndoRecode)(/*[in]*/ long VarIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(GetMaxnUc)(/*[retval,out]*/ long *pVal);
-	STDMETHOD(ExploreFile)(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * VarIndex, /*[retval,out]*/ bool *pVal);
+	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * VarIndex);
 	STDMETHOD(UnsafeVariable)( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(GetTableRow)( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType, /*[retval,out]*/ bool *pVal);
-	STDMETHOD(SetHierarchicalDigits)( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits, /*[retval,out]*/ bool *pVal);
-	STDMETHOD(CleanAll)();
+	bool STDMETHODCALLTYPE GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
+	bool STDMETHODCALLTYPE SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
+	void STDMETHODCALLTYPE CleanAll();
 	STDMETHOD(ApplyRecode)();
 	STDMETHOD(DoRecode)( /*[in]*/ long VarIndex, /*[in]*/ BSTR RecodeString, long nMissing,/*[in]*/ BSTR eMissing1, /*[in]*/ BSTR eMissing2,  /*[in.out]*/ long *ErrorType, /*[in,out]*/ long * ErrorLine, /*[in,out]*/ long * ErrorPos, /*[in,out]*/ BSTR * WarningString, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(ComputeTables)( /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * TableIndex, /*[retval,out]*/ bool *pVal);
-	STDMETHOD(SetNumberTab)( /*[in]*/ long nTab, /*[retval,out]*/ bool *pVal);
-	STDMETHOD(SetNumberVar)(/*[in]*/ long nVar, /*[retval,out]*/ bool *pVal);
-	STDMETHOD(GetMinimumCellValue)(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum, /*[retval,out]*/ double *Minimum);
+	bool STDMETHODCALLTYPE ComputeTables( /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * TableIndex);
+	bool STDMETHODCALLTYPE SetNumberTab( /*[in]*/ long nTab);
+	bool STDMETHODCALLTYPE SetNumberVar(/*[in]*/ long nVar);
+	double STDMETHODCALLTYPE GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	STDMETHOD(SetProtectionLevelsForResponseTable)(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound, /*[retval,out]*/ VARIANT_BOOL *pVal);
 
 };

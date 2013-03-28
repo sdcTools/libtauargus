@@ -35,34 +35,25 @@ STDMETHODIMP CTauArgCtrl::UndoSecondarySuppress(long TableIndex, long SortSuppre
 // Set number of Variables
 STDMETHODIMP CTauArgCtrl::SetNumberVar(long nVar, VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.SetNumberVar(nVar) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.SetNumberVar(nVar, &val);
-
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-	return returnValue;
+	return S_OK;
 }
 
 // set number of tables
 STDMETHODIMP CTauArgCtrl::SetNumberTab(long nTab, VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.SetNumberTab(nTab) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.SetNumberTab(nTab, &val);
-
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-	return returnValue;
+	return S_OK;
 }
 
 // Compute the Tabels. In this function all the tables are filled.
 STDMETHODIMP CTauArgCtrl::ComputeTables(long *ErrorCode, long *TableIndex, VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.ComputeTables(ErrorCode, TableIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.ComputeTables(ErrorCode, TableIndex, &val);
-
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-	return returnValue;
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::DoRecode(long VarIndex, BSTR RecodeString, long nMissing, BSTR eMissing1, BSTR eMissing2,
@@ -81,20 +72,17 @@ STDMETHODIMP CTauArgCtrl::ApplyRecode()
 // Clean all allocated memory. Destructor does this
 STDMETHODIMP CTauArgCtrl::CleanAll()
 {
-	return tauArgus.CleanAll();
+	tauArgus.CleanAll();
+
+	return S_OK;
 }
 
 // Used for setting Hierarchical Variables with digit Split
-STDMETHODIMP CTauArgCtrl::SetHierarchicalDigits(long VarIndex,
-																 long nDigitPairs, long *nDigits,
-																 VARIANT_BOOL *pVal)
+STDMETHODIMP CTauArgCtrl::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits, VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.SetHierarchicalDigits(VarIndex, nDigitPairs, nDigits) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.SetHierarchicalDigits(VarIndex, nDigitPairs, nDigits, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 // For every row get all cells with corresponding information
@@ -102,12 +90,9 @@ STDMETHODIMP CTauArgCtrl::GetTableRow(long TableIndex, long *DimIndex, double *C
 													long *Status, long CountType,
 													VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.GetTableRow(TableIndex, DimIndex, Cell, Status, CountType) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.GetTableRow(TableIndex, DimIndex, Cell, Status, CountType, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 // return information about Unsafe Variable
@@ -125,14 +110,12 @@ STDMETHODIMP CTauArgCtrl::ExploreFile(BSTR FileName, long *ErrorCode,
 													VARIANT_BOOL *pVal)
 {
 	char* fileName = _com_util::ConvertBSTRToString(FileName);
-	bool val;
 
-	HRESULT returnValue = tauArgus.ExploreFile(fileName, ErrorCode, LineNumber, VarIndex, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.ExploreFile(fileName, ErrorCode, LineNumber, VarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	delete[] fileName;
 
-	return returnValue;
+	return S_OK;
 }
 
 // get maximum unsafe Combination
@@ -183,12 +166,9 @@ STDMETHODIMP CTauArgCtrl::SetVarCodeActive(long VarIndex, long CodeIndex,
 STDMETHODIMP CTauArgCtrl::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
 															long *NumberOfActiveCodes, VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.GetVarNumberOfCodes(VarIndex, NumberOfCodes, NumberOfActiveCodes) ? VARIANT_TRUE : VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.GetVarNumberOfCodes(VarIndex, NumberOfCodes, NumberOfActiveCodes, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 // Do recode for all active codes
@@ -214,10 +194,10 @@ STDMETHODIMP CTauArgCtrl::SetVariable(long VarIndex, long bPos,
 	char *totalCode = _com_util::ConvertBSTRToString(TotalCode);
 	char *peeperCode1 = _com_util::ConvertBSTRToString(PeeperCode1);
 	char *peeperCode2 = _com_util::ConvertBSTRToString(PeeperCode2);
-	bool val;
 
-	HRESULT returnValue = tauArgus.SetVariable(VarIndex, bPos, nPos, nDec, nMissing, missing1, missing2, totalCode, IsPeeper==VARIANT_TRUE, peeperCode1, peeperCode2, IsCategorical==VARIANT_TRUE, IsNumeric==VARIANT_TRUE, IsWeight==VARIANT_TRUE, IsHierarchical==VARIANT_TRUE, IsHolding==VARIANT_TRUE, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.SetVariable(VarIndex, bPos, nPos, nDec, nMissing, missing1, missing2, totalCode, IsPeeper==VARIANT_TRUE, peeperCode1, peeperCode2, IsCategorical==VARIANT_TRUE, IsNumeric==VARIANT_TRUE, IsWeight==VARIANT_TRUE, IsHierarchical==VARIANT_TRUE, IsHolding==VARIANT_TRUE)
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
 
 	delete[] missing1;
 	delete[] missing2;
@@ -225,7 +205,7 @@ STDMETHODIMP CTauArgCtrl::SetVariable(long VarIndex, long bPos,
 	delete[] peeperCode1;
 	delete[] peeperCode2;
 
-	return returnValue;
+	return S_OK;
 }
 
 // Sets all the information for the Table object this together with
@@ -239,12 +219,11 @@ STDMETHODIMP CTauArgCtrl::SetTable(	long Index, long nDim, long *ExplanatoryVarL
 												VARIANT_BOOL SetMissingAsSafe,
 												VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.SetTable(Index, nDim, ExplanatoryVarList, IsFrequencyTable==VARIANT_TRUE, ResponseVar, ShadowVar, CostVar, Lambda, MaxScaledCost, PeepVarnr, SetMissingAsSafe==VARIANT_TRUE)
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.SetTable(Index, nDim, ExplanatoryVarList, IsFrequencyTable==VARIANT_TRUE, ResponseVar, ShadowVar, CostVar, Lambda, MaxScaledCost, PeepVarnr, SetMissingAsSafe==VARIANT_TRUE, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 
@@ -268,12 +247,11 @@ STDMETHODIMP CTauArgCtrl::GetTableCell(long TableIndex, long *DimIndex,
 													 double *RealizedLower,double * RealizedUpper,
 													 VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.GetTableCell(TableIndex, DimIndex, CellResponse, CellRoundedResp, CellCTAResp, CellShadow, CellCost, CellFreq, CellStatus, CellMaxScore, CellMAXScoreWeight, HoldingFreq, HoldingMaxScore, HoldingNrPerMaxScore, PeepCell, PeepHolding, PeepSortCell, PeepSortHolding, Lower, Upper, RealizedLower, RealizedUpper)
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.GetTableCell(TableIndex, DimIndex, CellResponse, CellRoundedResp, CellCTAResp, CellShadow, CellCost, CellFreq, CellStatus, CellMaxScore, CellMAXScoreWeight, HoldingFreq, HoldingMaxScore, HoldingNrPerMaxScore, PeepCell, PeepHolding, PeepSortCell, PeepSortHolding, Lower, Upper, RealizedLower, RealizedUpper, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 // Set information necessary to build a tableobject. This functions works together with SetTable.
@@ -296,12 +274,11 @@ STDMETHODIMP CTauArgCtrl::SetTableSafety( long Index, VARIANT_BOOL DominanceRule
 														long * CellAndHoldingFreqSafetyPerc,
 														VARIANT_BOOL *pVal)
 {
-	bool val;
+	*pVal = tauArgus.SetTableSafety(Index, DominanceRule==VARIANT_TRUE, DominanceNumber, DominancePerc, PQRule==VARIANT_TRUE, PriorPosteriorP, PriorPosteriorQ, PriorPosteriorN, SafeMinRecAndHoldings, PeepPerc, PeepSafetyRange, PeepMinFreqCellAndHolding, ApplyPeep==VARIANT_TRUE, ApplyWeight==VARIANT_TRUE, ApplyWeightOnSafetyRule==VARIANT_TRUE, ApplyHolding==VARIANT_TRUE, ApplyZeroRule==VARIANT_TRUE, EmptyCellAsNonStructural==VARIANT_TRUE, NSEmptySafetyRange, ZeroSafetyRange, ManualSafetyPerc, CellAndHoldingFreqSafetyPerc)
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
 
-	HRESULT returnValue = tauArgus.SetTableSafety(Index, DominanceRule==VARIANT_TRUE, DominanceNumber, DominancePerc, PQRule==VARIANT_TRUE, PriorPosteriorP, PriorPosteriorQ, PriorPosteriorN, SafeMinRecAndHoldings, PeepPerc, PeepSafetyRange, PeepMinFreqCellAndHolding, ApplyPeep==VARIANT_TRUE, ApplyWeight==VARIANT_TRUE, ApplyWeightOnSafetyRule==VARIANT_TRUE, ApplyHolding==VARIANT_TRUE, ApplyZeroRule==VARIANT_TRUE, EmptyCellAsNonStructural==VARIANT_TRUE, NSEmptySafetyRange, ZeroSafetyRange, ManualSafetyPerc, CellAndHoldingFreqSafetyPerc, &val);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
-
-	return returnValue;
+	return S_OK;
 }
 
 // Prepare the file for Hitas. The table is written in a file that could be used by
@@ -325,12 +302,12 @@ STDMETHODIMP CTauArgCtrl::SetHierarchicalCodelist(long VarIndex, BSTR FileName,
 	char* fileName = _com_util::ConvertBSTRToString(FileName);
 	char* levelString = _com_util::ConvertBSTRToString(LevelString);
 
-	HRESULT returnValue = tauArgus.SetHierarchicalCodelist(VarIndex, fileName, levelString, pVal);
+	*pVal = tauArgus.SetHierarchicalCodelist(VarIndex, fileName, levelString);
 
 	delete[] fileName;
 	delete[] levelString;
 
-	return returnValue;
+	return S_OK;
 }
 
 // Gets a code if given an index and a variable number
@@ -339,14 +316,15 @@ STDMETHODIMP CTauArgCtrl::GetVarCode(long VarIndex, long CodeIndex,
 												long *IsMissing, long *Level,
 												VARIANT_BOOL *pVal)
 {
-	bool val;
 	const char* codeString;
 
-	HRESULT returnValue = tauArgus.GetVarCode(VarIndex, CodeIndex, CodeType, &codeString, IsMissing, Level, &val);
-	*CodeString = _com_util::ConvertStringToBSTR(codeString);
-	*pVal = val ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.GetVarCode(VarIndex, CodeIndex, CodeType, &codeString, IsMissing, Level)
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
 
-	return returnValue;
+	*CodeString = _com_util::ConvertStringToBSTR(codeString);
+
+	return S_OK;
 }
 
 
@@ -577,11 +555,11 @@ STDMETHODIMP CTauArgCtrl::SetInFileInfo(VARIANT_BOOL IsFixedFormat, BSTR Seperat
 {
 	char* Sep = _com_util::ConvertBSTRToString(Seperator);
 	
-	HRESULT returnValue = tauArgus.SetInFileInfo(IsFixedFormat==VARIANT_TRUE, Sep);
+	tauArgus.SetInFileInfo(IsFixedFormat==VARIANT_TRUE, Sep);
 
 	delete[] Sep;
 
-	return returnValue;
+	return S_OK;
 }
 
 // Write Table in AMPL format. This is used in networking
@@ -613,7 +591,9 @@ STDMETHODIMP CTauArgCtrl::MaximumProtectionLevel(long TableIndex, double *Maximu
 //GetMinimumCellValue
 STDMETHODIMP CTauArgCtrl::GetMinimumCellValue(long TableIndex, double *Maximum, double *Minimum)
 {
-	return tauArgus.GetMinimumCellValue(TableIndex, Maximum, Minimum);
+	*Minimum = tauArgus.GetMinimumCellValue(TableIndex, Maximum);
+
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::SetRoundedResponse(BSTR RoundedFile, long TableIndex, VARIANT_BOOL *pVal)

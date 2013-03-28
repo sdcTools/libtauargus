@@ -55,11 +55,10 @@ STDMETHODIMP TauArgus::UndoSecondarySuppress(long TableIndex, long SortSuppress,
 }
 
 // Set number of Variables
-STDMETHODIMP TauArgus::SetNumberVar(long nVar, bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::SetNumberVar(long nVar)
 {
 	if (nVar < 1) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
    CleanUp();  // in case of a second call very usefull
@@ -68,24 +67,21 @@ STDMETHODIMP TauArgus::SetNumberVar(long nVar, bool *pVal)
 	m_var = new CVariable[m_nvar+1]; // Last variable for the empty variables
 												// if the table is a freq table etc
 	if (m_var == 0) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	m_ntab = 0;
 
 	m_var[m_nvar].nDec =0;   //Anders gaat het schrijven van JJ-files later mis!! Anco 1-6-2004
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // set number of tables
-STDMETHODIMP TauArgus::SetNumberTab(long nTab, bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::SetNumberTab(long nTab)
 {
 	// Not the right moment, first call SetNumberVar
 	if (m_nvar == 0 || nTab < 1) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// ev. delete previous tables
@@ -94,16 +90,14 @@ STDMETHODIMP TauArgus::SetNumberTab(long nTab, bool *pVal)
 	m_ntab = nTab;
 	m_tab = new CTable[nTab + nTab];  // second part for recoded tables
 	if (m_tab == 0) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // Compute the Tabels. In this function all the tables are filled.
-STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 {
 	// long MemSizeAll = 0, MemSizeTable;
 	int i;
@@ -119,16 +113,14 @@ STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pV
 	// Not the right moment, first call SetNumberVar
 	if (m_nvar == 0) {
 		*ErrorCode = NOVARIABLES;
-		*pVal = false;
-		return S_OK;
+		return false;
 
 	}
 
 	// Not the right moment, first call SetNumberTab
 	if (m_ntab == 0) {
 		*ErrorCode = NOTABLES;
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// First do ExploreFile
@@ -142,8 +134,7 @@ STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pV
 	// First do Explore File
 	if (!m_CompletedCodeList)  {
 		*ErrorCode = NODATAFILE;
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 
@@ -151,13 +142,11 @@ STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pV
 	for (i = 0; i < m_ntab; i++) {
 		if (m_tab[i].nDim == 0) {
 			*ErrorCode = TABLENOTSET;
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		/*if (m_tab[i].SafetyRule == 0) {
 			*ErrorCode = TABLENOTSET;
-			*pVal = false;
-			return S_OK;
+			return false;
 		}*/
   }
 
@@ -181,9 +170,7 @@ STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pV
 		if (!m_tab[i].PrepareTable() ) {
 			*ErrorCode = NOTABLEMEMORY;
 			*TableIndex = i + 1;
-			*pVal = false;
-			return S_OK;
-
+			return false;
 		}
 		// m_tab[i].nCell = m_tab[i].GetSizeTable();
   }
@@ -193,8 +180,7 @@ STDMETHODIMP TauArgus::ComputeTables(long *ErrorCode, long *TableIndex, bool *pV
 	fd = fopen(m_fname, "r");
 	if (fd == 0) {
 		*ErrorCode = FILENOTFOUND;
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 
@@ -255,14 +241,12 @@ oke:
 			m_var[i].hLevelBasic.RemoveAll();
 		}
 	}
-	*pVal = true;
-	return S_OK;
+	return true;
 
 error:
 	// You could change the errors with throws.
 	fclose(fd);
-	*pVal = false;
-	return S_OK;
+	return false;
 
 }
 
@@ -571,42 +555,37 @@ STDMETHODIMP TauArgus::ApplyRecode()
 }
 
 // Clean all allocated memory. Destructor does this
-STDMETHODIMP TauArgus::CleanAll()
+void STDMETHODCALLTYPE TauArgus::CleanAll()
 {
 	CleanUp();
-	return S_OK;
+	printf("bla\n");
 }
 
 // Used for setting Hierarchical Variables with digit Split
-STDMETHODIMP TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits, bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
 	int i = VarIndex - 1;
 
 	if (i < 0 || i >= m_nvar || !m_var[i].IsHierarchical) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	if (m_var[i].hLevel.GetSize() != 0) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
-	// *pVal = m_var[i].SetHierarchicalDigits(nDigitPairs, nDigits);
+	// return m_var[i].SetHierarchicalDigits(nDigitPairs, nDigits);
 	if (m_var[i].SetHierarchicalDigits(nDigitPairs, nDigits) == 0)	{
-			*pVal = false;
-			return S_OK;
+			return false;
 	}
 	else	{
-		*pVal = true;
-		return S_OK;
+		return true;
 	}
 }
 
 // For every row get all cells with corresponding information
-STDMETHODIMP TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell,
-													long *Status, long CountType,
-													bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell,
+													long *Status, long CountType)
 {
 	int tab = TableIndex - 1, i, coldim = -1, nCodes;
 	long DimNr[MAXDIM];
@@ -615,8 +594,7 @@ STDMETHODIMP TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell
 
 	// check parameters
 	if (tab < 0 || tab >= m_ntab) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
     DoAudit = 0;
 	CountTypeLocal = CountType;
@@ -638,22 +616,19 @@ STDMETHODIMP TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell
 					coldim = i;
 				}
 				else {
-					*pVal = false;
-					return S_OK;  // more than one coldim specified
+					return false;  // more than one coldim specified
 				}
 				break;
 			default:
 				if (DimIndex[i] < 0 || DimIndex[i] >= nCodes) {
-					*pVal = false;
-					return S_OK;
+					return false;
 				}
 				break;
 		}
 	}
 
 	if (coldim == -1) { // no coldim specified
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// parameters oke
@@ -680,8 +655,7 @@ STDMETHODIMP TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell
 				 Cell[c] = dc->GetCTAValue();
 				 break;
 			default:
-				*pVal = false;
-				return S_OK;
+				return false;
 		}
 
 		// set Status
@@ -709,8 +683,7 @@ STDMETHODIMP TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell
 		} //if audit
 	} //for
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // return information about Unsafe Variable
@@ -761,9 +734,7 @@ STDMETHODIMP TauArgus::UnsafeVariable(long VarIndex,
 }
 
 // In this function the input file is read and the code list is built
-STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
-													long *LineNumber, long *VarIndex,
-													bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *VarIndex)
 {
 
 	CString sFileName;
@@ -776,23 +747,20 @@ STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
 
    if (m_nvar == 0) {
 		*ErrorCode = NOVARIABLES;
-		*pVal = false;
-		return S_OK;
+		return false;
    }
 
 	for (i = 0; i < m_nvar; i++) {
 		if (InFileIsFixedFormat) {
 			if (m_var[i].bPos < 0) {
 				*ErrorCode = VARIABLENOTSET;
-				*pVal = false;
-				return S_OK;
+				return false;
 			}
 		}
 		else {
 			if (!m_var[i].PositionSet) {
 				*ErrorCode = VARIABLENOTSET;
-				*pVal = false;
-				return S_OK;
+				return false;
 			}
 		}
 	}
@@ -800,8 +768,7 @@ STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
 	fd = fopen(sFileName, "r");
 	if (fd == 0) {
 		*ErrorCode = FILENOTFOUND;
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	fseek(fd, 0, SEEK_END);
@@ -907,8 +874,7 @@ STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
 			if (!m_var[i].ComputeHierarchicalCodes() ) {
 				*ErrorCode = WRONGHIERARCHY;
 				*LineNumber = -1;
-				*pVal = false;
-				return S_OK;
+				return false;
 			}
 		}
 
@@ -923,8 +889,7 @@ STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
 			if (!m_var[i].SetHierarch() ) {
 				*ErrorCode = WRONGHIERARCHY;
 				*LineNumber = -1;
-				*pVal = false;
-				return S_OK;
+				return false;
 			}
 		}
 	}
@@ -933,14 +898,12 @@ STDMETHODIMP TauArgus::ExploreFile(const char* FileName, long *ErrorCode,
 	m_CompletedCodeList = true;
 	// ShowCodeLists();  // in output pane
 
-	*pVal = true;
-	return S_OK;
+	return true;
 
 error:
 	fclose(fd);
 
-	*pVal = false;
-	return S_OK;
+	return false;
 }
 
 // get maximum unsafe Combination
@@ -1184,21 +1147,19 @@ STDMETHODIMP TauArgus::SetVarCodeActive(long VarIndex, long CodeIndex,
 }
 
 // Get the number of codes for the given variable
-STDMETHODIMP TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
-															long *NumberOfActiveCodes, bool *pVal)
+bool STDMETHODCALLTYPE TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
+															long *NumberOfActiveCodes)
 {
 	int v = VarIndex - 1;
 
 	if (v < 0 || v >= m_nvar) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	*NumberOfCodes = m_var[v].GetnCode();
 	*NumberOfActiveCodes = m_var[v].GetnCodeActive();
-	*pVal = true;
 
-	return S_OK;
+	return true;
 }
 
 // Do recode for all active codes
@@ -1242,15 +1203,14 @@ STDMETHODIMP TauArgus::DoActiveRecode(long VarIndex, VARIANT_BOOL *pVal)
 }
 
 // Set Variable. All information to set in the variable object is given
-STDMETHODIMP TauArgus::SetVariable(long VarIndex, long bPos,
+bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 												 long nPos, long nDec, long nMissing, const char* Missing1,
 												 const char* Missing2, const char* TotalCode, bool IsPeeper,
 												 const char* PeeperCode1, const char* PeeperCode2,
 												 bool IsCategorical,
 												 bool IsNumeric, bool IsWeight,
 												 bool IsHierarchical,
-												 bool IsHolding,
-												 bool *pVal)
+												 bool IsHolding)
 {
 	CString sMissing1;
 	CString sMissing2;
@@ -1264,19 +1224,16 @@ STDMETHODIMP TauArgus::SetVariable(long VarIndex, long bPos,
 
 	// index oke?
 	if (i < 0 || i >= m_nvar+1) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// holding?
 	if (IsHolding) {
 		if (m_VarNrHolding >= 0)	{
-			*pVal = false;
-			return S_OK;  // holding variable already given
+			return false;  // holding variable already given
 		}
 		if (IsCategorical || IsNumeric || IsWeight || IsHierarchical) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		m_VarNrHolding = i;
 	}
@@ -1284,81 +1241,67 @@ STDMETHODIMP TauArgus::SetVariable(long VarIndex, long bPos,
 	// weight?
 	if (IsWeight) {
 		if (!IsNumeric)	{
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		if (m_VarNrWeight >= 0) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}// weight variable already given
 		if (IsCategorical || IsHierarchical)	{
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		m_VarNrWeight = i;
 	}
 
 	// Categorical variables should have at least one Missing
 /*	if (IsCategorical && Missing1[0] == 0 && Missing2[0] == 0)	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}*/
 
 	// save properties
 	if (!m_var[i].SetPosition(bPos, nPos, nDec) )	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[i].SetType(IsCategorical, IsNumeric, IsWeight, IsHierarchical,
 	  IsHolding, IsPeeper) )		{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if ((nMissing < 0) || (nMissing  > 2))	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[i].SetMissing(sMissing1, sMissing2, nMissing) )	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[i].SetTotalCode(sTotalCode) )	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[i].SetPeepCodes(tempPeeperCode1, tempPeeperCode2))	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // Sets all the information for the Table object this together with
 // SetTableSafety does the trick.
-STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList,
+bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList,
 												bool IsFrequencyTable,
 												long ResponseVar, long ShadowVar, long CostVar,
 												double Lambda,
 												double MaxScaledCost,
 												long PeepVarnr,
-												bool SetMissingAsSafe,
-												bool *pVal)
+												bool SetMissingAsSafe)
 {
 	int i = Index - 1, j;
 	long nd;
 
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// check number of dimensions
 	if (nDim < 1 || nDim > MAXDIM) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 
@@ -1366,23 +1309,20 @@ STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList
 
 	if (!IsFrequencyTable)	{
 		if (ResponseVar < 1 || ResponseVar > m_nvar || !m_var[ResponseVar - 1].IsNumeric) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		nd = - m_var[ResponseVar-1].nDec;
 		m_tab[i].MinLPL = pow(10.0, nd);
 
 		if (ShadowVar < 1 || ShadowVar > m_nvar || !m_var[ShadowVar - 1].IsNumeric) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 
 		// -1 : Count every record for 1 (= Freq)
 		// -2 : Eacht table cell, incl. (sub)totals, fixed value 1
 		if (CostVar != -1 && CostVar != -2 && CostVar != -3) {
 			if (CostVar < 1 || CostVar > m_nvar || !m_var[CostVar - 1].IsNumeric) {
-				*pVal = false;
-				return S_OK;
+				return false;
 			}
 		}
 	}
@@ -1400,8 +1340,7 @@ STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList
 
 	// Check if explore file is done
 	if (!m_CompletedCodeList)	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 
@@ -1409,12 +1348,10 @@ STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList
 	for (j = 0; j < nDim; j++) {
 		int d = ExplanatoryVarList[j]; // index of variable, 1 .. m_nvar is oke
 		if (d < 1 || d > m_nvar) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		if (!m_var[d - 1].IsCategorical) { // property set in SetVariable(...)
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 
@@ -1428,13 +1365,11 @@ STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList
 
 	// set Lambda
 	if (Lambda<0 || Lambda >1) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	m_tab[i].Lambda = Lambda;
 	if (MaxScaledCost <1)	{
-	  	*pVal = false;
-		return S_OK;
+		return false;
 	}
 	m_tab[i].MaxScaledCost = MaxScaledCost;
 	// set table variables
@@ -1445,8 +1380,7 @@ STDMETHODIMP TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList
 		m_tab[i].SetDimSize(d, m_var[ExplanatoryVarList[d] - 1].nCode);
 	}
 
-	*pVal =  true;
-	return S_OK;
+	return true;
 }
 
 
@@ -1473,7 +1407,7 @@ STDMETHODIMP TauArgus::GetTableCellValue(long TableIndex, long CellIndex,
 
 
 // Returns the information in a cell.
-STDMETHODIMP TauArgus::GetTableCell(long TableIndex, long *DimIndex,
+bool STDMETHODCALLTYPE TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
 													double *CellShadow, double *CellCost,
 													 long *CellFreq, long *CellStatus,
@@ -1482,16 +1416,14 @@ STDMETHODIMP TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
 													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
 													 double *Lower, double *Upper,
-													 double *RealizedLower,double * RealizedUpper,
-													 bool *pVal)
+													 double *RealizedLower,double * RealizedUpper)
 {
 	int tab = TableIndex - 1, i;
 
 
 	// check parameters
 	if (tab < 0 || tab >= m_ntab) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
   /*if (m_UsingMicroData)  {
@@ -1502,8 +1434,7 @@ STDMETHODIMP TauArgus::GetTableCell(long TableIndex, long *DimIndex,
   */
 
 	if (!m_CompletedCodeList)  {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	CTable *table = GetTable(tab);
@@ -1513,8 +1444,7 @@ STDMETHODIMP TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 		int nCodes = m_var[table->ExplVarnr[i]].GetnCode();
 		ASSERT(DimIndex[i] >= 0 && DimIndex[i] < nCodes);
 		if (DimIndex[i] < 0 || DimIndex[i] >= nCodes) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 
@@ -1557,12 +1487,11 @@ STDMETHODIMP TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 		}
 	}
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // Set information necessary to build a tableobject. This functions works together with SetTable.
-STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
+bool STDMETHODCALLTYPE TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long * DominanceNumber,
 														long * DominancePerc,
 														bool PQRule,
@@ -1578,47 +1507,38 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														bool ApplyHolding,bool ApplyZeroRule,
 														bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 														long ZeroSafetyRange,	long ManualSafetyPerc,
-														long * CellAndHoldingFreqSafetyPerc,
-														bool *pVal)
+														long * CellAndHoldingFreqSafetyPerc)
 {
 	int i = Index - 1;
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// Holding and weights cannot be applied at the same time
 	if (ApplyHolding && ApplyWeight)	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (ApplyHolding && m_VarNrHolding < 0)  {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (ApplyWeight && m_VarNrWeight < 0)  {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (ApplyWeightOnSafetyRule && !ApplyWeight) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 	if (ManualSafetyPerc < 0 || ManualSafetyPerc > 100)	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	if (CellAndHoldingFreqSafetyPerc[0] < 0 || CellAndHoldingFreqSafetyPerc[0] > 100) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	if (ApplyHolding)	{
 		if (CellAndHoldingFreqSafetyPerc[1] < 0 || CellAndHoldingFreqSafetyPerc[1] > 100) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 	if (ApplyHolding)	{
@@ -1631,15 +1551,13 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 	if (DominanceRule) {
 		if (!m_tab[i].SetDominance(DominanceNumber,DominancePerc)) {
 			//*ERRORCODECANNOTAPPLYDOMINANCERULE,
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 		//m_tab[i].nMaxCellValues = DominanceNumber;
 	if (PQRule)	{
 		if (!m_tab[i].SetPQRule(PriorPosteriorP, PriorPosteriorQ, PriorPosteriorN)) {
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 	//m_tab[i].nMaxCellValues = PriorPosteriorN + 1;
@@ -1651,8 +1569,7 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 	 */
 	if (EmptyCellAsNonStructural)	{
 		if (NSEmptySafetyRange < 0 || NSEmptySafetyRange >= 100)	{
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 		m_tab[i].EmptyCellsAsNSEmpty = true;
 		m_tab[i].NSEmptySafetyRange = NSEmptySafetyRange;
@@ -1660,8 +1577,7 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 
 	// set min rec
 	if (!m_tab[i].SetSafeMinRecAndHold(SafeMinRecAndHoldings[0], SafeMinRecAndHoldings[1]) ) {
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
 
 	// set other properties
@@ -1678,8 +1594,7 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 	if (ApplyPeep)	{
 		m_tab[i].ApplyPeeper = true;
 		if ((m_tab[i].PeepVarnr <0) || (m_tab[i].PeepVarnr >= m_nvar))	{
-			*pVal = false;
-			return S_OK;
+			return false;
 		}
 	}
 	//check he does not give nonsense
@@ -1694,9 +1609,7 @@ STDMETHODIMP TauArgus::SetTableSafety( long Index, bool DominanceRule,
 
 	// Now Set HoldingVarnr
 
-
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 // Prepare the file for Hitas. The table is written in a file that could be used by
@@ -1795,8 +1708,7 @@ STDMETHODIMP TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary,
 
 // sets a Hierarchical codelist (i.e a codelist given through a file not
 // through digit splits)
-STDMETHODIMP TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName,
-																 const char* LevelString, long *pVal)
+long STDMETHODCALLTYPE TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
 {
 	CString sFileName;
 	CString sLevelString;
@@ -1804,38 +1716,32 @@ STDMETHODIMP TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileNa
 	sLevelString = LevelString;
 	int i = VarIndex  - 1;
 
-	if (i < 0 || i >= m_nvar || !m_var[i].IsHierarchical) *pVal = HC_NOTHIERARCHICAL;
-	if (m_var[i].nDigitSplit != 0) *pVal = HC_HASSPLITDIGITS;
+	if (i < 0 || i >= m_nvar || !m_var[i].IsHierarchical) return HC_NOTHIERARCHICAL;
+	if (m_var[i].nDigitSplit != 0) return HC_HASSPLITDIGITS;
 
-	*pVal = m_var[i].SetCodeList(sFileName, sLevelString);
-
-	return S_OK;
+	return m_var[i].SetCodeList(sFileName, sLevelString);
 }
 
 // Gets a code if given an index and a variable number
-STDMETHODIMP TauArgus::GetVarCode(long VarIndex, long CodeIndex,
+bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
 												long *CodeType, const char** CodeString,
-												long *IsMissing, long *Level,
-												bool *pVal)
+												long *IsMissing, long *Level)
 {
 	int v = VarIndex - 1, nCodes;
 
 	if (v < 0 || v >= m_nvar)	{
-		*pVal = false;
-		return S_OK;
+		return false;
 	}
   nCodes = m_var[v].GetnCode();
   if (CodeIndex < 0 || CodeIndex >= nCodes)	{
-	  *pVal = false;
-		return S_OK;
+		return false;
   }
 
   /*if (m_Using MicroData)  {
 	if (m_fname[0] == 0) return false;
   }*/
   if (!m_CompletedCodeList)	{
-	  *pVal = false;
-		return S_OK;
+		return false;
   }
 
 	if (m_var[v].IsHierarchical) {
@@ -1852,8 +1758,7 @@ STDMETHODIMP TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   *CodeString = Code.GetBuffer(Code.GetLength());
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
-	*pVal = true;
-	return S_OK;
+	return true;
 }
 
 
@@ -3136,11 +3041,10 @@ STDMETHODIMP TauArgus::ComputeCodesToIndices(long TableIndex, VARIANT *sCode, lo
 }
 
 //Give input file information. This important when you are reading a file with free format
-STDMETHODIMP TauArgus::SetInFileInfo(bool IsFixedFormat, const char* Separator)
+void STDMETHODCALLTYPE TauArgus::SetInFileInfo(bool IsFixedFormat, const char* Separator)
 {
 	InFileIsFixedFormat = IsFixedFormat;
 	InFileSeperator = Separator;
-	return S_OK;
 }
 
 // Write Table in AMPL format. This is used in networking
@@ -3282,7 +3186,7 @@ STDMETHODIMP TauArgus::MaximumProtectionLevel(long TableIndex, double *Maximum)
 }
 
 //GetMinimumCellValue
-STDMETHODIMP TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum, double *Minimum)
+double STDMETHODCALLTYPE TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum)
 {
 
 	double mincell = 10E+60, maxcell = -10E+60;
@@ -3302,9 +3206,8 @@ STDMETHODIMP TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum, dou
 
 	}
 
-	*Minimum = mincell;
 	*Maximum = maxcell;
-	return S_OK;
+	return mincell;
 }
 
 STDMETHODIMP TauArgus::SetRoundedResponse(BSTR RoundedFile, long TableIndex, VARIANT_BOOL *pVal)
