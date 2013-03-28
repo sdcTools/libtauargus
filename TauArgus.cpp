@@ -169,7 +169,7 @@ bool STDMETHODCALLTYPE TauArgus::ComputeTables(long *ErrorCode, long *TableIndex
 	for (i = 0; i < m_ntab; i++) {
 		if (!m_tab[i].PrepareTable() ) {
 			*ErrorCode = NOTABLEMEMORY;
-			*TableIndex = i + 1;
+			*TableIndex = i;
 			return false;
 		}
 		// m_tab[i].nCell = m_tab[i].GetSizeTable();
@@ -564,18 +564,16 @@ void STDMETHODCALLTYPE TauArgus::CleanAll()
 // Used for setting Hierarchical Variables with digit Split
 bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
-	int i = VarIndex - 1;
-
-	if (i < 0 || i >= m_nvar || !m_var[i].IsHierarchical) {
+	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return false;
 	}
 
-	if (m_var[i].hLevel.GetSize() != 0) {
+	if (m_var[VarIndex].hLevel.GetSize() != 0) {
 		return false;
 	}
 
-	// return m_var[i].SetHierarchicalDigits(nDigitPairs, nDigits);
-	if (m_var[i].SetHierarchicalDigits(nDigitPairs, nDigits) == 0)	{
+	// return m_var[VarIndex].SetHierarchicalDigits(nDigitPairs, nDigits);
+	if (m_var[VarIndex].SetHierarchicalDigits(nDigitPairs, nDigits) == 0)	{
 			return false;
 	}
 	else	{
@@ -587,7 +585,7 @@ bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigi
 bool STDMETHODCALLTYPE TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell,
 													long *Status, long CountType)
 {
-	int tab = TableIndex - 1, i, coldim = -1, nCodes;
+	int tab = TableIndex, i, coldim = -1, nCodes;
 	long DimNr[MAXDIM];
 	long DoAudit, CountTypeLocal;
 	double 	XRL, XRU, XPL, XPU, XC;
@@ -743,7 +741,8 @@ bool STDMETHODCALLTYPE TauArgus::ExploreFile(const char* FileName, long *ErrorCo
    UCHAR str[MAXRECORDLENGTH];
    int i, length, recnr = 0, Result;
 
-   *ErrorCode = *LineNumber = *VarIndex = 0;
+   *ErrorCode = *LineNumber = 0;
+   *VarIndex = -1;
 
    if (m_nvar == 0) {
 		*ErrorCode = NOVARIABLES;
@@ -1150,7 +1149,7 @@ STDMETHODIMP TauArgus::SetVarCodeActive(long VarIndex, long CodeIndex,
 bool STDMETHODCALLTYPE TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
 															long *NumberOfActiveCodes)
 {
-	int v = VarIndex - 1;
+	int v = VarIndex;
 
 	if (v < 0 || v >= m_nvar) {
 		return false;
@@ -1220,10 +1219,9 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 	sMissing1 = Missing1;
 	sMissing2 = Missing2;
 	sTotalCode = TotalCode;
-	int i = VarIndex - 1;
 
 	// index oke?
-	if (i < 0 || i >= m_nvar+1) {
+	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
 		return false;
 	}
 
@@ -1235,7 +1233,7 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 		if (IsCategorical || IsNumeric || IsWeight || IsHierarchical) {
 			return false;
 		}
-		m_VarNrHolding = i;
+		m_VarNrHolding = VarIndex;
 	}
 
 	// weight?
@@ -1249,7 +1247,7 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 		if (IsCategorical || IsHierarchical)	{
 			return false;
 		}
-		m_VarNrWeight = i;
+		m_VarNrWeight = VarIndex;
 	}
 
 	// Categorical variables should have at least one Missing
@@ -1258,23 +1256,23 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 	}*/
 
 	// save properties
-	if (!m_var[i].SetPosition(bPos, nPos, nDec) )	{
+	if (!m_var[VarIndex].SetPosition(bPos, nPos, nDec) )	{
 		return false;
 	}
-	if (!m_var[i].SetType(IsCategorical, IsNumeric, IsWeight, IsHierarchical,
+	if (!m_var[VarIndex].SetType(IsCategorical, IsNumeric, IsWeight, IsHierarchical,
 	  IsHolding, IsPeeper) )		{
 		return false;
 	}
 	if ((nMissing < 0) || (nMissing  > 2))	{
 		return false;
 	}
-	if (!m_var[i].SetMissing(sMissing1, sMissing2, nMissing) )	{
+	if (!m_var[VarIndex].SetMissing(sMissing1, sMissing2, nMissing) )	{
 		return false;
 	}
-	if (!m_var[i].SetTotalCode(sTotalCode) )	{
+	if (!m_var[VarIndex].SetTotalCode(sTotalCode) )	{
 		return false;
 	}
-	if (!m_var[i].SetPeepCodes(tempPeeperCode1, tempPeeperCode2))	{
+	if (!m_var[VarIndex].SetPeepCodes(tempPeeperCode1, tempPeeperCode2))	{
 		return false;
 	}
 
@@ -1291,7 +1289,7 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 												long PeepVarnr,
 												bool SetMissingAsSafe)
 {
-	int i = Index - 1, j;
+	int i = Index, j;
 	long nd;
 
 	// check TableIndex
@@ -1418,7 +1416,7 @@ bool STDMETHODCALLTYPE TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 													 double *Lower, double *Upper,
 													 double *RealizedLower,double * RealizedUpper)
 {
-	int tab = TableIndex - 1, i;
+	int tab = TableIndex, i;
 
 
 	// check parameters
@@ -1509,7 +1507,7 @@ bool STDMETHODCALLTYPE TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long ZeroSafetyRange,	long ManualSafetyPerc,
 														long * CellAndHoldingFreqSafetyPerc)
 {
-	int i = Index - 1;
+	int i = Index;
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
 		return false;
@@ -1714,12 +1712,11 @@ long STDMETHODCALLTYPE TauArgus::SetHierarchicalCodelist(long VarIndex, const ch
 	CString sLevelString;
 	sFileName = FileName;
 	sLevelString = LevelString;
-	int i = VarIndex  - 1;
 
-	if (i < 0 || i >= m_nvar || !m_var[i].IsHierarchical) return HC_NOTHIERARCHICAL;
-	if (m_var[i].nDigitSplit != 0) return HC_HASSPLITDIGITS;
+	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) return HC_NOTHIERARCHICAL;
+	if (m_var[VarIndex].nDigitSplit != 0) return HC_HASSPLITDIGITS;
 
-	return m_var[i].SetCodeList(sFileName, sLevelString);
+	return m_var[VarIndex].SetCodeList(sFileName, sLevelString);
 }
 
 // Gets a code if given an index and a variable number
@@ -1727,7 +1724,7 @@ bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
 												long *CodeType, const char** CodeString,
 												long *IsMissing, long *Level)
 {
-	int v = VarIndex - 1, nCodes;
+	int v = VarIndex, nCodes;
 
 	if (v < 0 || v >= m_nvar)	{
 		return false;
@@ -3191,12 +3188,11 @@ double STDMETHODCALLTYPE TauArgus::GetMinimumCellValue(long TableIndex, double *
 
 	double mincell = 10E+60, maxcell = -10E+60;
 
-	long c,i, St;
-	i = TableIndex -1;
+	long c, St;
 	CDataCell *dc;
 
-	for (c=0; c<m_tab[i].nCell; c++)	{
-		dc = m_tab[i].GetCell(c);
+	for (c=0; c<m_tab[TableIndex].nCell; c++)	{
+		dc = m_tab[TableIndex].GetCell(c);
 		St = dc->GetStatus();
 		// 10 juni 2005 toegevoegd: alleen voor onveilige cellen AHNL
 		if ( St < CS_EMPTY) {
@@ -3637,7 +3633,7 @@ int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
 	CVariable *var;
 
 	for (i = 0; i < m_nvar; i++) {
-		*varindex = i + 1;
+		*varindex = i;
 		var = &(m_var[i]);
 		if (var->IsCategorical || var->IsNumeric) {
 			if (InFileIsFixedFormat) {
