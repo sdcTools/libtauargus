@@ -558,7 +558,6 @@ STDMETHODIMP TauArgus::ApplyRecode()
 void STDMETHODCALLTYPE TauArgus::CleanAll()
 {
 	CleanUp();
-	printf("bla\n");
 }
 
 // Used for setting Hierarchical Variables with digit Split
