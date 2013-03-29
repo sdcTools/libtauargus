@@ -140,6 +140,15 @@ SOURCE=.\TauArgus.cpp
 # Begin Source File
 
 SOURCE=.\TauArgusJava_wrap.cpp
+
+!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
+
+# ADD CPP /GR
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -210,6 +219,27 @@ SOURCE=.\Variable.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
+# Begin Source File
+
+SOURCE=.\IProgressListener.swg
+
+!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
+
+# Begin Custom Build
+ProjDir=.
+InputPath=.\IProgressListener.swg
+InputName=IProgressListener
+
+"$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+
+# End Custom Build
+
+!ENDIF 
+
+# End Source File
 # Begin Source File
 
 SOURCE=.\TauArgusJava.swg

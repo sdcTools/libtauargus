@@ -4,6 +4,7 @@
 %include <windows.i>
 %include <arrays_java.i>
 %include <various.i>
+%include "IProgressListener.swg"
 
 #define FAR                     __far
 #define STDMETHOD(method)       HRESULT STDMETHODCALLTYPE method
@@ -24,5 +25,16 @@
 #include "stdafx.h"
 #include "TauArgus.h"
 %}
+
+//%pragma(java) jniclasscode=%{
+//  static {
+//    try {
+//        System.loadLibrary("TauArgusJava");
+//    } catch (UnsatisfiedLinkError e) {
+//      System.err.println("Native code library failed to load. \n" + e);
+//      System.exit(1);
+//    }
+//  }
+//%}
 
 %include "TauArgus.h"

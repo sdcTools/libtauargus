@@ -4,6 +4,7 @@
 class IProgressListener
 {
 public:
+	virtual ~IProgressListener() {}
     virtual void UpdateProgress(short Perc) = 0;
 };
 
