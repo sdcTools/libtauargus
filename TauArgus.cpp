@@ -1305,27 +1305,27 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 
 
 	if (!IsFrequencyTable)	{
-		if (ResponseVar < 1 || ResponseVar > m_nvar || !m_var[ResponseVar - 1].IsNumeric) {
+		if (ResponseVar < 0 || ResponseVar >= m_nvar || !m_var[ResponseVar].IsNumeric) {
 			return false;
 		}
-		nd = - m_var[ResponseVar-1].nDec;
+		nd = - m_var[ResponseVar].nDec;
 		m_tab[i].MinLPL = pow(10.0, nd);
 
-		if (ShadowVar < 1 || ShadowVar > m_nvar || !m_var[ShadowVar - 1].IsNumeric) {
+		if (ShadowVar < 0 || ShadowVar >= m_nvar || !m_var[ShadowVar].IsNumeric) {
 			return false;
 		}
 
 		// -1 : Count every record for 1 (= Freq)
 		// -2 : Eacht table cell, incl. (sub)totals, fixed value 1
 		if (CostVar != -1 && CostVar != -2 && CostVar != -3) {
-			if (CostVar < 1 || CostVar > m_nvar || !m_var[CostVar - 1].IsNumeric) {
+			if (CostVar < 0 || CostVar >= m_nvar || !m_var[CostVar].IsNumeric) {
 				return false;
 			}
 		}
 	}
 	else	{
 		m_tab[i].IsFrequencyTable = true;
-		ResponseVar = m_nvar+1;
+		ResponseVar = m_nvar;
 	}
 
   // ExploreFile done?
@@ -1344,10 +1344,10 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 	// check variable indices, variable should be categorical
 	for (j = 0; j < nDim; j++) {
 		int d = ExplanatoryVarList[j]; // index of variable, 1 .. m_nvar is oke
-		if (d < 1 || d > m_nvar) {
+		if (d < 0 || d >= m_nvar) {
 			return false;
 		}
-		if (!m_var[d - 1].IsCategorical) { // property set in SetVariable(...)
+		if (!m_var[d].IsCategorical) { // property set in SetVariable(...)
 			return false;
 		}
 	}
@@ -1374,7 +1374,7 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 
 	// add SizeDim to tab
 	for (int d = 0; d < nDim; d++) {
-		m_tab[i].SetDimSize(d, m_var[ExplanatoryVarList[d] - 1].nCode);
+		m_tab[i].SetDimSize(d, m_var[ExplanatoryVarList[d]].nCode);
 	}
 
 	return true;

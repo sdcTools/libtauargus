@@ -208,31 +208,25 @@ BOOL CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, 
 	nDim = inDim;
 
 	for (int i = 0; i < nDim; i++) {
-		ExplVarnr[i] = ExplVar[i] - 1;
+		ExplVarnr[i] = ExplVar[i];
 	}
 
-	if (RespVar > 0)	{
-		ResponseVarnr = RespVar - 1;
+	if (RespVar >= 0)	{
+		ResponseVarnr = RespVar;
 	}
 	/*else {
 		ResponseVarnr = -1;
 	}*/
 
-	if (ShadVar > 0)	{
-		ShadowVarnr = ShadVar - 1;
+	if (ShadVar >= 0)	{
+		ShadowVarnr = ShadVar;
 	}
 	/*else	{
 		ShadowVarnr = -1;
 	}*/
 
-	if (CostVar > 0) {
-		CostVarnr = CostVar - 1;
-	}
-	else {
-	  CostVarnr = CostVar;
-	}
-
-		PeepVarnr = PeepVar - 1;
+	CostVarnr = CostVar;
+	PeepVarnr = PeepVar;
 
 	return true;
 }

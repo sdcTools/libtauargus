@@ -222,9 +222,17 @@ STDMETHODIMP CTauArgCtrl::SetTable(	long Index, long nDim, long *ExplanatoryVarL
 												VARIANT_BOOL SetMissingAsSafe,
 												VARIANT_BOOL *pVal)
 {
-	*pVal = tauArgus.SetTable(Index - 1, nDim, ExplanatoryVarList, IsFrequencyTable==VARIANT_TRUE, ResponseVar, ShadowVar, CostVar, Lambda, MaxScaledCost, PeepVarnr, SetMissingAsSafe==VARIANT_TRUE)
+	long* ExpVar = new long[nDim];
+	for (int i=0; i< nDim; i++) 
+	{
+		ExpVar[i] = ExplanatoryVarList[i] - 1;
+	}
+
+	*pVal = tauArgus.SetTable(Index - 1, nDim, ExpVar, IsFrequencyTable==VARIANT_TRUE, ResponseVar - 1, ShadowVar - 1, CostVar > 0 ? CostVar - 1 : CostVar,  Lambda, MaxScaledCost, PeepVarnr - 1, SetMissingAsSafe==VARIANT_TRUE)
 		? VARIANT_TRUE 
 		: VARIANT_FALSE;
+
+	delete[] ExpVar;
 
 	return S_OK;
 }
