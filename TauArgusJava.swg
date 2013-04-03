@@ -16,7 +16,7 @@
 %apply long *OUTPUT { long * };
 %apply double *OUTPUT { double * };
 // Method parameters treated as array variables in Java
-%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *Status};
+%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *Status, long *nDigits};
 %apply double[] { double *Cell };
 // Method parameters treated as String output variable in Java
 %apply char **STRING_OUT { const char ** CodeString };
