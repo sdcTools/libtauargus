@@ -214,7 +214,7 @@ public:
 	STDMETHOD(SetSecondaryGHMITER)(/*[in]*/ BSTR FileName, /*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, VARIANT_BOOL IsSingleton,/*[retval,out]*/ long *pVal );
 	STDMETHOD(WriteGHMITERDataCell)(/*[in]*/ BSTR FileName, /*[in]*/ long TableIndex, VARIANT_BOOL IsSingleton, /*[retval,out]*/ long *pVal);
 	STDMETHOD(WriteGHMITERSteuer)(/*[in]*/ BSTR FileName, /*[in]*/ BSTR EndString1, /*[in]*/ BSTR EndString2, /*[in]*/ long TableIndex, /*[retval,out]*/ long *pVal);
-	STDMETHOD(GetVarCodeProperties)(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ BSTR * Code, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE GetVarCodeProperties(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ const char** Code);
 	STDMETHOD(UnsafeVariableCodes)(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ BSTR * Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	bool STDMETHODCALLTYPE GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
 	long STDMETHODCALLTYPE SetHierarchicalCodelist(/*[in]*/  long VarIndex, /*[in]*/ const char* FileName, /*[in]*/ const char* LevelString);
@@ -249,20 +249,20 @@ public:
 		/*[in]*/ long nDec, long nMissing,/*[in]*/ const char* Missing1, /*[in]*/ const char* Missing2,/*[in]*/ const char* TotalCode,bool IsPeeper, const char* PeeperCode1, const char* PeeperCode2, /*[in]*/ bool IsCategorical,
 		/*[in]*/  bool IsNumeric, /*[in]*/  bool IsWeight, /*[in]*/ bool IsHierarchical,
 		/*[in]*/ bool IsHolding);
-	STDMETHOD(DoActiveRecode)(/*[in]*/ long VarIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE DoActiveRecode(/*[in]*/ long VarIndex);
 	bool STDMETHODCALLTYPE GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
-	STDMETHOD(SetVarCodeActive)(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ VARIANT_BOOL Active, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
 	STDMETHOD(GetStatusAndCostPerDim)(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost, /*[retval,out]*/ VARIANT_BOOL  *pVal);
 	STDMETHOD(SetTableCellStatus)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(UndoRecode)(/*[in]*/ long VarIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE UndoRecode(/*[in]*/ long VarIndex);
 	STDMETHOD(GetMaxnUc)(/*[retval,out]*/ long *pVal);
 	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * VarIndex);
 	STDMETHOD(UnsafeVariable)( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	bool STDMETHODCALLTYPE GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
 	bool STDMETHODCALLTYPE SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
 	void STDMETHODCALLTYPE CleanAll();
-	STDMETHOD(ApplyRecode)();
-	STDMETHOD(DoRecode)( /*[in]*/ long VarIndex, /*[in]*/ BSTR RecodeString, long nMissing,/*[in]*/ BSTR eMissing1, /*[in]*/ BSTR eMissing2,  /*[in.out]*/ long *ErrorType, /*[in,out]*/ long * ErrorLine, /*[in,out]*/ long * ErrorPos, /*[in,out]*/ BSTR * WarningString, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	void STDMETHODCALLTYPE ApplyRecode();
+	bool STDMETHODCALLTYPE DoRecode( /*[in]*/ long VarIndex, /*[in]*/ const char* RecodeString, long nMissing,/*[in]*/ const char* eMissing1, /*[in]*/ const char* eMissing2,  /*[in.out]*/ long *ErrorType, /*[in,out]*/ long * ErrorLine, /*[in,out]*/ long * ErrorPos, /*[in,out]*/ const char** WarningString);
 	bool STDMETHODCALLTYPE ComputeTables( /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * TableIndex);
 	bool STDMETHODCALLTYPE SetNumberTab( /*[in]*/ long nTab);
 	bool STDMETHODCALLTYPE SetNumberVar(/*[in]*/ long nVar);

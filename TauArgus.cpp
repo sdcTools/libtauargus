@@ -250,15 +250,15 @@ error:
 
 }
 
-STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing, BSTR eMissing1, BSTR eMissing2,
+bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, const char* eMissing1, const char* eMissing2,
 												long *ErrorType, long *ErrorLine, long *ErrorPos,
-												BSTR *WarningString, VARIANT_BOOL *pVal)
+												const char** WarningString)
 {
 
 	// RecodeStrings are changed to CString. Check this out
 	CString sRecodeString;
 	sRecodeString = RecodeString;
-	int i, v = VarIndex - 1, oke, maxwidth = 0;
+	int i, v = VarIndex, oke, maxwidth = 0;
 	*ErrorType = *ErrorLine = *ErrorPos = -1;
 	CString temp, Missing1, Missing2;
 
@@ -282,16 +282,13 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 
 	if (m_nvar == 0 || m_ntab == 0 || !m_CompletedCodeList) {
 		*ErrorType =  E_NOVARTABDATA;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
-
+		return false;
 	}
 
 	// wrong VarIndex
 	if (v < 0 || v >= m_nvar || !m_var[v].IsCategorical) {
 		*ErrorType =  E_VARINDEXWRONG;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// remove existing one, if needed
@@ -304,8 +301,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
   // only check syntax, phase = CHECK
 	oke = ParseRecodeString(v, sRecodeString, ErrorType, ErrorLine, ErrorPos, CHECK);
 	if (!oke) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// recode oke
@@ -320,8 +316,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 	m_var[v].Recode.DestCode = (int *) malloc(m_var[v].nCode * sizeof(int) );
 	if (m_var[v].Recode.DestCode == 0) {
 		*ErrorType = NOTENOUGHMEMORY;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	for (i = 0; i < m_var[v].nCode; i++) {
@@ -358,8 +353,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 		*ErrorType = E_EMPTYSPEC;
 		*ErrorLine = 1;
 		*ErrorPos = 1;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	// sort list of dest codes, still without missing values (coming soon)
 	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.GetSize() - 1);
@@ -371,8 +365,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 	// again, now compute dest codes and link between dest and src
 	oke = ParseRecodeString(v, sRecodeString, ErrorType, ErrorLine, ErrorPos, SRCCODE);
 	if (!oke) {
-		*pVal = VARIANT_FALSE;
-		return S_OK; // missing to valid codes, a terrible shame
+		return false; // missing to valid codes, a terrible shame
 	}
 
 	// compute untouched codes, add them to the recode codelist
@@ -463,8 +456,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 
 	oke = ParseRecodeString(v, sRecodeString, ErrorType, ErrorLine, ErrorPos, SRCCODE);
 	if (!oke) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;  // missing to valid codes, a terrible shame
+		return false; // missing to valid codes, a terrible shame
 	}
 
 	// yep, the number of codes is known and the codes are sorted (except one or two MISSINGs at the end of te list)
@@ -534,7 +526,7 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 		m_WarningRecode = "Recode OK";
 	}
 
-	*WarningString = m_WarningRecode.AllocSysString();
+	*WarningString = m_WarningRecode.GetBuffer(m_WarningRecode.GetLength());
 
 	m_var[v].HasRecode = true;
 
@@ -542,16 +534,13 @@ STDMETHODIMP TauArgus::DoRecode(long VarIndex, BSTR RecodeString, long nMissing,
 
 	m_var[v].Recode.sCode[0] = "";
 
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Apply Recoding. You need this for recoding tables
-STDMETHODIMP TauArgus::ApplyRecode()
+void TauArgus::ApplyRecode()
 {
-
 	ComputeRecodeTables();
-	return S_OK;
 }
 
 // Clean all allocated memory. Destructor does this
@@ -933,24 +922,22 @@ STDMETHODIMP TauArgus::GetMaxnUc(long *pVal)
 
 // Undo recode. Undo recodes for a variable. This is used when a table is
 // created to be recoded
-STDMETHODIMP TauArgus::UndoRecode(long VarIndex, VARIANT_BOOL *pVal)
+bool TauArgus::UndoRecode(long VarIndex)
 {
-	int v = VarIndex - 1;
+	int v = VarIndex;
 
 	/*if (m_nvar == 0 || m_ntab == 0 || m_fname[0] == 0) {
     return false;
 	}*/
 
 	if (m_nvar == 0  || m_ntab == 0  || !m_CompletedCodeList)  {
-		*pVal =  VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// wrong VarIndex
 	if (v < 0 || v >=
 		m_nvar || !m_var[v].IsCategorical) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	m_var[v].UndoRecode();
@@ -958,8 +945,7 @@ STDMETHODIMP TauArgus::UndoRecode(long VarIndex, VARIANT_BOOL *pVal)
 	// recomputes for all tables the flag HasRecode
 	SetTableHasRecode();
 
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 
@@ -1116,32 +1102,26 @@ STDMETHODIMP TauArgus::GetStatusAndCostPerDim(long TableIndex, long *Status,
 // Set a Variable code as Active, This is important for
 // recoding tables. This gives that the respective code is active
 // and will be used in recoding
-STDMETHODIMP TauArgus::SetVarCodeActive(long VarIndex, long CodeIndex,
-														VARIANT_BOOL Active, VARIANT_BOOL *pVal)
+bool TauArgus::SetVarCodeActive(long VarIndex, long CodeIndex, bool Active)
 {
-	int v = VarIndex - 1, c = CodeIndex;
+	int v = VarIndex, c = CodeIndex;
 
 	if (v < 0 || v >= m_nvar) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[v].IsHierarchical) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	if (c < 0 || c >= m_var[v].nCode - m_var[v].nMissing)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[v].hCode[c].IsParent)  {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	m_var[v].SetActive(c, Active);
 
-	*pVal =  VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Get the number of codes for the given variable
@@ -1161,10 +1141,10 @@ bool STDMETHODCALLTYPE TauArgus::GetVarNumberOfCodes(long VarIndex, long *Number
 }
 
 // Do recode for all active codes
-STDMETHODIMP TauArgus::DoActiveRecode(long VarIndex, VARIANT_BOOL *pVal)
+bool TauArgus::DoActiveRecode(long VarIndex)
 
 {
-	int v = VarIndex - 1;
+	int v = VarIndex;
 
 	// too early?
  /* if (m_nvar == 0 || m_ntab == 0 || m_fname[0] == 0) {
@@ -1172,32 +1152,20 @@ STDMETHODIMP TauArgus::DoActiveRecode(long VarIndex, VARIANT_BOOL *pVal)
   }*/
 
 	if  (m_nvar == 0 || m_ntab == 0 || !m_CompletedCodeList)  {
-		*pVal =  VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
   // wrong VarIndex, not hierarchical
 	if (v < 0 || v >= m_nvar || !m_var[v].IsCategorical || !m_var[v].IsHierarchical) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// nothing to do?
 	if (m_var[v].hCode == 0 || m_var[v].GetnCodeInActive() == 0) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
-	//*pVal = m_var[v].SetHierarchicalRecode();
-	if (m_var[v].SetHierarchicalRecode() == 0)
-	{
-		*pVal = VARIANT_FALSE;
-			return S_OK;
-	}
-	else {
-		*pVal = VARIANT_TRUE;
-		return S_OK;
-	}
+	return m_var[v].SetHierarchicalRecode() == TRUE;
 }
 
 // Set Variable. All information to set in the variable object is given
@@ -1833,25 +1801,21 @@ STDMETHODIMP TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex,
 }
 
 // return properties given a Variable and Code Index
-STDMETHODIMP TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
+bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
 															 long *IsParent, long *IsActive,
 															 long *IsMissing, long *Level,
-															 long *nChildren, BSTR *Code,
-															 VARIANT_BOOL *pVal)
+															 long *nChildren, const char** Code)
 {
-	int v = VarIndex - 1, c = CodeIndex;
+	int v = VarIndex, c = CodeIndex;
 
 	if (v < 0 || v >= m_nvar)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	if (!m_var[v].IsHierarchical)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	if (c < 0 || c >= m_var[v].nCode)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	CCode *phCode = m_var[v].hCode;
@@ -1862,12 +1826,10 @@ STDMETHODIMP TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
 	*IsMissing = (c >= m_var[v].nCode - m_var[v].nMissing);
 	*Level = phCode[c].Level;
 	*nChildren = phCode[c].nChildren;
-	*Code = psCode->GetAt(c).AllocSysString();
+	CString code = psCode->GetAt(c);
+	*Code = code.GetBuffer(code.GetLength());
 
-	*pVal = VARIANT_TRUE;
-
-
-	return S_OK;
+	return true;
 }
 
 // Write Table in GHmiter file. This is used in secondary supressions

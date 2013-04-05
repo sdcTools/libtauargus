@@ -62,13 +62,28 @@ STDMETHODIMP CTauArgCtrl::DoRecode(long VarIndex, BSTR RecodeString, long nMissi
 												long *ErrorType, long *ErrorLine, long *ErrorPos,
 												BSTR *WarningString, VARIANT_BOOL *pVal)
 {
-	return tauArgus.DoRecode(VarIndex, RecodeString, nMissing, eMissing1, eMissing2, ErrorType, ErrorLine, ErrorPos, WarningString, pVal);
+	char *recodeString = _com_util::ConvertBSTRToString(RecodeString);
+	char *missing1 = _com_util::ConvertBSTRToString(eMissing1);
+	char *missing2 = _com_util::ConvertBSTRToString(eMissing2);
+	const char* warningString;
+
+	*pVal = tauArgus.DoRecode(VarIndex - 1, recodeString, nMissing, missing1, missing2, ErrorType, ErrorLine, ErrorPos, &warningString) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	*WarningString = _com_util::ConvertStringToBSTR(warningString);
+
+	delete[] recodeString;
+	delete[] missing1;
+	delete[] missing2;
+
+	return S_OK;
 }
 
 // Apply Recoding. You need this for recoding tables
 STDMETHODIMP CTauArgCtrl::ApplyRecode()
 {
-	return tauArgus.ApplyRecode();
+	tauArgus.ApplyRecode();
+
+	return S_OK;
 }
 
 // Clean all allocated memory. Destructor does this
@@ -131,7 +146,9 @@ STDMETHODIMP CTauArgCtrl::GetMaxnUc(long *pVal)
 // created to be recoded
 STDMETHODIMP CTauArgCtrl::UndoRecode(long VarIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.UndoRecode(VarIndex, pVal);
+	*pVal = tauArgus.UndoRecode(VarIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 
@@ -162,7 +179,9 @@ STDMETHODIMP CTauArgCtrl::GetStatusAndCostPerDim(long TableIndex, long *Status,
 STDMETHODIMP CTauArgCtrl::SetVarCodeActive(long VarIndex, long CodeIndex,
 														VARIANT_BOOL Active, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetVarCodeActive(VarIndex, CodeIndex, Active, pVal);
+	*pVal = tauArgus.SetVarCodeActive(VarIndex - 1, CodeIndex, Active==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Get the number of codes for the given variable
@@ -178,7 +197,9 @@ STDMETHODIMP CTauArgCtrl::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes
 STDMETHODIMP CTauArgCtrl::DoActiveRecode(long VarIndex, VARIANT_BOOL *pVal)
 
 {
-	return tauArgus.DoActiveRecode(VarIndex, pVal);
+	*pVal = tauArgus.DoActiveRecode(VarIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Set Variable. All information to set in the variable object is given
@@ -355,7 +376,13 @@ STDMETHODIMP CTauArgCtrl::GetVarCodeProperties(long VarIndex, long CodeIndex,
 															 long *nChildren, BSTR *Code,
 															 VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetVarCodeProperties(VarIndex, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, Code, pVal);
+	const char* code;
+
+	*pVal = tauArgus.GetVarCodeProperties(VarIndex - 1, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, &code);
+
+	*Code = _com_util::ConvertStringToBSTR(code);
+
+	return S_OK;
 }
 
 // Write Table in GHmiter file. This is used in secondary supressions
