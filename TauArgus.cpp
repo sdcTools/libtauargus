@@ -526,6 +526,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 		m_WarningRecode = "Recode OK";
 	}
 
+
 	*WarningString = m_WarningRecode.GetBuffer(m_WarningRecode.GetLength());
 
 	m_var[v].HasRecode = true;
@@ -950,32 +951,28 @@ bool TauArgus::UndoRecode(long VarIndex)
 
 
 //Sets the status of a cell to a given status
-STDMETHODIMP TauArgus::SetTableCellStatus(long TableIndex, long *DimIndex,
-														  long CelStatus, VARIANT_BOOL *pVal)
+bool TauArgus::SetTableCellStatus(long TableIndex, long *DimIndex, long CelStatus)
 {
 
 	// redo protection levels
-	int tab = TableIndex - 1, i;
+	int tab = TableIndex, i;
    CDataCell *dc;
 
    int iOriginalStatus;
 
 	// check parameters
    if (tab < 0 || tab >= m_ntab) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	//if (m_fname[0] == 0)      		return false;
    if (!m_CompletedCodeList) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// check CellStatus; status EMPTY cannot be set
 	// Note empty can be set. empty means freq is nul
    if (CelStatus < CS_SAFE || CelStatus >= CS_EMPTY) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	CTable *table = GetTable(tab);
@@ -987,8 +984,7 @@ STDMETHODIMP TauArgus::SetTableCellStatus(long TableIndex, long *DimIndex,
 		int nCodes = m_var[table->ExplVarnr[i]].GetnCode();
 		ASSERT(DimIndex[i] >= 0 && DimIndex[i] < nCodes);
 		if (DimIndex[i] < 0 || DimIndex[i] >= nCodes)  {
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+			return false;
 		}
 	}
 
@@ -1040,27 +1036,22 @@ STDMETHODIMP TauArgus::SetTableCellStatus(long TableIndex, long *DimIndex,
       table->GetCell(DimIndex)->SetStatus(CelStatus);
    }
 
-
-	*pVal =  VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Set the cost function for a cell
-STDMETHODIMP TauArgus::SetTableCellCost(long TableIndex, long *DimIndex, double Cost,
-														 VARIANT_BOOL *pVal)
+bool TauArgus::SetTableCellCost(long TableIndex, long *DimIndex, double Cost)
 {
-	int tab = TableIndex - 1, i;
+	int tab = TableIndex, i;
    CDataCell *dc;
 
 	// check parameters
    if (tab < 0 || tab >= m_ntab) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	//if (m_fname[0] == 0)      		return false;
    if (!m_CompletedCodeList) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	CTable *table = GetTable(tab);
@@ -1072,14 +1063,12 @@ STDMETHODIMP TauArgus::SetTableCellCost(long TableIndex, long *DimIndex, double 
 		int nCodes = m_var[table->ExplVarnr[i]].GetnCode();
 		ASSERT(DimIndex[i] >= 0 && DimIndex[i] < nCodes);
 		if (DimIndex[i] < 0 || DimIndex[i] >= nCodes)  {
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+			return false;
 		}
 	}
 	dc = table ->GetCell(DimIndex);
 	dc->SetCost(Cost);
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Get Status and Cost per dimensie
@@ -1351,7 +1340,7 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 
 STDMETHODIMP TauArgus::GetTableCellValue(long TableIndex, long CellIndex,
                                             double *CellResponse, VARIANT_BOOL *pVal)
-{	int tab = TableIndex - 1;
+{	int tab = TableIndex;
 
 
 	if (!m_CompletedCodeList)  {
@@ -1696,6 +1685,7 @@ bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
 	if (v < 0 || v >= m_nvar)	{
 		return false;
 	}
+
   nCodes = m_var[v].GetnCode();
   if (CodeIndex < 0 || CodeIndex >= nCodes)	{
 		return false;
@@ -1719,7 +1709,12 @@ bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   }
 
   CString Code = m_var[v].GetCode(CodeIndex);
+
+  // Seems dangareous to retrieve a pointer to the buffer of an object that gets out of scope, 
+  // but node that CString is reference counted (sharing the buffer) and still another CString 
+  // object will refer to the buffer.
   *CodeString = Code.GetBuffer(Code.GetLength());
+
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
 	return true;

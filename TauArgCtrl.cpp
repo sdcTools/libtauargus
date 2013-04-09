@@ -156,14 +156,18 @@ STDMETHODIMP CTauArgCtrl::UndoRecode(long VarIndex, VARIANT_BOOL *pVal)
 STDMETHODIMP CTauArgCtrl::SetTableCellStatus(long TableIndex, long *DimIndex,
 														  long CelStatus, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetTableCellStatus(TableIndex, DimIndex, CelStatus, pVal);
+	*pVal = tauArgus.SetTableCellStatus(TableIndex - 1, DimIndex, CelStatus) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Set the cost function for a cell
 STDMETHODIMP CTauArgCtrl::SetTableCellCost(long TableIndex, long *DimIndex, double Cost,
 														 VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetTableCellCost(TableIndex, DimIndex, Cost, pVal);
+	*pVal = tauArgus.SetTableCellCost(TableIndex -1, DimIndex, Cost) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Get Status and Cost per dimensie
@@ -262,7 +266,7 @@ STDMETHODIMP CTauArgCtrl::SetTable(	long Index, long nDim, long *ExplanatoryVarL
 STDMETHODIMP CTauArgCtrl::GetTableCellValue(long TableIndex, long CellIndex,
                                             double *CellResponse, VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetTableCellValue(TableIndex, CellIndex, CellResponse, pVal);
+	return tauArgus.GetTableCellValue(TableIndex -1, CellIndex, CellResponse, pVal);
 }
 
 

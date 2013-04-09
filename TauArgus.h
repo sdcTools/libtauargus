@@ -171,7 +171,7 @@ public:
 	STDMETHOD(SetRoundedResponse)(/*[in]*/  BSTR RoundedFile,  /*[in]*/ long TableIndex,   /*[retval,out]*/  VARIANT_BOOL *pVal );
 	STDMETHOD(MaximumProtectionLevel)(/*[in]*/ long TableIndex, /*[retval,out]*/ double *Maximum);
 	STDMETHOD(SetProtectionLevelsForFrequencyTable)(long TableIndex,/*[in]*/ long Base, /*[in]*/ long K, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(SetTableCellCost)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ double Cost, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool SetTableCellCost(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ double Cost);
 	STDMETHOD(GetCellStatusStatistics)(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(WriteTableInAMPLFormat)(/*[in]*/ BSTR AMPLFileName, /*[in]*/ long TableIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
@@ -253,7 +253,7 @@ public:
 	bool STDMETHODCALLTYPE GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
 	bool STDMETHODCALLTYPE SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
 	STDMETHOD(GetStatusAndCostPerDim)(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost, /*[retval,out]*/ VARIANT_BOOL  *pVal);
-	STDMETHOD(SetTableCellStatus)(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
 	bool STDMETHODCALLTYPE UndoRecode(/*[in]*/ long VarIndex);
 	STDMETHOD(GetMaxnUc)(/*[retval,out]*/ long *pVal);
 	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * VarIndex);
