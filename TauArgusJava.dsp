@@ -38,11 +38,11 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "TauArgusJava___Win32_Release"
+# PROP Intermediate_Dir "TauArgusJava___Win32_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "c:\Program Files\Java\jdk1.7.0_17\include" /I "c:\Program Files\Java\jdk1.7.0_17\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x413 /d "NDEBUG"
@@ -142,6 +142,8 @@ SOURCE=.\TauArgus.cpp
 SOURCE=.\TauArgusJava_wrap.cpp
 
 !IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+# ADD CPP /GR
 
 !ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
 
