@@ -136,21 +136,22 @@ SOURCE=.\Table.cpp
 # Begin Source File
 
 SOURCE=.\TauArgus.cpp
+
+!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+# ADD CPP /GR-
+
+!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
+
+# ADD CPP /GR-
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\TauArgusJava_wrap.cpp
-
-!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
-
 # ADD CPP /GR
-
-!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
-
-# ADD CPP /GR
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -227,6 +228,16 @@ SOURCE=.\IProgressListener.swg
 
 !IF  "$(CFG)" == "TauArgusJava - Win32 Release"
 
+# Begin Custom Build
+ProjDir=.
+InputPath=.\IProgressListener.swg
+InputName=IProgressListener
+
+"$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+
+# End Custom Build
+
 !ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
 
 # Begin Custom Build
@@ -247,6 +258,16 @@ InputName=IProgressListener
 SOURCE=.\TauArgusJava.swg
 
 !IF  "$(CFG)" == "TauArgusJava - Win32 Release"
+
+# Begin Custom Build
+ProjDir=.
+InputPath=.\TauArgusJava.swg
+InputName=TauArgusJava
+
+"$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+
+# End Custom Build
 
 !ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
 
