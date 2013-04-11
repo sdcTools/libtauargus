@@ -136,17 +136,6 @@ SOURCE=.\Table.cpp
 # Begin Source File
 
 SOURCE=.\TauArgus.cpp
-
-!IF  "$(CFG)" == "TauArgusJava - Win32 Release"
-
-# ADD CPP /GR-
-
-!ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
-
-# ADD CPP /GR-
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
