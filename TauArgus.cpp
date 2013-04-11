@@ -527,7 +527,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	}
 
 
-	*WarningString = m_WarningRecode.GetBuffer(m_WarningRecode.GetLength());
+	*WarningString = m_WarningRecode;
 
 	m_var[v].HasRecode = true;
 
@@ -1708,13 +1708,8 @@ bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
     *Level = (CodeIndex == 0 ? 0 : 1);
   }
 
-  CString Code = m_var[v].GetCode(CodeIndex);
-
-  // Seems dangareous to retrieve a pointer to the buffer of an object that gets out of scope, 
-  // but node that CString is reference counted (sharing the buffer) and still another CString 
-  // object will refer to the buffer.
-  *CodeString = Code.GetBuffer(Code.GetLength());
-
+  // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
+  *CodeString = m_var[v].GetCode(CodeIndex);
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
 	return true;
@@ -1821,8 +1816,7 @@ bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
 	*IsMissing = (c >= m_var[v].nCode - m_var[v].nMissing);
 	*Level = phCode[c].Level;
 	*nChildren = phCode[c].nChildren;
-	CString code = psCode->GetAt(c);
-	*Code = code.GetBuffer(code.GetLength());
+	*Code = psCode->GetAt(c);
 
 	return true;
 }
