@@ -20,7 +20,7 @@ class TauArgus
 {
 private:
 	IProgressListener* m_ProgressListener;
-  	void FireUpdateProgress(short Perc);
+  	void FireUpdateProgress(int Perc);
 
 	bool m_CompletedCodeList;
 	CTable * GetTable(int t);

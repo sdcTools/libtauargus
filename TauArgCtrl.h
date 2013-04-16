@@ -29,7 +29,7 @@ public:
 		tauArgus.SetProgressListener(this);
 	}
 
-  	void UpdateProgress(short Perc);
+  	void UpdateProgress(int Perc);
 
 DECLARE_REGISTRY_RESOURCEID(IDR_TAUARGCTRL)
 

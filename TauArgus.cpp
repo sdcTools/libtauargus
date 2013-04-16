@@ -16,12 +16,27 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // TauArgus
 
+#ifdef _DEBUG
+	static int DEBUGprintf(char *fmt, ...)
+	{
+		int retval = -1;
+		FILE *f = fopen("C:\\Users\\Gebruiker\\Documents\\debug.txt","a");
+		if (f) {
+			va_list arg; /* argument pointer */
+			va_start(arg, fmt); /* make arg point to first unnamed argument */
+			retval = vfprintf(f, fmt, arg);
+			fclose(f);
+		}	
+		return retval;
+	}
+#endif
+
 void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
 {
 	m_ProgressListener = ProgressListener;
 }
 
-void TauArgus::FireUpdateProgress(short Perc)
+void TauArgus::FireUpdateProgress(int Perc)
 {
 	if (m_ProgressListener != NULL) {
 		m_ProgressListener->UpdateProgress(Perc);
@@ -57,6 +72,9 @@ STDMETHODIMP TauArgus::UndoSecondarySuppress(long TableIndex, long SortSuppress,
 // Set number of Variables
 bool STDMETHODCALLTYPE TauArgus::SetNumberVar(long nVar)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetNumberVar(%ld)\n", nVar);
+	#endif
 	if (nVar < 1) {
 		return false;
 	}
@@ -79,6 +97,9 @@ bool STDMETHODCALLTYPE TauArgus::SetNumberVar(long nVar)
 // set number of tables
 bool STDMETHODCALLTYPE TauArgus::SetNumberTab(long nTab)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetNumberTab(%ld)\n", nTab);
+	#endif
 	// Not the right moment, first call SetNumberVar
 	if (m_nvar == 0 || nTab < 1) {
 		return false;
@@ -188,7 +209,7 @@ bool STDMETHODCALLTYPE TauArgus::ComputeTables(long *ErrorCode, long *TableIndex
 	while (!feof(fd) ) {
 		int res = ReadMicroRecord(fd, str);
 		if (++recnr % FIREPROGRESS == 0) {
-			FireUpdateProgress((short)(ftell(fd) * 100.0 / m_fSize));  // for progressbar in container
+			FireUpdateProgress((int)(ftell(fd) * 100.0 / m_fSize));  // for progressbar in container
 		}
 		switch (res) {
 			case -1:  // error
@@ -547,12 +568,19 @@ void TauArgus::ApplyRecode()
 // Clean all allocated memory. Destructor does this
 void STDMETHODCALLTYPE TauArgus::CleanAll()
 {
+	#ifdef _DEBUG
+		DEBUGprintf("CleanAll()\n");
+	#endif
 	CleanUp();
 }
 
 // Used for setting Hierarchical Variables with digit Split
 bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetHierarchicalDigits(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)\n", VarIndex, nDigitPairs, nDigits[0], nDigits[1], nDigits[2], nDigits[3], nDigits[4], nDigits[5], nDigits[6], nDigits[7], nDigits[8], nDigits[9]);
+	#endif
+			
 	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return false;
 	}
@@ -819,7 +847,7 @@ bool STDMETHODCALLTYPE TauArgus::ExploreFile(const char* FileName, long *ErrorCo
 			case  1: // oke
 				recnr++;
 				if (recnr % FIREPROGRESS == 0) {
-					FireUpdateProgress((short)(ftell(fd) * 100.0 / m_fSize));  // for progressbar in container
+					FireUpdateProgress((int)(ftell(fd) * 100.0 / m_fSize));  // for progressbar in container
 				}
 				// Here is where the code lists are built
 				if (Result = DoMicroRecord(str, &varindex), Result >= 1000) { // error?
@@ -1126,6 +1154,9 @@ bool STDMETHODCALLTYPE TauArgus::GetVarNumberOfCodes(long VarIndex, long *Number
 	*NumberOfCodes = m_var[v].GetnCode();
 	*NumberOfActiveCodes = m_var[v].GetnCodeActive();
 
+	#ifdef _DEBUG
+		DEBUGprintf("GetVarNumberOfCodes(%ld, %ld, %ld)\n", VarIndex, *NumberOfCodes, *NumberOfActiveCodes);
+	#endif
 	return true;
 }
 
@@ -1167,6 +1198,11 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 												 bool IsHierarchical,
 												 bool IsHolding)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetVariable(%ld, %ld, %ld, %ld, %ld, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d)\n",
+			VarIndex, bPos, nPos, nDec, nMissing, Missing1, Missing2, TotalCode, IsPeeper, PeeperCode1, PeeperCode2, IsCategorical, IsNumeric, IsWeight, IsHierarchical, IsHolding);
+	#endif
+
 	CString sMissing1;
 	CString sMissing2;
 	CString sTotalCode;
@@ -1237,7 +1273,7 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 
 // Sets all the information for the Table object this together with
 // SetTableSafety does the trick.
-bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *ExplanatoryVarList,
+bool STDMETHODCALLTYPE TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 												bool IsFrequencyTable,
 												long ResponseVar, long ShadowVar, long CostVar,
 												double Lambda,
@@ -1245,6 +1281,14 @@ bool STDMETHODCALLTYPE TauArgus::SetTable(	long Index, long nDim, long *Explanat
 												long PeepVarnr,
 												bool SetMissingAsSafe)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetTable(%ld, %ld, (", Index, nDim);
+		for (int k=0; k<nDim; k++) 
+			DEBUGprintf("%ld, ", ExplanatoryVarList[k]);
+		DEBUGprintf("), %d, %ld, %ld, %ld, %f, %f, %ld, %d)\n",
+				IsFrequencyTable, ResponseVar, ShadowVar, CostVar, Lambda, MaxScaledCost, PeepVarnr, SetMissingAsSafe);
+	#endif
+
 	int i = Index, j;
 	long nd;
 
@@ -1440,7 +1484,19 @@ bool STDMETHODCALLTYPE TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 			HoldingNrPerMaxScore[i] = dc->HoldingnrPerMaxScore[i];
 		}
 	}
-
+	#ifdef _DEBUG
+		DEBUGprintf("GetTableCell(%ld, (%ld, %ld), %6.2f, %ld, %6.2f, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %ld, %6.2f, %ld, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %6.2f, %6.2f)\n",
+														TableIndex, DimIndex[0], DimIndex[1],
+														*CellResponse, *CellRoundedResp, *CellCTAResp,
+														*CellShadow, *CellCost,
+														*CellFreq, *CellStatus,
+														*CellMaxScore, *CellMAXScoreWeight,
+														*HoldingFreq,
+														*HoldingMaxScore, *HoldingNrPerMaxScore,
+														*PeepCell, *PeepHolding, *PeepSortCell, *PeepSortHolding,
+														*Lower, *Upper,
+														*RealizedLower, *RealizedUpper);
+	#endif
 	return true;
 }
 
@@ -1463,6 +1519,26 @@ bool STDMETHODCALLTYPE TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long ZeroSafetyRange,	long ManualSafetyPerc,
 														long * CellAndHoldingFreqSafetyPerc)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetTableSafety( %ld, %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld), %d, %d, %d, %d, %d, %d, %ld, %ld, %ld, (%ld, %ld))\n",
+				Index, DominanceRule,
+				DominanceNumber[0], DominanceNumber[1], DominanceNumber[2], DominanceNumber[3],
+				DominancePerc[0], DominancePerc[1], DominancePerc[2], DominancePerc[3],
+				PQRule,
+				PriorPosteriorP[0], PriorPosteriorP[1], PriorPosteriorP[2], PriorPosteriorP[3], 
+				PriorPosteriorQ[0], PriorPosteriorQ[1], PriorPosteriorQ[2], PriorPosteriorQ[3], 
+				PriorPosteriorN[0], PriorPosteriorN[1], PriorPosteriorN[2], PriorPosteriorN[3],
+				SafeMinRecAndHoldings[0], SafeMinRecAndHoldings[1],
+				PeepPerc[0], PeepPerc[1], PeepPerc[2], PeepPerc[3],
+				PeepSafetyRange[0], PeepSafetyRange[1], 
+				PeepMinFreqCellAndHolding[0], PeepMinFreqCellAndHolding[1],
+				ApplyPeep,
+				ApplyWeight, ApplyWeightOnSafetyRule,
+				ApplyHolding, ApplyZeroRule,
+				EmptyCellAsNonStructural, NSEmptySafetyRange,
+				ZeroSafetyRange, ManualSafetyPerc,
+				CellAndHoldingFreqSafetyPerc[0], CellAndHoldingFreqSafetyPerc[1]);
+	#endif
 	int i = Index;
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
@@ -1664,6 +1740,9 @@ STDMETHODIMP TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary,
 // through digit splits)
 long STDMETHODCALLTYPE TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
 {
+	#ifdef _DEBUG
+		DEBUGprintf("SetHierarchicalCodelist(%ld, %s, %s)\n", VarIndex, FileName, LevelString);
+	#endif
 	CString sFileName;
 	CString sLevelString;
 	sFileName = FileName;
@@ -1711,6 +1790,10 @@ bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
   *CodeString = m_var[v].GetCode(CodeIndex);
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
+
+	#ifdef _DEBUG
+	DEBUGprintf("GetVarCode(%ld, %ld, %ld, %s, %ld, %ld)\n", VarIndex, CodeIndex, *CodeType, * CodeString, *IsMissing, *Level);
+	#endif
 
 	return true;
 }

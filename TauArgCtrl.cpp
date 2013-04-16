@@ -20,9 +20,9 @@ static char THIS_FILE[] = __FILE__;
 // CTauArgCtrl
 
 // This function is used for firing events.
-void CTauArgCtrl::UpdateProgress (short Perc)
+void CTauArgCtrl::UpdateProgress (int Perc)
 {
-	Fire_UpdateProgress(Perc);
+	Fire_UpdateProgress((short)Perc);
 }
 
 // cells that are set as secondary unsafe to be undone
