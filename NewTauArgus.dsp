@@ -298,6 +298,10 @@ SOURCE=.\Hitas.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\IProgressListener.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\JJFormat.cpp
 # End Source File
 # Begin Source File
