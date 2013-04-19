@@ -660,12 +660,16 @@ STDMETHODIMP CTauArgCtrl::SetSecondaryFromHierarchicalAMPL(BSTR FileName,
 
 STDMETHODIMP CTauArgCtrl::SetAllEmptyNonStructural(long TableIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetAllEmptyNonStructural(TableIndex, pVal);
+	*pVal = tauArgus.SetAllEmptyNonStructural(TableIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::SetSingleEmptyAsNonStructural(long TableIndex, long *DimIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetSingleEmptyAsNonStructural(TableIndex, DimIndex, pVal);
+	*pVal = tauArgus.SetSingleEmptyAsNonStructural(TableIndex - 1, DimIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 

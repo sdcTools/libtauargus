@@ -164,8 +164,8 @@ public:
 	void STDMETHODCALLTYPE SetProgressListener(IProgressListener *ProgressListener);
 	STDMETHOD(SetAllNonStructuralAsEmpty)(/*[in]*/ long TableIndex, /*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(SetSingleNonStructuralAsEmpty)(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex,/*[retval,out]*/  VARIANT_BOOL *pVal);
-	STDMETHOD(SetSingleEmptyAsNonStructural)(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(SetAllEmptyNonStructural)(/*[in]*/ long TableIndex, /*[retval,out]*/  VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE SetSingleEmptyAsNonStructural(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex);
+	bool STDMETHODCALLTYPE SetAllEmptyNonStructural(/*[in]*/ long TableIndex);
 	STDMETHOD(SetSecondaryFromHierarchicalAMPL)(/*[in]*/  BSTR FileName, /*[in]*/ long TableIndex,  /*[in,out]*/ long *ErrorCode, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(WriteHierarchicalTableInAMPLFormat)(/*[in]*/ BSTR AMPLFilename, BSTR TempDir, /*[in]*/  long Tableindex, /*[in]*/ double MaxScale, long *ErrorCode,/*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(SetRoundedResponse)(/*[in]*/  BSTR RoundedFile,  /*[in]*/ long TableIndex,   /*[retval,out]*/  VARIANT_BOOL *pVal );

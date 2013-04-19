@@ -20,15 +20,18 @@ static char THIS_FILE[] = __FILE__;
 	static int DEBUGprintf(char *fmt, ...)
 	{
 		int retval = -1;
-		FILE *f = fopen("C:\\Users\\Gebruiker\\Documents\\debug.txt","a");
-		if (f) {
+//		FILE *f = fopen("C:\\Users\\Gebruiker\\Documents\\debug.txt","a");
+//		if (f) {
 			va_list arg; /* argument pointer */
 			va_start(arg, fmt); /* make arg point to first unnamed argument */
-			retval = vfprintf(f, fmt, arg);
-			fclose(f);
-		}	
+			retval = vfprintf(stderr, fmt, arg);
+//			retval = vfprintf(f, fmt, arg);
+//			fclose(f);
+//		}	
 		return retval;
 	}
+#else
+	inline static int DEBUGprintf(char *fmt, ...) { return 0; }
 #endif
 
 void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
@@ -38,7 +41,10 @@ void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
 
 void TauArgus::FireUpdateProgress(int Perc)
 {
+	fprintf(stderr, "m_ProgressListener->UpdateProgress(Perc)\n");
 	if (m_ProgressListener != NULL) {
+		DEBUGprintf("%p-%p\n", m_ProgressListener, m_ProgressListener->UpdateProgress);
+		fprintf(stderr, "%p-%p\n", m_ProgressListener, m_ProgressListener->UpdateProgress);
 		m_ProgressListener->UpdateProgress(Perc);
 	}
 }
@@ -120,6 +126,8 @@ bool STDMETHODCALLTYPE TauArgus::SetNumberTab(long nTab)
 // Compute the Tabels. In this function all the tables are filled.
 bool STDMETHODCALLTYPE TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 {
+	DEBUGprintf("ComputeTables\n");
+	
 	// long MemSizeAll = 0, MemSizeTable;
 	int i;
 	FILE *fd;
@@ -751,6 +759,7 @@ STDMETHODIMP TauArgus::UnsafeVariable(long VarIndex,
 // In this function the input file is read and the code list is built
 bool STDMETHODCALLTYPE TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *VarIndex)
 {
+	DEBUGprintf("ExploreFile\n");
 
 	CString sFileName;
 	sFileName = FileName;
@@ -3461,20 +3470,17 @@ STDMETHODIMP TauArgus::SetSecondaryFromHierarchicalAMPL(BSTR FileName,
 	return S_OK;
 }
 
-STDMETHODIMP TauArgus::SetAllEmptyNonStructural(long TableIndex, VARIANT_BOOL *pVal)
+bool STDMETHODCALLTYPE TauArgus::SetAllEmptyNonStructural(long TableIndex)
 {
-
-	long index = TableIndex -1;
 	long i;
 	CTable *tab;
 	CDataCell *dc;
 	CDataCell *dcempty;
-	if ((index <0) || (index >= m_ntab))	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+	if ((TableIndex <0) || (TableIndex >= m_ntab))	{
+		return false;
 	}
 
-	tab = GetTable(index); //&(m_tab[index]);
+	tab = GetTable(TableIndex); //&(m_tab[index]);
 	for (i=0; i<tab->nCell; i++)	{
 		dc = tab->GetCell(i);
 		if (dc->GetStatus() == CS_EMPTY)	{
@@ -3485,23 +3491,18 @@ STDMETHODIMP TauArgus::SetAllEmptyNonStructural(long TableIndex, VARIANT_BOOL *p
 //			tab->ComputeCellSafeCode (dc);
 		}
 	}
-	*pVal = VARIANT_TRUE;
-	//return S_OK;
-
-	return S_OK;
-
+	return true;
 }
 
-STDMETHODIMP TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimIndex, VARIANT_BOOL *pVal)
+bool STDMETHODCALLTYPE  TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimIndex)
 {
-	/*long index = TableIndex -1;
+	/*long index = TableIndex;
 	long i;
 	CTable *tab;
 	CDataCell *dc;
 	CDataCell *dcempty;
 	if ((index <0) || (index >= m_ntab))	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	tab = &(m_tab[index]);
@@ -3509,8 +3510,7 @@ STDMETHODIMP TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimI
 		int nCodes = m_var[tab->ExplVarnr[i]].GetnCode();
 		ASSERT(DimIndex[i] >= 0 && DimIndex[i] < nCodes);
 		if (DimIndex[i] < 0 || DimIndex[i] >= nCodes) {
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+			return false ;
 		}
 	}
 
@@ -3522,13 +3522,11 @@ STDMETHODIMP TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimI
 		dc->SetStatus(CS_EMPTY_NONSTRUCTURAL);
 	}
 	else	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 */
-	return S_OK;
+	return true;
 }
 
 
