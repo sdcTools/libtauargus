@@ -75,7 +75,7 @@ STDMETHODIMP TauArgus::UndoSecondarySuppress(long TableIndex, long SortSuppress,
 }
 
 // Set number of Variables
-bool STDMETHODCALLTYPE TauArgus::SetNumberVar(long nVar)
+bool TauArgus::SetNumberVar(long nVar)
 {
 	#ifdef _DEBUG
 		DEBUGprintf("SetNumberVar(%ld)\n", nVar);
@@ -100,7 +100,7 @@ bool STDMETHODCALLTYPE TauArgus::SetNumberVar(long nVar)
 }
 
 // set number of tables
-bool STDMETHODCALLTYPE TauArgus::SetNumberTab(long nTab)
+bool TauArgus::SetNumberTab(long nTab)
 {
 	#ifdef _DEBUG
 		DEBUGprintf("SetNumberTab(%ld)\n", nTab);
@@ -123,7 +123,7 @@ bool STDMETHODCALLTYPE TauArgus::SetNumberTab(long nTab)
 }
 
 // Compute the Tabels. In this function all the tables are filled.
-bool STDMETHODCALLTYPE TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
+bool TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 {
 	DEBUGprintf("ComputeTables\n");
 	
@@ -573,7 +573,7 @@ void TauArgus::ApplyRecode()
 }
 
 // Clean all allocated memory. Destructor does this
-void STDMETHODCALLTYPE TauArgus::CleanAll()
+void TauArgus::CleanAll()
 {
 	#ifdef _DEBUG
 		DEBUGprintf("CleanAll()\n");
@@ -582,7 +582,7 @@ void STDMETHODCALLTYPE TauArgus::CleanAll()
 }
 
 // Used for setting Hierarchical Variables with digit Split
-bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
+bool TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
 	#ifdef _DEBUG
 		DEBUGprintf("SetHierarchicalDigits(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)\n", VarIndex, nDigitPairs, nDigits[0], nDigits[1], nDigits[2], nDigits[3], nDigits[4], nDigits[5], nDigits[6], nDigits[7], nDigits[8], nDigits[9]);
@@ -606,7 +606,7 @@ bool STDMETHODCALLTYPE TauArgus::SetHierarchicalDigits(long VarIndex, long nDigi
 }
 
 // For every row get all cells with corresponding information
-bool STDMETHODCALLTYPE TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell,
+bool TauArgus::GetTableRow(long TableIndex, long *DimIndex, double *Cell,
 													long *Status, long CountType)
 {
 	int tab = TableIndex, i, coldim = -1, nCodes;
@@ -756,7 +756,7 @@ STDMETHODIMP TauArgus::UnsafeVariable(long VarIndex,
 }
 
 // In this function the input file is read and the code list is built
-bool STDMETHODCALLTYPE TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *VarIndex)
+bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *VarIndex)
 {
 	DEBUGprintf("ExploreFile\n");
 
@@ -1150,7 +1150,7 @@ bool TauArgus::SetVarCodeActive(long VarIndex, long CodeIndex, bool Active)
 }
 
 // Get the number of codes for the given variable
-bool STDMETHODCALLTYPE TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
+bool TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
 															long *NumberOfActiveCodes)
 {
 	int v = VarIndex;
@@ -1197,7 +1197,7 @@ bool TauArgus::DoActiveRecode(long VarIndex)
 }
 
 // Set Variable. All information to set in the variable object is given
-bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
+bool TauArgus::SetVariable(long VarIndex, long bPos,
 												 long nPos, long nDec, long nMissing, const char* Missing1,
 												 const char* Missing2, const char* TotalCode, bool IsPeeper,
 												 const char* PeeperCode1, const char* PeeperCode2,
@@ -1281,7 +1281,7 @@ bool STDMETHODCALLTYPE TauArgus::SetVariable(long VarIndex, long bPos,
 
 // Sets all the information for the Table object this together with
 // SetTableSafety does the trick.
-bool STDMETHODCALLTYPE TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
+bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 												bool IsFrequencyTable,
 												long ResponseVar, long ShadowVar, long CostVar,
 												double Lambda,
@@ -1413,7 +1413,7 @@ STDMETHODIMP TauArgus::GetTableCellValue(long TableIndex, long CellIndex,
 
 
 // Returns the information in a cell.
-bool STDMETHODCALLTYPE TauArgus::GetTableCell(long TableIndex, long *DimIndex,
+bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
 													double *CellShadow, double *CellCost,
 													 long *CellFreq, long *CellStatus,
@@ -1509,7 +1509,7 @@ bool STDMETHODCALLTYPE TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 }
 
 // Set information necessary to build a tableobject. This functions works together with SetTable.
-bool STDMETHODCALLTYPE TauArgus::SetTableSafety( long Index, bool DominanceRule,
+bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long * DominanceNumber,
 														long * DominancePerc,
 														bool PQRule,
@@ -1746,7 +1746,7 @@ STDMETHODIMP TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary,
 
 // sets a Hierarchical codelist (i.e a codelist given through a file not
 // through digit splits)
-long STDMETHODCALLTYPE TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
+long TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
 {
 	#ifdef _DEBUG
 		DEBUGprintf("SetHierarchicalCodelist(%ld, %s, %s)\n", VarIndex, FileName, LevelString);
@@ -1763,7 +1763,7 @@ long STDMETHODCALLTYPE TauArgus::SetHierarchicalCodelist(long VarIndex, const ch
 }
 
 // Gets a code if given an index and a variable number
-bool STDMETHODCALLTYPE TauArgus::GetVarCode(long VarIndex, long CodeIndex,
+bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
 												long *CodeType, const char** CodeString,
 												long *IsMissing, long *Level)
 {
@@ -3079,7 +3079,7 @@ STDMETHODIMP TauArgus::ComputeCodesToIndices(long TableIndex, VARIANT *sCode, lo
 }
 
 //Give input file information. This important when you are reading a file with free format
-void STDMETHODCALLTYPE TauArgus::SetInFileInfo(bool IsFixedFormat, const char* Separator)
+void TauArgus::SetInFileInfo(bool IsFixedFormat, const char* Separator)
 {
 	InFileIsFixedFormat = IsFixedFormat;
 	InFileSeperator = Separator;
@@ -3224,7 +3224,7 @@ STDMETHODIMP TauArgus::MaximumProtectionLevel(long TableIndex, double *Maximum)
 }
 
 //GetMinimumCellValue
-double STDMETHODCALLTYPE TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum)
+double TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum)
 {
 
 	double mincell = 10E+60, maxcell = -10E+60;
@@ -3469,7 +3469,7 @@ STDMETHODIMP TauArgus::SetSecondaryFromHierarchicalAMPL(BSTR FileName,
 	return S_OK;
 }
 
-bool STDMETHODCALLTYPE TauArgus::SetAllEmptyNonStructural(long TableIndex)
+bool TauArgus::SetAllEmptyNonStructural(long TableIndex)
 {
 	long i;
 	CTable *tab;
@@ -3493,7 +3493,7 @@ bool STDMETHODCALLTYPE TauArgus::SetAllEmptyNonStructural(long TableIndex)
 	return true;
 }
 
-bool STDMETHODCALLTYPE  TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimIndex)
+bool TauArgus::SetSingleEmptyAsNonStructural(long TableIndex, long *DimIndex)
 {
 	/*long index = TableIndex;
 	long i;
