@@ -1,11 +1,11 @@
-#ifndef I_PROGRESS_LISTENER_H
-#define I_PROGRESS_LISTENER_H
+#ifndef I_ProgressListener_h
+#define I_ProgressListener_h
 
 class IProgressListener
 {
 public:
-	virtual ~IProgressListener();
-    virtual void UpdateProgress(int Perc);
+	virtual ~IProgressListener() { }
+    virtual void UpdateProgress(int Perc) = 0;
 };
 
-#endif // I_PROGRESS_LISTENER_H
+#endif // I_ProgressListener_h

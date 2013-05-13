@@ -33,6 +33,7 @@
 %{
 #include "stdafx.h"
 #include "IProgressListener.h"
+#include "JavaProgressListener.h"
 #include "TauArgus.h"
 %}
 

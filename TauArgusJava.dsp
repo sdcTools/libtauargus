@@ -110,8 +110,7 @@ SOURCE=.\Hitas.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\IProgressListener.cpp
-# ADD CPP /GR
+SOURCE=.\JavaProgressListener.cpp
 # End Source File
 # Begin Source File
 
@@ -141,6 +140,10 @@ SOURCE=.\Table.cpp
 # Begin Source File
 
 SOURCE=.\TauArgus.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\tauargus_extern_TauArgusX.cpp
 # End Source File
 # Begin Source File
 
@@ -189,6 +192,10 @@ SOURCE=.\IProgressListener.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\JavaProgressListener.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\JJFormat.h
 # End Source File
 # Begin Source File
@@ -206,6 +213,10 @@ SOURCE=.\Table.h
 # Begin Source File
 
 SOURCE=.\TauArgus.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tauargus_extern_TauArgusX.h
 # End Source File
 # Begin Source File
 

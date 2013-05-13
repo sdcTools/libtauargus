@@ -162,6 +162,7 @@ public:
 
 public:
 	void STDMETHODCALLTYPE SetProgressListener(IProgressListener *ProgressListener);
+	IProgressListener * STDMETHODCALLTYPE GetProgressListener();
 	STDMETHOD(SetAllNonStructuralAsEmpty)(/*[in]*/ long TableIndex, /*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(SetSingleNonStructuralAsEmpty)(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex,/*[retval,out]*/  VARIANT_BOOL *pVal);
 	bool STDMETHODCALLTYPE SetSingleEmptyAsNonStructural(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex);

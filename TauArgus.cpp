@@ -39,6 +39,11 @@ void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
 	m_ProgressListener = ProgressListener;
 }
 
+IProgressListener* TauArgus::GetProgressListener()
+{
+	return m_ProgressListener;
+}
+
 void TauArgus::FireUpdateProgress(int Perc)
 {
 	DEBUGprintf("m_ProgressListener->UpdateProgress(Perc)\n");
