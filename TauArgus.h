@@ -193,22 +193,22 @@ public:
 											VARIANT_BOOL ApplyZeroRule, long ZeroSafetyRange,
 											VARIANT_BOOL EmptyCellAsNonStructural, long NSEmptySafetyRange,
 											long *ErrorCode, VARIANT_BOOL *pVal);
-	STDMETHOD(SetVariableForTable)(/*[in]*/ long Index, /*[in]*/long nMissing,  BSTR Missing1, /*[in]*/ BSTR Missing2,
-		/*[in]*/ long nDec,VARIANT_BOOL IsPeeper, BSTR PeeperCode, /*[in]*/ VARIANT_BOOL IsHierarchical, /*[in]*/ VARIANT_BOOL IsNumeriek, /*[in]*/ long nPos, /*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(CompletedTable)(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ BSTR FileName, /*[in]*/ VARIANT_BOOL CalculateTotals,/*[in]*/ VARIANT_BOOL SetCalculatedTotalsAsSafe,/*[in]*/ VARIANT_BOOL ForCoverTable,/*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(SetInTable)(/*[in]*/ long Index, /*[in]*/ VARIANT * sCode,
+	bool STDMETHODCALLTYPE SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2,
+		/*[in]*/ long nDec, bool IsPeeper, const char* PeeperCode, /*[in]*/ bool IsHierarchical, /*[in]*/ bool IsNumeriek, /*[in]*/ long nPos);
+	bool STDMETHODCALLTYPE CompletedTable(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ const char* FileName, /*[in]*/ bool CalculateTotals,/*[in]*/ bool SetCalculatedTotalsAsSafe,/*[in]*/ bool ForCoverTable);
+	bool STDMETHODCALLTYPE SetInTable(/*[in]*/ long Index, /*[in]*/ char* sCode[],
 									/*[in]*/ double Shadow, /*[in]*/ double Cost,
 									/*[in]*/ double Resp, /*[in]*/ long Freq, /*[in]*/ double * MaxScoreCell,
 									double * MaxScoreHolding, /*[in]*/ long Status,double LowerProtectionLevel,
 									double UpperProtectionLevel,
-									/*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrVNum,/*[retval,out]*/ VARIANT_BOOL *pVal);
-	STDMETHOD(ThroughTable)();
-	STDMETHOD(SetTotalsInCodeList)(/*[in]*/ long NumberofVariables,/*[in]*/  long * VarIndex,/*[in,out]*/  long * ErrorCode, /*[in,out]*/  long *  ErrorInVarIndex, /*[retval,out]*/  VARIANT_BOOL *pVal);
-	STDMETHOD(SetInCodeList)(/*[in]*/ long NumberofVar,  /*[in]*/ long * VarIndex, /*[in]*/ VARIANT * sCode, /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrorInVarIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
+									/*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrVNum);
+	void STDMETHODCALLTYPE ThroughTable();
+	bool STDMETHODCALLTYPE SetTotalsInCodeList(/*[in]*/ long NumberofVariables,/*[in]*/  long * VarIndex,/*[in,out]*/  long * ErrorCode, /*[in,out]*/  long *  ErrorInVarIndex);
+	bool STDMETHODCALLTYPE SetInCodeList(/*[in]*/ long NumberofVar,  /*[in]*/ long * VarIndex, /*[in]*/ char* sCode[], /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrorInVarIndex);
 	STDMETHOD(WriteCellRecords)(/*[in]*/ long TableIndex, /*[in]*/ BSTR FileName, /*[in]*/  long SBS, /*[in]*/ VARIANT_BOOL SBSLevel, /*[in]*/ VARIANT_BOOL SuppressEmpty, /*[in]*/ BSTR FirstLine, VARIANT_BOOL ShowUnsafe, long RespType,/*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(GetTotalTabelSize)(/*[in]*/ long TableIndex,/*[in,out]*/ long* nCell, /*[in,out]*/ long * SizeDataCell);
 	STDMETHOD(SetSecondaryJJFORMAT)(/*[in]*/ long TableIndex, /*[in]*/ BSTR FileName, /*[in]*/ VARIANT_BOOL WithBogus, /*[in,out]*/ long * nSetSecondary, /*[retval,out]*/ long * pVal);
-	STDMETHOD(WriteJJFormat)(/*[in]*/ long TableIndex, /*[in]*/ BSTR FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ VARIANT_BOOL WithBogus , VARIANT_BOOL AsPerc, VARIANT_BOOL ForRounding,/*[retval,out]*/  VARIANT_BOOL *pVal);
+	bool STDMETHODCALLTYPE WriteJJFormat(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ bool WithBogus , bool AsPerc, bool ForRounding);
 	STDMETHOD(WriteCSV)(/*[in]*/ long TableIndex, /*[in]*/ BSTR FileName, /*[in,out]*/ long * DimSequence,long RespType, /*[retval,out]*/  VARIANT_BOOL *pVal);
 	STDMETHOD(GetCellDistance)(/*[in]*/ long TableIndex, /*[in,out]*/ long * Dims, /*[in,out]*/ long * Distance , /*[retval,out]*/ VARIANT_BOOL *pVal );
 	STDMETHOD(PrepareCellDistance)(/*[in]*/ long TableIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);

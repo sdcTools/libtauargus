@@ -2143,12 +2143,11 @@ STDMETHODIMP TauArgus::WriteCSV(long TableIndex, BSTR FileName,
 }
 
 // Write Table in JJ Format
-STDMETHODIMP TauArgus::WriteJJFormat(long TableIndex, BSTR FileName,
+bool TauArgus::WriteJJFormat(long TableIndex, const char* FileName,
 													double LowerBound, double UpperBound,
-													VARIANT_BOOL WithBogus, VARIANT_BOOL AsPerc,
-													VARIANT_BOOL ForRounding,VARIANT_BOOL *pVal)
+													bool WithBogus, bool AsPerc,
+													bool ForRounding)
 {
-
 	CString sFileName;
 	sFileName = FileName;
 	CString sFileNameFreq;
@@ -2158,22 +2157,18 @@ STDMETHODIMP TauArgus::WriteJJFormat(long TableIndex, BSTR FileName,
 	int i;
 	CDataCell *dc;
 
-	int t = TableIndex - 1;
-	if (t < 0 || t >= m_ntab)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+	if (TableIndex < 0 || TableIndex >= m_ntab)	{
+		return false;
 	}
-	CTable *tab = GetTable(t);
+	CTable *tab = GetTable(TableIndex);
 
 	fd = fopen(sFileName, "w");
 	if (fd == 0)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	fdFrq = fopen(sFileNameFreq, "w");
 	if (fdFrq == 0)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 	MaxCost = 0;
 	MaxResp = 0;
@@ -2192,13 +2187,11 @@ STDMETHODIMP TauArgus::WriteJJFormat(long TableIndex, BSTR FileName,
 
 	fclose(fd);
 	fclose (fdFrq);
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 error:
 	fclose(fd);
 	fclose (fdFrq);
-	*pVal = VARIANT_FALSE;
-	return S_OK;
+	return false;
 }
 // Cells that are give as secondary unsafe by JJ to be set in the table
 STDMETHODIMP TauArgus::SetSecondaryJJFORMAT(long TableIndex, BSTR FileName, VARIANT_BOOL WithBogus, long *nSetSecondary, long *pVal)
@@ -2320,25 +2313,17 @@ STDMETHODIMP TauArgus::WriteCellRecords(long TableIndex, BSTR FileName,
 // Code list to be created. This is a sibling of the explore file. This is needed
 // for crerating a codelist when a table is directly given instead of being created from
 // micro data.
-STDMETHODIMP TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
-													VARIANT *sCode, long *ErrorCode,
-													long *ErrorInVarIndex, VARIANT_BOOL *pVal)
+bool TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
+													char *sCode[], long *ErrorCode,
+													long *ErrorInVarIndex)
 {
 	long i;
-	long lvarindex;
-	BSTR bstrtemp;
-	CString tempcode;
-	CVariable *var;
-	SAFEARRAY *sa = sCode->parray;
-	HRESULT hresult;
  // check if number of variables = length of array codes
 
-
-	*ErrorInVarIndex = 0;
+	*ErrorInVarIndex = -1;
 	if (m_nvar == 0) {
 		*ErrorCode = NOVARIABLES;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	for (i = 0; i < m_nvar; i++) {
@@ -2346,8 +2331,7 @@ STDMETHODIMP TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 			if (m_var[i].nDigitSplit == 0 && m_var[i].hLevel.GetSize() == 0) {
 				*ErrorCode = WRONGHIERARCHY;
 				*ErrorInVarIndex = i;
-				*pVal = VARIANT_FALSE;
-				return S_OK;
+				return false;
 			}
 		}
 	}
@@ -2355,12 +2339,11 @@ STDMETHODIMP TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 	// Now start reading the codes in Not if the code is in a hierarchical
 	// codelist without digit split don't bother.
 
-	for (i=1; i<=NumberofVar; i++)  {
-		lvarindex = VarIndex[i-1];
-		var = &(m_var[lvarindex-1]);
+	for (i=0; i<NumberofVar; i++)  {
+		long lvarindex = VarIndex[i];
+		CVariable *var = &(m_var[lvarindex]);
 		// To get a string from an array of strings. Use SafeArray
-		hresult = SafeArrayGetElement(sa, &i, &bstrtemp);
-		tempcode = bstrtemp;
+		CString tempcode = sCode[i];
 		if (tempcode != "" ) {
 		if (var->IsCategorical)  {
 			if ((var ->IsHierarchical) && (var ->nDigitSplit == 0))  {
@@ -2368,31 +2351,26 @@ STDMETHODIMP TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 					*ErrorCode = CODENOTINCODELIST;
 					*ErrorInVarIndex = i;
 					 // add some info here
-					*pVal = VARIANT_FALSE;
-					return S_OK;
+					return false;
 
 				}
 			}
 			else {
 				if (!var->AddCode(tempcode, false) ) {   // adds if new, else does nothing
 					*ErrorCode = PROGRAMERROR;
-					*pVal = VARIANT_FALSE;  // add program error
-					return S_OK;
+					return false;
 				}
 			}
 		}
 		}
 	}
 
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Once all code list a finished. Set Hierarchies and totals. This happens automatically in
 // the end of explore file
-STDMETHODIMP TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex,
-															long *ErrorCode, long *ErrorInVarIndex,
-															VARIANT_BOOL *pVal)
+bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long *ErrorCode, long *ErrorInVarIndex)
 {
 	long i, n;
 	long lvarindex;
@@ -2400,7 +2378,7 @@ STDMETHODIMP TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarInde
 
 	for (i=0; i<NumberofVariables; i++)  {
 		lvarindex = VarIndex[i];
-		var = &(m_var[lvarindex-1]);
+		var = &(m_var[lvarindex]);
 
 		if (var->IsCategorical)  {
 
@@ -2424,8 +2402,7 @@ STDMETHODIMP TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarInde
 			if ((var->nDigitSplit > 0)) {
 				if (!(var->ComputeHierarchicalCodes()) ) {
 					*ErrorCode = WRONGHIERARCHY;
-					*pVal = VARIANT_FALSE;
-					return S_OK;
+					return false;
 				}
 			}
 
@@ -2436,13 +2413,12 @@ STDMETHODIMP TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarInde
 
 
 //			m_var[i].nCode = m_var[i].sCode.GetSize();
-			n = m_var[lvarindex-1].sCode.GetSize();
-			m_var[lvarindex-1].nCode = n;
+			n = m_var[lvarindex].sCode.GetSize();
+			m_var[lvarindex].nCode = n;
 			if (var->IsHierarchical)  {
 				if (!var->SetHierarch()) {
 					*ErrorCode = WRONGHIERARCHY;
-					*pVal = VARIANT_FALSE;
-					return S_OK;
+					return false;
 				}
 			}
 
@@ -2451,101 +2427,73 @@ STDMETHODIMP TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarInde
 
 	m_CompletedCodeList = true;
 
-	*pVal =  VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // Tells you that you a given a table directly and not to
 //create one from micro data
-STDMETHODIMP TauArgus::ThroughTable()
+void TauArgus::ThroughTable()
 {
 	m_UsingMicroData = false;
-
-	return S_OK;
 }
 
 // Set data in table. Since table can be given in many ways.
 // See SetTableSafetyInfo, not all input is valid input.
-STDMETHODIMP TauArgus::SetInTable(long Index, VARIANT *sCode,
+bool TauArgus::SetInTable(long Index, char *sCode[],
 												double Shadow, double Cost,
 												double Resp, long Freq,
 												double *MaxScoreCell, double *MaxScoreHolding,
 												long Status, double LowerProtectionLevel, double UpperProtectionLevel,
-												long *ErrorCode, long *ErrVNum,
-												VARIANT_BOOL *pVal)
+												long *ErrorCode, long *ErrVNum)
 {
-	int  ind, dim;
-	ind = Index -1;
-	long error, ErrorVarNo;
-
 	*ErrVNum = 0;
-	SAFEARRAY *sa = sCode->parray;
-	long l;
-	HRESULT hresult;
-	BSTR bstrtemp;
-	double LPL, UPL;
 
 	// check if table is defined
-	if (m_tab[ind].nDim == 0) {
+	if (m_tab[Index].nDim == 0) {
 		*ErrorCode = TABLENOTSET;
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
 
 	// Memory allocated for table. If not do it
-	if (!m_tab[ind].Prepared)  {
-		if (!m_tab[ind].PrepareTable() ) {
+	if (!m_tab[Index].Prepared)  {
+		if (!m_tab[Index].PrepareTable() ) {
 			*ErrorCode = NOTABLEMEMORY;
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+			return false;
 		}
 	}
 
-	dim = m_tab[ind].nDim;
+	int dim = m_tab[Index].nDim;
 	CString *sCodes = new CString[dim];
 
-
-	//  Take out the codes and set in a CString array
-	for (l=1; l<=dim; l++) {
-		hresult = SafeArrayGetElement(sa, &l, &bstrtemp);
-		sCodes[l-1]=bstrtemp;
+	for (int i=0; i<dim; i++) {
+		sCodes[i] = sCode[i];
 	}
 
-	LPL = LowerProtectionLevel;
-	UPL = UpperProtectionLevel;
-
 	// fill it in the table cell
-	if (!FillInTable(ind, sCodes, Cost,
+	if (!FillInTable(Index, sCodes, Cost,
 								Resp, Shadow, Freq, MaxScoreCell, MaxScoreHolding,
-								LPL, UPL, Status, error, ErrorVarNo))  {
-		*ErrorCode = error;
-		*ErrVNum = ErrorVarNo;
-		*pVal = VARIANT_FALSE;
+								LowerProtectionLevel, UpperProtectionLevel, Status, *ErrorCode, *ErrVNum))  {
 		delete [] sCodes;
-		return S_OK;
+		return false;
 	}
 
 
 	delete [] sCodes;
-	*pVal = VARIANT_TRUE;
 
-	return S_OK;
+	return true;
 }
 
 // To state all the cells have been read and the table has to be built.
 // In some case the marginals (or sub totals are given ) in other cases they have to be
 // calculated
-STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
-										 BSTR FileName,
-										 VARIANT_BOOL CalculateTotals,
-										 VARIANT_BOOL SetCalculatedTotalsAsSafe,
-										 VARIANT_BOOL ForCoverTable,
-										 VARIANT_BOOL *pVal)
+bool TauArgus::CompletedTable(long Index, long *ErrorCode,
+										 const char* FileName,
+										 bool CalculateTotals,
+										 bool SetCalculatedTotalsAsSafe,
+										 bool ForCoverTable)
 {
 //	CString sFileName;
 //	sFileName = FileName;
-    long ind;
-	ind = Index -1;
 	int i;
 	CDataCell *dc ;
 	long tel;
@@ -2554,7 +2502,7 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 
 //	FILE *fddebug;
 
-//	CDataCell *dcempty = new CDataCell(m_tab[ind].NumberofMaxScoreCell,m_tab[ind].NumberofMaxScoreHolding,m_tab[ind].ApplyHolding);
+//	CDataCell *dcempty = new CDataCell(m_tab[Index].NumberofMaxScoreCell,m_tab[Index].NumberofMaxScoreHolding,m_tab[Index].ApplyHolding);
 
 //	fddebug = fopen("f:TMPTest", "w");
 //	fprintf(fddebug,"%s\n", "CompletedTable");
@@ -2574,12 +2522,12 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 //													VARIANT_BOOL WithBogus, VARIANT_BOOL AsPerc,
 //													VARIANT_BOOL ForRounding,
 
-		for (i=0; i <m_tab[ind].nCell; i++)  {
+		for (i=0; i <m_tab[Index].nCell; i++)  {
 			// if not safe or unsafe set empty; all not entered cells
-			dc = m_tab[ind].GetCell(i);
+			dc = m_tab[Index].GetCell(i);
 			if (dc->GetStatus() == 0)  {
-			//	m_tab[ind].CellPtr.SetAt(i,dcempty);
-			//	dc = m_tab[ind].GetCell(i);
+			//	m_tab[Index].CellPtr.SetAt(i,dcempty);
+			//	dc = m_tab[Index].GetCell(i);
 				dc->SetStatus(CS_EMPTY);
 				dc->IsFilled = false; //Why false,AncoJuly 2012
 			}
@@ -2588,12 +2536,11 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 		// CoverTabel always has a status
 		if (!ForCoverTable){
 			if (!CalculateTotals)	{
-	    		if (!IsTable(&(m_tab[ind]))) {
+	    		if (!IsTable(&(m_tab[Index]))) {
 		    		*ErrorCode = TABLENOTADDITIVE;
-     			    WriteJJFormat(Index, FileName, -1000, 1000, VARIANT_FALSE, VARIANT_FALSE, VARIANT_FALSE, pVal);
+     			    WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
 					IsAdditive = false;
-//			    	*pVal = VARIANT_FALSE;
-//					return S_OK;
+//					return false;
 				}
 			}
 
@@ -2601,10 +2548,10 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 			else
 			{
 				tel = 0;
-				maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[ind]));
+				maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
 
-				while (!IsTable(&(m_tab[ind])))	{
-					AdjustTable(&(m_tab[ind]));
+				while (!IsTable(&(m_tab[Index])))	{
+					AdjustTable(&(m_tab[Index]));
 					// To preven an unending loop
 					tel++;
 					if (tel > maxdiepte + 6 )	{
@@ -2617,16 +2564,15 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 				if (tel > maxdiepte + 6)	{
 					*ErrorCode = CANNOTMAKETOTALS;
 					IsAdditive = false;
-//					*pVal = VARIANT_FALSE;
-//					return S_OK;
+//					return false;
 				}
 			}
 		}
 		// Calculated totals to be set as safe
 		if (SetCalculatedTotalsAsSafe)	{
-			for (i=0; i <m_tab[ind].nCell; i++)  {
+			for (i=0; i <m_tab[Index].nCell; i++)  {
 			// if not safe or unsafe set empty
-				dc = m_tab[ind].GetCell(i);
+				dc = m_tab[Index].GetCell(i);
 				if (dc->GetStatus() == 0)  {
 					dc->SetStatus(CS_SAFE_MANUAL);
 					dc->IsFilled = false;  //Why false,AncoJuly 2012
@@ -2638,19 +2584,18 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 		else {
 			if (!((m_HasFreq) || (m_HasMaxScore)))	{
 				*ErrorCode = CANNOTCALCULATESAFETY;
-				*pVal = VARIANT_FALSE;
-				return S_OK;
+				return false;
 			}
 			else
 			{
-				for (i=0; i <m_tab[ind].nCell; i++)  {
+				for (i=0; i <m_tab[Index].nCell; i++)  {
 			// if not safe or unsafe set empty
-					dc = m_tab[ind].GetCell(i);
+					dc = m_tab[Index].GetCell(i);
 					if (dc->GetStatus() == 0)  {
-						//	m_tab[ind].CellPtr.SetAt(i,dcempty);
-						//	dc = m_tab[ind].GetCell(i);
-						dc->SetStatus(m_tab[ind].ComputeCellSafeCode(*dc));
-						m_tab[ind].SetProtectionLevelCell(*dc);
+						//	m_tab[Index].CellPtr.SetAt(i,dcempty);
+						//	dc = m_tab[Index].GetCell(i);
+						dc->SetStatus(m_tab[Index].ComputeCellSafeCode(*dc));
+						m_tab[Index].SetProtectionLevelCell(*dc);
 						dc->IsFilled = false;  //Why false,AncoJuly 2012
 					}
 				}
@@ -2658,15 +2603,7 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 		}
 
 		/// check if is table
-		if (IsAdditive){
-			*pVal = VARIANT_TRUE;
-			return S_OK;
-        }
-		else
-		{
-			*pVal = VARIANT_FALSE;
-			return S_OK;
-		}
+		return IsAdditive;
 
 	} // End loop status is given
 
@@ -2675,7 +2612,7 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 //	fclose(fddebug);
 
 	if ((m_HasFreq) || (m_HasMaxScore))  {
-		//ComputeCellStatuses(m_tab[ind]);
+		//ComputeCellStatuses(m_tab[Index]);
 
 
 //	fddebug = fopen("f:TMPText", "a");
@@ -2683,29 +2620,28 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 //	fclose(fddebug);
 
 		//Once more check all statuses are filled
-		for (i=0; i <m_tab[ind].nCell; i++)  {
+		for (i=0; i <m_tab[Index].nCell; i++)  {
 			// if not safe or unsafe set empty
-			dc = m_tab[ind].GetCell(i);
+			dc = m_tab[Index].GetCell(i);
 			if (dc->GetStatus() == 0)  {
 				dc->SetStatus(CS_EMPTY);
 			}
 		}
 		if (!CalculateTotals)	{
-			if (!IsTable(&(m_tab[ind]))) {
+			if (!IsTable(&(m_tab[Index]))) {
 				// maybe error code shouls show that table is not ok.
 				*ErrorCode = TABLENOTADDITIVE;
-   			    WriteJJFormat(Index, FileName, -1000, 1000, VARIANT_FALSE, VARIANT_FALSE, VARIANT_FALSE, pVal);
+   			    WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
                 IsAdditive = false;
-//			*pVal = VARIANT_FALSE;
-//				return S_OK;
+//				return false;
 			}
 		}
 		else
 		{
 			tel = 0;
-			maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[ind]));
-			while (!IsTable(&(m_tab[ind])))	{
-				AdjustTable(&(m_tab[ind]));
+			maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
+			while (!IsTable(&(m_tab[Index])))	{
+				AdjustTable(&(m_tab[Index]));
 				// To prevent an unending loop
 				tel++;
 				if (tel > maxdiepte+6 )	{
@@ -2717,13 +2653,12 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 			if (tel > maxdiepte +6)	{
 				*ErrorCode = CANNOTMAKETOTALS;
 				IsAdditive = false;
-//				*pVal = VARIANT_FALSE;
-//				return S_OK;
+//				return false;
 			}
 		}
 		//for each cell create safe code
-		ComputeCellStatuses(m_tab[ind]);
-		SetProtectionLevels(m_tab[ind]);
+		ComputeCellStatuses(m_tab[Index]);
+		SetProtectionLevels(m_tab[Index]);
 	} //end loop HasFreq or HasMaxScore
 
 //	fddebug = fopen("f:TMPText", "a");
@@ -2733,12 +2668,12 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 
 	// finale check: alles met status = 0  wordt empty als leeg or safe als niet leeg
     // Bijvoorbeeld als er niets bekend is over de status
-	for (i=0; i <m_tab[ind].nCell; i++)  {
+	for (i=0; i <m_tab[Index].nCell; i++)  {
 		// if not safe or unsafe set empty
-		dc = m_tab[ind].GetCell(i);
+		dc = m_tab[Index].GetCell(i);
 		if (dc->GetStatus() == 0)  {
-		//	m_tab[ind].CellPtr.SetAt(i,dcempty);
-		//	dc = m_tab[ind].GetCell(i);
+		//	m_tab[Index].CellPtr.SetAt(i,dcempty);
+		//	dc = m_tab[Index].GetCell(i);
 			if (dc->GetFreq() == 0) {
 				dc->SetStatus(CS_EMPTY);
 				dc->IsFilled = false;
@@ -2750,68 +2685,45 @@ STDMETHODIMP TauArgus::CompletedTable(long Index, long *ErrorCode,
 		}
 	}
 
-		if (IsAdditive){
-			*pVal = VARIANT_TRUE;
-			return S_OK;
-        }
-		else
-		{
-			*pVal = VARIANT_FALSE;
-			return S_OK;
-		}
-
+	return IsAdditive;
 }
 
 // variable set. This is incase table is given
 //directly and not built from micro data
-STDMETHODIMP TauArgus::SetVariableForTable(long Index, long nMissing, BSTR Missing1,
-															BSTR Missing2, long nDec, VARIANT_BOOL IsPeeper,
-															BSTR PeeperCode,
-															VARIANT_BOOL IsHierarchical,
-															VARIANT_BOOL IsNumeriek, long nPos,
-															VARIANT_BOOL *pVal)
+bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missing1,
+															const char* Missing2, long nDec, bool IsPeeper,
+															const char* PeeperCode,
+															bool IsHierarchical,
+															bool IsNumeriek, long nPos)
 {
-	CString sMissing1;
-	CString sMissing2;
-	sMissing1 = Missing1;
-	sMissing2 = Missing2;
-	int i = Index - 1;
-
-	if (i < 0 || i >= m_nvar)	{
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+	if (Index < 0 || Index >= m_nvar)	{
+		return false;
 	}
 
 	if ((nMissing < 0) || (nMissing  > 2))	{
-	  *pVal = VARIANT_FALSE;
-		return S_OK;
+		return false;
 	}
-	if (!m_var[i].SetMissing(sMissing1, sMissing2, nMissing) ) {
-		*pVal = VARIANT_FALSE;
-		return S_OK;
+	if (!m_var[Index].SetMissing(Missing1, Missing2, nMissing) ) {
+		return false;
 	}
 
-   m_var[i].nPos = nPos;
+   m_var[Index].nPos = nPos;
 	//variable ia always categorical, weight and holdings don't come into play
 	if (IsNumeriek) {
-		if (!m_var[i].SetDecPosition(nDec))	{
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+		if (!m_var[Index].SetDecPosition(nDec))	{
+			return false;
 		}
-		if (!m_var[i].SetType(false, IsNumeriek, false, IsHierarchical, false, false) )	{
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false) )	{
+			return false;
 		}
 	}
 	else  {
-		if (!m_var[i].SetType(true, false, false, IsHierarchical, false, false) )	{
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false) )	{
+			return false;
 		}
 	}
 
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 // set safety information. this function is used along with set table.

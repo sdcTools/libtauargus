@@ -165,7 +165,7 @@ STDMETHODIMP CTauArgCtrl::SetTableCellStatus(long TableIndex, long *DimIndex,
 STDMETHODIMP CTauArgCtrl::SetTableCellCost(long TableIndex, long *DimIndex, double Cost,
 														 VARIANT_BOOL *pVal)
 {
-	*pVal = tauArgus.SetTableCellCost(TableIndex -1, DimIndex, Cost) ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.SetTableCellCost(TableIndex - 1, DimIndex, Cost) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -382,7 +382,7 @@ STDMETHODIMP CTauArgCtrl::GetVarCodeProperties(long VarIndex, long CodeIndex,
 {
 	const char* code;
 
-	*pVal = tauArgus.GetVarCodeProperties(VarIndex - 1, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, &code);
+	*pVal = tauArgus.GetVarCodeProperties(VarIndex - 1, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, &code) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	*Code = _com_util::ConvertStringToBSTR(code);
 
@@ -453,8 +453,15 @@ STDMETHODIMP CTauArgCtrl::WriteJJFormat(long TableIndex, BSTR FileName,
 													VARIANT_BOOL WithBogus, VARIANT_BOOL AsPerc,
 													VARIANT_BOOL ForRounding,VARIANT_BOOL *pVal)
 {
-	return tauArgus.WriteJJFormat(TableIndex, FileName, LowerBound, UpperBound, WithBogus, AsPerc, ForRounding, pVal);
+	char* fileName = _com_util::ConvertBSTRToString(FileName);
+
+	*pVal = tauArgus.WriteJJFormat(TableIndex - 1, fileName, LowerBound, UpperBound, WithBogus==VARIANT_TRUE, AsPerc==VARIANT_TRUE, ForRounding==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	delete[] fileName;
+
+	return S_OK;
 }
+
 // Cells that are give as secondary unsafe by JJ to be set in the table
 STDMETHODIMP CTauArgCtrl::SetSecondaryJJFORMAT(long TableIndex, BSTR FileName, VARIANT_BOOL WithBogus, long *nSetSecondary, long *pVal)
 {
@@ -487,7 +494,34 @@ STDMETHODIMP CTauArgCtrl::SetInCodeList(long NumberofVar, long *VarIndex,
 													VARIANT *sCode, long *ErrorCode,
 													long *ErrorInVarIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetInCodeList(NumberofVar, VarIndex, sCode, ErrorCode, ErrorInVarIndex, pVal);
+	int i;
+	long* varIndex = new long[NumberofVar];
+	char** scode = new char*[NumberofVar];
+
+	SAFEARRAY *sa = sCode->parray;
+	BSTR bstrtemp;
+	for (i = 0; i < NumberofVar; i++) {
+		varIndex[i] = VarIndex[i] - 1;
+
+		long j = i + 1;
+		// To get a string from an array of strings. Use SafeArray
+		HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
+
+		scode[i] = _com_util::ConvertBSTRToString(bstrtemp);
+	}
+
+	*pVal = tauArgus.SetInCodeList(NumberofVar, varIndex, scode, ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	(*ErrorInVarIndex)++;
+
+	for (i = 0; i < NumberofVar; i++) {
+		delete [] scode[i];
+	}
+
+	delete[] varIndex;
+	delete[] scode;
+
+	return S_OK;
 }
 
 // Once all code list a finished. Set Hierarchies and totals. This happens automatically in
@@ -496,14 +530,25 @@ STDMETHODIMP CTauArgCtrl::SetTotalsInCodeList(long NumberofVariables, long *VarI
 															long *ErrorCode, long *ErrorInVarIndex,
 															VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetTotalsInCodeList(NumberofVariables, VarIndex, ErrorCode, ErrorInVarIndex, pVal);
+	long* varIndex = new long[NumberofVariables];
+
+	for (int i = 0; i < NumberofVariables; i++) 
+		varIndex[i] = VarIndex[i] - 1;
+
+	*pVal = tauArgus.SetTotalsInCodeList(NumberofVariables, varIndex, ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	delete[] varIndex;
+
+	return S_OK;
 }
 
 // Tells you that you a given a table directly and not to
 //create one from micro data
 STDMETHODIMP CTauArgCtrl::ThroughTable()
 {
-	return tauArgus.ThroughTable();
+	tauArgus.ThroughTable();
+
+	return S_OK;
 }
 
 // Set data in table. Since table can be given in many ways.
@@ -516,7 +561,31 @@ STDMETHODIMP CTauArgCtrl::SetInTable(long Index, VARIANT *sCode,
 												long *ErrorCode, long *ErrVNum,
 												VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetInTable(Index, sCode, Shadow, Cost, Resp, Freq, MaxScoreCell, MaxScoreHolding, Status, LowerProtectionLevel, UpperProtectionLevel, ErrorCode, ErrVNum, pVal);
+	int i;
+	long n;
+	SAFEARRAY *sa = sCode->parray;
+	SafeArrayGetUBound(sa, 1, &n);
+	char** scode = new char*[n];
+
+	BSTR bstrtemp;
+	for (i = 0; i < n; i++) {
+		long j = i + 1;
+		// To get a string from an array of strings. Use SafeArray
+		HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
+		scode[i] = _com_util::ConvertBSTRToString(bstrtemp);
+	}
+
+	*pVal = tauArgus.SetInTable(Index - 1, scode, Shadow, Cost, Resp, Freq, MaxScoreCell, MaxScoreHolding, Status, LowerProtectionLevel, UpperProtectionLevel, ErrorCode, ErrVNum)
+		? VARIANT_TRUE
+		: VARIANT_FALSE;
+
+	for (i = 0; i < n; i++) {
+		delete[] scode[i];
+	}
+
+	delete[] scode;
+
+	return S_OK;
 }
 
 // To state all the cells have been read and the table has to be built.
@@ -529,7 +598,13 @@ STDMETHODIMP CTauArgCtrl::CompletedTable(long Index, long *ErrorCode,
 										 VARIANT_BOOL ForCoverTable,
 										 VARIANT_BOOL *pVal)
 {
-	return tauArgus.CompletedTable(Index, ErrorCode, FileName, CalculateTotals, SetCalculatedTotalsAsSafe, ForCoverTable, pVal);
+	char* fileName = _com_util::ConvertBSTRToString(FileName);
+
+	*pVal = tauArgus.CompletedTable(Index - 1, ErrorCode, fileName, CalculateTotals==VARIANT_TRUE, SetCalculatedTotalsAsSafe==VARIANT_TRUE, ForCoverTable==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	delete[] fileName;
+
+	return S_OK;
 }
 
 // variable set. This is incase table is given
@@ -541,7 +616,17 @@ STDMETHODIMP CTauArgCtrl::SetVariableForTable(long Index, long nMissing, BSTR Mi
 															VARIANT_BOOL IsNumeriek, long nPos,
 															VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetVariableForTable(Index, nMissing, Missing1, Missing2, nDec, IsPeeper, PeeperCode, IsHierarchical, IsNumeriek, nPos, pVal);
+	char* missing1 = _com_util::ConvertBSTRToString(Missing1);
+	char* missing2 = _com_util::ConvertBSTRToString(Missing2);
+	char* peeperCode = _com_util::ConvertBSTRToString(PeeperCode);
+
+	*pVal = tauArgus.SetVariableForTable(Index - 1, nMissing, missing1, missing2, nDec, IsPeeper==VARIANT_TRUE, peeperCode, IsHierarchical==VARIANT_TRUE, IsNumeriek==VARIANT_TRUE, nPos) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	delete[] missing1;
+	delete[] missing2;
+	delete[] peeperCode;
+
+	return S_OK;
 }
 
 // set safety information. this function is used along with set table.
@@ -651,8 +736,7 @@ STDMETHODIMP CTauArgCtrl::WriteHierarchicalTableInAMPLFormat(BSTR AMPLFilename, 
 }
 
 
-STDMETHODIMP CTauArgCtrl::SetSecondaryFromHierarchicalAMPL(BSTR FileName,
-																			  long TableIndex, long *ErrorCode,
+STDMETHODIMP CTauArgCtrl::SetSecondaryFromHierarchicalAMPL(BSTR FileName, long TableIndex, long *ErrorCode,
 																			  VARIANT_BOOL *pVal)
 {
 	return tauArgus.SetSecondaryFromHierarchicalAMPL(FileName, TableIndex, ErrorCode, pVal);
