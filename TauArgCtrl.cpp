@@ -16,6 +16,29 @@ static char THIS_FILE[] = __FILE__;
 // Needed for conversion function from BSTR to char*
 # pragma comment(lib, "comsupp.lib")
 
+// --------------------------------------------------------------------------
+// B2CString - helper class for conversion from BSTR to char* 
+// --------------------------------------------------------------------------
+class B2CString {
+
+private:
+	char *cstr;
+
+public:
+	B2CString(const BSTR &bstr) {
+		cstr = _com_util::ConvertBSTRToString(bstr);
+	}
+
+	~B2CString() {
+		delete [] cstr;
+	}
+
+	operator char*() {
+		return cstr;
+	}
+};
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CTauArgCtrl
 
@@ -62,18 +85,11 @@ STDMETHODIMP CTauArgCtrl::DoRecode(long VarIndex, BSTR RecodeString, long nMissi
 												long *ErrorType, long *ErrorLine, long *ErrorPos,
 												BSTR *WarningString, VARIANT_BOOL *pVal)
 {
-	char *recodeString = _com_util::ConvertBSTRToString(RecodeString);
-	char *missing1 = _com_util::ConvertBSTRToString(eMissing1);
-	char *missing2 = _com_util::ConvertBSTRToString(eMissing2);
 	const char* warningString;
 
-	*pVal = tauArgus.DoRecode(VarIndex - 1, recodeString, nMissing, missing1, missing2, ErrorType, ErrorLine, ErrorPos, &warningString) ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.DoRecode(VarIndex - 1, B2CString(RecodeString), nMissing, B2CString(eMissing1), B2CString(eMissing2), ErrorType, ErrorLine, ErrorPos, &warningString) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	*WarningString = _com_util::ConvertStringToBSTR(warningString);
-
-	delete[] recodeString;
-	delete[] missing1;
-	delete[] missing2;
 
 	return S_OK;
 }
@@ -126,12 +142,8 @@ STDMETHODIMP CTauArgCtrl::ExploreFile(BSTR FileName, long *ErrorCode,
 			
 													VARIANT_BOOL *pVal)
 {
-	char* fileName = _com_util::ConvertBSTRToString(FileName);
-
-	*pVal = tauArgus.ExploreFile(fileName, ErrorCode, LineNumber, VarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.ExploreFile(B2CString(FileName), ErrorCode, LineNumber, VarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 	*VarIndex = *VarIndex + 1;
-
-	delete[] fileName;
 
 	return S_OK;
 }
@@ -217,21 +229,9 @@ STDMETHODIMP CTauArgCtrl::SetVariable(long VarIndex, long bPos,
 												 VARIANT_BOOL IsHolding,
 												 VARIANT_BOOL *pVal)
 {
-	char *missing1 = _com_util::ConvertBSTRToString(Missing1);
-	char *missing2 = _com_util::ConvertBSTRToString(Missing2);
-	char *totalCode = _com_util::ConvertBSTRToString(TotalCode);
-	char *peeperCode1 = _com_util::ConvertBSTRToString(PeeperCode1);
-	char *peeperCode2 = _com_util::ConvertBSTRToString(PeeperCode2);
-
-	*pVal = tauArgus.SetVariable(VarIndex - 1, bPos, nPos, nDec, nMissing, missing1, missing2, totalCode, IsPeeper==VARIANT_TRUE, peeperCode1, peeperCode2, IsCategorical==VARIANT_TRUE, IsNumeric==VARIANT_TRUE, IsWeight==VARIANT_TRUE, IsHierarchical==VARIANT_TRUE, IsHolding==VARIANT_TRUE)
+	*pVal = tauArgus.SetVariable(VarIndex - 1, bPos, nPos, nDec, nMissing, B2CString(Missing1), B2CString(Missing2), B2CString(TotalCode), IsPeeper==VARIANT_TRUE, B2CString(PeeperCode1), B2CString(PeeperCode2), IsCategorical==VARIANT_TRUE, IsNumeric==VARIANT_TRUE, IsWeight==VARIANT_TRUE, IsHierarchical==VARIANT_TRUE, IsHolding==VARIANT_TRUE)
 		? VARIANT_TRUE 
 		: VARIANT_FALSE;
-
-	delete[] missing1;
-	delete[] missing2;
-	delete[] totalCode;
-	delete[] peeperCode1;
-	delete[] peeperCode2;
 
 	return S_OK;
 }
@@ -335,13 +335,7 @@ STDMETHODIMP CTauArgCtrl::SetSecondaryHITAS(long TableIndex, long *nSetSecondary
 STDMETHODIMP CTauArgCtrl::SetHierarchicalCodelist(long VarIndex, BSTR FileName,
 																 BSTR LevelString, long *pVal)
 {
-	char* fileName = _com_util::ConvertBSTRToString(FileName);
-	char* levelString = _com_util::ConvertBSTRToString(LevelString);
-
-	*pVal = tauArgus.SetHierarchicalCodelist(VarIndex - 1, fileName, levelString);
-
-	delete[] fileName;
-	delete[] levelString;
+	*pVal = tauArgus.SetHierarchicalCodelist(VarIndex - 1, B2CString(FileName), B2CString(LevelString));
 
 	return S_OK;
 }
@@ -453,11 +447,7 @@ STDMETHODIMP CTauArgCtrl::WriteJJFormat(long TableIndex, BSTR FileName,
 													VARIANT_BOOL WithBogus, VARIANT_BOOL AsPerc,
 													VARIANT_BOOL ForRounding,VARIANT_BOOL *pVal)
 {
-	char* fileName = _com_util::ConvertBSTRToString(FileName);
-
-	*pVal = tauArgus.WriteJJFormat(TableIndex - 1, fileName, LowerBound, UpperBound, WithBogus==VARIANT_TRUE, AsPerc==VARIANT_TRUE, ForRounding==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	delete[] fileName;
+	*pVal = tauArgus.WriteJJFormat(TableIndex - 1, B2CString(FileName), LowerBound, UpperBound, WithBogus==VARIANT_TRUE, AsPerc==VARIANT_TRUE, ForRounding==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -598,11 +588,7 @@ STDMETHODIMP CTauArgCtrl::CompletedTable(long Index, long *ErrorCode,
 										 VARIANT_BOOL ForCoverTable,
 										 VARIANT_BOOL *pVal)
 {
-	char* fileName = _com_util::ConvertBSTRToString(FileName);
-
-	*pVal = tauArgus.CompletedTable(Index - 1, ErrorCode, fileName, CalculateTotals==VARIANT_TRUE, SetCalculatedTotalsAsSafe==VARIANT_TRUE, ForCoverTable==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	delete[] fileName;
+	*pVal = tauArgus.CompletedTable(Index - 1, ErrorCode, B2CString(FileName), CalculateTotals==VARIANT_TRUE, SetCalculatedTotalsAsSafe==VARIANT_TRUE, ForCoverTable==VARIANT_TRUE) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -616,15 +602,7 @@ STDMETHODIMP CTauArgCtrl::SetVariableForTable(long Index, long nMissing, BSTR Mi
 															VARIANT_BOOL IsNumeriek, long nPos,
 															VARIANT_BOOL *pVal)
 {
-	char* missing1 = _com_util::ConvertBSTRToString(Missing1);
-	char* missing2 = _com_util::ConvertBSTRToString(Missing2);
-	char* peeperCode = _com_util::ConvertBSTRToString(PeeperCode);
-
-	*pVal = tauArgus.SetVariableForTable(Index - 1, nMissing, missing1, missing2, nDec, IsPeeper==VARIANT_TRUE, peeperCode, IsHierarchical==VARIANT_TRUE, IsNumeriek==VARIANT_TRUE, nPos) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	delete[] missing1;
-	delete[] missing2;
-	delete[] peeperCode;
+	*pVal = tauArgus.SetVariableForTable(Index - 1, nMissing, B2CString(Missing1), B2CString(Missing2), nDec, IsPeeper==VARIANT_TRUE, B2CString(PeeperCode), IsHierarchical==VARIANT_TRUE, IsNumeriek==VARIANT_TRUE, nPos) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -680,11 +658,7 @@ STDMETHODIMP CTauArgCtrl::ComputeCodesToIndices(long TableIndex, VARIANT *sCode,
 //Give input file information. This important when you are reading a file with free format
 STDMETHODIMP CTauArgCtrl::SetInFileInfo(VARIANT_BOOL IsFixedFormat, BSTR Seperator)
 {
-	char* Sep = _com_util::ConvertBSTRToString(Seperator);
-	
-	tauArgus.SetInFileInfo(IsFixedFormat==VARIANT_TRUE, Sep);
-
-	delete[] Sep;
+	tauArgus.SetInFileInfo(IsFixedFormat==VARIANT_TRUE, B2CString(Seperator));
 
 	return S_OK;
 }
