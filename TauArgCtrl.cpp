@@ -38,6 +38,42 @@ public:
 	}
 };
 
+// --------------------------------------------------------------------------
+// B2CStringArray - helper class for conversion from VARIANT* to char[]
+// --------------------------------------------------------------------------
+class B2CStringArray {
+
+private:
+	char** cstr;
+	long size;
+
+public:
+	B2CStringArray(const VARIANT* &bstrArray) {
+		SAFEARRAY *sa = bstrArray->parray;
+		SafeArrayGetUBound(sa, 1, &size);
+		cstr = new char*[size];
+
+		BSTR bstrtemp;
+		for (long j = 1; j <= size; j++) {
+			// To get a string from an array of strings. Use SafeArray
+			HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
+			cstr[j - 1] = _com_util::ConvertBSTRToString(bstrtemp);
+		}
+	}
+
+	~B2CStringArray() {
+		for (int i = 0; i < size; i++) {
+			delete [] cstr[i];
+		}
+
+		delete[] cstr;
+	}
+
+	operator char**() {
+		return cstr;
+	}
+};
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CTauArgCtrl
@@ -484,32 +520,15 @@ STDMETHODIMP CTauArgCtrl::SetInCodeList(long NumberofVar, long *VarIndex,
 													VARIANT *sCode, long *ErrorCode,
 													long *ErrorInVarIndex, VARIANT_BOOL *pVal)
 {
-	int i;
-	long* varIndex = new long[NumberofVar];
-	char** scode = new char*[NumberofVar];
-
-	SAFEARRAY *sa = sCode->parray;
-	BSTR bstrtemp;
-	for (i = 0; i < NumberofVar; i++) {
+	long *varIndex = new long[NumberofVar];
+	for (int i = 0; i < NumberofVar; i++) {
 		varIndex[i] = VarIndex[i] - 1;
-
-		long j = i + 1;
-		// To get a string from an array of strings. Use SafeArray
-		HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
-
-		scode[i] = _com_util::ConvertBSTRToString(bstrtemp);
 	}
 
-	*pVal = tauArgus.SetInCodeList(NumberofVar, varIndex, scode, ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
-
+	*pVal = tauArgus.SetInCodeList(NumberofVar, varIndex, B2CStringArray(sCode), ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 	(*ErrorInVarIndex)++;
 
-	for (i = 0; i < NumberofVar; i++) {
-		delete [] scode[i];
-	}
-
 	delete[] varIndex;
-	delete[] scode;
 
 	return S_OK;
 }
@@ -551,29 +570,9 @@ STDMETHODIMP CTauArgCtrl::SetInTable(long Index, VARIANT *sCode,
 												long *ErrorCode, long *ErrVNum,
 												VARIANT_BOOL *pVal)
 {
-	int i;
-	long n;
-	SAFEARRAY *sa = sCode->parray;
-	SafeArrayGetUBound(sa, 1, &n);
-	char** scode = new char*[n];
-
-	BSTR bstrtemp;
-	for (i = 0; i < n; i++) {
-		long j = i + 1;
-		// To get a string from an array of strings. Use SafeArray
-		HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
-		scode[i] = _com_util::ConvertBSTRToString(bstrtemp);
-	}
-
-	*pVal = tauArgus.SetInTable(Index - 1, scode, Shadow, Cost, Resp, Freq, MaxScoreCell, MaxScoreHolding, Status, LowerProtectionLevel, UpperProtectionLevel, ErrorCode, ErrVNum)
+	*pVal = tauArgus.SetInTable(Index - 1, B2CStringArray(sCode), Shadow, Cost, Resp, Freq, MaxScoreCell, MaxScoreHolding, Status, LowerProtectionLevel, UpperProtectionLevel, ErrorCode, ErrVNum)
 		? VARIANT_TRUE
 		: VARIANT_FALSE;
-
-	for (i = 0; i < n; i++) {
-		delete[] scode[i];
-	}
-
-	delete[] scode;
 
 	return S_OK;
 }
@@ -652,7 +651,9 @@ STDMETHODIMP CTauArgCtrl::CheckRealizedLowerAndUpperValues(long TabNr, long *pVa
 // given an array of codes, calculate the corresponding indexes or cell number
 STDMETHODIMP CTauArgCtrl::ComputeCodesToIndices(long TableIndex, VARIANT *sCode, long *dimIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.ComputeCodesToIndices(TableIndex, sCode, dimIndex, pVal);
+	*pVal = tauArgus.ComputeCodesToIndices(TableIndex - 1, B2CStringArray(sCode), dimIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 //Give input file information. This important when you are reading a file with free format

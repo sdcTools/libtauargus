@@ -176,7 +176,7 @@ public:
 	STDMETHOD(GetCellStatusStatistics)(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(WriteTableInAMPLFormat)(/*[in]*/ BSTR AMPLFileName, /*[in]*/ long TableIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
-	STDMETHOD(ComputeCodesToIndices)(/*[in]*/ long TableIndex, /*[in,out]*/ VARIANT *sCode, /*[in,out]*/ long *dimIndex, /*[retval,out]*/ VARIANT_BOOL *pVal);
+	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *dimIndex);
 	STDMETHOD(CheckRealizedLowerAndUpperValues)(/*[in]*/long TabNr, /*[retval,out]*/  long *pVal);
     STDMETHOD(SetCTAValues)(/*[in]*/ long TabNr, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec, /*[retval,out]*/ VARIANT_BOOL *pVal);
 	STDMETHOD(SetRealizedLowerAndUpper)(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower, /*[retval,out]*/ VARIANT_BOOL *pVal);

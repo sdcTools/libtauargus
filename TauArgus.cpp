@@ -2696,14 +2696,13 @@ bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missin
 															bool IsHierarchical,
 															bool IsNumeriek, long nPos)
 {
-	if (Index < 0 || Index >= m_nvar)	{
+	if (Index < 0 || Index >= m_nvar) {
 		return false;
 	}
-
-	if ((nMissing < 0) || (nMissing  > 2))	{
+	if ((nMissing < 0) || (nMissing  > 2)) {
 		return false;
 	}
-	if (!m_var[Index].SetMissing(Missing1, Missing2, nMissing) ) {
+	if (!m_var[Index].SetMissing(Missing1, Missing2, nMissing)) {
 		return false;
 	}
 
@@ -2713,12 +2712,12 @@ bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missin
 		if (!m_var[Index].SetDecPosition(nDec))	{
 			return false;
 		}
-		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false) )	{
+		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false)) {
 			return false;
 		}
 	}
-	else  {
-		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false) )	{
+	else {
+		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false)) {
 			return false;
 		}
 	}
@@ -2944,32 +2943,14 @@ STDMETHODIMP TauArgus::CheckRealizedLowerAndUpperValues(long TabNr, long *pVal)
 }
 
 // given an array of codes, calculate the corresponding indexes or cell number
-STDMETHODIMP TauArgus::ComputeCodesToIndices(long TableIndex, VARIANT *sCode, long *dimIndex, VARIANT_BOOL *pVal)
+bool TauArgus::ComputeCodesToIndices(long TableIndex, char* sCode[], long *dimIndex)
 {
-	long ind = TableIndex-1;
-	SAFEARRAY *sa = sCode->parray;
-	long l;
-	HRESULT hresult;
-	BSTR bstrtemp;
-	CTable *tab;
-	long dim,j;
-	CVariable *var;
-	CString tempcode;
-	bool IsMissing;
-	// TODO: Add your implementation code here
-	tab = &(m_tab[ind]);
-	dim = tab->nDim;
-	CString *sCodes = new CString[dim];
+	CTable *tab = &(m_tab[TableIndex]);
+	long dim = tab->nDim;
 
-		//  Take out the codes and set in a CString array
-	for (l=1; l<=dim; l++) {
-		hresult = SafeArrayGetElement(sa, &l, &bstrtemp);
-		sCodes[l-1]=bstrtemp;
-	}
-
-	for (j=0; j< tab->nDim; j++)  {
-		var = &(m_var[tab->ExplVarnr[j]]);
-		tempcode = sCodes[j];
+	for (int j=0; j<dim; j++)  {
+		CVariable *var = &(m_var[tab->ExplVarnr[j]]);
+		CString tempcode = sCode[j];
 		if (tempcode == "") {
 			var->TableIndex = 0;
 		}
@@ -2978,21 +2959,18 @@ STDMETHODIMP TauArgus::ComputeCodesToIndices(long TableIndex, VARIANT *sCode, lo
 				var->TableIndex = var->FindAllHierarchicalCode(tempcode);
 			}
 			else {
+				bool IsMissing;
 				var->TableIndex = BinSearchStringArray(var->sCode, tempcode, var->nMissing,
 					IsMissing);
 			}
       }
 		if (var->TableIndex < 0) {
-			delete [] sCodes;
-			*pVal = VARIANT_FALSE;
-			return S_OK;
+			return false;
 		}
 		dimIndex[j] = var->TableIndex;
 	}
-	delete [] sCodes;
 
-	*pVal = VARIANT_TRUE;
-	return S_OK;
+	return true;
 }
 
 //Give input file information. This important when you are reading a file with free format
