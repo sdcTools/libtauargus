@@ -88,7 +88,9 @@ void CTauArgCtrl::UpdateProgress (int Perc)
 STDMETHODIMP CTauArgCtrl::UndoSecondarySuppress(long TableIndex, long SortSuppress,
 																VARIANT_BOOL *pVal)
 {
-	return tauArgus.UndoSecondarySuppress(TableIndex, SortSuppress, pVal);  
+	*pVal = tauArgus.UndoSecondarySuppress(TableIndex - 1, SortSuppress) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Set number of Variables
@@ -169,7 +171,9 @@ STDMETHODIMP CTauArgCtrl::UnsafeVariable(long VarIndex,
 														long *Count, long *UCArray,
 														VARIANT_BOOL *pVal)
 {
-	return tauArgus.UnsafeVariable(VarIndex, Count, UCArray, pVal);
+	*pVal = tauArgus.UnsafeVariable(VarIndex - 1, Count, UCArray) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // In this function the input file is read and the code list is built
@@ -187,7 +191,9 @@ STDMETHODIMP CTauArgCtrl::ExploreFile(BSTR FileName, long *ErrorCode,
 // get maximum unsafe Combination
 STDMETHODIMP CTauArgCtrl::GetMaxnUc(long *pVal)
 {
-	return tauArgus.GetMaxnUc(pVal);
+	*pVal = tauArgus.GetMaxnUc();
+
+	return S_OK;
 }
 
 // Undo recode. Undo recodes for a variable. This is used when a table is
@@ -302,7 +308,9 @@ STDMETHODIMP CTauArgCtrl::SetTable(	long Index, long nDim, long *ExplanatoryVarL
 STDMETHODIMP CTauArgCtrl::GetTableCellValue(long TableIndex, long CellIndex,
                                             double *CellResponse, VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetTableCellValue(TableIndex -1, CellIndex, CellResponse, pVal);
+	*pVal = tauArgus.GetTableCellValue(TableIndex - 1, CellIndex, CellResponse) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 
@@ -358,14 +366,20 @@ STDMETHODIMP CTauArgCtrl::SetTableSafety( long Index, VARIANT_BOOL DominanceRule
 STDMETHODIMP CTauArgCtrl::PrepareHITAS(long TableIndex, BSTR NameParameterFile,
 												  BSTR NameFilesFile, BSTR TauTemp, VARIANT_BOOL *pVal)
 {
-	return tauArgus.PrepareHITAS(TableIndex, NameParameterFile, NameFilesFile, TauTemp, pVal);
+	*pVal = tauArgus.PrepareHITAS(TableIndex - 1, B2CString(NameParameterFile), B2CString(NameFilesFile), B2CString(TauTemp))
+		? VARIANT_TRUE 
+		: VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Cells that are found to be secondary unsafe by Hitas is set as Unsafe in the table
 STDMETHODIMP CTauArgCtrl::SetSecondaryHITAS(long TableIndex, long *nSetSecondary,
 														 VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetSecondaryHITAS(TableIndex, nSetSecondary, pVal);
+	*pVal = tauArgus.SetSecondaryHITAS(TableIndex - 1, nSetSecondary) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::SetHierarchicalCodelist(long VarIndex, BSTR FileName,
@@ -424,7 +438,9 @@ STDMETHODIMP CTauArgCtrl::WriteGHMITERSteuer(BSTR FileName, BSTR EndString1,
 														  BSTR EndString2, long TableIndex,
 														  long *pVal)
 {
-	return tauArgus.WriteGHMITERSteuer(FileName, EndString1, EndString2, TableIndex, pVal);
+	*pVal = tauArgus.WriteGHMITERSteuer(B2CString(FileName), B2CString(EndString1), B2CString(EndString2), TableIndex - 1);
+
+	return S_OK;
 }
 
 // Write data Cells for GHMiter.
@@ -432,7 +448,9 @@ STDMETHODIMP CTauArgCtrl::WriteGHMITERDataCell(BSTR FileName, long TableIndex,
 															  VARIANT_BOOL IsSingleton,
 															 long *pVal)
 {
-	return tauArgus.WriteGHMITERDataCell(FileName, TableIndex, IsSingleton, pVal);
+	*pVal = tauArgus.WriteGHMITERDataCell(B2CString(FileName), TableIndex - 1, IsSingleton==VARIANT_TRUE);
+
+	return S_OK;
 }
 
 // Cells that are given as secondary Unsafe by GHmiter
@@ -441,7 +459,9 @@ STDMETHODIMP CTauArgCtrl::SetSecondaryGHMITER(BSTR FileName, long TableIndex,
 															long *nSetSecondary,VARIANT_BOOL IsSingleton,
 															long *pVal)
 {
-	return tauArgus.SetSecondaryGHMITER(FileName, TableIndex, nSetSecondary, IsSingleton, pVal);
+	*pVal = tauArgus.SetSecondaryGHMITER(B2CString(FileName), TableIndex - 1, nSetSecondary, IsSingleton==VARIANT_TRUE);
+
+	return S_OK;
 }
 
 // Get information per status
@@ -453,28 +473,39 @@ STDMETHODIMP CTauArgCtrl::GetCellStatusStatistics(long TableIndex,
 																  double *StatusCellCost,
 																  VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetCellStatusStatistics(TableIndex, StatusFreq, StatusCellFreq, StatusHoldingFreq, StatusCellResponse, StatusCellCost, pVal);
+	*pVal = tauArgus.GetCellStatusStatistics(TableIndex - 1, StatusFreq, StatusCellFreq, StatusHoldingFreq, StatusCellResponse, StatusCellCost)
+		? VARIANT_TRUE
+		: VARIANT_FALSE;
+	
+	return S_OK;
 }
 
 
 // This function is not usedb at the moment
 STDMETHODIMP CTauArgCtrl::PrepareCellDistance(long TableIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.PrepareCellDistance(TableIndex, pVal);
+	*pVal = tauArgus.PrepareCellDistance(TableIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+	
+	return S_OK;
 }
 
 // This function is not used either at the moment
 STDMETHODIMP CTauArgCtrl::GetCellDistance(long TableIndex, long *Dims,
 													  long *Distance, VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetCellDistance(TableIndex, Dims, Distance, pVal);
+	*pVal = tauArgus.GetCellDistance(TableIndex - 1, Dims, Distance) ? VARIANT_TRUE : VARIANT_FALSE;
+	
+	return S_OK;
 }
 
 // Write a table as Comma seperated file
 STDMETHODIMP CTauArgCtrl::WriteCSV(long TableIndex, BSTR FileName,
 											 long *DimSequence, long RespType, VARIANT_BOOL *pVal)
 {
-	return tauArgus.WriteCSV(TableIndex, FileName, DimSequence, RespType, pVal);
+	// specialized Basic version decreases indices of DimSequence with 1. At this place there is no knowledge of the length of the DimSequence array.
+	*pVal = tauArgus.WriteCSVBasic(TableIndex - 1, B2CString(FileName), DimSequence, RespType) ? VARIANT_TRUE : VARIANT_FALSE;
+	
+	return S_OK;
 }
 
 // Write Table in JJ Format
@@ -491,14 +522,17 @@ STDMETHODIMP CTauArgCtrl::WriteJJFormat(long TableIndex, BSTR FileName,
 // Cells that are give as secondary unsafe by JJ to be set in the table
 STDMETHODIMP CTauArgCtrl::SetSecondaryJJFORMAT(long TableIndex, BSTR FileName, VARIANT_BOOL WithBogus, long *nSetSecondary, long *pVal)
 {
-	return tauArgus.SetSecondaryJJFORMAT(TableIndex, FileName, WithBogus, nSetSecondary, pVal);
+	*pVal = tauArgus.SetSecondaryJJFORMAT(TableIndex - 1, B2CString(FileName), WithBogus==VARIANT_TRUE, nSetSecondary);
+
+	return S_OK;
 }
 
 // Get Size of a tabel. This function has to be changed
-STDMETHODIMP CTauArgCtrl::GetTotalTabelSize(long TableIndex,
-														   long* nCell,long * SizeDataCell)
+STDMETHODIMP CTauArgCtrl::GetTotalTabelSize(long TableIndex, long* nCell,long * SizeDataCell)
 {
-	return tauArgus.GetTotalTabelSize(TableIndex, nCell, SizeDataCell);
+	tauArgus.GetTotalTabelSize(TableIndex - 1, nCell, SizeDataCell);
+
+	return S_OK;
 }
 
 // Write Cell in file
@@ -510,7 +544,11 @@ STDMETHODIMP CTauArgCtrl::WriteCellRecords(long TableIndex, BSTR FileName,
 										    long RespType,
 											VARIANT_BOOL *pVal)
 {
-	return tauArgus.WriteCellRecords(TableIndex, FileName, SBS, SBSLevel, SuppressEmpty, FirstLine, ShowUnsafe, RespType, pVal);
+	*pVal = tauArgus.WriteCellRecords(TableIndex - 1, B2CString(FileName), SBS, SBSLevel==VARIANT_TRUE, SuppressEmpty==VARIANT_TRUE, B2CString(FirstLine), ShowUnsafe==VARIANT_TRUE, RespType)
+		? VARIANT_TRUE
+		: VARIANT_FALSE;
+	
+	return S_OK;
 }
 
 // Code list to be created. This is a sibling of the explore file. This is needed
@@ -621,7 +659,11 @@ STDMETHODIMP CTauArgCtrl::SetTableSafetyInfo(long TabIndex,
 															VARIANT_BOOL EmptyCellAsNonStructural, long NSEmptySafetyRange,
 															long *ErrorCode, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetTableSafetyInfo(TabIndex, HasMaxScore, DominanceRule, DominanceNumber, DominancePerc, PQRule, PriorPosteriorP, PriorPosteriorQ, PriorPosteriorN, HasFreq, CellFreqSafetyPerc, SafeMinRec, HasStatus, ManualSafetyPerc, ApplyZeroRule, ZeroSafetyRange, EmptyCellAsNonStructural, NSEmptySafetyRange, ErrorCode, pVal);
+	*pVal = tauArgus.SetTableSafetyInfo(TabIndex - 1, HasMaxScore==VARIANT_TRUE, DominanceRule==VARIANT_TRUE, DominanceNumber, DominancePerc, PQRule==VARIANT_TRUE, PriorPosteriorP, PriorPosteriorQ, PriorPosteriorN, HasFreq==VARIANT_TRUE, CellFreqSafetyPerc, SafeMinRec, HasStatus==VARIANT_TRUE, ManualSafetyPerc, ApplyZeroRule==VARIANT_TRUE, ZeroSafetyRange, EmptyCellAsNonStructural==VARIANT_TRUE, NSEmptySafetyRange, ErrorCode)
+		? VARIANT_TRUE
+		: VARIANT_FALSE;
+
+	return S_OK;
 }
 
 //CTA-value
@@ -629,7 +671,9 @@ STDMETHODIMP CTauArgCtrl::SetCTAValues(long TabNr, long CelNr,
                                          double OrgVal, double CTAVal,
                                          long *Sec , VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetCTAValues(TabNr, CelNr, OrgVal, CTAVal, Sec , pVal);
+	*pVal = tauArgus.SetCTAValues(TabNr - 1, CelNr - 1, OrgVal, CTAVal, Sec) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Set Lower and upper protection level. This is the one calculated by Anneke
@@ -637,7 +681,9 @@ STDMETHODIMP CTauArgCtrl::SetRealizedLowerAndUpper(long TabNr, long CelNr,
 																	double RealizedUpper, double RealizedLower,
 																	VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetRealizedLowerAndUpper(TabNr, CelNr, RealizedUpper, RealizedLower, pVal);
+	*pVal = tauArgus.SetRealizedLowerAndUpper(TabNr - 1, CelNr - 1, RealizedUpper, RealizedLower) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Check if Realized Upper and Lower bound are a better
@@ -645,7 +691,9 @@ STDMETHODIMP CTauArgCtrl::SetRealizedLowerAndUpper(long TabNr, long CelNr,
 
 STDMETHODIMP CTauArgCtrl::CheckRealizedLowerAndUpperValues(long TabNr, long *pVal)
 {
-	return tauArgus.CheckRealizedLowerAndUpperValues(TabNr, pVal);
+	*pVal = tauArgus.CheckRealizedLowerAndUpperValues(TabNr - 1);
+
+	return S_OK;
 }
 
 // given an array of codes, calculate the corresponding indexes or cell number
@@ -667,27 +715,35 @@ STDMETHODIMP CTauArgCtrl::SetInFileInfo(VARIANT_BOOL IsFixedFormat, BSTR Seperat
 // Write Table in AMPL format. This is used in networking
 STDMETHODIMP CTauArgCtrl::WriteTableInAMPLFormat(BSTR AMPLFileName, long TableIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.WriteTableInAMPLFormat(AMPLFileName, TableIndex, pVal);
+	*pVal = tauArgus.WriteTableInAMPLFormat(B2CString(AMPLFileName), TableIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 
 STDMETHODIMP CTauArgCtrl::SetProtectionLevelsForFrequencyTable(long TableIndex, long Base,
 																					 long K, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetProtectionLevelsForFrequencyTable(TableIndex, Base, K, pVal);
+	*pVal = tauArgus.SetProtectionLevelsForFrequencyTable(TableIndex - 1, Base, K) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::SetProtectionLevelsForResponseTable(long TableIndex, long *DimIndex,
 															   double LowerBound,double UpperBound,
 															   VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetProtectionLevelsForResponseTable(TableIndex, DimIndex, LowerBound, UpperBound, pVal);
+	*pVal = tauArgus.SetProtectionLevelsForResponseTable(TableIndex - 1, DimIndex, LowerBound, UpperBound) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 
 STDMETHODIMP CTauArgCtrl::MaximumProtectionLevel(long TableIndex, double *Maximum)
 {
-	return tauArgus.MaximumProtectionLevel(TableIndex, Maximum);
+	tauArgus.MaximumProtectionLevel(TableIndex - 1, Maximum);
+
+	return S_OK;
 }
 
 //GetMinimumCellValue
@@ -700,21 +756,27 @@ STDMETHODIMP CTauArgCtrl::GetMinimumCellValue(long TableIndex, double *Maximum, 
 
 STDMETHODIMP CTauArgCtrl::SetRoundedResponse(BSTR RoundedFile, long TableIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetRoundedResponse(RoundedFile, TableIndex, pVal);
+	*pVal = tauArgus.SetRoundedResponse(B2CString(RoundedFile), TableIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK; 
 }
 
 
 STDMETHODIMP CTauArgCtrl::WriteHierarchicalTableInAMPLFormat(BSTR AMPLFilename, BSTR TempDir,
 															 long Tableindex, double MaxScale, long *ErrorCode,  VARIANT_BOOL *pVal)
 {
-	return tauArgus.WriteHierarchicalTableInAMPLFormat(AMPLFilename, TempDir, Tableindex, MaxScale, ErrorCode,  pVal);
+	*pVal = tauArgus.WriteHierarchicalTableInAMPLFormat(B2CString(AMPLFilename), B2CString(TempDir), Tableindex - 1, MaxScale, ErrorCode) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;  
 }
 
 
 STDMETHODIMP CTauArgCtrl::SetSecondaryFromHierarchicalAMPL(BSTR FileName, long TableIndex, long *ErrorCode,
 																			  VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetSecondaryFromHierarchicalAMPL(FileName, TableIndex, ErrorCode, pVal);
+	*pVal = tauArgus.SetSecondaryFromHierarchicalAMPL(B2CString(FileName), TableIndex - 1, ErrorCode) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 STDMETHODIMP CTauArgCtrl::SetAllEmptyNonStructural(long TableIndex, VARIANT_BOOL *pVal)
