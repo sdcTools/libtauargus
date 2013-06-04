@@ -228,7 +228,9 @@ STDMETHODIMP CTauArgCtrl::SetTableCellCost(long TableIndex, long *DimIndex, doub
 STDMETHODIMP CTauArgCtrl::GetStatusAndCostPerDim(long TableIndex, long *Status,
 																double *Cost, VARIANT_BOOL *pVal)
 {
-	return tauArgus.GetStatusAndCostPerDim(TableIndex, Status, Cost, pVal);
+	*pVal = tauArgus.GetStatusAndCostPerDim(TableIndex - 1, Status, Cost) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 // Set a Variable code as Active, This is important for
@@ -414,7 +416,13 @@ STDMETHODIMP CTauArgCtrl::UnsafeVariableCodes(long VarIndex, long CodeIndex,
 															BSTR *Code, long *Count,
 															long *UCArray, VARIANT_BOOL *pVal)
 {
-	return tauArgus.UnsafeVariableCodes(VarIndex, CodeIndex, IsMissing, Freq, Code, Count, UCArray, pVal);
+	const char* code;
+
+	*pVal = tauArgus.UnsafeVariableCodes(VarIndex - 1, CodeIndex, IsMissing, Freq, &code, Count, UCArray) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	*Code = _com_util::ConvertStringToBSTR(code);
+
+	return S_OK;
 }
 
 // return properties given a Variable and Code Index
@@ -796,11 +804,15 @@ STDMETHODIMP CTauArgCtrl::SetSingleEmptyAsNonStructural(long TableIndex, long *D
 
 STDMETHODIMP CTauArgCtrl::SetSingleNonStructuralAsEmpty(long TableIndex, long *DimIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetSingleNonStructuralAsEmpty(TableIndex, DimIndex, pVal);
+	*pVal = tauArgus.SetSingleNonStructuralAsEmpty(TableIndex - 1, DimIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
 
 
 STDMETHODIMP CTauArgCtrl::SetAllNonStructuralAsEmpty(long TableIndex, VARIANT_BOOL *pVal)
 {
-	return tauArgus.SetAllNonStructuralAsEmpty(TableIndex, pVal);
+	*pVal = tauArgus.SetAllNonStructuralAsEmpty(TableIndex - 1) ? VARIANT_TRUE : VARIANT_FALSE;
+
+	return S_OK;
 }
