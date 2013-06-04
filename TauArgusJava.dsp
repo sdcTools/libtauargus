@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "TauArgusJava___Win32_Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "c:\Program Files\Java\jdk1.7.0_17\include" /I "c:\Program Files\Java\jdk1.7.0_17\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /D "_WINDLL" /D "_AFXDLL" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /D "_WINDLL" /D "_AFXDLL" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x413 /d "NDEBUG"
@@ -239,7 +239,7 @@ InputPath=.\TauArgusJava.swg
 InputName=TauArgusJava
 
 "$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
 
 # End Custom Build
 
@@ -251,7 +251,7 @@ InputPath=.\TauArgusJava.swg
 InputName=TauArgusJava
 
 "$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	c:\swigwin-2.0.9\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
 
 # End Custom Build
 
