@@ -2294,11 +2294,7 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 {
 //	CString sFileName;
 //	sFileName = FileName;
-	int i;
 	CDataCell *dc ;
-	long tel;
-	long maxdiepte;
-	bool IsAdditive;
 
 //	FILE *fddebug;
 
@@ -2309,8 +2305,8 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 //	fclose(fddebug);
 
 	// if status for each cel is given
-	IsAdditive = true;
-	i = 1;
+	bool IsAdditive = true;
+	int i = 1;
 	if (m_HasStatus)  {
 
 //	fddebug = fopen("f:TMPText", "a");
@@ -2347,8 +2343,8 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 			// other wise make sub totals
 			else
 			{
-				tel = 0;
-				maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
+				long tel = 0;
+				long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
 
 				while (!IsTable(&(m_tab[Index])))	{
 					AdjustTable(&(m_tab[Index]));
@@ -2438,8 +2434,8 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 		}
 		else
 		{
-			tel = 0;
-			maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
+			long tel = 0;
+			long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
 			while (!IsTable(&(m_tab[Index])))	{
 				AdjustTable(&(m_tab[Index]));
 				// To prevent an unending loop
@@ -2618,13 +2614,12 @@ bool TauArgus::SetTableSafetyInfo(long TabIndex,
 }
 
 //CTA-value
-bool TauArgus::SetCTAValues(long TabNr, long CelNr,
+bool TauArgus::SetCTAValues(long TabIndex, long CelNr,
 							double OrgVal, double CTAVal, long *Sec)
 {
-	if (TabNr < 0 || TabNr >= m_ntab) {
+	if (TabIndex < 0 || TabIndex >= m_ntab) {
 		return false;
 	}
-	long TabIndex = TabNr;
 	if (m_tab[TabIndex].HasRecode) TabIndex += m_ntab;
 
 	if (CelNr < 0 || CelNr > m_tab[TabIndex].GetSizeTable()) {
@@ -3793,13 +3788,11 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 {
 
 	int i, j;
-	CDataCell *dc;
 	double weight = 1;
 	bool IsexistingHolding = false;
 	double x ;
-	double dtemp;
 	ASSERT(cellindex >= 0 && cellindex < t.nCell);
-	dc = t.GetCell(cellindex);
+	CDataCell *dc = t.GetCell(cellindex);
 	// Does a new cell have to be created
 	if (!dc->IsFilled) {
 		CDataCell *dcempty = new CDataCell(t.NumberofMaxScoreCell,t.NumberofMaxScoreHolding,t.ApplyHolding, t.ApplyWeight);
@@ -3851,7 +3844,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 				x = fabs(dc->GetTempShadow());
 				if (x> 0)
 				{
-					dtemp = x;
+					double dtemp = x;
 				}
 				for (i = 0; i < t.NumberofMaxScoreHolding; i++) {
 					if (x > dc->MaxScoreHolding[i]) {
@@ -4870,13 +4863,13 @@ CTable * TauArgus::GetTable(int t)
 
 // only for debug
 void TauArgus::ShowCodeLists()  // in output pane
-{ int i, j;
+{ 
   CString s;
-  for (i = 0; i < m_nvar; i++) {
+  for (int i = 0; i < m_nvar; i++) {
     CVariable *v = &(m_var[i]);
 		s.Format("%3d %3d %3d %3d %8.0f %8.0f", v->bPos + 1, v->nPos, v->nDec, v->GetnCode(), v->MaxValue, v->MinValue);
     TRACE("Var %2d. %s\n", i + 1, (LPCTSTR) s);
-		for (j = 0; j < v->GetnCode(); j++) {
+		for (int j = 0; j < v->GetnCode(); j++) {
       TRACE("  %4d. [%s]\n", j + 1, (LPCTSTR) v->GetCode(j) );
     }
 	}
@@ -4885,8 +4878,7 @@ void TauArgus::ShowCodeLists()  // in output pane
 // only for debug
 BOOL TauArgus::ShowTable(const char *fname, CTable& tab)
 { FILE *fd;
-  CDataCell *dc;
-
+ 
   fd = fopen(fname, "w");
 	if (fd == 0) return false;
 
@@ -4894,7 +4886,7 @@ BOOL TauArgus::ShowTable(const char *fname, CTable& tab)
 	case 1:
 		{ int i;
 		  for (i = 0; i < tab.SizeDim[0]; i++) {
-				dc = tab.GetCell(i);
+				CDataCell *dc = tab.GetCell(i);
 				if (dc->GetResp() == 0) {
 				  fprintf(fd, "%3d. %12s \n", i + 1, "-");
 				} else {
@@ -4957,15 +4949,14 @@ int TauArgus::ShowTableLayerCell(char *str, long val)
 void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& tab)
 { int r, k, c, colwidth = 0;
   char str[200];
-  CStringArray  *sCol, *sRow;  // pointer to codes for row and column
 
-  sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
-	sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
+  // pointer to codes for row and column
+  CStringArray  *sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
+  CStringArray  *sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
 
   { // compute width column
 		k = c = 0;
-		CDataCell *dc;
-		dc = tab.GetCell(c + k);
+		CDataCell *dc = tab.GetCell(c + k);
 		colwidth += ShowTableLayerCell(str, dc->GetResp(), m_var[tab.ResponseVarnr].nDec);
 #ifndef COMPACT
 		colwidth += ShowTableLayerCell(str, dc->GetFreq());
@@ -5315,11 +5306,9 @@ bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCod
 	CString stempstr, stemp, tempvarcode;
 	VarCodes.SetSize(m_nvar);
 	stempstr = Str;
-	int inrem;
-	long lseppos;
 	long lcount= 0;
 	if (InFileSeperator  != " ") {
-		lseppos = stempstr.Find(InFileSeperator,0);
+		long lseppos = stempstr.Find(InFileSeperator,0);
 		while (lseppos != -1) {
 			stemp = stempstr.Left(lseppos);
 			VarCodes.SetAt(lcount,stemp);
@@ -5342,7 +5331,7 @@ bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCod
 		tempvarcode = VarCodes.GetAt(VarIndex);
 		tempvarcode.TrimLeft();
 		tempvarcode.TrimRight();
-		inrem = tempvarcode.Remove('"');
+		int inrem = tempvarcode.Remove('"');
 		ASSERT ((inrem == 2) || (inrem == 0));
 		CVariable *var = &(m_var[VarIndex]);
 		AddSpacesBefore(tempvarcode, var->nPos);
@@ -5401,14 +5390,11 @@ bool TauArgus::TestSubCodeList()
 // find number of subtables
 long TauArgus::NumberOfSubTables(long IndexTable)
 {
-	CTable *tab;
-	CVariable *var;
-	long i;
 	long Num=1;
 
-	tab = &(m_tab[IndexTable]);
-	for (i= 0; i<tab->nDim; i++)	{
-		var = &(m_var[tab->ExplVarnr[i]]);
+	CTable *tab = &(m_tab[IndexTable]);
+	for (long i = 0; i < tab->nDim; i++) {
+		CVariable *var = &(m_var[tab->ExplVarnr[i]]);
 		Num *= var->NumSubCodes;
 	}
 	return Num;
@@ -5437,26 +5423,21 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 {
 	long i,j,k,l;
 	long SubTableIndex = -1;
-	long *SubTableTuple;
-	long * MarginalCellIndex;
-	long * SubTableCellIndex;
-	long * TableCellIndex;
 	long nCellSubTable;
 	CTable *tab = &(m_tab[TableIndex]);
 	bool found = false;
 	long SubTableCellNum;
 	long teller = UnsafeCellNum;
-	long NumberOfColumns;
-	CVariable *var, *var1;
+	CVariable *var;
 	CDataCell *dc;
 	long nDec = 8;
 	double UPL, LPL;
-	var1 = &(m_var[tab->ExplVarnr[tab->nDim-1]]);
-	NumberOfColumns = var1->m_SubCodes[0].NumberOfSubCodes();
-	SubTableTuple = new long [tab->nDim];
-	TableCellIndex = new long [tab->nDim];
-	MarginalCellIndex = new long [tab->nDim];
-	SubTableCellIndex  = new long [tab->nDim];
+	CVariable *var1 = &(m_var[tab->ExplVarnr[tab->nDim-1]]);
+	long NumberOfColumns = var1->m_SubCodes[0].NumberOfSubCodes();
+	long *SubTableTuple = new long [tab->nDim];
+	long *TableCellIndex = new long [tab->nDim];
+	long *MarginalCellIndex = new long [tab->nDim];
+	long * SubTableCellIndex = new long [tab->nDim];
 	long marginal;
 	long nsubtable = NumberOfSubTables(TableIndex);
 	for (i = 0; i<nsubtable; i++)	{
@@ -5593,8 +5574,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 bool TauArgus::ArrayCompare (long *arr1, long *arr2, long nDim)
 {
 	bool equal = true;
-	long i;
-	for (i = 0; i<nDim; i++)	{
+	for (long i = 0; i<nDim; i++)	{
 		if (arr1[i] != arr2[i])	{
 			equal = false;
 			break;
@@ -5608,14 +5588,11 @@ bool TauArgus::ArrayCompare (long *arr1, long *arr2, long nDim)
 // return the number of cells
 long TauArgus::FindNumberOfElementsInSubTable(long *SubTableTuple, long TableIndex)
 {
-	long i;
-	CTable *tab;
-	CVariable *var;
 	long Num = 1;
-	tab =  &(m_tab[TableIndex]);
+	CTable *tab =  &(m_tab[TableIndex]);
 
-	for (i = 0; i<tab->nDim; i++)	{
-		var = &(m_var[tab->ExplVarnr[i]]);
+	for (long i = 0; i<tab->nDim; i++)	{
+		CVariable *var = &(m_var[tab->ExplVarnr[i]]);
 		Num *= var->m_SubCodes[SubTableTuple[i]].NumberOfSubCodes();
 	}
 
@@ -5662,19 +5639,16 @@ long TauArgus::SubTableForCellDimension(long TableIndex, long *CellDimension, lo
 {
 	long i,j;
 	long SubTableIndex = -1;
-	long *SubTableTuple;
-	long *SubCodeList;
-	long nCellSubTable;
 	CTable *tab = &(m_tab[TableIndex]);
 	bool found = false;
 
-	SubTableTuple = new long [tab->nDim];
-	SubCodeList = new long [tab->nDim];
+	long *SubTableTuple = new long [tab->nDim];
+	long *SubCodeList = new long [tab->nDim];
 	long nsubtable = NumberOfSubTables(TableIndex);
 	for (i = 0; i<nsubtable; i++)	{
 		//Find a SubTableTuple
 		SubTableTupleForSubTable(TableIndex,i,SubTableTuple);
-		nCellSubTable = FindNumberOfElementsInSubTable(SubTableTuple, TableIndex);
+		long nCellSubTable = FindNumberOfElementsInSubTable(SubTableTuple, TableIndex);
 		for (j = 0; j <nCellSubTable; j++)	{
 			// Find out for each cell the cell index
 			FindCellIndexForSubTable(SubCodeList,TableIndex,SubTableTuple,j,SubTableTupleIndex);
@@ -5697,9 +5671,8 @@ long TauArgus::FindSubTableForCell(long CellIndex, long TableIndex, long *SubTab
 {
 	CTable *tab = &(m_tab[TableIndex]);
 	long *dimnr = new long[tab->nDim];
-	long SubTableIndex;
 	tab->GetIndicesFromCellNr(CellIndex,dimnr);
-	SubTableIndex = SubTableForCellDimension(TableIndex,dimnr,SubTableTupleIndex);
+	long SubTableIndex = SubTableForCellDimension(TableIndex,dimnr,SubTableTupleIndex);
 	delete [] dimnr;
 	return SubTableIndex;
 }
@@ -5709,35 +5682,27 @@ long TauArgus::FindSubTableForCell(long CellIndex, long TableIndex, long *SubTab
 bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 {
 	long i, j, k, cellnr;
-	long sum;
 	long marginal = 0;
-	long NumberOfColumns;
-	long NumSubTables, NumSubTableCells;
 
-	long *SubTableTuple;
-	long *SubTableCellIndex;
-	long *TableCellIndex;
-	long *MarginalCellIndex;
 	long nDecResp = 8;
 	CTable *tab = &(m_tab[tabind]);
 	CVariable *var1 = &(m_var[tab->ExplVarnr[tab->nDim-1]]); // last variable at this point its 2
 																// dim
+	long NumberOfColumns = var1->m_SubCodes[0].NumberOfSubCodes();
 
-	NumberOfColumns = var1->m_SubCodes[0].NumberOfSubCodes();
-
-	SubTableTuple = new long[tab->nDim];
-	SubTableCellIndex = new long[tab->nDim];
-	TableCellIndex = new long[tab->nDim];
+	long *SubTableTuple = new long[tab->nDim];
+	long *SubTableCellIndex = new long[tab->nDim];
+	long *TableCellIndex = new long[tab->nDim];
 //	dimnr = new long [tab->nDim];
-	MarginalCellIndex = new long [tab->nDim];
-	NumSubTables = NumberOfSubTables(tabind);
+	long *MarginalCellIndex = new long [tab->nDim];
+	long NumSubTables = NumberOfSubTables(tabind);
 
 	fprintf (fd, "%s\n", "#table values and weights 9indexed by (table,row,column)), marginals included");
 	fprintf (fd, "%s\n", "param : a         weight   :=");
 	for (i =0; i<NumSubTables; i++)	{
 		SubTableTupleForSubTable(tabind,i,SubTableTuple);
-		NumSubTableCells = FindNumberOfElementsInSubTable(SubTableTuple,tabind);
-		marginal = 0; sum = 0;
+		long NumSubTableCells = FindNumberOfElementsInSubTable(SubTableTuple,tabind);
+		marginal = 0; long sum = 0;
 		for (j= 0; j<NumSubTableCells; j++)	{
 			// just print cell
 			FindCellIndexForSubTable(TableCellIndex,tabind,SubTableTuple,j, SubTableCellIndex);
@@ -5905,7 +5870,6 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, doub
 	if (fd == 0)	{
 		return false;
 	}
-	long status;
 	CTable *tab = &(m_tab[tabind]);
 	long *DimNr = new long [tab->nDim];
 	long *RowColIndex = new long [tab->nDim];
@@ -5940,7 +5904,7 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, doub
 	long nUnsafe = 0;
 	for (i = 0; i < tab->nCell; i++) {
 		CDataCell *dc = tab->GetCell(i);
-		status = dc->GetStatus();
+		long status = dc->GetStatus();
 		if ((status == CS_UNSAFE_RULE) || (status == CS_UNSAFE_PEEP) || (status == CS_UNSAFE_FREQ) ||
 			(status == CS_UNSAFE_ZERO) || (status == CS_UNSAFE_SINGLETON) || (status == CS_UNSAFE_SINGLETON_MANUAL) ||
 			(status == CS_UNSAFE_MANUAL) || (status == CS_PROTECT_MANUAL))	{

@@ -178,7 +178,7 @@ public:
 	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
 	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *dimIndex);
 	long STDMETHODCALLTYPE CheckRealizedLowerAndUpperValues(/*[in]*/long TabNr);
-    bool STDMETHODCALLTYPE SetCTAValues(/*[in]*/ long TabNr, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
+    bool STDMETHODCALLTYPE SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
 	bool STDMETHODCALLTYPE SetRealizedLowerAndUpper(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower);
 	bool STDMETHODCALLTYPE UndoSecondarySuppress(/*[in]*/ long TableIndex, long SortSuppress);
 	bool STDMETHODCALLTYPE SetTableSafetyInfo(long TabIndex,
