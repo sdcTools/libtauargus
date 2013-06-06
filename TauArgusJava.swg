@@ -21,12 +21,18 @@
 %apply char **STRING_OUT { char ** };
 
 // Instead of the default, treat these method parameters as array variables in Java...
+
 // Arrays used as input
-%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *nDigits };
+%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *nDigits, long *DimSequence, long *VarIndex };
 %apply char **STRING_ARRAY { char* [] }
+%apply double[] { double *MaxScoreCell, double *MaxScoreHolding };
+
 // Arrays used as output
-%apply long[] { long *Status, long *HoldingNrPerMaxScore };
-%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore };
+%apply long[] { long *Status, long *HoldingNrPerMaxScore, long *UCArray };
+%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore, double *Cost };
+// GetCellStatusStatistics
+%apply long[] { long *StatusFreq, long *StatusCellFreq, long *StatusHoldingFreq };
+%apply double[] { double *StatusCellResponse, double *StatusCellCost };
 
 // Include this block in the generated C++ wrapper code (TauArgus_wrap.cpp)
 %{

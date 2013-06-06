@@ -737,7 +737,7 @@ bool TauArgus::UnsafeVariable(long VarIndex, long *Count, long *UCArray)
 }
 
 // In this function the input file is read and the code list is built
-bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *VarIndex)
+bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *ErrorVarIndex)
 {
 	DEBUGprintf("ExploreFile\n");
 
@@ -745,7 +745,7 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
    int i, length, recnr = 0, Result;
 
    *ErrorCode = *LineNumber = 0;
-   *VarIndex = -1;
+   *ErrorVarIndex = -1;
 
    if (m_nvar == 0) {
 		*ErrorCode = NOVARIABLES;
@@ -839,7 +839,7 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 				if (Result = DoMicroRecord(str, &varindex), Result >= 1000) { // error?
 					*ErrorCode = Result;
 					*LineNumber = recnr;
-					*VarIndex = varindex;
+					*ErrorVarIndex = varindex;
 					goto error;
 				}
 				break;
@@ -1923,14 +1923,14 @@ bool TauArgus::PrepareCellDistance(long TableIndex)
 }
 
 // This function is not used either at the moment
-bool TauArgus::GetCellDistance(long TableIndex, long *Dims, long *Distance)
+bool TauArgus::GetCellDistance(long TableIndex, long *DimIndex, long *Distance)
 {
 	if (TableIndex < 0 || TableIndex >= m_ntab) {
 		return false;
 	}
 
 	CTable *tab = GetTable(TableIndex);
-	tab->GetCellDistance(tab->GetCellNrFromIndices(Dims), Distance);
+	tab->GetCellDistance(tab->GetCellNrFromIndices(DimIndex), Distance);
 	
 	return true;
 }
@@ -2693,7 +2693,7 @@ long TauArgus::CheckRealizedLowerAndUpperValues(long TabIndex)
 }
 
 // given an array of codes, calculate the corresponding indexes or cell number
-bool TauArgus::ComputeCodesToIndices(long TableIndex, char* sCode[], long *dimIndex)
+bool TauArgus::ComputeCodesToIndices(long TableIndex, char* sCode[], long *DimIndex)
 {
 	CTable *tab = &(m_tab[TableIndex]);
 	long dim = tab->nDim;
@@ -2717,7 +2717,7 @@ bool TauArgus::ComputeCodesToIndices(long TableIndex, char* sCode[], long *dimIn
 		if (var->TableIndex < 0) {
 			return false;
 		}
-		dimIndex[j] = var->TableIndex;
+		DimIndex[j] = var->TableIndex;
 	}
 
 	return true;

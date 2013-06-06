@@ -176,7 +176,7 @@ public:
 	bool STDMETHODCALLTYPE GetCellStatusStatistics(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost);
 	bool STDMETHODCALLTYPE WriteTableInAMPLFormat(/*[in]*/ const char* AMPLFileName, /*[in]*/ long TableIndex);
 	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
-	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *dimIndex);
+	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *DimIndex);
 	long STDMETHODCALLTYPE CheckRealizedLowerAndUpperValues(/*[in]*/long TabNr);
     bool STDMETHODCALLTYPE SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
 	bool STDMETHODCALLTYPE SetRealizedLowerAndUpper(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower);
@@ -211,7 +211,7 @@ public:
 	bool STDMETHODCALLTYPE WriteJJFormat(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ bool WithBogus , bool AsPerc, bool ForRounding);
 	bool STDMETHODCALLTYPE WriteCSV(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
 	bool STDMETHODCALLTYPE WriteCSVBasic(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
-	bool STDMETHODCALLTYPE GetCellDistance(/*[in]*/ long TableIndex, /*[in,out]*/ long * Dims, /*[in,out]*/ long * Distance);
+	bool STDMETHODCALLTYPE GetCellDistance(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ long * Distance);
 	bool STDMETHODCALLTYPE PrepareCellDistance(/*[in]*/ long TableIndex);
 	long STDMETHODCALLTYPE SetSecondaryGHMITER(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, bool IsSingleton);
 	long STDMETHODCALLTYPE WriteGHMITERDataCell(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, bool IsSingleton);
@@ -258,7 +258,7 @@ public:
 	bool STDMETHODCALLTYPE SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
 	bool STDMETHODCALLTYPE UndoRecode(/*[in]*/ long VarIndex);
 	long STDMETHODCALLTYPE GetMaxnUc();
-	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * VarIndex);
+	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
 	bool STDMETHODCALLTYPE UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
 	bool STDMETHODCALLTYPE GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
 	bool STDMETHODCALLTYPE SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
