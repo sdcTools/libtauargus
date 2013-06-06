@@ -39,6 +39,29 @@ public:
 };
 
 // --------------------------------------------------------------------------
+// C2BString - helper class for conversion from const char** to BSTR* 
+// --------------------------------------------------------------------------
+class C2BString {
+
+private:
+	const char *cstr;
+	BSTR* bstr;
+
+public:
+	C2BString(BSTR *bstr) {
+		this->bstr = bstr;
+	}
+
+	~C2BString() {
+		*bstr = _com_util::ConvertStringToBSTR(cstr);
+	}
+
+	operator const char**() {
+		return &cstr;
+	}
+};
+
+// --------------------------------------------------------------------------
 // B2CStringArray - helper class for conversion from VARIANT* to char[]
 // --------------------------------------------------------------------------
 class B2CStringArray {
@@ -54,6 +77,7 @@ public:
 		cstr = new char*[size];
 
 		BSTR bstrtemp;
+		// currently all supplied arrays have a lower bound index of 1
 		for (long j = 1; j <= size; j++) {
 			// To get a string from an array of strings. Use SafeArray
 			HRESULT hresult = SafeArrayGetElement(sa, &j, &bstrtemp);
@@ -74,6 +98,30 @@ public:
 	}
 };
 
+// --------------------------------------------------------------------------
+// DecrementIndex - helper class for decrementing indices (by 1) in arrays
+// --------------------------------------------------------------------------
+class DecrementIndex {
+
+private:
+	long *Index;
+
+public:
+	DecrementIndex(long size, long *Index) {
+		this->Index = new long[size];
+		for (int i=0; i<size; i++) {
+			this->Index[i] = Index[i] - 1;
+		}
+	}
+
+	~DecrementIndex() {
+		delete[] Index;
+	}
+
+	operator long*() {
+		return Index;
+	}
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CTauArgCtrl
@@ -123,11 +171,7 @@ STDMETHODIMP CTauArgCtrl::DoRecode(long VarIndex, BSTR RecodeString, long nMissi
 												long *ErrorType, long *ErrorLine, long *ErrorPos,
 												BSTR *WarningString, VARIANT_BOOL *pVal)
 {
-	const char* warningString;
-
-	*pVal = tauArgus.DoRecode(VarIndex - 1, B2CString(RecodeString), nMissing, B2CString(eMissing1), B2CString(eMissing2), ErrorType, ErrorLine, ErrorPos, &warningString) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	*WarningString = _com_util::ConvertStringToBSTR(warningString);
+	*pVal = tauArgus.DoRecode(VarIndex - 1, B2CString(RecodeString), nMissing, B2CString(eMissing1), B2CString(eMissing2), ErrorType, ErrorLine, ErrorPos, C2BString(WarningString)) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -291,17 +335,9 @@ STDMETHODIMP CTauArgCtrl::SetTable(	long Index, long nDim, long *ExplanatoryVarL
 												VARIANT_BOOL SetMissingAsSafe,
 												VARIANT_BOOL *pVal)
 {
-	long* ExpVar = new long[nDim];
-	for (int i=0; i< nDim; i++) 
-	{
-		ExpVar[i] = ExplanatoryVarList[i] - 1;
-	}
-
-	*pVal = tauArgus.SetTable(Index - 1, nDim, ExpVar, IsFrequencyTable==VARIANT_TRUE, ResponseVar - 1, ShadowVar - 1, CostVar > 0 ? CostVar - 1 : CostVar,  Lambda, MaxScaledCost, PeepVarnr - 1, SetMissingAsSafe==VARIANT_TRUE)
+	*pVal = tauArgus.SetTable(Index - 1, nDim, DecrementIndex(nDim, ExplanatoryVarList), IsFrequencyTable==VARIANT_TRUE, ResponseVar - 1, ShadowVar - 1, CostVar > 0 ? CostVar - 1 : CostVar,  Lambda, MaxScaledCost, PeepVarnr - 1, SetMissingAsSafe==VARIANT_TRUE)
 		? VARIANT_TRUE 
 		: VARIANT_FALSE;
-
-	delete[] ExpVar;
 
 	return S_OK;
 }
@@ -398,13 +434,9 @@ STDMETHODIMP CTauArgCtrl::GetVarCode(long VarIndex, long CodeIndex,
 												long *IsMissing, long *Level,
 												VARIANT_BOOL *pVal)
 {
-	const char* codeString;
-
-	*pVal = tauArgus.GetVarCode(VarIndex - 1, CodeIndex, CodeType, &codeString, IsMissing, Level)
+	*pVal = tauArgus.GetVarCode(VarIndex - 1, CodeIndex, CodeType, C2BString(CodeString), IsMissing, Level)
 		? VARIANT_TRUE 
 		: VARIANT_FALSE;
-
-	*CodeString = _com_util::ConvertStringToBSTR(codeString);
 
 	return S_OK;
 }
@@ -416,11 +448,7 @@ STDMETHODIMP CTauArgCtrl::UnsafeVariableCodes(long VarIndex, long CodeIndex,
 															BSTR *Code, long *Count,
 															long *UCArray, VARIANT_BOOL *pVal)
 {
-	const char* code;
-
-	*pVal = tauArgus.UnsafeVariableCodes(VarIndex - 1, CodeIndex, IsMissing, Freq, &code, Count, UCArray) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	*Code = _com_util::ConvertStringToBSTR(code);
+	*pVal = tauArgus.UnsafeVariableCodes(VarIndex - 1, CodeIndex, IsMissing, Freq, C2BString(Code), Count, UCArray) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -432,11 +460,7 @@ STDMETHODIMP CTauArgCtrl::GetVarCodeProperties(long VarIndex, long CodeIndex,
 															 long *nChildren, BSTR *Code,
 															 VARIANT_BOOL *pVal)
 {
-	const char* code;
-
-	*pVal = tauArgus.GetVarCodeProperties(VarIndex - 1, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, &code) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	*Code = _com_util::ConvertStringToBSTR(code);
+	*pVal = tauArgus.GetVarCodeProperties(VarIndex - 1, CodeIndex, IsParent, IsActive, IsMissing, Level, nChildren, C2BString(Code)) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
@@ -566,15 +590,8 @@ STDMETHODIMP CTauArgCtrl::SetInCodeList(long NumberofVar, long *VarIndex,
 													VARIANT *sCode, long *ErrorCode,
 													long *ErrorInVarIndex, VARIANT_BOOL *pVal)
 {
-	long *varIndex = new long[NumberofVar];
-	for (int i = 0; i < NumberofVar; i++) {
-		varIndex[i] = VarIndex[i] - 1;
-	}
-
-	*pVal = tauArgus.SetInCodeList(NumberofVar, varIndex, B2CStringArray(sCode), ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
+	*pVal = tauArgus.SetInCodeList(NumberofVar, DecrementIndex(NumberofVar, VarIndex), B2CStringArray(sCode), ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 	(*ErrorInVarIndex)++;
-
-	delete[] varIndex;
 
 	return S_OK;
 }
@@ -585,14 +602,7 @@ STDMETHODIMP CTauArgCtrl::SetTotalsInCodeList(long NumberofVariables, long *VarI
 															long *ErrorCode, long *ErrorInVarIndex,
 															VARIANT_BOOL *pVal)
 {
-	long* varIndex = new long[NumberofVariables];
-
-	for (int i = 0; i < NumberofVariables; i++) 
-		varIndex[i] = VarIndex[i] - 1;
-
-	*pVal = tauArgus.SetTotalsInCodeList(NumberofVariables, varIndex, ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
-
-	delete[] varIndex;
+	*pVal = tauArgus.SetTotalsInCodeList(NumberofVariables, DecrementIndex(NumberofVariables, VarIndex), ErrorCode, ErrorInVarIndex) ? VARIANT_TRUE : VARIANT_FALSE;
 
 	return S_OK;
 }
