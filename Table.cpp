@@ -184,7 +184,7 @@ CTable::~CTable()
 }
 
 // explanatory variables are set
-BOOL CTable::SetExplVariables(int inDim, long* ExplVar)
+bool CTable::SetExplVariables(int inDim, long* ExplVar)
 {
 	nDim = inDim;
 
@@ -201,7 +201,7 @@ BOOL CTable::SetExplVariables(int inDim, long* ExplVar)
 
 
 // other variables are set. In case only frequency tables are created, this has to be changed
-BOOL CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar)
+bool CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar)
 {
 	// Add HoldingVarnr to this shit
 
@@ -232,7 +232,7 @@ BOOL CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, 
 }
 // cell_1 = LongArray[0], cell_2 = LongArray[1],
 //Holding_1 = LongArray[2],Holding_2,= LongArray[3];
-BOOL CTable::SetDominance(long *DominanceNumber, long *DominancePerc)
+bool CTable::SetDominance(long *DominanceNumber, long *DominancePerc)
 {
 	if (!ApplyHolding)	{
 		if (DominanceNumber[0] < 1) return false;
@@ -293,7 +293,7 @@ BOOL CTable::SetDominance(long *DominanceNumber, long *DominancePerc)
 }
 
 // Set PQ rule
-BOOL CTable::SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN )
+bool CTable::SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN )
 
 {
 	if (!ApplyHolding)	{
@@ -344,7 +344,7 @@ BOOL CTable::SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorP
 }
 
 // safe minimum records and safe minimum holdings
-BOOL CTable::SetSafeMinRecAndHold(long SafeMinRec, long SafeMinHoldings)
+bool CTable::SetSafeMinRecAndHold(long SafeMinRec, long SafeMinHoldings)
 {
 
 
@@ -369,7 +369,7 @@ BOOL CTable::SetSafeMinRecAndHold(long SafeMinRec, long SafeMinHoldings)
 // Since there could be two PQ and two Dominance rules. The top n is the maximum n.
 // One cell is also created as an empty cell. This is the (Size of table + 1)th cell. This is used
 // whenever information for a cell is asked that is not created.
-BOOL CTable::PrepareTable()
+bool CTable::PrepareTable()
 {
 	int nScoreCellDom, nScoreHoldingDom, i;
 	int nScoreCellPQ, nScoreHoldingPQ;
@@ -416,7 +416,7 @@ BOOL CTable::PrepareTable()
 }
 
 // cleans up all allocated memory.
-BOOL CTable::CleanUp()
+bool CTable::CleanUp()
 {
 	int i;
 	if (nCell == 0) {
@@ -490,7 +490,7 @@ long CTable::GetSizeTable()
 }
 
 // sets per dimension the size of this dimension.
-BOOL CTable::SetDimSize(int dim, int value)
+bool CTable::SetDimSize(int dim, int value)
 {
 	ASSERT(nDim != 0 && dim >= 0 && dim < nDim && value > 0);
 	if (nDim == 0 || dim < 0 || dim >= nDim || value < 1) {
@@ -539,14 +539,14 @@ CDataCell* CTable::GetCell(long CellNr)
 // given a cell and an array of dimension positions.
 //The cell can be placed on position in the CellPtr array.
 
-BOOL CTable::SetCell(long *VarValueList, CDataCell &datacell)
+bool CTable::SetCell(long *VarValueList, CDataCell &datacell)
 {
 	SetCell(GetCellNrFromIndices(VarValueList), datacell);
 	return true;
 }
 
 // Given a cell an a position. It sets the cell.
-BOOL CTable::SetCell(long CellNr, CDataCell &datacell)
+bool CTable::SetCell(long CellNr, CDataCell &datacell)
 {
 	ASSERT(CellNr >= 0 && CellNr < nCell);
 
@@ -556,7 +556,7 @@ BOOL CTable::SetCell(long CellNr, CDataCell &datacell)
 }
 // Unsafe cell through Dominance rule. This is used to determine that the cell is
 // primary unsafe.
-BOOL CTable::UnsafeCellDominance(CDataCell &dc)
+bool CTable::UnsafeCellDominance(CDataCell &dc)
 {
 	if (DominanceNumberCell_1 > 0)	{
 		if (dc.GetDominancePercCell(ApplyWeight, ApplyWeightOnSafetyRule,
@@ -588,7 +588,7 @@ BOOL CTable::UnsafeCellDominance(CDataCell &dc)
 }
 // Unsafe cell through PQ rule. This is used to determine that a cell is
 // primary unsafe.
-BOOL CTable::UnsafeCellPQRule(CDataCell &dc)
+bool CTable::UnsafeCellPQRule(CDataCell &dc)
 {
 	if (PQ_PCell_1 > 0)	{
 		if (dc.GetPQCell(PQ_PCell_1, PQ_QCell_1,
@@ -621,7 +621,7 @@ BOOL CTable::UnsafeCellPQRule(CDataCell &dc)
 
 // Unsafe cell through peep rule. This is used to determine if the cell is unsafe
 // because it fails in the peep rule.
-BOOL CTable::UnsafeCellPeep(CDataCell &dc)
+bool CTable::UnsafeCellPeep(CDataCell &dc)
 {
 
 	if(dc.GetPeepSortCell() == PEEP1)	{
@@ -679,7 +679,7 @@ BOOL CTable::UnsafeCellPeep(CDataCell &dc)
 
 
 // Unsafe cells through minimum records or minimum holdings.
-BOOL CTable::UnsafeCellMinRec(CDataCell &dc)
+bool CTable::UnsafeCellMinRec(CDataCell &dc)
 {
 	if (!ApplyWeight)	{
 		if ((dc.GetFreq() > 0) && (dc.GetFreq() < SafeMinRec))	{
@@ -758,7 +758,7 @@ int CTable::ComputeCellSafeCode(CDataCell &dc)
 // nUnsafe: array with max MAXDIM longs.
 // For a given explanatory variable this method returns the
 //number of unsafe cells per code (index)
-BOOL CTable::GetUnsafeCells(int VarIndex, long *nUnsafe)
+bool CTable::GetUnsafeCells(int VarIndex, long *nUnsafe)
 {
 	long DimList[MAXDIM], c;
 	int d, i, n;
@@ -796,7 +796,7 @@ BOOL CTable::GetUnsafeCells(int VarIndex, long *nUnsafe)
 }
 
 // Given a variable and code. This method returns the number of cells
-BOOL CTable::GetUnsafeCells(int VarIndex, int VarCodeIndex, long *nUnsafe)
+bool CTable::GetUnsafeCells(int VarIndex, int VarCodeIndex, long *nUnsafe)
 {
 	long DimList[MAXDIM];
 	int i;
@@ -877,7 +877,7 @@ long CTable::GetCellNrFromIndices(long *Indices)
 }
 
 // Given a CellNr returns an array of indices.
-BOOL CTable::GetIndicesFromCellNr(long CellNr, long *Indices)
+bool CTable::GetIndicesFromCellNr(long CellNr, long *Indices)
 {
 	int i, c = CellNr;
 
@@ -972,7 +972,7 @@ void CTable::GetStatusAndCostPerDim(long *Status, double *Cost)
 }
 
 // The secondary unsafe cells are set as unsafe
-BOOL CTable::SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary)
+bool CTable::SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary)
 {
 	char *p, str[200];
 	long dims[MAXDIM];
@@ -1089,14 +1089,14 @@ void CTable::GetStatusStatistics(long *Freq, long *CellFreq, long *HoldingFreq,
 }
 
 // returns true if the cell is safe
-BOOL CTable::IsCellSafe(long c)
+bool CTable::IsCellSafe(long c)
 {
 	int status = GetCell(c)->GetStatus();
 	return status == CS_SAFE || status == CS_SAFE_MANUAL || status == CS_PROTECT_MANUAL;
 }
 
 // returns true if the cell is unsafe
-BOOL CTable::IsCellUnsafe(long c)
+bool CTable::IsCellUnsafe(long c)
 {
 	int status = GetCell(c)->GetStatus();
 	return status == CS_UNSAFE_FREQ || status == CS_UNSAFE_PEEP || status == CS_UNSAFE_RULE
@@ -1117,7 +1117,7 @@ int CTable::GetCellDistance(long *dim1, long *dim2)
 	return n;
 }
 
-BOOL CTable::PrepareComputeDistance()
+bool CTable::PrepareComputeDistance()
 {
 // This could be used sometime in the future
 
@@ -1168,7 +1168,7 @@ BOOL CTable::PrepareComputeDistance()
 }
 
 // also not used
-BOOL CTable::GetCellDistance(long CellNr, long *Dist)
+bool CTable::GetCellDistance(long CellNr, long *Dist)
 {
 	if (CellDistance == 0) return false;
 	*Dist = CellDistance[CellNr];
@@ -1199,7 +1199,7 @@ void CTable::InitializeHoldingNrs()
 // 3) if the cell is unsafe through Zero rule then zero safety perc
 // 4) if the cell is unsafe through peep then peep safety perc
 // and etc.
-BOOL CTable::SetProtectionLevelCell(CDataCell &datacell)
+bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 {
 	double LowerProtectionLevel = 0, UpperProtectionLevel = 0;
 	//double SlidingProtectionLevel = 0, ProtectionCapacity = 0;
@@ -1361,7 +1361,7 @@ BOOL CTable::SetProtectionLevelCell(CDataCell &datacell)
 	return true;
 }
 
-BOOL CTable::SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K)
+bool CTable::SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K)
 {
 	double UpperProtectionLevel = 0;
 	double LowerProtectionLevel = 0;

@@ -1650,7 +1650,7 @@ bool TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary)
 		return false;
 	}
 
-	BOOL res = m_tab[t].SetSecondaryHITAS(fd, m_var, nSetSecondary);
+	bool res = m_tab[t].SetSecondaryHITAS(fd, m_var, nSetSecondary);
 
 	fclose(fd);
 
@@ -3394,7 +3394,7 @@ void TauArgus::QuickSortStringArray(CStringArray &s, int first, int last)
 
 // converts code to double; leading and trailing spaces are ignored;
 // the last chararter should be a zero-byte
-BOOL TauArgus::ConvertNumeric(char *code, double &d)
+bool TauArgus::ConvertNumeric(char *code, double &d)
 
 {
 	char *stop;
@@ -3413,7 +3413,7 @@ BOOL TauArgus::ConvertNumeric(char *code, double &d)
 
 // fill code lists in a table. This is the sibling of do micro record
 
-BOOL TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
+bool TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
 							   double Resp,double Shadow, long Freq,
 							   double *TopNCell, double *TopNHolding,
 								double LPL, double UPL,
@@ -3957,7 +3957,7 @@ void TauArgus::InitializeHoldingTables()
 ///         DESTCODE    compute and sort dest code
 ///         SRCCODE     compute link between src and dest code
 
-BOOL TauArgus::ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase)
+bool TauArgus::ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase)
 {
 	int PosInString = 0, LineNumber = 1;
 
@@ -3978,7 +3978,7 @@ BOOL TauArgus::ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* 
 }
 
 // Parse a line of a recode string (until str[i] == 0 || str[i] == '\n' || str[i] == '\r')
-BOOL TauArgus::ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* ErrorType, long FAR* ErrorPos, int Phase)
+bool TauArgus::ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* ErrorType, long FAR* ErrorPos, int Phase)
 {
 	int i = 0, len = strlen(str), res, fromto, position;
 	int nPos = m_var[VarIndex].nPos;
@@ -4321,7 +4321,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 }
 
 // compute recoded tables . sibling function of fill tables, for recoded tables
-BOOL TauArgus::ComputeRecodeTables()
+bool TauArgus::ComputeRecodeTables()
 {
 	int i, d, nRecodes = 0;
 
@@ -4431,7 +4431,7 @@ int TauArgus::MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR M
 	return maxwidth;
 }
 // from source table create recoded destination table
-BOOL TauArgus::ComputeRecodeTable(CTable& srctab, CTable& dsttab)
+bool TauArgus::ComputeRecodeTable(CTable& srctab, CTable& dsttab)
 {
 	dsttab.nCell = 1;
 	// compute number of cells
@@ -4801,7 +4801,7 @@ void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, l
 void TauArgus::WriteCellRecord(FILE *fd, CTable *tab,
 											 long *Dims, int niv, char ValueSep, long SBSCode,
 											 bool bSBSLevel,
-											 BOOL SuppressEmpty, bool ShowUnsafe, long RespType)
+											 bool SuppressEmpty, bool ShowUnsafe, long RespType)
 {
 	// write Cell
 	if (niv == tab->nDim) {
@@ -4876,7 +4876,7 @@ void TauArgus::ShowCodeLists()  // in output pane
 }
 
 // only for debug
-BOOL TauArgus::ShowTable(const char *fname, CTable& tab)
+bool TauArgus::ShowTable(const char *fname, CTable& tab)
 { FILE *fd;
  
   fd = fopen(fname, "w");

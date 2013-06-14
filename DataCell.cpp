@@ -253,8 +253,8 @@ void CDataCell::MergeScore(double *a, double *aw, double* b, double *bw, int n) 
 // Note the two functions below could be combined and made into one function with a boolean
 // to direct you to use weight or not
 // Gets the dominance Perc of cell.
-double CDataCell::GetDominancePercCell(BOOL ApplyWeight, 
-													BOOL ApplyWeightOnSafetyRule, long DominanceNumber)
+double CDataCell::GetDominancePercCell(bool ApplyWeight, 
+													bool ApplyWeightOnSafetyRule, long DominanceNumber)
 { 
 	ASSERT(MaxScoreCell != 0);
 	if (MaxScoreCell[0] == 0) return 0;
@@ -264,8 +264,8 @@ double CDataCell::GetDominancePercCell(BOOL ApplyWeight,
 }
 
 // Gets the dominance Perc of holding. These two 
-double CDataCell::GetDominancePercHolding(BOOL ApplyWeight, 
-													BOOL ApplyWeightOnSafetyRule, long DominanceNumber)
+double CDataCell::GetDominancePercHolding(bool ApplyWeight, 
+													bool ApplyWeightOnSafetyRule, long DominanceNumber)
 { 
 	ASSERT(MaxScoreHolding != 0);
 	if (MaxScoreHolding[0] == 0) return 0;
@@ -277,7 +277,7 @@ double CDataCell::GetDominancePercHolding(BOOL ApplyWeight,
 // Gets PQ for cell.
 
 double CDataCell::GetPQCell(double p, double q, long n, 
-									 BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule)
+									 bool ApplyWeight, bool ApplyWeightOnSafetyRule)
 {
 	if (!ApplyWeight || !ApplyWeightOnSafetyRule) {  
 		int i;
@@ -294,7 +294,7 @@ double CDataCell::GetPQCell(double p, double q, long n,
 }
 
 //  gets PQ holding
-double CDataCell::GetPQHolding(double p, double q, long n, BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule)
+double CDataCell::GetPQHolding(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule)
 {
 	if (!ApplyWeight || !ApplyWeightOnSafetyRule) {  
 		int i;
@@ -310,7 +310,7 @@ double CDataCell::GetPQHolding(double p, double q, long n, BOOL ApplyWeight, BOO
 }
 
 // Each of the top n is factored with the corresponding weights.
-double CDataCell::ComputeWeightedScoreCell(BOOL DoWeight, long NumberOfScores )
+double CDataCell::ComputeWeightedScoreCell(bool DoWeight, long NumberOfScores )
 { 
 	int i;
 	double score = 0;
@@ -338,7 +338,7 @@ double CDataCell::ComputeWeightedScoreCell(BOOL DoWeight, long NumberOfScores )
 }
 
 // each of the top n holdings is factored with holdings.
-double CDataCell::ComputeWeightedScoreHolding(BOOL DoWeight, long NumberOfScores )
+double CDataCell::ComputeWeightedScoreHolding(bool DoWeight, long NumberOfScores )
 { 
 	int i;
 	double score = 0;
@@ -377,7 +377,7 @@ double CDataCell::ComputeWeightedScoreHolding(BOOL DoWeight, long NumberOfScores
 // CDataCell message handlers
 // Not yet been done for the 2 rules
 /*
-BOOL CDataCell::GetProtectionLevel(long SafetyRule,
+bool CDataCell::GetProtectionLevel(long SafetyRule,
 											  long ManualSafetyPerc, 
                                    long CellFreqSafetyPerc,
 											  long HoldingFreqSafetyPerc,
@@ -388,7 +388,7 @@ BOOL CDataCell::GetProtectionLevel(long SafetyRule,
 											  long MinSafeRec,
 											  long MinSafeHold,
 											  bool WithHolding,
-                                   BOOL DoWeight, 
+                                   bool DoWeight, 
 											  int kCell_1,int kCell_2, int kHolding_1, int kHolding_2, 
 											  int nkCell_1,int nkCell_2, int nkHolding_1, int nkHolding_2, 
 											  int pCell_1,int pCell_2, int pHolding_1, int pHolding_2,

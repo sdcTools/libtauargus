@@ -43,12 +43,12 @@ public:
 	long nPos;              // number of bytes
 	long nDec;              // number of decimals
 
-	BOOL IsPeeper;					//variable is Pieper
-	BOOL IsCategorical;			// variable is categorical (sex, regio)
-	BOOL IsNumeric;		      // variable is counting item (income, number of persons)
-	BOOL IsWeight;		    	// variable is weight
-	BOOL IsHierarchical;   	// variable is hierarchical
-	BOOL IsHolding;       	// variable is holding indicator
+	bool IsPeeper;					//variable is Pieper
+	bool IsCategorical;			// variable is categorical (sex, regio)
+	bool IsNumeric;		      // variable is counting item (income, number of persons)
+	bool IsWeight;		    	// variable is weight
+	bool IsHierarchical;   	// variable is hierarchical
+	bool IsHolding;       	// variable is holding indicator
 
 	int nMissing;	          // number of missing codes (usually 1 or 2)
 	CString Missing1;       // first missing value
@@ -97,20 +97,20 @@ public:
 	int  hfCodeWidth; // max width code hierarchical codelist from file
 	void UndoRecode();
 	CCode* GethCode();
-	BOOL SetHierarchicalRecode();
+	bool SetHierarchicalRecode();
 	void PrintLevelStrings(FILE *fd, int nLevel, LPCTSTR LevelString);
 	void PrintLevelCode(FILE *fd, LPCTSTR code, LPCTSTR LevelString);
 	void WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, CStringArray *CodeList);
-	BOOL WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, BOOL bogus);
-	BOOL SetHierarchicalDigits(long nDigitPairs, long *nDigits);
+	bool WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, bool bogus);
+	bool SetHierarchicalDigits(long nDigitPairs, long *nDigits);
 	int  FindHierarchicalCode(LPCTSTR code);
 	int  FindAllHierarchicalCode(LPCTSTR code);
 	int  SetCodeList(LPCTSTR FileName, LPCTSTR LevelString);
-	void SetActive(long CodeIndex, BOOL active);
-	BOOL SetHierarch();
+	void SetActive(long CodeIndex, bool active);
+	bool SetHierarch();
 	void GetGHMITERCode(int i, char* code);
 	int  GetCodeWidth();
-	BOOL IsCodeBasic(int i);
+	bool IsCodeBasic(int i);
 	CStringArray * GetCodeList();
 	int  GetnMissing();
 	CString GetCode(int i);
@@ -120,14 +120,14 @@ public:
 	int  GetnBogus();
 	int  GetnCodeActive();
 	int  GetnCodeInActive();
-	BOOL AddCode(const char *newcode, bool tail);
-	BOOL ComputeHierarchicalCodes();
-	BOOL SetMissing(LPCTSTR Missing1, LPCTSTR Missing2, long NumMissing);
-	BOOL SetTotalCode(LPCTSTR sTotalCode);
-	BOOL SetType(BOOL IsCategorical, BOOL IsNumeric, BOOL IsWeight, BOOL IsHierarchical, BOOL IsHolding, BOOL IsPeeper);
-	BOOL SetPeepCodes(CString Peep1, CString Peep2);
-	BOOL SetPosition(long bPos, long nPos, long nDec);
-	BOOL SetDecPosition(long lnDec);
+	bool AddCode(const char *newcode, bool tail);
+	bool ComputeHierarchicalCodes();
+	bool SetMissing(LPCTSTR Missing1, LPCTSTR Missing2, long NumMissing);
+	bool SetTotalCode(LPCTSTR sTotalCode);
+	bool SetType(bool IsCategorical, bool IsNumeric, bool IsWeight, bool IsHierarchical, bool IsHolding, bool IsPeeper);
+	bool SetPeepCodes(CString Peep1, CString Peep2);
+	bool SetPosition(long bPos, long nPos, long nDec);
+	bool SetDecPosition(long lnDec);
 	int  BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool &IsMissing);
 	virtual ~CVariable();
 	long OrganizeCodelist();

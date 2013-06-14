@@ -80,9 +80,9 @@ void CGhmiter::DeleteSourceFiles()
 // 0.0  value 0 safe
 // 0    normal processing positive tables
 // MaxnDim max number of dimensions of all tables
-// nTables number of tables (usually 1)BOOL ControlDataTables(
+// nTables number of tables (usually 1)bool ControlDataTables(
 // tabelle
-BOOL CGhmiter::ControlDataTables(long MemorySizeMB, double MinValue, double MaxValue,
+bool CGhmiter::ControlDataTables(long MemorySizeMB, double MinValue, double MaxValue,
 	int MaxnDim, int nTables)
 { FILE *fd;
   CString FileName;
@@ -116,7 +116,7 @@ error:
 */
 
 // steuer
-BOOL CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
+bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 										  const char *EndStr1, const char *EndStr2,
 										  int nDim, int *ExpVarNr, CVariable *m_var)
 {
@@ -202,7 +202,7 @@ BOOL CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 }
 
 // eingabe
-BOOL CGhmiter::CellsTable(const char *FileName, CTable *tab, CVariable *m_var, bool IsSingleton)
+bool CGhmiter::CellsTable(const char *FileName, CTable *tab, CVariable *m_var, bool IsSingleton)
 {
 	FILE *fd;
 	int n, m;
@@ -368,7 +368,7 @@ int CGhmiter::ComputeHierarchicalLevels(int VarNr, int *nGroup, CVariable *m_var
 }
 
 /*
-BOOL CGhmiter::ExecuteProgram()
+bool CGhmiter::ExecuteProgram()
 { int result;
 
   result = _spawnl(_P_WAIT, (LPCTSTR) ProgramPath, (LPCTSTR) ProgramPath, NULL);
@@ -381,7 +381,7 @@ BOOL CGhmiter::ExecuteProgram()
 */
 
 /*
-BOOL CGhmiter::MakeTempPath()
+bool CGhmiter::MakeTempPath()
 {	char path[_MAX_PATH];
 
 	if (!GetTempPath(_MAX_PATH, path)) {
@@ -394,7 +394,7 @@ BOOL CGhmiter::MakeTempPath()
 */
 
 /*
-BOOL CGhmiter::SetProgramPath(LPCTSTR mProgramPath)
+bool CGhmiter::SetProgramPath(LPCTSTR mProgramPath)
 {
 	// Check for existence
   if (_access(mProgramPath, 0) == -1 )	return false;
@@ -404,7 +404,7 @@ BOOL CGhmiter::SetProgramPath(LPCTSTR mProgramPath)
 */
 
 // secondary unsafe cells that are calculated by GHmiter are set as unsafe.
-BOOL CGhmiter::SetSecondaryUnsafe(const char *FileName, CTable *tab, long *nSetSecondary, int *ErrorCode, bool IsSingleton)
+bool CGhmiter::SetSecondaryUnsafe(const char *FileName, CTable *tab, long *nSetSecondary, int *ErrorCode, bool IsSingleton)
 {
 	FILE *fd;
 	*ErrorCode = 0;
@@ -417,7 +417,7 @@ BOOL CGhmiter::SetSecondaryUnsafe(const char *FileName, CTable *tab, long *nSetS
 
 	long Dims[MAXDIM];
 	nSetAtSec = 0;
-	BOOL result = SetSecUnSafe(tab, fd, Dims, tab->nDim - 1,IsSingleton);
+	bool result = SetSecUnSafe(tab, fd, Dims, tab->nDim - 1,IsSingleton);
 	if (!result) *ErrorCode = GHM_SOURCECELLINCORRECT;
 
 	*nSetSecondary = nSetAtSec;
@@ -428,7 +428,7 @@ BOOL CGhmiter::SetSecondaryUnsafe(const char *FileName, CTable *tab, long *nSetS
 
 //Secondary unsafe set as unsafe in the table cells.
 
-BOOL CGhmiter::SetSecUnSafe(CTable *tab, FILE *fd, long *Dims, int niv, bool IsSingleton)
+bool CGhmiter::SetSecUnSafe(CTable *tab, FILE *fd, long *Dims, int niv, bool IsSingleton)
 {
 	int i, n;
 

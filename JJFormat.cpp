@@ -27,9 +27,9 @@ CJJFormat::~CJJFormat()
 }
 
 // Write cells to be used in JJ format
-BOOL CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double UpperBound,
+bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double UpperBound,
 									CTable *tab, CVariable *var, int nDecResp,
-									BOOL WithBogus, BOOL AsPerc, BOOL ForRounding,
+									bool WithBogus, bool AsPerc, bool ForRounding,
 									double MaxCost, double MaxResp)
 {
 	long i, j, n, frq, nCell, ScaledCost, nDecRespPlus;
@@ -216,7 +216,7 @@ BOOL CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 // Restriction = Cell 1 = Cell 2 + Cell 3 + Cell 4 in complicated form:
 // 0.0   4  :  1 (-1) 2 (1) 3 (1) 4 (1)
 // so, there are four cells and 0.0 == -1 * Cell[1] + 1 * Cell[2] + 1 * Cell[3] + 1 * Cell[4]
-BOOL CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, BOOL WithBogus)
+bool CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, bool WithBogus)
 {
 	int d, d1, d2, nRestrictions, nDim = tab->nDim;
 
@@ -285,7 +285,7 @@ BOOL CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, BOOL Wi
 // right hand side of the equation. Normally that parent = sum of children
 void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 									int TargetDim, long *DimNr, int niv,
-									BOOL WithBogus, TabDimProp *tdp)
+									bool WithBogus, TabDimProp *tdp)
 {
 	CUIntArray Children;
 	if (niv == tab->nDim) {
@@ -366,7 +366,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 
 // if WithBogus: No-Bogus-Parents with all descendants bogus: no Parent any more
 int CJJFormat::GetRange(CVariable &var, int CodeIndex, CUIntArray &Children,
-								BOOL WithBogus)
+								bool WithBogus)
 {
 	int i, n = 0, LevelParent, LevelDesc, nCode;
 	CCode *hCode = var.GethCode();
@@ -436,7 +436,7 @@ long CJJFormat::GetCellNrFromIndices(int nDim, long *DimNr, TabDimProp *tdp)
 }
 
 // Secondary Unsafes returned by JJ set as Unsafe cells in the table
-BOOL CJJFormat::SetSecondaryUnsafe(const char *FileName, CTable *tab, CVariable *var, long *nSetSecondary, long *ErrorCode, BOOL WithBogus)
+bool CJJFormat::SetSecondaryUnsafe(const char *FileName, CTable *tab, CVariable *var, long *nSetSecondary, long *ErrorCode, bool WithBogus)
 {
 	FILE *fd;
 	*ErrorCode = 0;
@@ -449,7 +449,7 @@ BOOL CJJFormat::SetSecondaryUnsafe(const char *FileName, CTable *tab, CVariable 
 
 
 	nSetAtSec = 0;
-	BOOL result = SetSecUnSafe(tab, var, fd, WithBogus);
+	bool result = SetSecUnSafe(tab, var, fd, WithBogus);
 	if (!result) *ErrorCode = JJF_SOURCECELLINCORRECT;
 	*nSetSecondary = nSetAtSec;
 
@@ -458,7 +458,7 @@ BOOL CJJFormat::SetSecondaryUnsafe(const char *FileName, CTable *tab, CVariable 
 	return result;
 }
 
-BOOL CJJFormat::SetSecUnSafe(CTable *tab,  CVariable *var, FILE *fd, BOOL WithBogus)
+bool CJJFormat::SetSecUnSafe(CTable *tab,  CVariable *var, FILE *fd, bool WithBogus)
 {
 	int i, n = 2;
 	char str[1000];

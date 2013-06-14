@@ -23,11 +23,11 @@ class CHitas
 public:
 	CString NameSecFile;
 	CString NameTabFile;
-  BOOL WriteCellDim(FILE *fd, CTable &tab, CVariable *var, long *dimsCell, long *dimsCodeList, int niv);
-	BOOL WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var);
-	BOOL WriteFilesFile(FILE *fd, CTable& tab, CVariable *var);
-	BOOL WriteParameterFile(FILE *fd, CTable& tab);
-	BOOL MakeTempPath();
+  bool WriteCellDim(FILE *fd, CTable &tab, CVariable *var, long *dimsCell, long *dimsCodeList, int niv);
+	bool WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var);
+	bool WriteFilesFile(FILE *fd, CTable& tab, CVariable *var);
+	bool WriteParameterFile(FILE *fd, CTable& tab);
+	bool MakeTempPath();
 	CString TempPath;
 	CHitas();
 	virtual ~CHitas();

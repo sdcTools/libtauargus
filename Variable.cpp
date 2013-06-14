@@ -65,7 +65,7 @@ END_MESSAGE_MAP()
 */
 
 // Set position for variables.
-BOOL CVariable::SetPosition(long lbPos, long lnPos, long lnDec)
+bool CVariable::SetPosition(long lbPos, long lnPos, long lnDec)
 {
 
 	bPos = lbPos - 1;
@@ -77,7 +77,7 @@ BOOL CVariable::SetPosition(long lbPos, long lnPos, long lnDec)
 
 
 //Set number of decimal places
-BOOL CVariable::SetDecPosition(long lnDec)
+bool CVariable::SetDecPosition(long lnDec)
 {
 	if (lnDec < 0) return false;
 	nDec = lnDec;
@@ -86,9 +86,9 @@ BOOL CVariable::SetDecPosition(long lnDec)
 
 // Set what type the variable is.
 // Categorical, Numerical etc
-BOOL CVariable::SetType(BOOL bIsCategorical, BOOL bIsNumeric,
-								BOOL bIsWeight, BOOL bIsHierarchical,
-								BOOL bIsHolding, BOOL bIsPeeper)
+bool CVariable::SetType(bool bIsCategorical, bool bIsNumeric,
+								bool bIsWeight, bool bIsHierarchical,
+								bool bIsHolding, bool bIsPeeper)
 {
 	IsCategorical = bIsCategorical;
 	IsNumeric = bIsNumeric;
@@ -101,7 +101,7 @@ BOOL CVariable::SetType(BOOL bIsCategorical, BOOL bIsNumeric,
 
 // set the missing strings for variable. note a variable need not always
 // have missing strings
-BOOL CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing)
+bool CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing)
 {
 
 	if (NumMissing > 0)	{
@@ -127,7 +127,7 @@ BOOL CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing
 }
 
 
-BOOL CVariable::SetTotalCode(LPCTSTR sTotalCode)
+bool CVariable::SetTotalCode(LPCTSTR sTotalCode)
 {
     TotalCode = sTotalCode;
 	return true;
@@ -136,7 +136,7 @@ BOOL CVariable::SetTotalCode(LPCTSTR sTotalCode)
 
 // code is added to the code list.
 // if code already in code list it is not added
-BOOL CVariable::AddCode(const char *newcode, bool tail)
+bool CVariable::AddCode(const char *newcode, bool tail)
 {
 	int i, n;
 	bool IsMissing;
@@ -227,7 +227,7 @@ int CVariable::BinSearchStringArray(CStringArray &s, CString x, int nMissing, bo
 }
 
 // compute the hierarchical codes where digit split is involved
-BOOL CVariable::ComputeHierarchicalCodes()
+bool CVariable::ComputeHierarchicalCodes()
 {
 	int i, j, n;
 	CString s, t;
@@ -354,7 +354,7 @@ CCode* CVariable::GethCode()
 }
 
 // only for non hierarchical variables
-BOOL CVariable::IsCodeBasic(int i)
+bool CVariable::IsCodeBasic(int i)
 {
 	ASSERT(IsHierarchical == false);
 	return GetCodeList()->GetAt(i).GetLength() == GetCodeWidth();
@@ -395,7 +395,7 @@ void CVariable::GetGHMITERCode(int i, char *code)
 // set the hierarchy. Very important and used by explore file and
 // completed codelist
 // In this functions the hierarchies, levels and number of children are calculated.
-BOOL CVariable::SetHierarch()
+bool CVariable::SetHierarch()
 {
 	int i, j, n, lev[MAXDIGITGROUP + 1];
 
@@ -467,7 +467,7 @@ BOOL CVariable::SetHierarch()
 }
 
 // set all descendants on active / not active
-void CVariable::SetActive(long CodeIndex, BOOL active)
+void CVariable::SetActive(long CodeIndex, bool active)
 {
 	int c = CodeIndex, level;
 
@@ -628,7 +628,7 @@ int CVariable::FindHierarchicalCode(LPCTSTR code)
 }
 
 //
-BOOL CVariable::SetHierarchicalDigits(long nDigitPairs, long *nDigits)
+bool CVariable::SetHierarchicalDigits(long nDigitPairs, long *nDigits)
 {
 	int i, npos = 0;
 
@@ -648,7 +648,7 @@ BOOL CVariable::SetHierarchicalDigits(long nDigitPairs, long *nDigits)
 	return true;
 }
 
-BOOL CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, BOOL bogus)
+bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, bool bogus)
 {
 	CStringArray *CodeList = GetCodeList();
 	CCode *phCode = GethCode();
@@ -719,7 +719,7 @@ void CVariable::PrintLevelCode(FILE *fd, LPCTSTR code, LPCTSTR LevelString)
 }
 
 
-BOOL CVariable::SetHierarchicalRecode()
+bool CVariable::SetHierarchicalRecode()
 {
 	int i, j;
 	CByteArray RLevel; // levels recoded hierarchical variable
@@ -862,7 +862,7 @@ long CVariable::OrganizeCodelist()
 	}
 	return 1;
 }
-BOOL CVariable::SetPeepCodes(CString Peep1, CString Peep2)
+bool CVariable::SetPeepCodes(CString Peep1, CString Peep2)
 {
 	if (IsPeeper)	{
 		if ((Peep1.IsEmpty()) &&  (Peep2.IsEmpty()))	{

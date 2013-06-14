@@ -111,11 +111,11 @@ public:
 // About the Table
 	bool IsFrequencyTable;
 	bool ApplyHolding;
-	BOOL ApplyWeight;
-	BOOL ApplyWeightOnSafetyRule;
-	BOOL ApplyPeeper;
-	BOOL ApplyZeroRule;
-	BOOL EmptyCellsAsNSEmpty;
+	bool ApplyWeight;
+	bool ApplyWeightOnSafetyRule;
+	bool ApplyPeeper;
+	bool ApplyZeroRule;
+	bool EmptyCellsAsNSEmpty;
 	int HasRecode;
 
 
@@ -136,51 +136,51 @@ public:
 public:
 	void InitializeHoldingNrs();
 	long GetCellNrFromIndices(long *Indices);
-	BOOL GetCellDistance(long CellNr, long *Dist);
-	BOOL IsCellSafe(long c);
-	BOOL IsCellUnsafe(long c);
+	bool GetCellDistance(long CellNr, long *Dist);
+	bool IsCellSafe(long c);
+	bool IsCellUnsafe(long c);
 	int * CellDistance;
-	BOOL PrepareComputeDistance();
+	bool PrepareComputeDistance();
 	int  GetCellDistance(long *dim1, long *dim2);
 	void GetStatusStatistics(long *Freq,long *CellFreq, long *HoldingFreq, double *CellResp, double *CellCost);
 	void SetCellSecondaryUnsafe(long *dims);
 	void SetSecondary(CVariable *var, long *dims, long *CellDims, int niv, long *nSetSecondary);
-	BOOL SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary);
+	bool SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary);
 	CDataCell * GetCell(long *VarValueList);
 	CDataCell * GetCell(long CellNr);
 	void GetStatusAndCostPerDim(long *Status, double *Cost);
 	void UndoSecondarySuppress(long SortSuppress);
-	BOOL GetIndicesFromCellNr(long CellNr, long* Indices);
-	BOOL CleanUp();
+	bool GetIndicesFromCellNr(long CellNr, long* Indices);
+	bool CleanUp();
 	int  ComputeCellSafeCode(CDataCell &dc);
-	BOOL PrepareTable();
-	BOOL UnsafeCellDominance(CDataCell &dc);
-	BOOL UnsafeCellPQRule(CDataCell &dc);
-	BOOL UnsafeCellMinRec(CDataCell& dc);
-	BOOL UnsafeCellPeep(CDataCell &dc);
+	bool PrepareTable();
+	bool UnsafeCellDominance(CDataCell &dc);
+	bool UnsafeCellPQRule(CDataCell &dc);
+	bool UnsafeCellMinRec(CDataCell& dc);
+	bool UnsafeCellPeep(CDataCell &dc);
 	void CountUnSafe(long *DimList, int FixedDimNr, long *Unsafe, int niv);
 
-	BOOL GetUnsafeCells(int VarIndex, int VarCodeIndex, long *nUnsafe);
-	BOOL GetUnsafeCells(int VarIndex, long *nUnsafe);
-	//BOOL GetCell(long *VarValueList, CDataCell& datacell);
-	//BOOL GetCell(long CellNr, CDataCell& datacell);
+	bool GetUnsafeCells(int VarIndex, int VarCodeIndex, long *nUnsafe);
+	bool GetUnsafeCells(int VarIndex, long *nUnsafe);
+	//bool GetCell(long *VarValueList, CDataCell& datacell);
+	//bool GetCell(long CellNr, CDataCell& datacell);
 	long GetMemSizeTable();
 	long GetSizeTable();
 
-	BOOL SetCell(long *VarValueList, CDataCell& datacell);
-	BOOL SetCell(long CellNr, CDataCell& datacell);
-	BOOL SetDimSize(int dim, int value);
-//  BOOL SetDominance(long DominanceNumber, long DominancePerc);
+	bool SetCell(long *VarValueList, CDataCell& datacell);
+	bool SetCell(long CellNr, CDataCell& datacell);
+	bool SetDimSize(int dim, int value);
+//  bool SetDominance(long DominanceNumber, long DominancePerc);
 
 
-	BOOL SetDominance(long *DominanceNumber, long *DominancePerc);
-	//BOOL SetPQRule(long PriorPosteriorP, long PriorPosteriorQ, long PriorPosteriorN);
-	BOOL SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN);
-	BOOL SetSafeMinRecAndHold(long SafeMinRec, long SafeMinholdings);
-	BOOL SetVariables(int inDim, long* ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar);
-	BOOL SetExplVariables(int nDim, long* ExplVar);
-	BOOL SetProtectionLevelCell(CDataCell &datacell);
-	BOOL SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K);
+	bool SetDominance(long *DominanceNumber, long *DominancePerc);
+	//bool SetPQRule(long PriorPosteriorP, long PriorPosteriorQ, long PriorPosteriorN);
+	bool SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN);
+	bool SetSafeMinRecAndHold(long SafeMinRec, long SafeMinholdings);
+	bool SetVariables(int inDim, long* ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar);
+	bool SetExplVariables(int nDim, long* ExplVar);
+	bool SetProtectionLevelCell(CDataCell &datacell);
+	bool SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K);
 	virtual ~CTable();
 protected:
 	//{{AFX_MSG(CTable)

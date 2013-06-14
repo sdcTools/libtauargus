@@ -181,17 +181,17 @@ public:
 
 	void MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n);
 	void MergeScore(double *a, double *aw, double* b, double *bw, int n);  // for MaxScore and MaxScoreWeight
-	double GetDominancePercCell(BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule, long DominanceNumber);
-	double GetDominancePercHolding(BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule, long DominanceNumber);
-	double GetPQCell(double p, double q, long n, BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule);
-	double GetPQHolding(double p, double q, long n, BOOL ApplyWeight, BOOL ApplyWeightOnSafetyRule);
-	 //BOOL GetProtectionLevel(long SafetyRule,long ManualSafetyPerc, long FreqSafetyPerc, long PeepSafetyRangePerc, long SingletonSafetyRangePerc,
-		// double ZeroSafetyRangePerc, long MinSafeRec, long LenOfArray,BOOL DoWeight, 
+	double GetDominancePercCell(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
+	double GetDominancePercHolding(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
+	double GetPQCell(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
+	double GetPQHolding(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
+	 //bool GetProtectionLevel(long SafetyRule,long ManualSafetyPerc, long FreqSafetyPerc, long PeepSafetyRangePerc, long SingletonSafetyRangePerc,
+		// double ZeroSafetyRangePerc, long MinSafeRec, long LenOfArray,bool DoWeight, 
 		 //int k, int p, int q, double *Upper, double *Lower, double *Sliding, 
 		// double *Capacity);
-	double ComputeWeightedScoreCell(BOOL DoWeight, long NumberOfScores);
-	double ComputeWeightedScoreHolding(BOOL DoWeight, long NumberOfScores);
-	 /*BOOL GetProtectionLevel(long SafetyRule,
+	double ComputeWeightedScoreCell(bool DoWeight, long NumberOfScores);
+	double ComputeWeightedScoreHolding(bool DoWeight, long NumberOfScores);
+	 /*bool GetProtectionLevel(long SafetyRule,
 											  long ManualSafetyPerc, 
                                    long CellFreqSafetyPerc,
 											  long HoldingFreqSafetyRangePerc,
@@ -202,7 +202,7 @@ public:
 											  long MinSafeRec,
 											  long MinSafeHold,
 											  bool WithHolding,
-                                   BOOL DoWeight, 
+                                   bool DoWeight, 
 											  int kCell_1,int kCell_2, int kHolding_1, int kHolding_2, 
 											  int nkCell_1,int nkCell_2, int nkHolding_1, int nkHolding_2, 
 											  int pCell_1,int pCell_2, int pHolding_1, int pHolding_2,

@@ -39,7 +39,7 @@ public:
 };
 
 // --------------------------------------------------------------------------
-// C2BString - helper class for conversion from const char** to BSTR* 
+// C2BString - helper class for back conversion from const char** to BSTR* 
 // --------------------------------------------------------------------------
 class C2BString {
 

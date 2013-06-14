@@ -54,7 +54,7 @@ OUTDIR=c:/knb/hitas/test/  ; Will contain ouput-files (= TEMP-dir?) // werkdirec
 */
 
 
-BOOL CHitas::WriteParameterFile(FILE *fd, CTable& tab)
+bool CHitas::WriteParameterFile(FILE *fd, CTable& tab)
 {
 	fprintf(fd, "[Frequency rule]\n");
 	fprintf(fd, "MINCOUNT=%d\n\n", tab.SafeMinRec);
@@ -81,7 +81,7 @@ BOOL CHitas::WriteParameterFile(FILE *fd, CTable& tab)
 	return true;
 }
 
-BOOL CHitas::MakeTempPath()
+bool CHitas::MakeTempPath()
 {	
 	char path[_MAX_PATH];
 	
@@ -102,7 +102,7 @@ c:\knb\hitas\test3\data\BTab.dat             // naam bestand met basistabel
 c:\knb\hitas\test\status3.dat                // naam bestand met resultaat (alleen secundaire cellen)
 */
 
-BOOL CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
+bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 { 
 	int i;
 	CString fname, varname;
@@ -129,7 +129,7 @@ BOOL CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 	return true;
 }
 
-BOOL CHitas::WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var)
+bool CHitas::WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var)
 { 
 	long dimsCell[MAXDIM];
 	long dimsCodeList[MAXDIM];
@@ -145,7 +145,7 @@ BOOL CHitas::WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var)
 }
 
 
-BOOL CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var, 
+bool CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var, 
 							long *dimsCell, long *dimsCodeList, int niv)
 { 
 	int i, c;

@@ -22,9 +22,9 @@ Code      Parent nChildren IsBogus Level
 class CCode  
 {
 public:
-	BOOL IsParent;    // nChildren >= 1
-	BOOL IsBogus;     // only child of a parent
-	BOOL Active;      // if so, always all descendants from an IsParent-item
+	bool IsParent;    // nChildren >= 1
+	bool IsBogus;     // only child of a parent
+	bool Active;      // if so, always all descendants from an IsParent-item
 	int Level;        // 0 = total, 1, 2 ... 
 	int nChildren;    // number of childs 
 	CCode();

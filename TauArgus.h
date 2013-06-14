@@ -58,7 +58,7 @@ private:
 	void AddTableCells(CTable& t, CDataCell AddCell, int niv, long cellindex);
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
 	void FillTables(UCHAR *str);
-	BOOL ConvertNumeric(char *code, double &d);
+	bool ConvertNumeric(char *code, double &d);
 	void QuickSortStringArray(CStringArray &s, int first, int last);
 	int  BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool& IsMissing);
 	char m_fname[_MAX_PATH];
@@ -72,7 +72,7 @@ private:
 	void WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code);
 	void WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, int SBSCode, long RespType);
 	void WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, long SBSCode);
-	void WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel, BOOL SuppressEmpty, bool ShowUnsafe, long RespType);
+	void WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel, bool SuppressEmpty, bool ShowUnsafe, long RespType);
    void WriteFirstLine(FILE *fd, LPCTSTR FirstLine);
    void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, long RespType);
 	void ComputeCellStatuses(CTable &tab);
@@ -80,7 +80,7 @@ private:
 
 // for debug
 	void ShowCodeLists();
-	BOOL ShowTable(const char *fname, CTable& tab);
+	bool ShowTable(const char *fname, CTable& tab);
 	void ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable &tab);
 	int  ShowTableLayerCell(char *str, double val, int ndec);
 	int  ShowTableLayerCell(char *str, long val);
@@ -90,20 +90,20 @@ private:
 	bool ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCode);
 	void InitializeHoldingTables();
 	void MergeLastTempShadow();
-	BOOL ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase);
-	BOOL ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* ErrorType, long FAR* ErrorPos, int Phase);
+	bool ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase);
+	bool ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* ErrorType, long FAR* ErrorPos, int Phase);
 	int  AddRecode(int varnr, const char *newcode);
 	int  MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR Missing2);
 	int  ReadWord(LPCTSTR str, char* CodeFrom, char *CodeTo, char EndCode, int& fromto, int& pos);
 	void AddSpacesBefore(char *str, int len);
 	void AddSpacesBefore(CString& str, int len);
 	int  SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char *SrcCode2, int fromto);
-	BOOL ComputeRecodeTables();
-	BOOL ComputeRecodeTable(CTable& srctab, CTable& dsttab);
+	bool ComputeRecodeTables();
+	bool ComputeRecodeTable(CTable& srctab, CTable& dsttab);
 	void ComputeRecodeTableCells(CTable& srctab, CTable& dsttab, int niv, int iCellSrc, int iCellDst);
 	void AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, long ito);
 	void SetTableHasRecode();
-	BOOL FillInTable(long Index, CString *sCodes, double Cost, double Resp,
+	bool FillInTable(long Index, CString *sCodes, double Cost, double Resp,
 						double Shadow, long Freq, double *TopNCell, double *TopNHolding,
 						double LPL, double UPL,long Status, long & error, long  & ErrorVarNo);
 
