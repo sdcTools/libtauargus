@@ -4015,7 +4015,7 @@ bool TauArgus::ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* Error
 	}
 	i += res;
 
-	//if (strlen(DestCode) > (UINT) nPos) {
+	//if (strlen(DestCode) > (size_t) nPos) {
 	//  *ErrorType = E_LENGTHWRONG;
 	//  *ErrorPos = position + i + 1;
 	//  return false;
@@ -4033,7 +4033,7 @@ bool TauArgus::ParseRecodeStringLine(long VarIndex, LPCTSTR str, long FAR* Error
 		}
 
 		// length oke?
-		if (strlen(SrcCode1) > (UINT) nPos || strlen(SrcCode2) > (UINT) nPos) {
+		if (strlen(SrcCode1) > (size_t) nPos || strlen(SrcCode2) > (size_t) nPos) {
 			*ErrorType = E_LENGTHWRONG;
 			*ErrorPos = position + i + 1;
 			return false;
@@ -4424,8 +4424,8 @@ int TauArgus::MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR M
 			maxwidth = length;
 		}
 	}
-	if (strlen(Missing1) > (UINT) maxwidth) maxwidth = strlen(Missing1);
-	if (strlen(Missing2) > (UINT) maxwidth) maxwidth = strlen(Missing2);
+	if (strlen(Missing1) > (size_t) maxwidth) maxwidth = strlen(Missing1);
+	if (strlen(Missing2) > (size_t) maxwidth) maxwidth = strlen(Missing2);
 	m_var[VarIndex].Recode.CodeWidth = maxwidth;
 
 	// spaces before shorter ones
@@ -5085,7 +5085,7 @@ void TauArgus::AdjustTable(CTable *tab)
 void TauArgus::TestTable(CTable *tab, long TargetDim,
 									 long *DimNr, long niv, bool	*IsGoodTable)
 {
-	vector<UINT> Children;
+	vector<unsigned int> Children;
 	CDataCell *dc;
 	double sum,test;
 
@@ -5157,7 +5157,7 @@ void TauArgus::TestTable(CTable *tab, long TargetDim,
 }
 
 // Get Children for a code
-int TauArgus::GetChildren(CVariable &var, int CodeIndex, vector<UINT> &Children)
+int TauArgus::GetChildren(CVariable &var, int CodeIndex, vector<unsigned int> &Children)
 {
 	int i, n = 0, LevelParent, LevelDesc, nCode;
 	CCode *hCode = var.GethCode();
@@ -5187,7 +5187,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 
 	long ramya=1;
 	long robbert = 1;
-	vector<UINT> Children;
+	vector<unsigned int> Children;
 	CDataCell *dc;
 	CDataCell *dctemp, *dcramya;
    CDataCell *addcell;

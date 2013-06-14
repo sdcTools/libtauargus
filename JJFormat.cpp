@@ -235,7 +235,7 @@ bool CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, bool Wi
 		if (WithBogus && v->IsHierarchical) tdp[d].nCode -= v->nBogus;
 		if (v->IsHierarchical) {
 			// count number of parents
-			vector<UINT> Children;
+			vector<unsigned int> Children;
 			tdp[d].nParent = 1; // total always parent
 			int nCode = v->GetnCode();
 			for (int i = 1; i < nCode; i++) {
@@ -290,7 +290,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 									int TargetDim, long *DimNr, int niv,
 									bool WithBogus, TabDimProp *tdp)
 {
-	vector<UINT> Children;
+	vector<unsigned int> Children;
 	if (niv == tab->nDim) {
 		CVariable *v = &(var[tab->ExplVarnr[TargetDim]]);
 		int nCode = v->GetnCode();
@@ -368,7 +368,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 
 
 // if WithBogus: No-Bogus-Parents with all descendants bogus: no Parent any more
-int CJJFormat::GetRange(CVariable &var, int CodeIndex, vector<UINT> &Children,
+int CJJFormat::GetRange(CVariable &var, int CodeIndex, vector<unsigned int> &Children,
 								bool WithBogus)
 {
 	int i, n = 0, LevelParent, LevelDesc, nCode;

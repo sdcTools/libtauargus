@@ -111,7 +111,7 @@ private:
 
 	bool IsTable (CTable *tab);
 	void TestTable(CTable *tab, long fixeddim, long *DimNr, long niv, bool *IsGoodTable);
-	int GetChildren(CVariable &var, int CodeIndex, std::vector<UINT> &Children);
+	int GetChildren(CVariable &var, int CodeIndex, std::vector<unsigned int> &Children);
 
 	// To find rand totallen
 	void AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, long niv);
