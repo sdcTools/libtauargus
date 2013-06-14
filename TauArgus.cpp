@@ -1,9 +1,12 @@
 #include "stdafx.h"
-#include "TauArgus.h"
+#include <vector>
+#include <float.h>
+#include <math.h>
 
 #include "Globals.h"
-#include "float.h"
-#include "math.h"
+#include "TauArgus.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -255,8 +258,8 @@ oke:
 	for (i = 0; i < m_nvar; i++) {
 		if (m_var[i].IsHierarchical && m_var[i].nDigitSplit == 0) {
 			// empty no longer needed arrays
-			m_var[i].hLevel.RemoveAll();
-			m_var[i].hLevelBasic.RemoveAll();
+			m_var[i].hLevel.clear();
+			m_var[i].hLevelBasic.clear();
 		}
 	}
 	return true;
@@ -355,23 +358,23 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 		}
 	}
 
-	m_var[v].Recode.sCode.RemoveAll();
+	m_var[v].Recode.sCode.clear();
 	m_var[v].Recode.nCode = 0;
 	m_var[v].Recode.CodeWidth = 0;
 	m_var[v].Recode.nMissing = 0;
 
-	m_var[v].Recode.sCode.Add(""); // for Total
+	m_var[v].Recode.sCode.push_back(""); // for Total
 
 	// another time, now compute list of dest codes
 	ParseRecodeString(v, RecodeString, ErrorType, ErrorLine, ErrorPos, DESTCODE);
-	if (m_var[v].Recode.sCode.GetSize() < 2) {
+	if (m_var[v].Recode.sCode.size() < 2) {
 		*ErrorType = E_EMPTYSPEC;
 		*ErrorLine = 1;
 		*ErrorPos = 1;
 		return false;
 	}
 	// sort list of dest codes, still without missing values (coming soon)
-	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.GetSize() - 1);
+	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.size() - 1);
 
 
 	// now the number of codes is known, but not the not mentioned ones
@@ -403,18 +406,20 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 			CString mis = Missing1;
 			AddSpacesBefore(mis, maxwidth);
 			if (n = BinSearchStringArray(m_var[v].Recode.sCode, mis, 0, IsMissing), n >= 0) {
-				m_var[v].Recode.sCode.RemoveAt(n);
+				vector<CString>::iterator p = m_var[v].Recode.sCode.begin() + n;
+				m_var[v].Recode.sCode.erase(p);
 			}
 			mis = Missing2;
 			AddSpacesBefore(mis, maxwidth);
 			if (n = BinSearchStringArray(m_var[v].Recode.sCode, mis, 0, IsMissing), n >= 0) {
-				m_var[v].Recode.sCode.RemoveAt(n);
+				vector<CString>::iterator p = m_var[v].Recode.sCode.begin() + n;
+				m_var[v].Recode.sCode.erase(p);
 			}
 		}
 	}
 
 	// sort list of dest codes, still without missing values (coming soon)
-	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.GetSize() - 1);
+	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.size() - 1);
 
 	// ADD MISSING1 AND -2
 	// both empty impossible, see start of function
@@ -475,7 +480,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	}
 
 	// yep, the number of codes is known and the codes are sorted (except one or two MISSINGs at the end of te list)
-	m_var[v].Recode.nCode = m_var[v].Recode.sCode.GetSize();
+	m_var[v].Recode.nCode = m_var[v].Recode.sCode.size();
 
 
 	// do the same for MISSINGS, more complicated
@@ -546,7 +551,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 
 	m_var[v].HasRecode = true;
 
-	m_var[v].Recode.nCode = m_var[v].Recode.sCode.GetSize();
+	m_var[v].Recode.nCode = m_var[v].Recode.sCode.size();
 
 	m_var[v].Recode.sCode[0] = "";
 
@@ -579,7 +584,7 @@ bool TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDig
 		return false;
 	}
 
-	if (m_var[VarIndex].hLevel.GetSize() != 0) {
+	if (m_var[VarIndex].hLevel.size() != 0) {
 		return false;
 	}
 
@@ -804,7 +809,7 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 		}
 
 		if (m_var[i].IsHierarchical) {
-			if (m_var[i].nDigitSplit == 0 && m_var[i].hLevel.GetSize() == 0) {
+			if (m_var[i].nDigitSplit == 0 && m_var[i].hLevel.size() == 0) {
 				*ErrorCode = WRONGHIERARCHY;
 				goto error;
 			}
@@ -858,14 +863,14 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 			if (m_var[i].nMissing != 0)	{
 				m_var[i].AddCode((LPCTSTR) m_var[i].Missing1, true);
 				if (m_var[i].IsHierarchical && m_var[i].nDigitSplit == 0) {
-					m_var[i].hLevel.Add(1);
-					m_var[i].hLevelBasic.Add(true);
+					m_var[i].hLevel.push_back(1);
+					m_var[i].hLevelBasic.push_back(true);
 				}
 				if (m_var[i].nMissing == 2) {
 					m_var[i].AddCode((LPCTSTR) m_var[i].Missing2, true);
 					if (m_var[i].IsHierarchical && m_var[i].nDigitSplit == 0) {
-						m_var[i].hLevel.Add(1);
-						m_var[i].hLevelBasic.Add(true);
+						m_var[i].hLevel.push_back(1);
+						m_var[i].hLevelBasic.push_back(true);
 					}
 				}
 			}
@@ -885,7 +890,7 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 			m_var[i].AddCode("", false);
 		}
 
-		m_var[i].nCode = m_var[i].sCode.GetSize();
+		m_var[i].nCode = m_var[i].sCode.size();
 		// allocate and initialize memory
 		if (m_var[i].IsHierarchical) {
 			if (!m_var[i].SetHierarch() ) {
@@ -1812,14 +1817,14 @@ bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
 	}
 
 	CCode *phCode = m_var[v].hCode;
-	CStringArray *psCode = &(m_var[v].sCode);
+	vector<CString> *psCode = &(m_var[v].sCode);
 
 	*IsParent = phCode[c].IsParent;
 	*IsActive = phCode[c].Active;
 	*IsMissing = (c >= m_var[v].nCode - m_var[v].nMissing);
 	*Level = phCode[c].Level;
 	*nChildren = phCode[c].nChildren;
-	*Code = psCode->GetAt(c);
+	*Code = (*psCode)[c];
 
 	return true;
 }
@@ -2131,7 +2136,7 @@ bool TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 
 	for (i = 0; i < m_nvar; i++) {
 		if (m_var[i].IsHierarchical) {
-			if (m_var[i].nDigitSplit == 0 && m_var[i].hLevel.GetSize() == 0) {
+			if (m_var[i].nDigitSplit == 0 && m_var[i].hLevel.size() == 0) {
 				*ErrorCode = WRONGHIERARCHY;
 				*ErrorInVarIndex = i;
 				return false;
@@ -2185,15 +2190,15 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 			if (var->nMissing > 0)	{
 				var->AddCode((LPCTSTR) var->Missing1, true);
 				if (var->IsHierarchical && var->nDigitSplit == 0) {
-					var->hLevel.Add(1);
-					var->hLevelBasic.Add(true);
+					var->hLevel.push_back(1);
+					var->hLevelBasic.push_back(true);
 				}
 
 				if (var->nMissing == 2)  {
 					var->AddCode((LPCTSTR) var->Missing2, true);
 					if  (var->IsHierarchical && var->nDigitSplit == 0)   {
-						var->hLevel.Add(1);
-						var->hLevelBasic.Add(true);
+						var->hLevel.push_back(1);
+						var->hLevelBasic.push_back(true);
 					}
 				}
 			}
@@ -2213,7 +2218,7 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 
 
 //			m_var[i].nCode = m_var[i].sCode.GetSize();
-			long n = m_var[lvarindex].sCode.GetSize();
+			long n = m_var[lvarindex].sCode.size();
 			m_var[lvarindex].nCode = n;
 			if (var->IsHierarchical)  {
 				if (!var->SetHierarch()) {
@@ -2891,7 +2896,7 @@ bool TauArgus::SetRoundedResponse(const char* RoundedFile, long TableIndex)
 				(dc->GetStatus() == CS_EMPTY_NONSTRUCTURAL)))	{
 
 			CDataCell *newcell = new CDataCell(tab->NumberofMaxScoreCell,tab->NumberofMaxScoreHolding,tab->ApplyHolding, tab->ApplyWeight);
-			tab->CellPtr.SetAt(CellNum,newcell);
+			tab->CellPtr[CellNum] = newcell;
 			dc = tab->GetCell(CellNum);
 			dc->SetStatus(CS_SAFE);
 
@@ -3038,7 +3043,7 @@ bool TauArgus::SetAllEmptyNonStructural(long TableIndex)
 		CDataCell *dc = tab->GetCell(i);
 		if (dc->GetStatus() == CS_EMPTY) {
 			CDataCell *dcempty = new CDataCell(tab->NumberofMaxScoreCell,tab->NumberofMaxScoreHolding,tab->ApplyHolding, tab->ApplyWeight);
-			tab->CellPtr.SetAt(i,dcempty);
+			tab->CellPtr[i] = dcempty;
 			dc = tab->GetCell(i);
 			dc->SetStatus(CS_EMPTY_NONSTRUCTURAL);
 //			tab->ComputeCellSafeCode (dc);
@@ -3124,7 +3129,7 @@ bool TauArgus::SetAllNonStructuralAsEmpty(long TableIndex)
 			//dcempty = new CDataCell(tab->NumberofMaxScoreCell,tab->NumberofMaxScoreHolding,tab->ApplyHolding, tab->ApplyWeight);
 			dc = tab->GetCell(i);
 			delete [] dc;
-			tab->CellPtr.SetAt(i,NULL);
+			tab->CellPtr[i] = NULL;
 		}
 	}
 
@@ -3256,9 +3261,9 @@ int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
 
 // returns: -1 in case not found
 // IsMissing on true if x = Missing1 or x = Missing2
-int TauArgus::BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool &IsMissing)
+int TauArgus::BinSearchStringArray(vector<CString> &s, CString x, int nMissing, bool &IsMissing)
 {
-	int mid, left = 0, right = s.GetSize() - 1 - nMissing;
+	int mid, left = 0, right = s.size() - 1 - nMissing;
 	int mis;
 
 	ASSERT(left <= right);
@@ -3286,7 +3291,7 @@ int TauArgus::BinSearchStringArray(CStringArray &s, CString x, int nMissing, boo
 	// equal to missing1 or -2? // code missing not always the highest
 
 	if (nMissing > 0) {
-		mis = s.GetSize() - nMissing;
+		mis = s.size() - nMissing;
 		if (x == s[mis]) {
 			IsMissing = true;
 			return mis;
@@ -3350,7 +3355,7 @@ void TauArgus::QuickSortMaxScore(double &doub, int &intg, int first, int last)
 
 */
 // sort strings
-void TauArgus::QuickSortStringArray(CStringArray &s, int first, int last)
+void TauArgus::QuickSortStringArray(vector<CString> &s, int first, int last)
 {
 	int i, j;
 	CString mid, temp;
@@ -3456,7 +3461,7 @@ bool TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
 		long CellIndex = tab->GetCellNrFromIndices(tabind);
 
 		// check if cell index is valid
-		tab->CellPtr.SetAt(CellIndex,dcempty);
+		tab->CellPtr[CellIndex] = dcempty;
 		dc = tab ->GetCell(tabind);
 		dc->IsFilled = true;
 
@@ -3796,7 +3801,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 	// Does a new cell have to be created
 	if (!dc->IsFilled) {
 		CDataCell *dcempty = new CDataCell(t.NumberofMaxScoreCell,t.NumberofMaxScoreHolding,t.ApplyHolding, t.ApplyWeight);
-		t.CellPtr.SetAt(cellindex,dcempty);
+		t.CellPtr[cellindex] = dcempty;
 		dc = t.GetCell(cellindex);
 	}
 
@@ -3878,7 +3883,7 @@ void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto,
 	CDataCell *dc2 = tabto.GetCell(ito);
 	if (!dc2->IsFilled)	{
 		CDataCell *dcempty = new CDataCell(tabto.NumberofMaxScoreCell,tabto.NumberofMaxScoreHolding, tabto.ApplyHolding, tabto.ApplyWeight);
-		tabto.CellPtr.SetAt(ito,dcempty);
+		tabto.CellPtr[ito] = dcempty;
 		dc2 = tabto.GetCell(ito);
 	}
 	// add and store
@@ -4227,7 +4232,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 {
 	CVariable *v = &(m_var[VarIndex]);
 	int c, c1 = 0, c2 = 0;
-	int n_codes = v->sCode.GetSize() - v->nMissing;
+	int n_codes = v->sCode.size() - v->nMissing;
 	int DestIndex, Exact;
 	bool DestMissing, Src1Missing, Src2Missing;
 
@@ -4302,8 +4307,8 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 		return R_MISSING2VALID;
 	}
 
-	ASSERT(DestIndex >= 0 && DestIndex < v->Recode.sCode.GetSize() );
-	if (DestIndex < 0 || DestIndex >= v->Recode.sCode.GetSize() ) {
+	ASSERT(DestIndex >= 0 && DestIndex < v->Recode.sCode.size() );
+	if (DestIndex < 0 || DestIndex >= v->Recode.sCode.size() ) {
 		return PROGRAMERROR;
 	}
 
@@ -4390,13 +4395,13 @@ int TauArgus::AddRecode(int varnr, const char *newcode)
 {
 	int i, n;
 
-	n = m_var[varnr].Recode.sCode.GetSize();
+	n = m_var[varnr].Recode.sCode.size();
 	// not already in list?
 	for (i = 0; i < n; i++) {                               // optimizable with binary search (number > ??)
 		if (m_var[varnr].Recode.sCode[i] == newcode) break;   // found!
 	}
 	if (i == n) {  // not found
-		m_var[varnr].Recode.sCode.Add(newcode);
+		m_var[varnr].Recode.sCode.push_back(newcode);
 	}
 
 	return i;
@@ -4404,7 +4409,7 @@ int TauArgus::AddRecode(int varnr, const char *newcode)
 
 int TauArgus::MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR Missing2)
 {
-	int i, length, ncode = m_var[VarIndex].Recode.sCode.GetSize(), maxwidth = 0;
+	int i, length, ncode = m_var[VarIndex].Recode.sCode.size(), maxwidth = 0;
 
 	// if missings empty take missings of variable[VarIndex]
 	if (Missing1[0] == 0 && Missing2[0] == 0) {
@@ -4951,8 +4956,8 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
   char str[200];
 
   // pointer to codes for row and column
-  CStringArray  *sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
-  CStringArray  *sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
+  vector<CString>  *sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
+  vector<CString>  *sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
 
   { // compute width column
 		k = c = 0;
@@ -4977,7 +4982,7 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
   // show code column variable
   fprintf(fd, "%14s", (LPCTSTR) m_ValueTotal);
   for (k = 0; k < tab.SizeDim[var2]; k++) {
-	  fprintf(fd, "%-*s", colwidth, (LPCTSTR) sCol->GetAt(k));
+	  fprintf(fd, "%-*s", colwidth, (LPCTSTR) (*sCol)[k]);
 	}
   fprintf(fd, "\n\n");
 
@@ -4986,7 +4991,7 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
 		if (r == 0) {
 		  fprintf(fd, "%s  => ", (LPCTSTR) m_ValueTotal);
 		} else {
-		  fprintf(fd, "%-6s => ", (LPCTSTR) sRow->GetAt(r) );
+		  fprintf(fd, "%-6s => ", (LPCTSTR) (*sRow)[r] );
 		}
 		for (k = 0; k < tab.SizeDim[var2]; k++) {
 			ASSERT(c + k >= 0 && c + k < tab.nCell);
@@ -5080,7 +5085,7 @@ void TauArgus::AdjustTable(CTable *tab)
 void TauArgus::TestTable(CTable *tab, long TargetDim,
 									 long *DimNr, long niv, bool	*IsGoodTable)
 {
-	CUIntArray Children;
+	vector<UINT> Children;
 	CDataCell *dc;
 	double sum,test;
 
@@ -5102,7 +5107,7 @@ void TauArgus::TestTable(CTable *tab, long TargetDim,
 					dc = tab->GetCell(DimNr);
 					test = dc->GetResp();
 					for (j = 0; j < n; j++) {
-						long RealCode = Children.GetAt(j);
+						long RealCode = Children[j];
   						DimNr[TargetDim] = RealCode;
 						dc = tab-> GetCell(DimNr);
 						sum = sum + dc->GetResp();
@@ -5152,13 +5157,13 @@ void TauArgus::TestTable(CTable *tab, long TargetDim,
 }
 
 // Get Children for a code
-int TauArgus::GetChildren(CVariable &var, int CodeIndex, CUIntArray &Children)
+int TauArgus::GetChildren(CVariable &var, int CodeIndex, vector<UINT> &Children)
 {
 	int i, n = 0, LevelParent, LevelDesc, nCode;
 	CCode *hCode = var.GethCode();
 	ASSERT(var.IsHierarchical);
 
-	Children.RemoveAll();
+	Children.clear();
 	nCode = var.GetnCode();
 	// here I better do something
 	if (hCode[CodeIndex].IsParent) {
@@ -5167,7 +5172,7 @@ int TauArgus::GetChildren(CVariable &var, int CodeIndex, CUIntArray &Children)
 			LevelDesc = hCode[i].Level;
 			if (LevelDesc <= LevelParent) break;
 			if (LevelDesc == LevelParent + 1) { // that's a child
-				Children.Add(i);
+				Children.push_back(i);
 				n++;
 			}
 		}
@@ -5182,7 +5187,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 
 	long ramya=1;
 	long robbert = 1;
-	CUIntArray Children;
+	vector<UINT> Children;
 	CDataCell *dc;
 	CDataCell *dctemp, *dcramya;
    CDataCell *addcell;
@@ -5215,7 +5220,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 						tab->NumberofMaxScoreHolding, tab->ApplyHolding, tab->ApplyWeight );
 					addcell->SetStatus(0);
 					for (j = 0; j < n; j++) {
-						long RealCode = Children.GetAt(j);
+						long RealCode = Children[j];
   						DimNr[TargetDim] = RealCode;
     					//fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp));
 						dc = tab-> GetCell(DimNr);
@@ -5229,7 +5234,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 						if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
 							delete [] dctemp;
 						}
-						tab->CellPtr.SetAt(tempDimNr,addcell);
+						tab->CellPtr[tempDimNr] = addcell;
 					}
 					else {
 						delete[] addcell;
@@ -5268,7 +5273,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 				if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
 					delete [] dctemp;
 				}
-				tab->CellPtr.SetAt(tempDimNr,addcell);
+				tab->CellPtr[tempDimNr] = addcell;
 			}
 			else {
 
@@ -5302,16 +5307,16 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 // read variables from a free formated file
 bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCode)
 {
-	CStringArray VarCodes;
+	vector<CString> VarCodes;
 	CString stempstr, stemp, tempvarcode;
-	VarCodes.SetSize(m_nvar);
+	VarCodes.resize(m_nvar);
 	stempstr = Str;
 	long lcount= 0;
 	if (InFileSeperator  != " ") {
 		long lseppos = stempstr.Find(InFileSeperator,0);
 		while (lseppos != -1) {
 			stemp = stempstr.Left(lseppos);
-			VarCodes.SetAt(lcount,stemp);
+			VarCodes[lcount] = stemp;
 			stempstr.Delete(0,lseppos + 1);
 			lcount ++;
 			lseppos = stempstr.Find(InFileSeperator, 0);
@@ -5326,9 +5331,9 @@ bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCod
 			return false;
 		}
 		else {
-			VarCodes.SetAt(lcount,stempstr);
+			VarCodes[lcount] = stempstr;
 		}
-		tempvarcode = VarCodes.GetAt(VarIndex);
+		tempvarcode = VarCodes[VarIndex];
 		tempvarcode.TrimLeft();
 		tempvarcode.TrimRight();
 		int inrem = tempvarcode.Remove('"');
@@ -5807,7 +5812,7 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 	fprintf(fd, "%s\n", "#(T-1) lines with hierarchical info: row rh,of table th decomposed in table tdh");
 	fprintf(fd, "%s\n", " param:     rh     th     tdh :=");
 	for (long i = 1; i < var->nCode; i++)	{
-		CString scode = var->sCode.GetAt(i);
+		CString scode = var->sCode[i];
 		long CodeIndex = i;
 		// Is a parent
 		if (var->FindNumberOfChildren(CodeIndex) > 0)	{

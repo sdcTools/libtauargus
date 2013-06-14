@@ -3,6 +3,8 @@
 #ifndef TauArgus_h
 #define TauArgus_h
 
+#include <vector>
+#include <locale.h>
 #include "resource.h"       // main symbols
 #include "Variable.h"
 #include "Table.h"
@@ -11,7 +13,6 @@
 #include "Hitas.h"
 #include "JJFormat.h"
 #include "AMPL.h"
-#include <locale.h>
 #include "IProgressListener.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,8 +60,8 @@ private:
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
 	void FillTables(UCHAR *str);
 	bool ConvertNumeric(char *code, double &d);
-	void QuickSortStringArray(CStringArray &s, int first, int last);
-	int  BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool& IsMissing);
+	void QuickSortStringArray(std::vector<CString> &s, int first, int last);
+	int  BinSearchStringArray(std::vector<CString> &s, CString x, int nMissing, bool& IsMissing);
 	char m_fname[_MAX_PATH];
 	int  DoMicroRecord(UCHAR *str, int *varindex);
 	int  ReadMicroRecord(FILE *fd, UCHAR *str);
@@ -110,7 +111,7 @@ private:
 
 	bool IsTable (CTable *tab);
 	void TestTable(CTable *tab, long fixeddim, long *DimNr, long niv, bool *IsGoodTable);
-	int GetChildren(CVariable &var, int CodeIndex, CUIntArray &Children);
+	int GetChildren(CVariable &var, int CodeIndex, std::vector<UINT> &Children);
 
 	// To find rand totallen
 	void AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, long niv);

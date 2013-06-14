@@ -105,7 +105,7 @@ void CTable:: operator = (CTable & table2)
 	MaxScaledCost = table2.MaxScaledCost;
 	EmptyCellsAsNSEmpty = table2.EmptyCellsAsNSEmpty;
 	NSEmptySafetyRange = table2.NSEmptySafetyRange;
-	CellPtr.SetSize(1);
+	CellPtr.resize(1);
 
 
 }
@@ -375,16 +375,16 @@ bool CTable::PrepareTable()
 	int nScoreCellPQ, nScoreHoldingPQ;
 	nCell = GetSizeTable();
 	// The rest are null pointers.
-	CellPtr.SetSize(nCell+1); // last pointer to emptycell;
-	if (CellPtr.GetSize() == 0) {
+	CellPtr.resize(nCell+1); // last pointer to emptycell;
+	if (CellPtr.size() == 0) {
 		return false;
 	}
 	// one empty cell with last Cellptr pointing to.
 	CDataCell *dcempty = new CDataCell(NumberofMaxScoreCell, NumberofMaxScoreHolding,ApplyHolding,ApplyWeight);
 	//hier ook een nus struct empty maken; Size eentje hoger; Iedereen verwijst naaar de empty cell ipv NULL
-	CellPtr.SetAt(nCell,dcempty);
+	CellPtr[nCell] = dcempty;
 	for (i=0; i<nCell; i++)	{
-		CellPtr.SetAt(i,NULL);
+		CellPtr[i] = NULL;
 	}
 
 	nScoreCellDom = 0;
@@ -428,15 +428,15 @@ bool CTable::CleanUp()
 	}
 
 	for (i=0; i<nCell+1; i++) {
-		if (CellPtr.GetAt(i) != NULL) {
+		if (CellPtr[i] != NULL) {
 			CDataCell *dc;
-			dc = (CDataCell *)CellPtr.GetAt(i);
+			dc = (CDataCell *)CellPtr[i];
 			delete[] dc;
 			//delete[] CellPtr.GetAt(i);
-			CellPtr.SetAt(i,NULL);
+			CellPtr[i] = NULL;
 		}
 	}
-	CellPtr.RemoveAll();
+	CellPtr.clear();
 
 	return true;
 }
@@ -512,9 +512,9 @@ CDataCell* CTable::GetCell(long CellNr)
 {
 	CDataCell *dc;
 
-	if (CellPtr.GetAt(CellNr) != NULL) {
+	if (CellPtr[CellNr] != NULL) {
 
-		dc = (CDataCell *) CellPtr.GetAt(CellNr);
+		dc = (CDataCell *) CellPtr[CellNr];
 		switch (CostVarnr) {
 		case CVT_DISTANCE:
 			dc->SetCost(1); // provisional solution, Anco
@@ -531,7 +531,7 @@ CDataCell* CTable::GetCell(long CellNr)
 	}
 
 	else {
-		dc = (CDataCell *) CellPtr.GetAt(nCell); // return last empty cell;
+		dc = (CDataCell *) CellPtr[nCell]; // return last empty cell;
 		return dc;
 	}
 }
@@ -550,8 +550,7 @@ bool CTable::SetCell(long CellNr, CDataCell &datacell)
 {
 	ASSERT(CellNr >= 0 && CellNr < nCell);
 
-
-	CellPtr.SetAt(CellNr,& datacell);
+	CellPtr[CellNr] = &datacell;
 	return true;
 }
 // Unsafe cell through Dominance rule. This is used to determine that the cell is

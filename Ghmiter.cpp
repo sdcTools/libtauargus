@@ -3,12 +3,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include <vector>
 #include "Ghmiter.h"
 #include  <math.h>
 
 #include "process.h"
 #include "io.h"
 #include "direct.h"
+
+using namespace std;
 
 
 #ifdef _DEBUG
@@ -132,7 +135,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "%d\n", nDim);
 
 	for (i = 0; i < nDim; i++) {
-    //CStringArray *Codes = m_var[ExpVarNr[i]].GetCodeList();
+    //vector<CString> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 	/*	if (m_var[ExpVarNr[i]].GetCodeWidth() > 8) {
 			fclose(fd);
 			return false;
@@ -154,7 +157,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "\n");
 
 	for (i = 0; i < nDim; i++) {
-		CStringArray *Codes = m_var[ExpVarNr[i]].GetCodeList();
+		vector<CString> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 		int j, k, s;
 		fprintf(fd, "'Var %d'\n", i + 1);
 
@@ -171,7 +174,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 		k = -1;
 		for (s = MAXLEVEL; s >= 0; s--) {
 			if (nGroup[s] == 0) continue;
-			for (j = Codes->GetSize() - 1; j >= 0; j--) { // sorted decreasing
+			for (j = Codes->size() - 1; j >= 0; j--) { // sorted decreasing
 				if (m_var[ExpVarNr[i]].IsHierarchical) {
 					if (m_var[ExpVarNr[i]].GethCode()[j].Level != s) continue;
 				}

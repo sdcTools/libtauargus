@@ -2,8 +2,11 @@
 //
 
 #include "stdafx.h"
-#include "Variable.h"
+#include <vector>
 #include <math.h>
+#include "Variable.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -141,35 +144,36 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 	int i, n;
 	bool IsMissing;
 
-	n = sCode.GetSize();
+	n = sCode.size();
 
 	// add at the end of array if not found
 	if (tail) {
 		// not already in list?
 		for (i = 0; i < n; i++) {
-			if (sCode.GetAt(i) == newcode) break;  // found!
+			if (sCode[i] == newcode) break;  // found!
 		}
 		if (i == n) {  // not found
-			sCode.Add(newcode);
+			sCode.push_back(newcode);
 		}
 		return true;
 	}
 
 	// keep list sorted
 	if (n == 0) {
-		sCode.Add(newcode);
+		sCode.push_back(newcode);
 	}
 	else {
 		int res = BinSearchStringArray(sCode, newcode, 0, IsMissing);
 		if (res < 0) { // not found
 			for (i = 0; i < n; i++) {
-				if (newcode < sCode.GetAt(i) ) break;
+				if (newcode < sCode[i] ) break;
 			}
 			if (i < n) {
-				sCode.InsertAt(i, newcode);
+				vector<CString>::iterator p = sCode.begin() + i;
+				sCode.insert(p, newcode);
 			}
 			else {
-				sCode.Add(newcode);
+				sCode.push_back(newcode);
 			}
 		}
 	}
@@ -180,9 +184,9 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 // binary search to see if an string is in an array of
 // strings taking in to account weather to look at missings or not.
 // returns the position if the string is found -1 if not.
-int CVariable::BinSearchStringArray(CStringArray &s, CString x, int nMissing, bool &IsMissing)
+int CVariable::BinSearchStringArray(vector<CString> &s, CString x, int nMissing, bool &IsMissing)
 {
-	int mid, left = 0, right = s.GetSize() - 1 - nMissing;
+	int mid, left = 0, right = s.size() - 1 - nMissing;
 	int mis;
 
 	ASSERT(left <= right);
@@ -210,7 +214,7 @@ int CVariable::BinSearchStringArray(CStringArray &s, CString x, int nMissing, bo
 	// equal to missing1 or -2? // code missing not always the highest
 
 	if (nMissing > 0) {
-		mis = s.GetSize() - nMissing;
+		mis = s.size() - nMissing;
 		if (x == s[mis]) {
 			IsMissing = true;
 			return mis;
@@ -234,7 +238,7 @@ bool CVariable::ComputeHierarchicalCodes()
 
 	if (nDigitSplit < 2) return false;
 
-	for (i = 0; i < sCode.GetSize() - nMissing; i++) {
+	for (i = 0; i < sCode.size() - nMissing; i++) {
 		n = 0;
 		t = sCode[i];
 		if (t.GetLength() != nPos) continue; // no datafile code
@@ -308,9 +312,9 @@ CString CVariable::GetCode(int i)
 	CString s;
 
 	if (HasRecode) {
-		return Recode.sCode.GetAt(i);
+		return Recode.sCode[i];
 	}
-	return sCode.GetAt(i);
+	return sCode[i];
 }
 
 
@@ -318,7 +322,7 @@ int CVariable::GetLevel(int i)
 {
 	int l;
     if (IsHierarchical) {
-     l = hLevel.GetAt(i);
+     l = hLevel[i];
      return l;
 	}
 	return 0;
@@ -335,7 +339,7 @@ int CVariable::GetnMissing()
 }
 
 // returns codelist
-CStringArray * CVariable::GetCodeList()
+vector<CString> * CVariable::GetCodeList()
 {
   if (HasRecode) {
 		return &(Recode.sCode);
@@ -357,7 +361,7 @@ CCode* CVariable::GethCode()
 bool CVariable::IsCodeBasic(int i)
 {
 	ASSERT(IsHierarchical == false);
-	return GetCodeList()->GetAt(i).GetLength() == GetCodeWidth();
+	return (*GetCodeList())[i].GetLength() == GetCodeWidth();
 }
 
 // returns code width
@@ -427,7 +431,7 @@ bool CVariable::SetHierarch()
 			}
 		}
 		else {
-			j = hLevel.GetAt(i);
+			j = hLevel[i];
 		}
 		hCode[i].Level = j;
 
@@ -496,17 +500,17 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 
 	if (LenLevelString = strlen(LevelString), LenLevelString < 1) return HC_LEVELSTRINGEMPTY;
 
-	hLevel.RemoveAll();
-	hLevel.SetSize(0, 20);
-	hLevel.Add(0); // for total
+	hLevel.clear();
+	hLevel.reserve(20);
+	hLevel.push_back(0); // for total
 
-	sCode.RemoveAll();
-	sCode.SetSize(0, 20);
-	sCode.Add(""); // code for total
+	sCode.clear();
+	sCode.reserve(20);
+	sCode.push_back(""); // code for total
 
-	hLevelBasic.RemoveAll();
-	hLevelBasic.SetSize(0, 20);
-	hLevelBasic.Add(false); // for total
+	hLevelBasic.clear();
+	hLevelBasic.reserve(20);
+	hLevelBasic.push_back(false); // for total
 
 	fd = fopen(FileName, "r");
 	if (fd == 0) return HC_FILENOTFOUND;
@@ -532,7 +536,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 		// count number of LevelStrings
 		i = 0;
 		while (strncmp(LevelString, &str[i * LenLevelString], LenLevelString) == 0) i++;
-		hLevel.Add(i + 1);
+		hLevel.push_back(i + 1);
 //		fprintf(ftemp,"%s","hLevel   ");
 //		fprintf(ftemp,"%i\n",hLevel.GetAt(num));
 		s = &str[i * LenLevelString];
@@ -540,7 +544,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 			return HC_CODEISMISSING;
 		}
 
-		sCode.Add(s);
+		sCode.push_back(s);
 //		fprintf(ftemp,"%s","sCode   ");
 //		fprintf(ftemp,"%s\n",sCode.GetAt(num));
 //		num++;
@@ -550,7 +554,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
  // num = 1;
 
 	// set nCode
-	nCode = sCode.GetSize();
+	nCode = sCode.size();
 	hfCodeWidth = sCode[0].GetLength();
 
 
@@ -566,14 +570,14 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 		if (sCode[i].IsEmpty()) return HC_CODEEMPTY;
 
 		if (i == nCode - 1) {
-			hLevelBasic.Add(true); // last one always basic
+			hLevelBasic.push_back(true); // last one always basic
 		}
 		else {
 			if (hLevel[i + 1] <= hLevel[i]) {
-				hLevelBasic.Add(true);
+				hLevelBasic.push_back(true);
 			}
 			else {
-				hLevelBasic.Add(false);
+				hLevelBasic.push_back(false);
 			}
 		}
 
@@ -598,7 +602,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 int CVariable::FindAllHierarchicalCode(LPCTSTR code)
 {
 
-	int i, n = sCode.GetSize();
+	int i, n = sCode.size();
 	CString stemp;
 	for (i = 0; i < n; i++) {
 		stemp = sCode[i];
@@ -613,10 +617,10 @@ int CVariable::FindAllHierarchicalCode(LPCTSTR code)
 // Finds only the basic codes in a hierarchical codelist
 int CVariable::FindHierarchicalCode(LPCTSTR code)
 {
-	int i, n = sCode.GetSize();
+	int i, n = sCode.size();
 	CString stemp;
 	for (i = 0; i < n; i++) {
-		if (hLevelBasic.GetAt(i) ) {
+		if (hLevelBasic[i] ) {
 			stemp = sCode[i];// only basic codes, not parental
 			if (sCode[i] == code) break; // hebbes!
 		}
@@ -650,9 +654,9 @@ bool CVariable::SetHierarchicalDigits(long nDigitPairs, long *nDigits)
 
 bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, bool bogus)
 {
-	CStringArray *CodeList = GetCodeList();
+	vector<CString> *CodeList = GetCodeList();
 	CCode *phCode = GethCode();
-	int i, n = CodeList->GetSize();
+	int i, n = CodeList->size();
 	FILE *fd;
 
 	if (IsHierarchical && phCode == 0) return false; // not yet set complete
@@ -674,7 +678,7 @@ bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Nam
 			if (IsHierarchical) {
 				PrintLevelStrings(fd, phCode[i].Level - 1, LevelString);
 			}
-			PrintLevelCode(fd, (LPCTSTR) CodeList->GetAt(i), LevelString);
+			PrintLevelCode(fd, (LPCTSTR) (*CodeList)[i], LevelString);
 		}
 	}
 
@@ -682,7 +686,7 @@ bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Nam
 	return true;
 }
 
-void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, CStringArray *CodeList)
+void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, vector<CString> *CodeList)
 {
 	int i, a;
 	CCode *phCode = GethCode();
@@ -695,7 +699,7 @@ void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int
 		if (phCode[i].Level > level) continue;
 		if (phCode[i].nChildren != 1) {  // no bogus
 			PrintLevelStrings(fd, boguslevel - 1, LevelString);
-			PrintLevelCode(fd, (LPCTSTR) CodeList->GetAt(i), LevelString);
+			PrintLevelCode(fd, (LPCTSTR) (*CodeList)[i], LevelString);
 		}
 		if (phCode[i].IsParent) {
 			if (phCode[i].nChildren == 1) a = 0;
@@ -722,7 +726,7 @@ void CVariable::PrintLevelCode(FILE *fd, LPCTSTR code, LPCTSTR LevelString)
 bool CVariable::SetHierarchicalRecode()
 {
 	int i, j;
-	CByteArray RLevel; // levels recoded hierarchical variable
+	vector<BYTE> RLevel; // levels recoded hierarchical variable
 
 	// free previous recode
 	if (HasRecode) {
@@ -739,30 +743,30 @@ bool CVariable::SetHierarchicalRecode()
 	if (Recode.DestCode == 0) {
 		return false;
 	}
-	Recode.sCode.RemoveAll();
+	Recode.sCode.clear();
 	Recode.CodeWidth = 0;
 	Recode.nMissing = nMissing;
 	Recode.Missing1 = Missing1;
 	Recode.Missing2 = Missing2;
-	RLevel.SetSize(0, 20);
+	RLevel.reserve(20);
 
 	// set new codelist, remember RLevel
 	for (i = j = 0; i < nCode; i++) {
 		if (hCode[i].Active) {
-			Recode.sCode.Add(sCode.GetAt(i));
+			Recode.sCode.push_back(sCode[i]);
 			// compute max width code
 			if (sCode[i].GetLength() > Recode.CodeWidth) {
 				Recode.CodeWidth = sCode[i].GetLength();
 			}
 			Recode.DestCode[i] = j++;
-			RLevel.Add(hCode[i].Level);
+			RLevel.push_back(hCode[i].Level);
 		}
 		else {
 			Recode.DestCode[i] = -1;
 		}
 	}
 
-	Recode.nCode = Recode.sCode.GetSize();
+	Recode.nCode = Recode.sCode.size();
 
 	// initialize hCode
 	Recode.hCode = new CCode[Recode.nCode];
@@ -828,16 +832,16 @@ long CVariable::OrganizeCodelist()
 	long lowestlevel = 0;
 	CString s,temps;
 	long rightlen;
-	long n = sCode.GetSize();
+	long n = sCode.size();
 	for (i = 0; i < n; i++) {
-		if (hLevel.GetAt(i) > lowestlevel) {
-			lowestlevel =hLevel.GetAt(i);
+		if (hLevel[i] > lowestlevel) {
+			lowestlevel = hLevel[i];
 		}
 	}
 
 	for (i=0;i<n; i++) {
-		if (hLevel.GetAt(i) == lowestlevel) {
-			s = sCode.GetAt(i);
+		if (hLevel[i] == lowestlevel) {
+			s = sCode[i];
 			rightlen = nPos-s.GetLength();
 			temps = s;
 			if (s.GetLength() > nPos) {
@@ -857,7 +861,7 @@ long CVariable::OrganizeCodelist()
 				s.Insert(0, tempstr);
 			}
 
-			sCode.SetAt(i,s);
+			sCode[i] = s;
 		}
 	}
 	return 1;
@@ -966,20 +970,20 @@ bool CVariable::CreateSubCodeForNonHierarchicalCode()
 	CSubCodeList *subcodelist;
 	long *indices;
 	long i;
-	CStringArray subcodes;
+	vector<CString> subcodes;
 	if (IsHierarchical)	{
 		return false;
 	}
 	else	{
 
-		subcodes.SetSize(sCode.GetSize() -1);
-		indices = new long [sCode.GetSize()-1];
+		subcodes.resize(sCode.size() -1);
+		indices = new long [sCode.size()-1];
 		subcodelist = &(m_SubCodes[0]);
 		for (i=1; i<nCode; i++)	{
-			subcodes.SetAt(i-1,sCode.GetAt(i));
+			subcodes[i-1] = sCode[i];
 			indices[i-1] = i;
 		}
-		subcodelist->SetParentCode(sCode.GetAt(0));
+		subcodelist->SetParentCode(sCode[0]);
 		subcodelist->SetParentIndex(0);
 		subcodelist->SetSequenceNumber(0);
 		subcodelist->FillSubCodes(subcodes, indices);
@@ -993,7 +997,7 @@ bool CVariable::CreateSubCodeForHierarchicalCode(long CodeIndex,
 																 long SubCodeSequenceNumber)
 {
 	long  NumChild;
-	CStringArray subcode;
+	vector<CString> subcode;
 	CSubCodeList *subcodelist;
 	long *indices;
 	if (!IsHierarchical)	{
@@ -1005,7 +1009,7 @@ bool CVariable::CreateSubCodeForHierarchicalCode(long CodeIndex,
 			return false;
 		}
 		else	{
-			subcode.SetSize(NumChild);
+			subcode.resize(NumChild);
 			indices = new long [NumChild];
 			if (!FindChildren(NumChild,subcode,CodeIndex, indices))	{
 				return false;
@@ -1015,7 +1019,7 @@ bool CVariable::CreateSubCodeForHierarchicalCode(long CodeIndex,
 	}
 
 	subcodelist = &(m_SubCodes[SubCodeSequenceNumber]);
-	subcodelist->SetParentCode(sCode.GetAt(CodeIndex));
+	subcodelist->SetParentCode(sCode[CodeIndex]);
 	subcodelist->SetParentIndex(CodeIndex);
 	subcodelist->SetSequenceNumber(SubCodeSequenceNumber);
 	subcodelist->FillSubCodes(subcode, indices);
@@ -1054,7 +1058,7 @@ long CVariable::FindNumberOfChildren(long CodeIndex)
 }
 
 // given a parent find list of children.
-bool CVariable::FindChildren(long NumChild, CStringArray & Child, long CodeIndex,
+bool CVariable::FindChildren(long NumChild, vector<CString> & Child, long CodeIndex,
 									  long *Index)
 {
 	long i, j;
@@ -1077,8 +1081,7 @@ bool CVariable::FindChildren(long NumChild, CStringArray & Child, long CodeIndex
 					break;
 				}
 				if (ChildLevel == ParentLevel +1)	{
-					tempCode = sCode.GetAt(i);
-					Child.SetAt(j,tempCode);
+					Child[j] = sCode[i];
 					Index[j] = i;
 					j++;
 				}

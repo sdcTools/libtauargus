@@ -130,7 +130,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
   fprintf(fd, "%d\n", nDim);
   
 	for (i = 0; i < nDim; i++) {
-    //CStringArray *Codes = m_var[ExpVarNr[i]].GetCodeList();
+    //vector<CString> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 		if (m_var[ExpVarNr[i]].GetCodeWidth() > 8) {
 			fclose(fd);
 			return false;
@@ -152,7 +152,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "\n");
 
 	for (i = 0; i < nDim; i++) {
-    CStringArray *Codes = m_var[ExpVarNr[i]].GetCodeList();
+    vector<CString> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 		int j, k, s;
 		fprintf(fd, "'Var %d'\n", i + 1);
 		

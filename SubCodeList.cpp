@@ -1,33 +1,36 @@
 #include "stdafx.h"
+#include <vector>
 #include "SubCodeList.h"
+
+using namespace std;
 
 CString CSubCodeList::GetSubCode(long isubcodenum)
 {
-	if  (isubcodenum < 0)	{
-		return m_colSubCodeCollection.GetAt(0);
+	if (isubcodenum < 0)	{
+		return m_colSubCodeCollection[0];
 	}
-	if (m_colSubCodeCollection.GetUpperBound() < isubcodenum)	{
-		return m_colSubCodeCollection.GetAt(m_colSubCodeCollection.GetUpperBound());
+	if (isubcodenum > m_colSubCodeCollection.size() - 1) {
+		return m_colSubCodeCollection[m_colSubCodeCollection.size() - 1];
 	}
 	else
 	{
-		return m_colSubCodeCollection.GetAt(isubcodenum);
+		return m_colSubCodeCollection[isubcodenum];
 	}
 }
 
 
-void CSubCodeList::FillSubCodes(CStringArray &codes, long *indices)
+void CSubCodeList::FillSubCodes(vector<CString> &codes, long *indices)
 {
 	long i;
-	m_colSubCodeCollection.SetSize(codes.GetSize());
-	m_lSubCodeIndex = new long[codes.GetSize()];
+	m_colSubCodeCollection.resize(codes.size());
+	m_lSubCodeIndex = new long[codes.size()];
 
-	for (i= 0; i< codes.GetSize(); i++)
+	for (i= 0; i< codes.size(); i++)
 	{
-		m_colSubCodeCollection.SetAt(i,codes.GetAt(i));
+		m_colSubCodeCollection[i] = codes[i];
 		m_lSubCodeIndex[i] = indices[i];
 	}
-	m_lNumberOfSubCodes = codes.GetSize();
+	m_lNumberOfSubCodes = codes.size();
 
 }
 
@@ -36,8 +39,8 @@ long CSubCodeList::IsInSubCodes(CString sCode)
 	long i;
 	bool found = false;
 	
-	for (i= 0; i< m_colSubCodeCollection.GetSize(); i++)	{
-		if (sCode == m_colSubCodeCollection.GetAt(i))	{
+	for (i= 0; i< m_colSubCodeCollection.size(); i++)	{
+		if (sCode == m_colSubCodeCollection[i])	{
 			found = true;
 			break;
 		}

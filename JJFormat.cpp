@@ -3,8 +3,11 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include <vector>
 #include "JJFormat.h"
 #include "math.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -232,7 +235,7 @@ bool CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, bool Wi
 		if (WithBogus && v->IsHierarchical) tdp[d].nCode -= v->nBogus;
 		if (v->IsHierarchical) {
 			// count number of parents
-			CUIntArray Children;
+			vector<UINT> Children;
 			tdp[d].nParent = 1; // total always parent
 			int nCode = v->GetnCode();
 			for (int i = 1; i < nCode; i++) {
@@ -287,7 +290,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 									int TargetDim, long *DimNr, int niv,
 									bool WithBogus, TabDimProp *tdp)
 {
-	CUIntArray Children;
+	vector<UINT> Children;
 	if (niv == tab->nDim) {
 		CVariable *v = &(var[tab->ExplVarnr[TargetDim]]);
 		int nCode = v->GetnCode();
@@ -309,7 +312,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 					DimNr[TargetDim] = k;
     				fprintf(fd, "0 %d : %d (-1) ", n + 1, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 					for (j = 0; j < n; j++) {
-						long RealCode = Children.GetAt(j);
+						long RealCode = Children[j];
 						if (WithBogus) {
 							for (r = RealCode - 1; r >= i; r--) {
 								if (v->GethCode()[r].IsBogus) {
@@ -365,14 +368,14 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 
 
 // if WithBogus: No-Bogus-Parents with all descendants bogus: no Parent any more
-int CJJFormat::GetRange(CVariable &var, int CodeIndex, CUIntArray &Children,
+int CJJFormat::GetRange(CVariable &var, int CodeIndex, vector<UINT> &Children,
 								bool WithBogus)
 {
 	int i, n = 0, LevelParent, LevelDesc, nCode;
 	CCode *hCode = var.GethCode();
 	ASSERT(var.IsHierarchical);
 
-	Children.RemoveAll();
+	Children.clear();
 	nCode = var.GetnCode();
 	if (WithBogus) {
 		if (!hCode[CodeIndex].IsBogus) {
@@ -390,7 +393,7 @@ int CJJFormat::GetRange(CVariable &var, int CodeIndex, CUIntArray &Children,
 					for (i = CodeIndex + 1; ; i++) {
 						if (hCode[i].Level <= LevelParent) break; // end descendants
 						if (!hCode[i].IsBogus && hCode[i].Level == LevelDesc) {
-							Children.Add(i);
+							Children.push_back(i);
 							n++;
 						}
 					}
@@ -408,7 +411,7 @@ int CJJFormat::GetRange(CVariable &var, int CodeIndex, CUIntArray &Children,
 				LevelDesc = hCode[i].Level;
 				if (LevelDesc <= LevelParent) break;
 				if (LevelDesc == LevelParent + 1) { // that's a child
-					Children.Add(i);
+					Children.push_back(i);
 					n++;
 				}
 			}

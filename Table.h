@@ -7,6 +7,7 @@
 #if !defined Table_h
 #define Table_h
 
+#include <vector>
 #include "defines.h"
 #include "datacell.h"
 #include "variable.h"
@@ -103,7 +104,7 @@ public:
 	double ZeroSafetyRange;
 
 //	CDataCell *Cell;          // counting space
-	CPtrArray CellPtr;
+	std::vector<void*> CellPtr;
 	long nCell;               // number of cells
 	//int nMaxCellValues;
 
