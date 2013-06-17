@@ -13,10 +13,10 @@
 #include "SubCodeList.h"
 
 typedef struct {
-	std::vector<CString> sCode;			// list of codes generated from recode, sorted upwards
+	std::vector<std::string> sCode;			// list of codes generated from recode, sorted upwards
 	int nCode;              // number of codes, should be equal to sCode.GetSize()
-	CString Missing1;       // first missing value
-	CString Missing2;       // second missing value
+	std::string Missing1;       // first missing value
+	std::string Missing2;       // second missing value
 	int nMissing;	          // number of missing codes (usually 1 or 2)
 	int *DestCode;          // m_var[SrcVar].nCode times an index to sCode
 	int CodeWidth;          // max length sCodes
@@ -52,18 +52,18 @@ public:
 	bool IsHolding;       	// variable is holding indicator
 
 	int nMissing;	          // number of missing codes (usually 1 or 2)
-	CString Missing1;       // first missing value
-	CString Missing2;       // second missing value
-	CString TotalCode;      // code for Total
+	std::string Missing1;       // first missing value
+	std::string Missing2;       // second missing value
+	std::string TotalCode;      // code for Total
 
   // computed during ExploreFile
 	double MinValue;        // For numeric variables : minimum in data file
 	double MaxValue;        //                         maximum in data file
 
 
-	std::vector<CString> sCode;			// For categorical variables: list of codes generated from microfile or from a file
-	std::vector<BYTE> hLevel;      // Levels hierarchical codelist, nCodes long
-	std::vector<BYTE> hLevelBasic; // Basic code hierarchical codelist, nCodes long
+	std::vector<std::string> sCode;			// For categorical variables: list of codes generated from microfile or from a file
+	std::vector<unsigned char> hLevel;      // Levels hierarchical codelist, nCodes long
+	std::vector<unsigned char> hLevelBasic; // Basic code hierarchical codelist, nCodes long
 
 	int nCode;              // number of codes, should be equal to sCode.GetSize()
 
@@ -78,8 +78,8 @@ public:
 	bool HasRecode;        // toggle for Recode specification
 	bool HasCodeList;       // toggle for Codelist specification form file
 	RECODE Recode;          // recode specification, only relevant if HasRecode = true
-	CString PeepCode1;
-	CString PeepCode2;
+	std::string PeepCode1;
+	std::string PeepCode2;
 
 	bool PositionSet;
 	long NumSubCodes;
@@ -101,7 +101,7 @@ public:
 	bool SetHierarchicalRecode();
 	void PrintLevelStrings(FILE *fd, int nLevel, LPCTSTR LevelString);
 	void PrintLevelCode(FILE *fd, LPCTSTR code, LPCTSTR LevelString);
-	void WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, std::vector<CString> *CodeList);
+	void WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, std::vector<std::string> *CodeList);
 	bool WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, bool bogus);
 	bool SetHierarchicalDigits(long nDigitPairs, long *nDigits);
 	int  FindHierarchicalCode(LPCTSTR code);
@@ -112,9 +112,9 @@ public:
 	void GetGHMITERCode(int i, char* code);
 	int  GetCodeWidth();
 	bool IsCodeBasic(int i);
-	std::vector<CString> * GetCodeList();
+	std::vector<std::string> * GetCodeList();
 	int  GetnMissing();
-	CString GetCode(int i);
+	std::string GetCode(int i);
 	int GetLevel(int i);
 	long GetDepthOfHerarchicalBoom();
 	int  GetnCode();
@@ -126,10 +126,10 @@ public:
 	bool SetMissing(LPCTSTR Missing1, LPCTSTR Missing2, long NumMissing);
 	bool SetTotalCode(LPCTSTR sTotalCode);
 	bool SetType(bool IsCategorical, bool IsNumeric, bool IsWeight, bool IsHierarchical, bool IsHolding, bool IsPeeper);
-	bool SetPeepCodes(CString Peep1, CString Peep2);
+	bool SetPeepCodes(std::string Peep1, std::string Peep2);
 	bool SetPosition(long bPos, long nPos, long nDec);
 	bool SetDecPosition(long lnDec);
-	int  BinSearchStringArray(std::vector<CString> &s, CString x, int nMissing, bool &IsMissing);
+	int  BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool &IsMissing);
 	virtual ~CVariable();
 	long OrganizeCodelist();
 	long NumberOfSubCodeList();
@@ -138,7 +138,7 @@ public:
 	bool CreateSubCodeForNonHierarchicalCode();
 	bool FillSubCodeList();
 	long FindNumberOfChildren(long CodeIndex);
-	bool FindChildren(long NumChild, std::vector<CString> &Child, long CodeIndex, long *Index);
+	bool FindChildren(long NumChild, std::vector<std::string> &Child, long CodeIndex, long *Index);
 
 
 	// Generated message map functions

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-CString CSubCodeList::GetSubCode(long isubcodenum)
+std::string CSubCodeList::GetSubCode(long isubcodenum)
 {
 	if (isubcodenum < 0)	{
 		return m_colSubCodeCollection[0];
@@ -19,7 +19,7 @@ CString CSubCodeList::GetSubCode(long isubcodenum)
 }
 
 
-void CSubCodeList::FillSubCodes(vector<CString> &codes, long *indices)
+void CSubCodeList::FillSubCodes(vector<std::string> &codes, long *indices)
 {
 	long i;
 	m_colSubCodeCollection.resize(codes.size());
@@ -34,33 +34,23 @@ void CSubCodeList::FillSubCodes(vector<CString> &codes, long *indices)
 
 }
 
-long CSubCodeList::IsInSubCodes(CString sCode)
+long CSubCodeList::IsInSubCodes(std::string sCode)
 {
-	long i;
-	bool found = false;
-	
-	for (i= 0; i< m_colSubCodeCollection.size(); i++)	{
-		if (sCode == m_colSubCodeCollection[i])	{
-			found = true;
-			break;
+	for (long i = 0; i < m_colSubCodeCollection.size(); i++)	{
+		if (sCode.compare(m_colSubCodeCollection[i]) == 0)	{
+			return i;
 		}
 	}
-	if (found) {
-		return i;
-	}
-	else {
-		return -1;
-	}
-
+	return -1;
 }
 
 
-void CSubCodeList::SetParentCode(CString code)
+void CSubCodeList::SetParentCode(std::string code)
 {
 	m_sParentCode = code;
 }
 
-CString CSubCodeList::GetParentCode()
+std::string CSubCodeList::GetParentCode()
 {
 	return m_sParentCode;
 }

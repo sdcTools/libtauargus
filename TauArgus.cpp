@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <vector>
+#include <sstream>
 #include <float.h>
 #include <math.h>
 
@@ -207,7 +208,7 @@ bool TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 
 	int recnr = 0;
 	while (!feof(fd) ) {
-		UCHAR str[MAXRECORDLENGTH];
+		char str[MAXRECORDLENGTH];
 		int res = ReadMicroRecord(fd, str);
 		if (++recnr % FIREPROGRESS == 0) {
 			FireUpdateProgress((int)(ftell(fd) * 100.0 / m_fSize));  // for progressbar in container
@@ -248,7 +249,7 @@ oke:
 #ifdef _DEBUGG
 {
 	for (int i = 0; i < m_ntab; i++) {
-		CString fname;
+		std::string fname;
 		fname.Format("tab%02d.txt", i);
 		ShowTable((LPCTSTR) fname, m_tab[i]);
 	}
@@ -276,19 +277,19 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 												const char** WarningString)
 {
 
-	// RecodeStrings are changed to CString. Check this out
+	// RecodeStrings are changed to std::string. Check this out
 	int i, v = VarIndex, oke, maxwidth = 0;
 	*ErrorType = *ErrorLine = *ErrorPos = -1;
 
-	CString Missing1 = eMissing1;
-	CString Missing2 = eMissing2;
+	std::string Missing1 = eMissing1;
+	std::string Missing2 = eMissing2;
 
 	// for warnings
 	m_nOverlap = 0;
 	m_nUntouched = 0;
 	m_nNoSense = 0;
 
-	m_WarningRecode.Empty();
+	m_WarningRecode.resize(0);
 
 	  // too early?
 	  /*
@@ -343,12 +344,12 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	}
 
 	// Missing2 specified but not Missing1? Swap!
-	if (Missing1.IsEmpty() && !Missing2.IsEmpty()) {
+	if (Missing1.empty() && !Missing2.empty()) {
 		Missing1 = Missing2;
 	}
 
 	// no missings for recode specified? Take the missing(s) of the source
-	if (Missing1.IsEmpty() && Missing2.IsEmpty()) {
+	if (Missing1.empty() && Missing2.empty()) {
 		Missing1 = m_var[v].Missing1;
 		if (m_var[v].nMissing == 2) {
 			Missing2, m_var[v].Missing2;
@@ -391,28 +392,28 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	for (i = 0; i < m_var[v].nCode - m_var[v].nMissing; i++) {
 		if (m_var[v].Recode.DestCode[i] == -1) { // not touched
 			m_nUntouched++;
-			AddRecode(v, (LPCTSTR) m_var[v].sCode[i]);
+			AddRecode(v, m_var[v].sCode[i].c_str());
 		}
 	}
 
 	// make all recode codes same width
-	maxwidth = MakeRecodelistEqualWidth(v, (LPCTSTR) Missing1, (LPCTSTR) Missing2);
+	maxwidth = MakeRecodelistEqualWidth(v, Missing1.c_str(), (LPCTSTR) Missing2.c_str());
 
 	// remove the missing codes,
 	{
 		if (!((nMissing == 0) && (m_var[v].nMissing ==0)))	{
 			int n;
 			bool IsMissing;
-			CString mis = Missing1;
+			std::string mis = Missing1;
 			AddSpacesBefore(mis, maxwidth);
 			if (n = BinSearchStringArray(m_var[v].Recode.sCode, mis, 0, IsMissing), n >= 0) {
-				vector<CString>::iterator p = m_var[v].Recode.sCode.begin() + n;
+				vector<std::string>::iterator p = m_var[v].Recode.sCode.begin() + n;
 				m_var[v].Recode.sCode.erase(p);
 			}
 			mis = Missing2;
 			AddSpacesBefore(mis, maxwidth);
 			if (n = BinSearchStringArray(m_var[v].Recode.sCode, mis, 0, IsMissing), n >= 0) {
-				vector<CString>::iterator p = m_var[v].Recode.sCode.begin() + n;
+				vector<std::string>::iterator p = m_var[v].Recode.sCode.begin() + n;
 				m_var[v].Recode.sCode.erase(p);
 			}
 		}
@@ -427,12 +428,12 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 
 	if (!((nMissing == 0) && (m_var[v].nMissing ==0)))	{
 
-		if (Missing1.IsEmpty() && Missing2.IsEmpty()) {             // no missing specified?
+		if (Missing1.empty() && Missing2.empty()) {             // no missing specified?
 			m_var[v].Recode.Missing1 = m_var[v].Missing1;  // take the missing of source variable
 			m_var[v].Recode.Missing2 = m_var[v].Missing2;
 		}
 		else {
-			if (Missing1.IsEmpty()) {  // at least one missing specified
+			if (Missing1.empty()) {  // at least one missing specified
 				m_var[v].Recode.Missing1 = Missing2;
 				m_var[v].Recode.Missing2 = Missing1;
 			}
@@ -443,7 +444,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 		}
 
 		// second empty?
-	if (m_var[v].Recode.Missing2.IsEmpty()) {
+	if (m_var[v].Recode.Missing2.empty()) {
 		m_var[v].Recode.Missing2 = m_var[v].Recode.Missing1;
 		m_var[v].Recode.nMissing = 1;
 	}
@@ -459,10 +460,10 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 
 	// put in list, last one or two
 	AddSpacesBefore(m_var[v].Recode.Missing1, maxwidth);
-	AddRecode(v, (LPCTSTR) m_var[v].Recode.Missing1);
+	AddRecode(v, m_var[v].Recode.Missing1.c_str());
 	if (m_var[v].Recode.nMissing == 2) {
 		 AddSpacesBefore(m_var[v].Recode.Missing2, maxwidth);
-		 AddRecode(v, (LPCTSTR) m_var[v].Recode.Missing2);
+		 AddRecode(v, m_var[v].Recode.Missing2.c_str());
 	}
 }
   // last time, now compute dest codes and link between dest and src
@@ -513,7 +514,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 		int index, ncode = m_var[v].nCode - m_var[v].nMissing;
 		for (i = 0; i < ncode; i++) {
 			if (c->DestCode[i] == -1) {
-				CString str = m_var[v].sCode[i];
+				std::string str = m_var[v].sCode[i];
 				AddSpacesBefore(str, c->CodeWidth);
 				index = BinSearchStringArray(c->sCode, str, c->nMissing, IsMissing);
 				ASSERT(index >= 0 && index < c->nCode);
@@ -525,29 +526,27 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	// WARNINGS in recode:
 
   // show untouched codes:
-	CString temp;
+	ostringstream ss;
 	if (m_nUntouched > 0) {
-		temp.Format("Number of untouched codes: %d\r\n", m_nUntouched);
-		m_WarningRecode += temp;
+		ss << "Number of untouched codes: " << m_nUntouched << "\r\n";
 	}
 
 	// show warnings
 	if (m_nOverlap > 0) {
-		temp.Format("Number of overlapping codes: %d\r\n", m_nOverlap);
-		m_WarningRecode += temp;
+		ss << "Number of overlapping codes: " << m_nOverlap << "\r\n";
 	}
 
 	if (m_nNoSense > 0) {
-		temp.Format("Number of \"no sense\" codes: %d\r\n", m_nNoSense);
-		m_WarningRecode += temp;
+		ss << "Number of \"no sense\" codes: " << m_nNoSense << "\r\n";
 	}
+	m_WarningRecode = ss.str();
 
-	if (m_WarningRecode.IsEmpty() ) {
+	if (m_WarningRecode.empty() ) {
 		m_WarningRecode = "Recode OK";
 	}
 
 
-	*WarningString = m_WarningRecode;
+	*WarningString = m_WarningRecode.c_str();
 
 	m_var[v].HasRecode = true;
 
@@ -746,7 +745,7 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 {
 	DEBUGprintf("ExploreFile\n");
 
-   UCHAR str[MAXRECORDLENGTH];
+   char str[MAXRECORDLENGTH];
    int i, length, recnr = 0, Result;
 
    *ErrorCode = *LineNumber = 0;
@@ -861,13 +860,13 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 		// add Missing1 and -2
 		if (m_var[i].IsCategorical) {
 			if (m_var[i].nMissing != 0)	{
-				m_var[i].AddCode((LPCTSTR) m_var[i].Missing1, true);
+				m_var[i].AddCode(m_var[i].Missing1.c_str(), true);
 				if (m_var[i].IsHierarchical && m_var[i].nDigitSplit == 0) {
 					m_var[i].hLevel.push_back(1);
 					m_var[i].hLevelBasic.push_back(true);
 				}
 				if (m_var[i].nMissing == 2) {
-					m_var[i].AddCode((LPCTSTR) m_var[i].Missing2, true);
+					m_var[i].AddCode(m_var[i].Missing2.c_str(), true);
 					if (m_var[i].IsHierarchical && m_var[i].nDigitSplit == 0) {
 						m_var[i].hLevel.push_back(1);
 						m_var[i].hLevelBasic.push_back(true);
@@ -1641,7 +1640,7 @@ error:
 // Cells that are found to be secondary unsafe by Hitas is set as Unsafe in the table
 bool TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary)
 {
-	CString SecFileName = m_hitas.TempPath + m_hitas.NameSecFile;
+	std::string SecFileName = m_hitas.TempPath + m_hitas.NameSecFile;
 	int t = TableIndex;
 
 	if (t < 0 || t >= m_ntab)	{
@@ -1650,7 +1649,7 @@ bool TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary)
 
 	if (m_tab[t].HasRecode) t += m_ntab;
 
-	FILE *fd = fopen((LPCTSTR) SecFileName, "r");
+	FILE *fd = fopen(SecFileName.c_str(), "r");
 	if (fd == 0)	{
 		return false;
 	}
@@ -1718,7 +1717,7 @@ bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   }
 
   // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
-  *CodeString = m_var[v].GetCode(CodeIndex);
+  *CodeString = m_var[v].GetCode(CodeIndex).c_str();
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
 	#ifdef _DEBUG
@@ -1790,7 +1789,7 @@ bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex,
 		}
 	}
 
-	*Code = m_var[VarIndex].GetCode(CodeIndex);
+	*Code = m_var[VarIndex].GetCode(CodeIndex).c_str();
 	*IsMissing = (CodeIndex >= nCodes - m_var[VarIndex].GetnMissing() );
 
 	// TRACE("Var %d Code [%s] Freq = %d, unsafe %d %d %d\n", VarIndex + 1, (LPCTSTR) m_var[VarIndex].GetCode(CodeIndex), *Freq, UCArray[0], UCArray[1], UCArray[2]);
@@ -1817,14 +1816,14 @@ bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
 	}
 
 	CCode *phCode = m_var[v].hCode;
-	vector<CString> *psCode = &(m_var[v].sCode);
+	vector<std::string> *psCode = &(m_var[v].sCode);
 
 	*IsParent = phCode[c].IsParent;
 	*IsActive = phCode[c].Active;
 	*IsMissing = (c >= m_var[v].nCode - m_var[v].nMissing);
 	*Level = phCode[c].Level;
 	*nChildren = phCode[c].nChildren;
-	*Code = (*psCode)[c];
+	*Code = (*psCode)[c].c_str();
 
 	return true;
 }
@@ -1840,10 +1839,10 @@ long TauArgus::WriteGHMITERSteuer(const char* FileName, const char* EndString1,
 
 	CTable *tab = GetTable(TableIndex);
 
-	CString s;
-	s.Format("Table %d", TableIndex + 1);
+	ostringstream ss;
+	ss << "Table " << TableIndex + 1;
 
-	if (m_ghmiter.ControlDataTable(FileName, (LPCTSTR)s, EndString1, EndString2, tab->nDim, tab->ExplVarnr, m_var) == 0) {
+	if (m_ghmiter.ControlDataTable(FileName, ss.str().c_str(), EndString1, EndString2, tab->nDim, tab->ExplVarnr, m_var) == 0) {
 		return GHM_STEUERINCORRECT;
 	}
 
@@ -1998,10 +1997,8 @@ bool TauArgus::WriteJJFormat(long TableIndex, const char* FileName,
 													bool WithBogus, bool AsPerc,
 													bool ForRounding)
 {
-	CString sFileName;
-	sFileName = FileName;
-	CString sFileNameFreq;
-	sFileNameFreq = sFileName + ".frq";
+	std::string sFileNameFreq = FileName;
+	sFileNameFreq += ".frq";
 	FILE *fd, *fdFrq;
 	double MaxCost, MaxResp, x;
 	int i;
@@ -2012,11 +2009,11 @@ bool TauArgus::WriteJJFormat(long TableIndex, const char* FileName,
 	}
 	CTable *tab = GetTable(TableIndex);
 
-	fd = fopen(sFileName, "w");
+	fd = fopen(FileName, "w");
 	if (fd == 0)	{
 		return false;
 	}
-	fdFrq = fopen(sFileNameFreq, "w");
+	fdFrq = fopen(sFileNameFreq.c_str(), "w");
 	if (fdFrq == 0)	{
 		return false;
 	}
@@ -2151,11 +2148,11 @@ bool TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 		long lvarindex = VarIndex[i];
 		CVariable *var = &(m_var[lvarindex]);
 		// To get a string from an array of strings. Use SafeArray
-		CString tempcode = sCode[i];
+		std::string tempcode = sCode[i];
 		if (tempcode != "" ) {
 		if (var->IsCategorical)  {
 			if ((var ->IsHierarchical) && (var ->nDigitSplit == 0))  {
-				if (var ->FindAllHierarchicalCode(tempcode) < 0)  {
+				if (var ->FindAllHierarchicalCode(tempcode.c_str()) < 0)  {
 					*ErrorCode = CODENOTINCODELIST;
 					*ErrorInVarIndex = i;
 					 // add some info here
@@ -2164,7 +2161,7 @@ bool TauArgus::SetInCodeList(long NumberofVar, long *VarIndex,
 				}
 			}
 			else {
-				if (!var->AddCode(tempcode, false) ) {   // adds if new, else does nothing
+				if (!var->AddCode(tempcode.c_str(), false) ) {   // adds if new, else does nothing
 					*ErrorCode = PROGRAMERROR;
 					return false;
 				}
@@ -2188,14 +2185,14 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 		if (var->IsCategorical)  {
 
 			if (var->nMissing > 0)	{
-				var->AddCode((LPCTSTR) var->Missing1, true);
+				var->AddCode(var->Missing1.c_str(), true);
 				if (var->IsHierarchical && var->nDigitSplit == 0) {
 					var->hLevel.push_back(1);
 					var->hLevelBasic.push_back(true);
 				}
 
 				if (var->nMissing == 2)  {
-					var->AddCode((LPCTSTR) var->Missing2, true);
+					var->AddCode(var->Missing2.c_str(), true);
 					if  (var->IsHierarchical && var->nDigitSplit == 0)   {
 						var->hLevel.push_back(1);
 						var->hLevelBasic.push_back(true);
@@ -2268,7 +2265,7 @@ bool TauArgus::SetInTable(long Index, char *sCode[],
 	}
 
 	int dim = m_tab[Index].nDim;
-	CString *sCodes = new CString[dim];
+	std::string *sCodes = new std::string[dim];
 
 	for (int i=0; i<dim; i++) {
 		sCodes[i] = sCode[i];
@@ -2297,7 +2294,7 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 										 bool SetCalculatedTotalsAsSafe,
 										 bool ForCoverTable)
 {
-//	CString sFileName;
+//	std::string sFileName;
 //	sFileName = FileName;
 	CDataCell *dc ;
 
@@ -2705,13 +2702,13 @@ bool TauArgus::ComputeCodesToIndices(long TableIndex, char* sCode[], long *DimIn
 
 	for (int j=0; j<dim; j++)  {
 		CVariable *var = &(m_var[tab->ExplVarnr[j]]);
-		CString tempcode = sCode[j];
+		std::string tempcode = sCode[j];
 		if (tempcode == "") {
 			var->TableIndex = 0;
 		}
 		else {
 	  		if (var->IsHierarchical && var->nDigitSplit == 0) {
-				var->TableIndex = var->FindAllHierarchicalCode(tempcode);
+				var->TableIndex = var->FindAllHierarchicalCode(tempcode.c_str());
 			}
 			else {
 				bool IsMissing;
@@ -3168,7 +3165,7 @@ void TauArgus::CleanUp()
 // returns 0: EOF
 // return 1: oke
 // a line in the micro record is read and set in the string
-int TauArgus::ReadMicroRecord(FILE *fd, UCHAR *str)
+int TauArgus::ReadMicroRecord(FILE *fd, char *str)
 {
 	int length = 0;
 
@@ -3191,9 +3188,9 @@ int TauArgus::ReadMicroRecord(FILE *fd, UCHAR *str)
 }
 
 // with a string fill the code lists
-int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
+int TauArgus::DoMicroRecord(char *str, int *varindex)
 {
-	CString tempcode;
+	std::string tempcode;
 
 	for (int i = 0; i < m_nvar; i++) {
 		*varindex = i;
@@ -3209,7 +3206,7 @@ int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
 			else {
 				int ap = var->nPos;         // number of positions
 				if (ReadVariableFreeFormat(str,i,&(tempcode))) {
-					strcpy(code,(const char*)tempcode);
+					strcpy(code,(const char*)tempcode.c_str());
 					code[ap] = 0;
 				}
 				else {
@@ -3243,8 +3240,8 @@ int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
 		if (var->IsNumeric) {
 			double d;
 			// exclude missings for calculating min/max
-			if (strcmp(code, (LPCTSTR) var->Missing1) != 0 &&
-				strcmp(code, (LPCTSTR) var->Missing2) != 0 ) {
+			if (var->Missing1.compare(code) != 0 &&
+				var->Missing2.compare(code) != 0) {
 				if (!ConvertNumeric(code, d) ) {
 					return ISNOTNUMERIC;   // is not numeric! (variabelenummer meegeven voor gebruiker)
 				}
@@ -3261,7 +3258,7 @@ int TauArgus::DoMicroRecord(UCHAR *str, int *varindex)
 
 // returns: -1 in case not found
 // IsMissing on true if x = Missing1 or x = Missing2
-int TauArgus::BinSearchStringArray(vector<CString> &s, CString x, int nMissing, bool &IsMissing)
+int TauArgus::BinSearchStringArray(vector<std::string> &s, std::string x, int nMissing, bool &IsMissing)
 {
 	int mid, left = 0, right = s.size() - 1 - nMissing;
 	int mis;
@@ -3312,7 +3309,7 @@ void TauArgus::QuickSortMaxScore(double &doub, int &intg, int first, int last)
 {
 
   int i, j;
-  CString mid, temp;
+  std::string mid, temp;
 
   ASSERT(first >= 0 && last >= first);
 
@@ -3355,10 +3352,10 @@ void TauArgus::QuickSortMaxScore(double &doub, int &intg, int first, int last)
 
 */
 // sort strings
-void TauArgus::QuickSortStringArray(vector<CString> &s, int first, int last)
+void TauArgus::QuickSortStringArray(vector<std::string> &s, int first, int last)
 {
 	int i, j;
-	CString mid, temp;
+	std::string mid, temp;
 
 	ASSERT(first >= 0 && last >= first);
 
@@ -3418,7 +3415,7 @@ bool TauArgus::ConvertNumeric(char *code, double &d)
 
 // fill code lists in a table. This is the sibling of do micro record
 
-bool TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
+bool TauArgus::FillInTable(long Index, std::string *sCodes, double Cost,
 							   double Resp,double Shadow, long Freq,
 							   double *TopNCell, double *TopNHolding,
 								double LPL, double UPL,
@@ -3431,13 +3428,12 @@ bool TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
 	ErrorVarNo = 0;
 	for (int j = 0; j < tab->nDim; j++)  {
 		CVariable *var = &(m_var[tab->ExplVarnr[j]]);
-		CString tempcode = sCodes[j];
 		if (var->IsHierarchical && var->nDigitSplit == 0) {
-			var->TableIndex = var->FindAllHierarchicalCode(tempcode);
+			var->TableIndex = var->FindAllHierarchicalCode(sCodes[j].c_str());
 		}
 		else {
 			bool IsMissing;
-			var->TableIndex = BinSearchStringArray(var->sCode, tempcode, var->nMissing, IsMissing);
+			var->TableIndex = BinSearchStringArray(var->sCode, sCodes[j], var->nMissing, IsMissing);
 		}
 
 		if (var->TableIndex < 0) {
@@ -3514,16 +3510,16 @@ bool TauArgus::FillInTable(long Index, CString *sCodes, double Cost,
 
 // str: content microdata record
 // fill tables from a micro record
-void TauArgus::FillTables(UCHAR *str)
+void TauArgus::FillTables(char *str)
 {
 	int i, j;
 	char code[MAXCODEWIDTH];
 	bool IsMissing;
 	double Weight = 0;
-	CString tempcode;
+	std::string tempcode;
 	CVariable *var;
 	CDataCell dc;
-	CString  tempPeepCode;
+	std::string  tempPeepCode;
 
 
 	//find the holding code and correct Holding Nr
@@ -3540,12 +3536,12 @@ void TauArgus::FillTables(UCHAR *str)
 			}
 			else {
 				if (ReadVariableFreeFormat(str,m_VarNrHolding,&(tempcode))) {
-					strcpy(code,(const char*)tempcode);
+					strcpy(code, tempcode.c_str());
 					code[var->nPos] = 0;
 				}
 			}
 
-			if (strcmp(LastHoldingCode,code) != 0){
+			if (LastHoldingCode.compare(code) != 0){
 				CurrentHoldingNr++;
 				LastHoldingCode = code;
 			}
@@ -3574,7 +3570,7 @@ void TauArgus::FillTables(UCHAR *str)
 				}
 				else {
 					if (ReadVariableFreeFormat(str,tab->ExplVarnr[j],&(tempcode))) {
-						strcpy(code,(const char*)tempcode);
+						strcpy(code, tempcode.c_str());
 						code[var->nPos] = 0;
 					}
 				}
@@ -3599,7 +3595,7 @@ void TauArgus::FillTables(UCHAR *str)
 			}
 			else {
 				if (ReadVariableFreeFormat(str,tab->PeepVarnr,&(tempcode))) {
-					strcpy(code,(const char*)tempcode);
+					strcpy(code, tempcode.c_str());
 					code[var->nPos] = 0;
 				}
 			}
@@ -3616,7 +3612,7 @@ void TauArgus::FillTables(UCHAR *str)
 				}
 				else {
 					if (ReadVariableFreeFormat(str,tab->ShadowVarnr,&(tempcode))) {
-						strcpy(code,(const char*)tempcode);
+						strcpy(code, tempcode.c_str());
 						code[var->nPos] = 0;
 					}
 				}
@@ -3639,7 +3635,7 @@ void TauArgus::FillTables(UCHAR *str)
 				}
 				else {
 					if (ReadVariableFreeFormat(str,tab->CostVarnr,&(tempcode))) {
-						strcpy(code,(const char*)tempcode);
+						strcpy(code, tempcode.c_str());
 						code[var->nPos] = 0;
 					}
 				}
@@ -3658,7 +3654,7 @@ void TauArgus::FillTables(UCHAR *str)
 				}
 				else {
 					if (ReadVariableFreeFormat(str,tab->ResponseVarnr,&(tempcode))) {
-						strcpy(code,(const char*)tempcode);
+						strcpy(code, tempcode.c_str());
 						code[var->nPos] = 0;
 					}
 				}
@@ -3684,7 +3680,7 @@ void TauArgus::FillTables(UCHAR *str)
 			}
 			else {
 				if (ReadVariableFreeFormat(str,m_VarNrWeight,&(tempcode))) {
-					strcpy(code,(const char*)tempcode);
+					strcpy(code, tempcode.c_str());
 					code[var->nPos] = 0;
 				}
 			}
@@ -3699,11 +3695,11 @@ void TauArgus::FillTables(UCHAR *str)
 
 		if (m_tab[i].ApplyPeeper) {
 
-			if ((tempPeepCode.Compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0) ||
-			  (tempPeepCode.Compare(m_var[m_tab[i].PeepVarnr].PeepCode2) == 0))	{
+			if ((tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0) ||
+			  (tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode2) == 0))	{
 			  dc.SetPeepCell(m_var[m_tab[i].ShadowVarnr].Value);
 			  dc.SetPeepHolding(m_var[m_tab[i].ShadowVarnr].Value);
-			  if ( tempPeepCode.Compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0)	{
+			  if ( tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0)	{
 					dc.SetPeepSortCell(PEEP1);
 					dc.SetPeepSortHolding(PEEP1);
 			  }
@@ -3764,11 +3760,11 @@ void TauArgus::AddTableCells(CTable &t, CDataCell AddCell, int niv, long cellind
 	if (var->IsHierarchical) {
 		bool IsMissing;
 		int i, hIndex, n = 0;
-		CString s;
+		std::string s;
 		if (var->nDigitSplit > 0) {
 			for (i = 0; i < var->nDigitSplit - 1; i++) {
 				n += var->DigitSplit[i];
-				s = var->sCode[var->TableIndex].Left(n);
+				s = var->sCode[var->TableIndex].substr(0, n);
 				hIndex = BinSearchStringArray(var->sCode, s, var->nMissing, IsMissing);
 				ASSERT(hIndex >= 0 && hIndex < var->GetnCode());
 				AddTableCells(t, AddCell, niv + 1, cellindex + hIndex); // for subtotals in codelist
@@ -4205,16 +4201,13 @@ void TauArgus::AddSpacesBefore(char *str, int len)
 	sprintf(str, "%*s%s", len - lstr, " ", tempstr);
 }
 
-void TauArgus::AddSpacesBefore(CString& str, int len)
+void TauArgus::AddSpacesBefore(std::string& str, int len)
 {
-	int width = str.GetLength();
+	int width = str.length();
 
-	if (width >= len) return;  // nothing to do
-
+	if (width < len)
 	{
-		char tempstr[100];
-		sprintf(tempstr, "%*s", len - width, " ");
-		str.Insert(0, tempstr);
+		str.insert((size_t)0, (size_t)(len - width), ' ');
 	}
 }
 
@@ -4294,7 +4287,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 	}
 
 	// c1 and c2 now are correct, I assume
-	ASSERT(c1 >= 0 && c1 < v->sCode.GetSize() && c2 >= c1 && c2 < v->sCode.GetSize());
+	ASSERT(c1 >= 0 && c1 < v->sCode.size() && c2 >= c1 && c2 < v->sCode.size());
 
 	// search destcode in list
 	ASSERT(v->nMissing > 0 && v->nMissing < 3);
@@ -4377,7 +4370,7 @@ bool TauArgus::ComputeRecodeTables()
 #ifdef _DEBUGG
 		{ int i;
 			for (i = 0; i < m_ntab; i++) {
-				CString fname;
+				std::string fname;
 				fname.Format("tabrecode%02d.txt", i);
 				ShowTable((LPCTSTR) fname, m_tab[i + m_ntab]);
 			}
@@ -4413,14 +4406,14 @@ int TauArgus::MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR M
 
 	// if missings empty take missings of variable[VarIndex]
 	if (Missing1[0] == 0 && Missing2[0] == 0) {
-		length = strlen(m_var[VarIndex].Missing1);
+		length = m_var[VarIndex].Missing1.length();
 		if (length > maxwidth) maxwidth = length;
-		length = strlen(m_var[VarIndex].Missing2);
+		length = m_var[VarIndex].Missing2.length();
 		if (length > maxwidth) maxwidth = length;
 	}
 
 	for (i = 1; i < ncode; i++) {
-		if (length = m_var[VarIndex].Recode.sCode[i].GetLength(), length > maxwidth) {
+		if (length = m_var[VarIndex].Recode.sCode[i].length(), length > maxwidth) {
 			maxwidth = length;
 		}
 	}
@@ -4621,9 +4614,17 @@ void TauArgus::WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueS
 	fprintf(fd, "\n");
 }
 
+static void ReplaceStringInPlace(std::string& subject, const char search, const char replace) {
+    size_t pos = 0;
+    while((pos = subject.find(search, pos)) != std::string::npos) {
+         subject[pos] = replace;
+         pos++;
+    }
+}
+
 void TauArgus::WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code)
 {
-	CString s;
+	std::string s;
 	ASSERT(dim >= 0 && dim < tab->nDim);
 	ASSERT(code >= 0 && code < m_var[tab->ExplVarnr[dim]].GetnCode() );
 
@@ -4632,10 +4633,10 @@ void TauArgus::WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code)
 	else	{
 		s = m_var[tab->ExplVarnr[dim]].GetCode(code);
 	}
-	if (s.IsEmpty() ) s = m_ValueTotal;
-	s.Replace('"', '\'');
+	if (s.empty() ) s = m_ValueTotal;
+	ReplaceStringInPlace(s, '"', '\'');
 
-	fprintf(fd, "\"%s\"", (LPCTSTR) s);
+	fprintf(fd, "\"%s\"", s.c_str());
 }
 
 // write cells
@@ -4869,13 +4870,13 @@ CTable * TauArgus::GetTable(int t)
 // only for debug
 void TauArgus::ShowCodeLists()  // in output pane
 { 
-  CString s;
+  char s[100];
   for (int i = 0; i < m_nvar; i++) {
     CVariable *v = &(m_var[i]);
-		s.Format("%3d %3d %3d %3d %8.0f %8.0f", v->bPos + 1, v->nPos, v->nDec, v->GetnCode(), v->MaxValue, v->MinValue);
-    TRACE("Var %2d. %s\n", i + 1, (LPCTSTR) s);
+		sprintf(s, "%3d %3d %3d %3d %8.0f %8.0f", v->bPos + 1, v->nPos, v->nDec, v->GetnCode(), v->MaxValue, v->MinValue);
+    TRACE("Var %2d. %s\n", i + 1, s);
 		for (int j = 0; j < v->GetnCode(); j++) {
-      TRACE("  %4d. [%s]\n", j + 1, (LPCTSTR) v->GetCode(j) );
+      TRACE("  %4d. [%s]\n", j + 1, v->GetCode(j).c_str() );
     }
 	}
 }
@@ -4911,7 +4912,7 @@ bool TauArgus::ShowTable(const char *fname, CTable& tab)
 	case 3:
 		{ int i;
 			for (i = 0; i < tab.SizeDim[0]; i++) {
-				fprintf(fd, "\n*** Layer %d Code [%s] ***\n\n", i + 1, (LPCTSTR) m_var[tab.ExplVarnr[0]].GetCode(i) );
+				fprintf(fd, "\n*** Layer %d Code [%s] ***\n\n", i + 1, m_var[tab.ExplVarnr[0]].GetCode(i).c_str() );
         ShowTableLayer(fd, 1, 2, i * tab.SizeDim[1] * tab.SizeDim[2], tab);
       }
 		}
@@ -4919,9 +4920,9 @@ bool TauArgus::ShowTable(const char *fname, CTable& tab)
 	case 4:
 		{ int i, j;
 			for (i = 0; i < tab.SizeDim[0]; i++) {
-				fprintf(fd, "\n*** Layer %d Code %s ***\n", i + 1, (LPCTSTR) m_var[tab.ExplVarnr[0]].GetCode(i) );
+				fprintf(fd, "\n*** Layer %d Code %s ***\n", i + 1, m_var[tab.ExplVarnr[0]].GetCode(i).c_str() );
 				for (j = 0; j < tab.SizeDim[1]; j++) {
-				  fprintf(fd, "   *** Layer %d *** Code %s\n\n", j + 1, (LPCTSTR) m_var[tab.ExplVarnr[1]].GetCode(j));
+				  fprintf(fd, "   *** Layer %d *** Code %s\n\n", j + 1, m_var[tab.ExplVarnr[1]].GetCode(j).c_str());
           ShowTableLayer(fd, 2, 3, (i * tab.SizeDim[1] + j) * tab.SizeDim[2] * tab.SizeDim[3], tab);
 				}
       }
@@ -4956,8 +4957,8 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
   char str[200];
 
   // pointer to codes for row and column
-  vector<CString>  *sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
-  vector<CString>  *sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
+  vector<std::string>  *sCol = m_var[tab.ExplVarnr[var2]].GetCodeList();
+  vector<std::string>  *sRow = m_var[tab.ExplVarnr[var1]].GetCodeList();
 
   { // compute width column
 		k = c = 0;
@@ -4980,18 +4981,18 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
   }
 
   // show code column variable
-  fprintf(fd, "%14s", (LPCTSTR) m_ValueTotal);
+  fprintf(fd, "%14s", m_ValueTotal.c_str());
   for (k = 0; k < tab.SizeDim[var2]; k++) {
-	  fprintf(fd, "%-*s", colwidth, (LPCTSTR) (*sCol)[k]);
+	  fprintf(fd, "%-*s", colwidth, (*sCol)[k].c_str());
 	}
   fprintf(fd, "\n\n");
 
   for (r = 0; r < tab.SizeDim[var1]; r++) {
 		c = cellnr + r * tab.SizeDim[var2];
 		if (r == 0) {
-		  fprintf(fd, "%s  => ", (LPCTSTR) m_ValueTotal);
+		  fprintf(fd, "%s  => ", m_ValueTotal.c_str());
 		} else {
-		  fprintf(fd, "%-6s => ", (LPCTSTR) (*sRow)[r] );
+		  fprintf(fd, "%-6s => ", (*sRow)[r].c_str() );
 		}
 		for (k = 0; k < tab.SizeDim[var2]; k++) {
 			ASSERT(c + k >= 0 && c + k < tab.nCell);
@@ -5304,22 +5305,30 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 	}
 }
 
+static int RemoveStringInPlace(std::string& subject, char ch) {
+	int occurences = 0;
+	size_t pos = 0;
+	while((pos = subject.find(ch, pos)) != std::string::npos) {
+		subject.erase(pos, 1);
+		occurences++;
+	}
+	return occurences;
+}
+
 // read variables from a free formated file
-bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCode)
+bool TauArgus::ReadVariableFreeFormat(char *Str, long VarIndex, std::string *VarCode)
 {
-	vector<CString> VarCodes;
-	CString stempstr, stemp, tempvarcode;
+	vector<std::string> VarCodes;
 	VarCodes.resize(m_nvar);
-	stempstr = Str;
+	std::string stempstr = Str;
 	long lcount= 0;
 	if (InFileSeperator  != " ") {
-		long lseppos = stempstr.Find(InFileSeperator,0);
-		while (lseppos != -1) {
-			stemp = stempstr.Left(lseppos);
-			VarCodes[lcount] = stemp;
-			stempstr.Delete(0,lseppos + 1);
+		long lseppos = stempstr.find(InFileSeperator);
+		while (lseppos != std::string::npos) {
+			VarCodes[lcount] = stempstr.substr(0, lseppos);
+			stempstr.erase(0, lseppos + 1);
 			lcount ++;
-			lseppos = stempstr.Find(InFileSeperator, 0);
+			lseppos = stempstr.find(InFileSeperator);
 		}
 		//fill the stuff here
 		//Waarom mag de laatste niet leeg zijn?????
@@ -5333,10 +5342,17 @@ bool TauArgus::ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCod
 		else {
 			VarCodes[lcount] = stempstr;
 		}
-		tempvarcode = VarCodes[VarIndex];
-		tempvarcode.TrimLeft();
-		tempvarcode.TrimRight();
-		int inrem = tempvarcode.Remove('"');
+		std::string tempvarcode = VarCodes[VarIndex];
+
+		// trim left and right
+		size_t s = tempvarcode.find_first_not_of(" \n\r\t");
+		size_t e = tempvarcode.find_last_not_of (" \n\r\t");
+		if (s == string::npos || e == string::npos)
+			tempvarcode = "";
+		else
+			tempvarcode = tempvarcode.substr(s, e - s + 1);
+
+		int inrem = RemoveStringInPlace(tempvarcode, '"');
 		ASSERT ((inrem == 2) || (inrem == 0));
 		CVariable *var = &(m_var[VarIndex]);
 		AddSpacesBefore(tempvarcode, var->nPos);
@@ -5812,7 +5828,7 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 	fprintf(fd, "%s\n", "#(T-1) lines with hierarchical info: row rh,of table th decomposed in table tdh");
 	fprintf(fd, "%s\n", " param:     rh     th     tdh :=");
 	for (long i = 1; i < var->nCode; i++)	{
-		CString scode = var->sCode[i];
+		std::string scode = var->sCode[i];
 		long CodeIndex = i;
 		// Is a parent
 		if (var->FindNumberOfChildren(CodeIndex) > 0)	{
@@ -5869,9 +5885,9 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 // This can only be used if the first dimension of the table
 // is hierarchical and the second dimension is not.
 // The table should be 2 dimensional.
-bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, double MaxScale)
+bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, std::string TempDir, double MaxScale)
 {
-	FILE *fdtempw = fopen(TempDir +"/TMPAMPLU", "w");
+	FILE *fdtempw = fopen((TempDir +"/TMPAMPLU").c_str(), "w");
 	if (fd == 0)	{
 		return false;
 	}
@@ -5924,13 +5940,13 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, doub
 	fprintf (fd, "%s\n", "# for each primary : table, row, column, lower prot, and upper prot.");
 	fprintf  (fd,"%s\n", "param : p_t    p_r    p_c    lpl    upl  :=");
 	// now open the temp file
-	FILE *fdtempr = fopen(TempDir +"/TMPAMPLU", "r");
+	FILE *fdtempr = fopen((TempDir +"/TMPAMPLU").c_str(), "r");
 	if (fdtempr == 0)	{
 		return false;
 	}
 	fseek( fdtempr, 0L, SEEK_SET );
 	for (i=0; i<nUnsafe; i++)	{
-		UCHAR str[MAXRECORDLENGTH];
+		char str[MAXRECORDLENGTH];
 		int res = ReadMicroRecord(fdtempr, str);
 		fprintf(fd,"%s\n",str);
 	}
@@ -5973,7 +5989,7 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, doub
 
 bool TauArgus::testampl(long ind)
 {
-	CString sTempDir = "E:/Temp";
+	std::string sTempDir = "E:/Temp";
 
 	CTable *tab = &(m_tab[ind]);
 	for (long j = 0; j < tab->nDim; j++) {

@@ -2,7 +2,7 @@
 # define Globals_h
 
 int CurrentHoldingNr;
-CString LastHoldingCode;
+std::string LastHoldingCode;
 
 
 # endif

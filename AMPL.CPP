@@ -24,10 +24,10 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 	fprintf(fd,"\n");
 	fprintf(fd,"%s\n", "#m= number of rows of the table (without marginal row)");
 	tempvar = &(var[tab->ExplVarnr[0]]);
-/*	CString tempcode;
+/*	std::string tempcode;
 	for (i=0; i<tempvar->nCode; i++) 
 	{
-		tempcode = tempvar->sCode.GetAt(i);
+		tempcode = tempvar->sCode[i];
 	}*/
 	rows = tempvar->nCode-1;
 	fprintf(fd, "%s %d %s\n", "param m := ", rows, ";");

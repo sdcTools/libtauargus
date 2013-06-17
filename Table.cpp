@@ -1122,7 +1122,7 @@ bool CTable::PrepareComputeDistance()
 
 	/*long dim1[MAXDIM], dim2[MAXDIM];
   long Dist, i, j;
-  BYTE *SafeOrUnsafe;
+  unsigned char *SafeOrUnsafe;
 
   if (CellDistance != 0) {
 		delete [] CellDistance;
@@ -1131,7 +1131,7 @@ bool CTable::PrepareComputeDistance()
   CellDistance = new int[nCell];
   if (CellDistance == 0) return false;
 
-	SafeOrUnsafe = new BYTE[nCell];
+	SafeOrUnsafe = new unsigned char[nCell];
   if (SafeOrUnsafe == 0) return false;
 
 	memset(CellDistance, 0, sizeof(int) * nCell);

@@ -111,15 +111,15 @@ bool CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing
 		Missing1 = sMissing1;
 		Missing2 = sMissing2;
 
-		if (Missing1.IsEmpty()) {
+		if (Missing1.empty()) {
 			Missing1 = Missing2;
 		}
 
-		if (Missing1.IsEmpty() ) {
+		if (Missing1.empty() ) {
 			nMissing = 0;
 		}
 		else {
-		if (Missing2.IsEmpty() ) nMissing = 1;
+		if (Missing2.empty() ) nMissing = 1;
 		else                     nMissing = 2;
 		}
 	}
@@ -150,7 +150,7 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 	if (tail) {
 		// not already in list?
 		for (i = 0; i < n; i++) {
-			if (sCode[i] == newcode) break;  // found!
+			if (sCode[i].compare(newcode) == 0) break;  // found!
 		}
 		if (i == n) {  // not found
 			sCode.push_back(newcode);
@@ -166,10 +166,10 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 		int res = BinSearchStringArray(sCode, newcode, 0, IsMissing);
 		if (res < 0) { // not found
 			for (i = 0; i < n; i++) {
-				if (newcode < sCode[i] ) break;
+				if (sCode[i].compare(newcode) > 0) break;
 			}
 			if (i < n) {
-				vector<CString>::iterator p = sCode.begin() + i;
+				vector<std::string>::iterator p = sCode.begin() + i;
 				sCode.insert(p, newcode);
 			}
 			else {
@@ -184,7 +184,7 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 // binary search to see if an string is in an array of
 // strings taking in to account weather to look at missings or not.
 // returns the position if the string is found -1 if not.
-int CVariable::BinSearchStringArray(vector<CString> &s, CString x, int nMissing, bool &IsMissing)
+int CVariable::BinSearchStringArray(vector<std::string> &s, std::string x, int nMissing, bool &IsMissing)
 {
 	int mid, left = 0, right = s.size() - 1 - nMissing;
 	int mis;
@@ -195,11 +195,11 @@ int CVariable::BinSearchStringArray(vector<CString> &s, CString x, int nMissing,
 
 	while (right - left > 1) {
 		mid = (left + right) / 2;
-		if (x < s[mid]) {
+		if (x.compare(s[mid]) < 0) {
 			right = mid;
 		}
 		else {
-			if (x > s[mid]) {
+			if (x.compare(s[mid]) > 0) {
 				left = mid;
 			}
 			else {
@@ -208,19 +208,19 @@ int CVariable::BinSearchStringArray(vector<CString> &s, CString x, int nMissing,
 		}
 	}
 
-	if (x == s[right]) return right;
-	if (x == s[left]) return left;
+	if (x.compare(s[right]) == 0) return right;
+	if (x.compare(s[left]) == 0) return left;
 
 	// equal to missing1 or -2? // code missing not always the highest
 
 	if (nMissing > 0) {
 		mis = s.size() - nMissing;
-		if (x == s[mis]) {
+		if (x.compare(s[mis]) == 0) {
 			IsMissing = true;
 			return mis;
 		}
 		if (nMissing == 2) {
-			if (x == s[mis + 1]) {
+			if (x.compare(s[mis + 1]) == 0) {
 				IsMissing = true;
 				return mis + 1;
 			}
@@ -234,18 +234,18 @@ int CVariable::BinSearchStringArray(vector<CString> &s, CString x, int nMissing,
 bool CVariable::ComputeHierarchicalCodes()
 {
 	int i, j, n;
-	CString s, t;
+	std::string s, t;
 
 	if (nDigitSplit < 2) return false;
 
 	for (i = 0; i < sCode.size() - nMissing; i++) {
 		n = 0;
 		t = sCode[i];
-		if (t.GetLength() != nPos) continue; // no datafile code
+		if (t.length() != nPos) continue; // no datafile code
 		for (j = 0; j < nDigitSplit - 1; j++) {
 			n += DigitSplit[j];
-			s = t.Left(n);
-			AddCode((LPCTSTR) s, false);
+			s = t.substr(0, n);
+			AddCode(s.c_str(), false);
 		}
 	}
 
@@ -307,9 +307,9 @@ int CVariable::GetnCodeInActive()
 
 // Given a position i returns the code for that position. Can only
 // be done for a categorical variable
-CString CVariable::GetCode(int i)
+std::string CVariable::GetCode(int i)
 {
-	CString s;
+	std::string s;
 
 	if (HasRecode) {
 		return Recode.sCode[i];
@@ -339,7 +339,7 @@ int CVariable::GetnMissing()
 }
 
 // returns codelist
-vector<CString> * CVariable::GetCodeList()
+vector<std::string> * CVariable::GetCodeList()
 {
   if (HasRecode) {
 		return &(Recode.sCode);
@@ -361,7 +361,7 @@ CCode* CVariable::GethCode()
 bool CVariable::IsCodeBasic(int i)
 {
 	ASSERT(IsHierarchical == false);
-	return (*GetCodeList())[i].GetLength() == GetCodeWidth();
+	return (*GetCodeList())[i].length() == GetCodeWidth();
 }
 
 // returns code width
@@ -388,12 +388,12 @@ int CVariable::GetCodeWidth()
 // always with width of 8 characters
 void CVariable::GetGHMITERCode(int i, char *code)
 {
-	CString s;
+	std::string s;
 
-	ASSERT(i >= 0 && i < GetCodeList()->GetSize() );
+	ASSERT(i >= 0 && i < GetCodeList()->size() );
 	s = GetCode(i);
-	ASSERT(s.GetLength() < 9);
-	sprintf(code, "%8s", (LPCTSTR) s);
+	ASSERT(s.length() < 9);
+	sprintf(code, "%8s", s.c_str());
 }
 
 // set the hierarchy. Very important and used by explore file and
@@ -425,7 +425,7 @@ bool CVariable::SetHierarch()
 	// set Level, IsParent
 	for (i = 0; i < nCode; i++) {
 		if (nDigitSplit > 0) {
-			n = sCode[i].GetLength();
+			n = sCode[i].length();
 			for (j = 0; j <= nDigitSplit; j++) {
 				if (n == lev[j]) break;
 			}
@@ -494,7 +494,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 {
 	FILE *fd;
 	int i, LenLevelString;
-	CString s;
+	std::string s;
 
 
 
@@ -524,14 +524,17 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 		fgets(str, 200, fd);
 		if (str[0] == 0) break;
 		s = str;
-		s.TrimRight();
-		s.TrimRight("\n\r");
+		// trim right
+		size_t found = s.find_last_not_of(" \n\r\t");
+		if (found != std::string::npos)
+			s.erase(found + 1);
+		else
+			s.resize(0); // str is all whitespace
+
 		/// add a few checks.
 
-
-
-		if (s.IsEmpty()) continue;
-		strcpy(str, (LPCTSTR) s);
+		if (s.empty()) continue;
+		strcpy(str, s.c_str());
 
 		// count number of LevelStrings
 		i = 0;
@@ -540,7 +543,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 //		fprintf(ftemp,"%s","hLevel   ");
 //		fprintf(ftemp,"%i\n",hLevel.GetAt(num));
 		s = &str[i * LenLevelString];
-		if (s == Missing1 || (nMissing == 2 && s == Missing2) ) {
+		if (s.compare(Missing1) == 0 || (nMissing == 2 && s.compare(Missing2) == 0) ) {
 			return HC_CODEISMISSING;
 		}
 
@@ -555,19 +558,19 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 
 	// set nCode
 	nCode = sCode.size();
-	hfCodeWidth = sCode[0].GetLength();
+	hfCodeWidth = sCode[0].length();
 
 
   // check and compute hLevelBasic
 	for (i = 1; i < nCode; i++) {
 		// compute max width code
-		if (sCode[i].GetLength() > hfCodeWidth) {
-			hfCodeWidth = sCode[i].GetLength();
+		if (sCode[i].length() > hfCodeWidth) {
+			hfCodeWidth = sCode[i].length();
 		}
 
 		// level oke?
 		if (hLevel[i] > hLevel[i - 1] && hLevel[i] - hLevel[i - 1] != 1) return HC_LEVELINCORRECT;
-		if (sCode[i].IsEmpty()) return HC_CODEEMPTY;
+		if (sCode[i].empty()) return HC_CODEEMPTY;
 
 		if (i == nCode - 1) {
 			hLevelBasic.push_back(true); // last one always basic
@@ -601,34 +604,29 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 // Finds a code in a hierarchical codelist
 int CVariable::FindAllHierarchicalCode(LPCTSTR code)
 {
+	int n = sCode.size();
 
-	int i, n = sCode.size();
-	CString stemp;
-	for (i = 0; i < n; i++) {
-		stemp = sCode[i];
-		if (sCode[i] == code) break; // hebbes!
+	for (int i = 0; i < n; i++) {
+		if (sCode[i].compare(code) == 0) {
+			return i; // found
+		}
 	}
 
-	if (i >= n) return -1; // not found
-
-	return i;  // found
+	return -1; // not found
 }
 
 // Finds only the basic codes in a hierarchical codelist
 int CVariable::FindHierarchicalCode(LPCTSTR code)
 {
-	int i, n = sCode.size();
-	CString stemp;
-	for (i = 0; i < n; i++) {
-		if (hLevelBasic[i] ) {
-			stemp = sCode[i];// only basic codes, not parental
-			if (sCode[i] == code) break; // hebbes!
+	int n = sCode.size();
+
+	for (int i = 0; i < n; i++) {
+		if (hLevelBasic[i] && sCode[i].compare(code) == 0) {
+			return i; // found
 		}
 	}
 
-	if (i >= n) return -1; // not found
-
-	return i;  // found
+	return -1; // not found
 }
 
 //
@@ -654,7 +652,7 @@ bool CVariable::SetHierarchicalDigits(long nDigitPairs, long *nDigits)
 
 bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Name, bool bogus)
 {
-	vector<CString> *CodeList = GetCodeList();
+	vector<std::string> *CodeList = GetCodeList();
 	CCode *phCode = GethCode();
 	int i, n = CodeList->size();
 	FILE *fd;
@@ -678,7 +676,7 @@ bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Nam
 			if (IsHierarchical) {
 				PrintLevelStrings(fd, phCode[i].Level - 1, LevelString);
 			}
-			PrintLevelCode(fd, (LPCTSTR) (*CodeList)[i], LevelString);
+			PrintLevelCode(fd, (*CodeList)[i].c_str(), LevelString);
 		}
 	}
 
@@ -686,7 +684,7 @@ bool CVariable::WriteCodelist(LPCTSTR FileName, LPCTSTR LevelString, LPCTSTR Nam
 	return true;
 }
 
-void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, vector<CString> *CodeList)
+void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int level, int boguslevel, int ncode, vector<std::string> *CodeList)
 {
 	int i, a;
 	CCode *phCode = GethCode();
@@ -699,7 +697,7 @@ void CVariable::WriteBogusCodelist(FILE *fd, LPCTSTR LevelString, int index, int
 		if (phCode[i].Level > level) continue;
 		if (phCode[i].nChildren != 1) {  // no bogus
 			PrintLevelStrings(fd, boguslevel - 1, LevelString);
-			PrintLevelCode(fd, (LPCTSTR) (*CodeList)[i], LevelString);
+			PrintLevelCode(fd, (*CodeList)[i].c_str(), LevelString);
 		}
 		if (phCode[i].IsParent) {
 			if (phCode[i].nChildren == 1) a = 0;
@@ -726,7 +724,7 @@ void CVariable::PrintLevelCode(FILE *fd, LPCTSTR code, LPCTSTR LevelString)
 bool CVariable::SetHierarchicalRecode()
 {
 	int i, j;
-	vector<BYTE> RLevel; // levels recoded hierarchical variable
+	vector<unsigned char> RLevel; // levels recoded hierarchical variable
 
 	// free previous recode
 	if (HasRecode) {
@@ -755,8 +753,8 @@ bool CVariable::SetHierarchicalRecode()
 		if (hCode[i].Active) {
 			Recode.sCode.push_back(sCode[i]);
 			// compute max width code
-			if (sCode[i].GetLength() > Recode.CodeWidth) {
-				Recode.CodeWidth = sCode[i].GetLength();
+			if (sCode[i].length() > Recode.CodeWidth) {
+				Recode.CodeWidth = sCode[i].length();
 			}
 			Recode.DestCode[i] = j++;
 			RLevel.push_back(hCode[i].Level);
@@ -826,39 +824,42 @@ void CVariable::UndoRecode()
 	}
 }
 
+static void RemoveStringInPlace(std::string& subject, char ch) {
+    size_t pos = 0;
+    while((pos = subject.find(ch, pos)) != std::string::npos) {
+         subject.erase(pos, 1);
+         pos ++;
+    }
+}
+
 long CVariable::OrganizeCodelist()
 {
 	long i;
-	long lowestlevel = 0;
-	CString s,temps;
-	long rightlen;
 	long n = sCode.size();
+	long lowestlevel = 0;
+
 	for (i = 0; i < n; i++) {
 		if (hLevel[i] > lowestlevel) {
 			lowestlevel = hLevel[i];
 		}
 	}
 
-	for (i=0;i<n; i++) {
+	for (i = 0; i < n; i++) {
 		if (hLevel[i] == lowestlevel) {
-			s = sCode[i];
-			rightlen = nPos-s.GetLength();
-			temps = s;
-			if (s.GetLength() > nPos) {
-				s.Left(nPos);
-				temps.Right(rightlen);
-				rightlen = temps.Remove(' ');
-				if (!temps.IsEmpty()) {
+			std::string s = sCode[i];
+			if (s.length() > nPos) {
+				std::string temps = s;
+				s.substr(0, nPos);
+				temps.substr(nPos);
+				RemoveStringInPlace(temps, ' ');
+				if (!temps.empty()) {
 					return HC_CODETOOLONG;
 				}
 			}
 
-			if (s.GetLength() <nPos) {
-			// add spaces.
-				long width = s.GetLength();
-				char tempstr[100];
-				sprintf(tempstr, "%*s", nPos - width, " ");
-				s.Insert(0, tempstr);
+			if (s.length() < nPos) {
+				// add spaces.
+				s.insert((size_t)0, (size_t)(nPos - s.length()), ' ');
 			}
 
 			sCode[i] = s;
@@ -866,13 +867,14 @@ long CVariable::OrganizeCodelist()
 	}
 	return 1;
 }
-bool CVariable::SetPeepCodes(CString Peep1, CString Peep2)
+
+bool CVariable::SetPeepCodes(std::string Peep1, std::string Peep2)
 {
 	if (IsPeeper)	{
-		if ((Peep1.IsEmpty()) &&  (Peep2.IsEmpty()))	{
+		if ((Peep1.empty()) &&  (Peep2.empty()))	{
 			return false;
 		}
-		if (Peep1.IsEmpty())	{
+		if (Peep1.empty())	{
 			PeepCode1 = Peep2;
 		}
 		else	{
@@ -970,7 +972,7 @@ bool CVariable::CreateSubCodeForNonHierarchicalCode()
 	CSubCodeList *subcodelist;
 	long *indices;
 	long i;
-	vector<CString> subcodes;
+	vector<std::string> subcodes;
 	if (IsHierarchical)	{
 		return false;
 	}
@@ -997,7 +999,7 @@ bool CVariable::CreateSubCodeForHierarchicalCode(long CodeIndex,
 																 long SubCodeSequenceNumber)
 {
 	long  NumChild;
-	vector<CString> subcode;
+	vector<std::string> subcode;
 	CSubCodeList *subcodelist;
 	long *indices;
 	if (!IsHierarchical)	{
@@ -1058,13 +1060,13 @@ long CVariable::FindNumberOfChildren(long CodeIndex)
 }
 
 // given a parent find list of children.
-bool CVariable::FindChildren(long NumChild, vector<CString> & Child, long CodeIndex,
+bool CVariable::FindChildren(long NumChild, vector<std::string> & Child, long CodeIndex,
 									  long *Index)
 {
 	long i, j;
 	long ParentLevel;
 	long ChildLevel;
-	CString tempCode;
+	std::string tempCode;
 	if (!IsHierarchical)	{
 		return false;
 	}
@@ -1096,7 +1098,7 @@ bool CVariable::FindChildren(long NumChild, vector<CString> & Child, long CodeIn
 /*void CVariable:: ShowhCode()
 {
 	FILE *fdshow;
-	CString filename;
+	std::string filename;
 	filename = "E:/Temp/hCodeout.txt";
 
 	fdshow = fopen(filename, "a");

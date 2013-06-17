@@ -9,9 +9,10 @@
 // DataCell.h : header file
 #if !defined DataCell_h
 #define DataCell_h 
-extern int CurrentHoldingNr;
-extern CString LastHoldingCode;
+#include <string>
 #include "defines.h"
+extern int CurrentHoldingNr;
+extern std::string LastHoldingCode;
 //#include "Globals.h"
 
 /////////////////////////////////////////////////////////////////////////////

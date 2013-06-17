@@ -4,6 +4,7 @@
 #define TauArgus_h
 
 #include <vector>
+#include <string>
 #include <locale.h>
 #include "resource.h"       // main symbols
 #include "Variable.h"
@@ -28,7 +29,7 @@ private:
 	int  m_VarNrWeight;
 	int  m_VarNrHolding;
 	char m_ValueSeparator;
-	CString m_ValueTotal;
+	std::string m_ValueTotal;
 
 	CHitas m_hitas;
 	CGhmiter m_ghmiter;
@@ -43,7 +44,7 @@ private:
 
 	long m_ntab;
 	bool InFileIsFixedFormat;
-	CString InFileSeperator;
+	std::string InFileSeperator;
 
 	CVariable* m_var;
 	CTable* m_tab;
@@ -51,20 +52,20 @@ private:
 	int m_nNoSense;
 	int m_nUntouched;
 	int m_nOverlap;
-	CString m_WarningRecode;
+	std::string m_WarningRecode;
 
 
    void CleanUp();
 	void CleanTables();
 	void AddTableCells(CTable& t, CDataCell AddCell, int niv, long cellindex);
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
-	void FillTables(UCHAR *str);
+	void FillTables(char *str);
 	bool ConvertNumeric(char *code, double &d);
-	void QuickSortStringArray(std::vector<CString> &s, int first, int last);
-	int  BinSearchStringArray(std::vector<CString> &s, CString x, int nMissing, bool& IsMissing);
+	void QuickSortStringArray(std::vector<std::string> &s, int first, int last);
+	int  BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool& IsMissing);
 	char m_fname[_MAX_PATH];
-	int  DoMicroRecord(UCHAR *str, int *varindex);
-	int  ReadMicroRecord(FILE *fd, UCHAR *str);
+	int  DoMicroRecord(char *str, int *varindex);
+	int  ReadMicroRecord(FILE *fd, char *str);
   // int  MakeSafeGHM(int TableIndex, long *nSetSecondary);
 
 // for export files
@@ -88,7 +89,7 @@ private:
 
 
 	// for RECODE
-	bool ReadVariableFreeFormat(UCHAR *Str, long VarIndex, CString *VarCode);
+	bool ReadVariableFreeFormat(char *Str, long VarIndex, std::string *VarCode);
 	void InitializeHoldingTables();
 	void MergeLastTempShadow();
 	bool ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase);
@@ -97,14 +98,14 @@ private:
 	int  MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR Missing2);
 	int  ReadWord(LPCTSTR str, char* CodeFrom, char *CodeTo, char EndCode, int& fromto, int& pos);
 	void AddSpacesBefore(char *str, int len);
-	void AddSpacesBefore(CString& str, int len);
+	void AddSpacesBefore(std::string& str, int len);
 	int  SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char *SrcCode2, int fromto);
 	bool ComputeRecodeTables();
 	bool ComputeRecodeTable(CTable& srctab, CTable& dsttab);
 	void ComputeRecodeTableCells(CTable& srctab, CTable& dsttab, int niv, int iCellSrc, int iCellDst);
 	void AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, long ito);
 	void SetTableHasRecode();
-	bool FillInTable(long Index, CString *sCodes, double Cost, double Resp,
+	bool FillInTable(long Index, std::string *sCodes, double Cost, double Resp,
 						double Shadow, long Freq, double *TopNCell, double *TopNHolding,
 						double LPL, double UPL,long Status, long & error, long  & ErrorVarNo);
 
@@ -124,7 +125,7 @@ private:
 	long FindNumberOfElementsInSubTable(long *SubTableTuple, long TableIndex);
 	bool FindCellIndexForSubTable(long *TableCellIndex, long TableIndex, long *SubTableTuple,long CellIndexInSubTable, long *SubTableCellIndex);
 	long FindSubTableForCell(long CellIndex, long TableIndex, long *SubTableTupleIndex);
-	bool WriteHierTableInAMPL(FILE *fd, long tabind, CString TempDir, double MaxScale);
+	bool WriteHierTableInAMPL(FILE *fd, long tabind, std::string TempDir, double MaxScale);
 	long SubTableForCellDimension(long TableIndex, long *CellDimension, long * SubTableTupleIndex);
 	bool WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind, long varind);
 	bool ArrayCompare (long *arr1, long *arr2, long nDim);

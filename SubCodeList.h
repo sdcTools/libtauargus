@@ -8,10 +8,10 @@ class CSubCodeList
 {
 private:
 	long m_lSequenceNumber;
-	CString m_sParentCode;
+	std::string m_sParentCode;
 	long m_lParentCodeIndex;
 	long m_lNumberOfSubCodes;
-	std::vector<CString> m_colSubCodeCollection;
+	std::vector<std::string> m_colSubCodeCollection;
 	long * m_lSubCodeIndex;
 
 public:
@@ -33,17 +33,17 @@ public:
 			delete[] m_lSubCodeIndex;
 		}
 	}
-	CString GetSubCode(long icodenum);
-	void FillSubCodes(std::vector<CString> &codes, long *indices);
-	long IsInSubCodes(CString sCode);
+	std::string GetSubCode(long icodenum);
+	void FillSubCodes(std::vector<std::string> &codes, long *indices);
+	long IsInSubCodes(std::string sCode);
 	void SetSequenceNumber(long num);
-	void SetParentCode(CString code);
+	void SetParentCode(std::string code);
 	void SetParentIndex(long Index);
 
 	long GetSubCodeIndex(long i);
 	long GetParentIndex();
 	long GetSequenceNumber();
-	CString GetParentCode();
+	std::string GetParentCode();
 	long NumberOfSubCodes();
 
 };

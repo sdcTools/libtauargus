@@ -30,9 +30,9 @@ public:
   bool ControlDataTable(const char *FileName, const char *TableName, const char *EndStr1, const char *EndStr2, int nDim, int *ExpVarNr, CVariable *m_var);
 	// bool ControlDataTables(long MemorySize, double MinValue, double MaxValue, int MaxnDim, int nTables);
 	// void DeleteResultFiles();
-	// CString ProgramPath;
-	// CString TempPath;
-	// CString CurrentPath;
+	// std::string ProgramPath;
+	// std::string TempPath;
+	// std::string CurrentPath;
 	CGhmiter();
 	virtual ~CGhmiter();
 
