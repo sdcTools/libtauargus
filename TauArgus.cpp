@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <vector>
 #include <sstream>
+#include <algorithm>
 #include <float.h>
 #include <math.h>
 
@@ -375,7 +376,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 		return false;
 	}
 	// sort list of dest codes, still without missing values (coming soon)
-	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.size() - 1);
+	QuickSortStringArray(m_var[v].Recode.sCode);
 
 
 	// now the number of codes is known, but not the not mentioned ones
@@ -420,7 +421,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	}
 
 	// sort list of dest codes, still without missing values (coming soon)
-	QuickSortStringArray(m_var[v].Recode.sCode, 0, m_var[v].Recode.sCode.size() - 1);
+	QuickSortStringArray(m_var[v].Recode.sCode);
 
 	// ADD MISSING1 AND -2
 	// both empty impossible, see start of function
@@ -3260,44 +3261,24 @@ int TauArgus::DoMicroRecord(char *str, int *varindex)
 // IsMissing on true if x = Missing1 or x = Missing2
 int TauArgus::BinSearchStringArray(vector<std::string> &s, std::string x, int nMissing, bool &IsMissing)
 {
-	int mid, left = 0, right = s.size() - 1 - nMissing;
-	int mis;
-
 	ASSERT(left <= right);
 
 	IsMissing = false;
 
-	while (right - left > 1) {
-		mid = (left + right) / 2;
-		if (x < s[mid]) {
-			right = mid;
-		}
-		else {
-			if (x > s[mid]) {
-				left = mid;
-			}
-			else {
-				return mid;
-			}
+	std::vector<std::string>::iterator it = std::lower_bound(s.begin(), s.end() - nMissing, x);
+
+	if (it != s.end() - nMissing) {
+		if (*it == x) {
+			return it - s.begin();
 		}
 	}
 
-	if (x == s[right]) return right;
-	if (x == s[left]) return left;
-
 	// equal to missing1 or -2? // code missing not always the highest
 
-	if (nMissing > 0) {
-		mis = s.size() - nMissing;
+	for (int mis = s.size() - nMissing; mis < s.size(); mis++) {
 		if (x == s[mis]) {
 			IsMissing = true;
 			return mis;
-		}
-		if (nMissing == 2) {
-			if (x == s[mis + 1]) {
-				IsMissing = true;
-				return mis + 1;
-			}
 		}
 	}
 
@@ -3352,46 +3333,9 @@ void TauArgus::QuickSortMaxScore(double &doub, int &intg, int first, int last)
 
 */
 // sort strings
-void TauArgus::QuickSortStringArray(vector<std::string> &s, int first, int last)
+void TauArgus::QuickSortStringArray(vector<std::string> &s)
 {
-	int i, j;
-	std::string mid, temp;
-
-	ASSERT(first >= 0 && last >= first);
-
-	do {
-		i = first;
-		j = last;
-		mid = s[(i + j) / 2];
-		do {
-			while (s[i] < mid) i++;
-			while (s[j] > mid) j--;
-			if (i < j) {
-				temp = s[i];
-				s[i] = s[j];
-				s[j] = temp;
-			}
-			else {
-				if (i == j) {
-				i++;
-				j--;
-			}
-			break;
-		}
-   } while (++i <= --j);
-   if (j - first < last - i) {
-      if (j > first) {
-			QuickSortStringArray(s, first, j);
-      }
-      first = i;
-	}
-	else {
-      if (i < last) {
-			QuickSortStringArray(s, i, last);
-      }
-      last = j;
-    }
-	} while (first < last);
+	std::sort(s.begin(), s.end());
 }
 
 // converts code to double; leading and trailing spaces are ignored;

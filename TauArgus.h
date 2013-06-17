@@ -61,7 +61,7 @@ private:
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
 	void FillTables(char *str);
 	bool ConvertNumeric(char *code, double &d);
-	void QuickSortStringArray(std::vector<std::string> &s, int first, int last);
+	void QuickSortStringArray(std::vector<std::string> &s);
 	int  BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool& IsMissing);
 	char m_fname[_MAX_PATH];
 	int  DoMicroRecord(char *str, int *varindex);
