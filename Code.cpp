@@ -1,8 +1,4 @@
-// Code.cpp: implementation of the CCode class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+#include "General.h"
 #include "Code.h"
 
 #ifdef _DEBUG

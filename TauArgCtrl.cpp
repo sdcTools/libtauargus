@@ -48,8 +48,7 @@ private:
 	BSTR* bstr;
 
 public:
-	C2BString(BSTR *bstr) {
-		this->bstr = bstr;
+	C2BString(BSTR *bstr) : cstr(0), bstr(bstr) {
 	}
 
 	~C2BString() {

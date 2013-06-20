@@ -1,13 +1,9 @@
-/*#if !defined(AFX_VARIABLE_H__6CE83D09_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_)
-#define AFX_VARIABLE_H__6CE83D09_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-*/
 #if !defined Variable_h
-#include <vector>
 #define Variable_h
+
+#include <vector>
+
+#include "General.h"
 #include "defines.h"
 #include "code.h"
 #include "SubCodeList.h"
@@ -22,15 +18,7 @@ typedef struct {
 	int CodeWidth;          // max length sCodes
 	int nBogus;
 	CCode *hCode;           // Properties hierarchical codes
-
 } RECODE;
-
-
-// Variable.h : header file
-//
-
-/////////////////////////////////////////////////////////////////////////////
-// CVariable window
 
 class CVariable
 {
@@ -87,11 +75,6 @@ public:
 // Operations
 public:
 
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CVariable)
-	//}}AFX_VIRTUAL
-
 // Implementation
 public:
 	int nBogus;
@@ -129,7 +112,6 @@ public:
 	bool SetPeepCodes(std::string Peep1, std::string Peep2);
 	bool SetPosition(long bPos, long nPos, long nDec);
 	bool SetDecPosition(long lnDec);
-	int  BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool &IsMissing);
 	virtual ~CVariable();
 	long OrganizeCodelist();
 	long NumberOfSubCodeList();
@@ -139,23 +121,6 @@ public:
 	bool FillSubCodeList();
 	long FindNumberOfChildren(long CodeIndex);
 	bool FindChildren(long NumChild, std::vector<std::string> &Child, long CodeIndex, long *Index);
-
-
-	// Generated message map functions
-
-protected:
-	//{{AFX_MSG(CVariable)
-		// NOTE - the ClassWizard will add and remove member functions here.
-	//}}AFX_MSG
-/*
-	DECLARE_MESSAGE_MAP()
-*/
 };
-#endif
 
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-//#endif // !defined(AFX_VARIABLE_H__6CE83D09_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_)
+#endif // Variable_h

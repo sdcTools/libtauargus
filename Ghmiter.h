@@ -1,13 +1,3 @@
-// Ghmiter.h: interface for the CGhmiter class.
-//
-//////////////////////////////////////////////////////////////////////
-
-/*#if !defined(AFX_GHMITER_H__A93D13A1_ADCA_11D5_BC97_00C04F9A7DB5__INCLUDED_)
-#define AFX_GHMITER_H__A93D13A1_ADCA_11D5_BC97_00C04F9A7DB5__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000*/
 #if !defined Ghmiter_h
 #define Ghmiter_h
 
@@ -35,11 +25,6 @@ public:
 	// std::string CurrentPath;
 	CGhmiter();
 	virtual ~CGhmiter();
-
-
-
-
 };
-#endif
 
-//#endif // !defined(AFX_GHMITER_H__A93D13A1_ADCA_11D5_BC97_00C04F9A7DB5__INCLUDED_)
+#endif // Ghmiter_h

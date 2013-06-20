@@ -1,14 +1,5 @@
-// Code.h: interface for the CCode class.
-//
-//////////////////////////////////////////////////////////////////////
-
-/*#if !defined(AFX_CODE_H__E4A6F926_B7E3_11D5_BCA0_00C04F9A7DB5__INCLUDED_)
-#define AFX_CODE_H__E4A6F926_B7E3_11D5_BCA0_00C04F9A7DB5__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-  */
+#if !defined Code_h
+#define Code_h
 
 /*
 Code      Parent nChildren IsBogus Level
@@ -17,8 +8,7 @@ Code      Parent nChildren IsBogus Level
   130          Y         1       Y     2
     1300       N         0       Y     3
 */
-#if !defined Code_h
-#define Code_h
+
 class CCode  
 {
 public:
@@ -31,5 +21,5 @@ public:
 	virtual ~CCode();
 };
 
-#endif
-//#endif // !defined(AFX_CODE_H__E4A6F926_B7E3_11D5_BCA0_00C04F9A7DB5__INCLUDED_)
+#endif // Code_h
+

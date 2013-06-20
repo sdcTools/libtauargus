@@ -1,16 +1,9 @@
-// Table.cpp : implementation file
-//
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
 
-#include "stdafx.h"
+#include "General.h"
 #include "Table.h"
-//////
-//#include <stdio.h>
-//#include <stdlib.h>
-
-#include  <stdio.h>
-#include  <math.h>
-#include  <stdlib.h>
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

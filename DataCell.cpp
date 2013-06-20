@@ -1,10 +1,7 @@
-// DataCell.cpp : implementation file
-//
+#include <cmath>
 
-#include "stdafx.h"
+#include "General.h"
 #include "DataCell.h"
-#include "math.h"
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

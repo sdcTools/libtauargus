@@ -1,11 +1,10 @@
-// TauArgus.h : Declaration of the TauArgus
-
 #ifndef TauArgus_h
 #define TauArgus_h
 
+#include <clocale>
 #include <vector>
 #include <string>
-#include <locale.h>
+
 #include "resource.h"       // main symbols
 #include "Variable.h"
 #include "Table.h"
@@ -16,8 +15,6 @@
 #include "AMPL.h"
 #include "IProgressListener.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// TauArgus
 class TauArgus
 {
 private:
@@ -61,8 +58,6 @@ private:
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
 	void FillTables(char *str);
 	bool ConvertNumeric(char *code, double &d);
-	void QuickSortStringArray(std::vector<std::string> &s);
-	int  BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool& IsMissing);
 	char m_fname[_MAX_PATH];
 	int  DoMicroRecord(char *str, int *varindex);
 	int  ReadMicroRecord(FILE *fd, char *str);
@@ -163,27 +158,27 @@ public:
 	}
 
 public:
-	void STDMETHODCALLTYPE SetProgressListener(IProgressListener *ProgressListener);
-	IProgressListener * STDMETHODCALLTYPE GetProgressListener();
-	bool STDMETHODCALLTYPE SetAllNonStructuralAsEmpty(/*[in]*/ long TableIndex);
-	bool STDMETHODCALLTYPE SetSingleNonStructuralAsEmpty(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex);
-	bool STDMETHODCALLTYPE SetSingleEmptyAsNonStructural(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex);
-	bool STDMETHODCALLTYPE SetAllEmptyNonStructural(/*[in]*/ long TableIndex);
-	bool STDMETHODCALLTYPE SetSecondaryFromHierarchicalAMPL(/*[in]*/  const char* FileName, /*[in]*/ long TableIndex,  /*[in,out]*/ long *ErrorCode);
-	bool STDMETHODCALLTYPE WriteHierarchicalTableInAMPLFormat(/*[in]*/ const char* AMPLFilename, const char* TempDir, /*[in]*/  long Tableindex, /*[in]*/ double MaxScale, long *ErrorCode);
-	bool STDMETHODCALLTYPE SetRoundedResponse(/*[in]*/  const char* RoundedFile,  /*[in]*/ long TableIndex);
-	void STDMETHODCALLTYPE MaximumProtectionLevel(/*[in]*/ long TableIndex, /*[retval,out]*/ double *Maximum);
-	bool STDMETHODCALLTYPE SetProtectionLevelsForFrequencyTable(long TableIndex,/*[in]*/ long Base, /*[in]*/ long K);
+	void SetProgressListener(IProgressListener *ProgressListener);
+	IProgressListener * GetProgressListener();
+	bool SetAllNonStructuralAsEmpty(/*[in]*/ long TableIndex);
+	bool SetSingleNonStructuralAsEmpty(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex);
+	bool SetSingleEmptyAsNonStructural(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex);
+	bool SetAllEmptyNonStructural(/*[in]*/ long TableIndex);
+	bool SetSecondaryFromHierarchicalAMPL(/*[in]*/  const char* FileName, /*[in]*/ long TableIndex,  /*[in,out]*/ long *ErrorCode);
+	bool WriteHierarchicalTableInAMPLFormat(/*[in]*/ const char* AMPLFilename, const char* TempDir, /*[in]*/  long Tableindex, /*[in]*/ double MaxScale, long *ErrorCode);
+	bool SetRoundedResponse(/*[in]*/  const char* RoundedFile,  /*[in]*/ long TableIndex);
+	void MaximumProtectionLevel(/*[in]*/ long TableIndex, /*[retval,out]*/ double *Maximum);
+	bool SetProtectionLevelsForFrequencyTable(long TableIndex,/*[in]*/ long Base, /*[in]*/ long K);
 	bool SetTableCellCost(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ double Cost);
-	bool STDMETHODCALLTYPE GetCellStatusStatistics(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost);
-	bool STDMETHODCALLTYPE WriteTableInAMPLFormat(/*[in]*/ const char* AMPLFileName, /*[in]*/ long TableIndex);
-	void STDMETHODCALLTYPE SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
+	bool GetCellStatusStatistics(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost);
+	bool WriteTableInAMPLFormat(/*[in]*/ const char* AMPLFileName, /*[in]*/ long TableIndex);
+	void SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
 	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *DimIndex);
-	long STDMETHODCALLTYPE CheckRealizedLowerAndUpperValues(/*[in]*/long TabNr);
-    bool STDMETHODCALLTYPE SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
-	bool STDMETHODCALLTYPE SetRealizedLowerAndUpper(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower);
-	bool STDMETHODCALLTYPE UndoSecondarySuppress(/*[in]*/ long TableIndex, long SortSuppress);
-	bool STDMETHODCALLTYPE SetTableSafetyInfo(long TabIndex,
+	long CheckRealizedLowerAndUpperValues(/*[in]*/long TabNr);
+    bool SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
+	bool SetRealizedLowerAndUpper(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower);
+	bool UndoSecondarySuppress(/*[in]*/ long TableIndex, long SortSuppress);
+	bool SetTableSafetyInfo(long TabIndex,
 											bool HasMaxScore,
 											bool DominanceRule,
 											long * DominanceNumber, long * DominancePerc,
@@ -195,36 +190,36 @@ public:
 											bool ApplyZeroRule, long ZeroSafetyRange,
 											bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 											long *ErrorCode);
-	bool STDMETHODCALLTYPE SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2,
+	bool SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2,
 		/*[in]*/ long nDec, bool IsPeeper, const char* PeeperCode, /*[in]*/ bool IsHierarchical, /*[in]*/ bool IsNumeriek, /*[in]*/ long nPos);
-	bool STDMETHODCALLTYPE CompletedTable(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ const char* FileName, /*[in]*/ bool CalculateTotals,/*[in]*/ bool SetCalculatedTotalsAsSafe,/*[in]*/ bool ForCoverTable);
-	bool STDMETHODCALLTYPE SetInTable(/*[in]*/ long Index, /*[in]*/ char* sCode[],
+	bool CompletedTable(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ const char* FileName, /*[in]*/ bool CalculateTotals,/*[in]*/ bool SetCalculatedTotalsAsSafe,/*[in]*/ bool ForCoverTable);
+	bool SetInTable(/*[in]*/ long Index, /*[in]*/ char* sCode[],
 									/*[in]*/ double Shadow, /*[in]*/ double Cost,
 									/*[in]*/ double Resp, /*[in]*/ long Freq, /*[in]*/ double * MaxScoreCell,
 									double * MaxScoreHolding, /*[in]*/ long Status,double LowerProtectionLevel,
 									double UpperProtectionLevel,
 									/*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrVNum);
-	void STDMETHODCALLTYPE ThroughTable();
-	bool STDMETHODCALLTYPE SetTotalsInCodeList(/*[in]*/ long NumberofVariables,/*[in]*/  long * VarIndex,/*[in,out]*/  long * ErrorCode, /*[in,out]*/  long *  ErrorInVarIndex);
-	bool STDMETHODCALLTYPE SetInCodeList(/*[in]*/ long NumberofVar,  /*[in]*/ long * VarIndex, /*[in]*/ char* sCode[], /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrorInVarIndex);
-	bool STDMETHODCALLTYPE WriteCellRecords(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/  long SBS, /*[in]*/ bool SBSLevel, /*[in]*/ bool SuppressEmpty, /*[in]*/ const char* FirstLine, bool ShowUnsafe, long RespType);
-	void STDMETHODCALLTYPE GetTotalTabelSize(/*[in]*/ long TableIndex,/*[in,out]*/ long* nCell, /*[in,out]*/ long * SizeDataCell);
-	long STDMETHODCALLTYPE SetSecondaryJJFORMAT(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ bool WithBogus, /*[in,out]*/ long * nSetSecondary);
-	bool STDMETHODCALLTYPE WriteJJFormat(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ bool WithBogus , bool AsPerc, bool ForRounding);
-	bool STDMETHODCALLTYPE WriteCSV(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
-	bool STDMETHODCALLTYPE WriteCSVBasic(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
-	bool STDMETHODCALLTYPE GetCellDistance(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ long * Distance);
-	bool STDMETHODCALLTYPE PrepareCellDistance(/*[in]*/ long TableIndex);
-	long STDMETHODCALLTYPE SetSecondaryGHMITER(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, bool IsSingleton);
-	long STDMETHODCALLTYPE WriteGHMITERDataCell(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, bool IsSingleton);
-	long STDMETHODCALLTYPE WriteGHMITERSteuer(/*[in]*/ const char* FileName, /*[in]*/ const char* EndString1, /*[in]*/ const char* EndString2, /*[in]*/ long TableIndex);
-	bool STDMETHODCALLTYPE GetVarCodeProperties(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ const char** Code);
-	bool STDMETHODCALLTYPE UnsafeVariableCodes(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ const char** Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray);
-	bool STDMETHODCALLTYPE GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
-	long STDMETHODCALLTYPE SetHierarchicalCodelist(/*[in]*/  long VarIndex, /*[in]*/ const char* FileName, /*[in]*/ const char* LevelString);
-	bool STDMETHODCALLTYPE SetSecondaryHITAS(/*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary);
-	bool STDMETHODCALLTYPE PrepareHITAS(/*[in]*/ long TableIndex, /*[in]*/ const char* NameParameterFile, /*[in]*/ const char* NameFilesFile, /*[in]*/ const char* TauTemp);
-	bool STDMETHODCALLTYPE SetTableSafety(	long Index, bool DominanceRule,
+	void ThroughTable();
+	bool SetTotalsInCodeList(/*[in]*/ long NumberofVariables,/*[in]*/  long * VarIndex,/*[in,out]*/  long * ErrorCode, /*[in,out]*/  long *  ErrorInVarIndex);
+	bool SetInCodeList(/*[in]*/ long NumberofVar,  /*[in]*/ long * VarIndex, /*[in]*/ char* sCode[], /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrorInVarIndex);
+	bool WriteCellRecords(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/  long SBS, /*[in]*/ bool SBSLevel, /*[in]*/ bool SuppressEmpty, /*[in]*/ const char* FirstLine, bool ShowUnsafe, long RespType);
+	void GetTotalTabelSize(/*[in]*/ long TableIndex,/*[in,out]*/ long* nCell, /*[in,out]*/ long * SizeDataCell);
+	long SetSecondaryJJFORMAT(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ bool WithBogus, /*[in,out]*/ long * nSetSecondary);
+	bool WriteJJFormat(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ bool WithBogus , bool AsPerc, bool ForRounding);
+	bool WriteCSV(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
+	bool WriteCSVBasic(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
+	bool GetCellDistance(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ long * Distance);
+	bool PrepareCellDistance(/*[in]*/ long TableIndex);
+	long SetSecondaryGHMITER(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, bool IsSingleton);
+	long WriteGHMITERDataCell(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, bool IsSingleton);
+	long WriteGHMITERSteuer(/*[in]*/ const char* FileName, /*[in]*/ const char* EndString1, /*[in]*/ const char* EndString2, /*[in]*/ long TableIndex);
+	bool GetVarCodeProperties(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ const char** Code);
+	bool UnsafeVariableCodes(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ const char** Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray);
+	bool GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
+	long SetHierarchicalCodelist(/*[in]*/  long VarIndex, /*[in]*/ const char* FileName, /*[in]*/ const char* LevelString);
+	bool SetSecondaryHITAS(/*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary);
+	bool PrepareHITAS(/*[in]*/ long TableIndex, /*[in]*/ const char* NameParameterFile, /*[in]*/ const char* NameFilesFile, /*[in]*/ const char* TauTemp);
+	bool SetTableSafety(	long Index, bool DominanceRule,
 										long * DominanceNumber,long * DominancePerc,
 										bool PQRule,long * PriorPosteriorP,
 										long * PriorPosteriorQ,long * PriorPosteriorN,
@@ -235,8 +230,8 @@ public:
 										bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 										long ZeroSafetyRange,	long ManualSafetyPerc,
 										long * CellAndHoldingFreqSafetyPerc);
-	bool STDMETHODCALLTYPE GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
-	bool STDMETHODCALLTYPE GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
+	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
+	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
 										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
 										/*[in,out]*/ long * CellFreq, /*[in,out]*/ long * CellStatus,
 										/*[in,out]*/  double * CellMaxScore, /*[in,out]*/ double * CellMaxScoreWeight,
@@ -244,35 +239,34 @@ public:
 													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
 													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
 										double * Lower, double * Upper, double * RealizedLower, double * RealizedUpper);
-	bool STDMETHODCALLTYPE SetTable(/*[in]*/ long Index, /*[in]*/ long nDim,
+	bool SetTable(/*[in]*/ long Index, /*[in]*/ long nDim,
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
 		double Lambda, double MaxScaledCost,
 		long PeepVarnr,bool SetMissingAsSafe);
-	bool STDMETHODCALLTYPE SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
+	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
 		/*[in]*/ long nDec, long nMissing,/*[in]*/ const char* Missing1, /*[in]*/ const char* Missing2,/*[in]*/ const char* TotalCode,bool IsPeeper, const char* PeeperCode1, const char* PeeperCode2, /*[in]*/ bool IsCategorical,
 		/*[in]*/  bool IsNumeric, /*[in]*/  bool IsWeight, /*[in]*/ bool IsHierarchical,
 		/*[in]*/ bool IsHolding);
-	bool STDMETHODCALLTYPE DoActiveRecode(/*[in]*/ long VarIndex);
-	bool STDMETHODCALLTYPE GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
-	bool STDMETHODCALLTYPE SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
-	bool STDMETHODCALLTYPE GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
-	bool STDMETHODCALLTYPE SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
-	bool STDMETHODCALLTYPE UndoRecode(/*[in]*/ long VarIndex);
-	long STDMETHODCALLTYPE GetMaxnUc();
-	bool STDMETHODCALLTYPE ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
-	bool STDMETHODCALLTYPE UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
-	bool STDMETHODCALLTYPE GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
-	bool STDMETHODCALLTYPE SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
-	void STDMETHODCALLTYPE CleanAll();
-	void STDMETHODCALLTYPE ApplyRecode();
-	bool STDMETHODCALLTYPE DoRecode( /*[in]*/ long VarIndex, /*[in]*/ const char* RecodeString, long nMissing,/*[in]*/ const char* eMissing1, /*[in]*/ const char* eMissing2,  /*[in.out]*/ long *ErrorType, /*[in,out]*/ long * ErrorLine, /*[in,out]*/ long * ErrorPos, /*[in,out]*/ const char** WarningString);
-	bool STDMETHODCALLTYPE ComputeTables( /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * TableIndex);
-	bool STDMETHODCALLTYPE SetNumberTab( /*[in]*/ long nTab);
-	bool STDMETHODCALLTYPE SetNumberVar(/*[in]*/ long nVar);
-	double STDMETHODCALLTYPE GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
-	bool STDMETHODCALLTYPE SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
-
+	bool DoActiveRecode(/*[in]*/ long VarIndex);
+	bool GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
+	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
+	bool GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
+	bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
+	bool UndoRecode(/*[in]*/ long VarIndex);
+	long GetMaxnUc();
+	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
+	bool UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
+	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
+	bool SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
+	void CleanAll();
+	void ApplyRecode();
+	bool DoRecode( /*[in]*/ long VarIndex, /*[in]*/ const char* RecodeString, long nMissing,/*[in]*/ const char* eMissing1, /*[in]*/ const char* eMissing2,  /*[in.out]*/ long *ErrorType, /*[in,out]*/ long * ErrorLine, /*[in,out]*/ long * ErrorPos, /*[in,out]*/ const char** WarningString);
+	bool ComputeTables( /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * TableIndex);
+	bool SetNumberTab( /*[in]*/ long nTab);
+	bool SetNumberVar(/*[in]*/ long nVar);
+	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
+	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 };
 
 #endif // TauArgus_h

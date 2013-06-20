@@ -5,7 +5,7 @@ class IProgressListener
 {
 public:
 	virtual ~IProgressListener() { }
-    virtual void UpdateProgress(int Perc) = 0;
+	virtual void UpdateProgress(int Perc) = 0;
 };
 
 #endif // I_ProgressListener_h

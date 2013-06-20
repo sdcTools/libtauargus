@@ -1,6 +1,3 @@
-// JavaProgressListener.h: interface for the JavaProgressListener class.
-//
-//////////////////////////////////////////////////////////////////////
 #if !defined JavaProgressListener_h
 #define JavaProgressListener_h
 

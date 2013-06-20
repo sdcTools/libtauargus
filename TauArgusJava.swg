@@ -36,7 +36,6 @@
 
 // Include this block in the generated C++ wrapper code (TauArgus_wrap.cpp)
 %{
-#include "stdafx.h"
 #include "IProgressListener.h"
 #include "JavaProgressListener.h"
 #include "TauArgus.h"

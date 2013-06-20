@@ -1,22 +1,11 @@
-/*#if !defined(AFX_TABLE_H__6CE83D0A_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_)
-#define AFX_TABLE_H__6CE83D0A_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000*/
 #if !defined Table_h
 #define Table_h
 
 #include <vector>
+
 #include "defines.h"
 #include "datacell.h"
 #include "variable.h"
-
-// Table.h : header file
-//
-
-/////////////////////////////////////////////////////////////////////////////
-// CTable window
 
 class CTable
 {
@@ -128,11 +117,6 @@ public:
 
 public:
 
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTable)
-	//}}AFX_VIRTUAL
-
 // Implementation
 public:
 	void InitializeHoldingNrs();
@@ -173,7 +157,6 @@ public:
 	bool SetDimSize(int dim, int value);
 //  bool SetDominance(long DominanceNumber, long DominancePerc);
 
-
 	bool SetDominance(long *DominanceNumber, long *DominancePerc);
 	//bool SetPQRule(long PriorPosteriorP, long PriorPosteriorQ, long PriorPosteriorN);
 	bool SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN);
@@ -183,19 +166,6 @@ public:
 	bool SetProtectionLevelCell(CDataCell &datacell);
 	bool SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K);
 	virtual ~CTable();
-protected:
-	//{{AFX_MSG(CTable)
-		// NOTE - the ClassWizard will add and remove member functions here.
-	//}}AFX_MSG
-/*
-	DECLARE_MESSAGE_MAP()
-*/
 };
-#endif
 
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-//#endif // !defined(AFX_TABLE_H__6CE83D0A_63CC_11D5_BC56_00C04F9A7DB5__INCLUDED_)
+#endif // Table_h

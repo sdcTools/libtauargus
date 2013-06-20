@@ -1,10 +1,8 @@
-// Hitas.cpp: implementation of the CHitas class.
-//
-//////////////////////////////////////////////////////////////////////
+#include <cmath>
 
-#include "stdafx.h"
 #include "Hitas.h"
-#include "math.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -25,9 +23,7 @@ CHitas::CHitas()
 
 CHitas::~CHitas()
 {
-
 }
-
 
 /*
 [Frequency rule]
@@ -85,7 +81,7 @@ bool CHitas::MakeTempPath()
 {	
 	char path[_MAX_PATH];
 	
-	if (!GetTempPath(_MAX_PATH, path)) {
+	if (!GetTempDir(_MAX_PATH, path)) {
 		return false;
 	}
 
@@ -105,7 +101,7 @@ c:\knb\hitas\test\status3.dat                // naam bestand met resultaat (alle
 bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 { 
 	int i;
-//	std::string fname/*, varname*/;
+//	string fname/*, varname*/;
 	char fname[MAX_PATH];
 	char varname[10];
 	fprintf(fd, "%d\n", tab.nDim); // dimensies
@@ -255,4 +251,3 @@ bool CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var,
 	}
 	return true;
 }
-

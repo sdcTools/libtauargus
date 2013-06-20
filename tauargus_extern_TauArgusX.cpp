@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "TauArgus.h"
 #include "JavaProgressListener.h"
 #include "tauargus_extern_TauArgusX.h"

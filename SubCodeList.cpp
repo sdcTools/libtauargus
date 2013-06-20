@@ -1,10 +1,10 @@
-#include "stdafx.h"
 #include <vector>
+
 #include "SubCodeList.h"
 
 using namespace std;
 
-std::string CSubCodeList::GetSubCode(long isubcodenum)
+string CSubCodeList::GetSubCode(long isubcodenum)
 {
 	if (isubcodenum < 0)	{
 		return m_colSubCodeCollection[0];
@@ -19,7 +19,7 @@ std::string CSubCodeList::GetSubCode(long isubcodenum)
 }
 
 
-void CSubCodeList::FillSubCodes(vector<std::string> &codes, long *indices)
+void CSubCodeList::FillSubCodes(vector<string> &codes, long *indices)
 {
 	long i;
 	m_colSubCodeCollection.resize(codes.size());
@@ -34,7 +34,7 @@ void CSubCodeList::FillSubCodes(vector<std::string> &codes, long *indices)
 
 }
 
-long CSubCodeList::IsInSubCodes(std::string sCode)
+long CSubCodeList::IsInSubCodes(string sCode)
 {
 	for (long i = 0; i < m_colSubCodeCollection.size(); i++)	{
 		if (sCode.compare(m_colSubCodeCollection[i]) == 0)	{
@@ -45,12 +45,12 @@ long CSubCodeList::IsInSubCodes(std::string sCode)
 }
 
 
-void CSubCodeList::SetParentCode(std::string code)
+void CSubCodeList::SetParentCode(string code)
 {
 	m_sParentCode = code;
 }
 
-std::string CSubCodeList::GetParentCode()
+string CSubCodeList::GetParentCode()
 {
 	return m_sParentCode;
 }

@@ -1,6 +1,6 @@
-#include "stdafx.h"
+#include <cmath>
+
 #include "AMPL.h"
-#include "math.h"
 
 // The AMPL format is a special way to describe a table. It is used in networking.
 // Only 2 dimensional, non hierarchical tabels can be described this way.
@@ -24,7 +24,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 	fprintf(fd,"\n");
 	fprintf(fd,"%s\n", "#m= number of rows of the table (without marginal row)");
 	tempvar = &(var[tab->ExplVarnr[0]]);
-/*	std::string tempcode;
+/*	string tempcode;
 	for (i=0; i<tempvar->nCode; i++) 
 	{
 		tempcode = tempvar->sCode[i];

@@ -1,7 +1,6 @@
-#if ! defined SubCodeList_h
+#if !defined SubCodeList_h
 #define SubCodeList_h
 
-#include <afx.h>
 #include <vector>
 
 class CSubCodeList
@@ -45,7 +44,7 @@ public:
 	long GetSequenceNumber();
 	std::string GetParentCode();
 	long NumberOfSubCodes();
-
 };
-#endif
+
+#endif // SubCodeList_h
 

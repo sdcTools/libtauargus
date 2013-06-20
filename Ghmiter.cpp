@@ -1,18 +1,13 @@
-// Ghmiter.cpp: implementation of the CGhmiter class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+#include <cmath>
 #include <vector>
-#include "Ghmiter.h"
-#include  <math.h>
+#include <process.h>
+#include <io.h>
+#include <direct.h>
 
-#include "process.h"
-#include "io.h"
-#include "direct.h"
+#include "General.h"
+#include "Ghmiter.h"
 
 using namespace std;
-
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -50,7 +45,7 @@ CGhmiter::~CGhmiter()
 /*
 // delete previous result files
 void CGhmiter::DeleteResultFiles()
-{ std::string s;
+{ string s;
 
   s = TempPath + "ausgabe";
 	remove((LPCTSTR) s);
@@ -65,7 +60,7 @@ void CGhmiter::DeleteResultFiles()
 
 /*
 void CGhmiter::DeleteSourceFiles()
-{ std::string s;
+{ string s;
 
   s = TempPath + "eingabe";
 	remove((LPCTSTR) s);
@@ -135,7 +130,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "%d\n", nDim);
 
 	for (i = 0; i < nDim; i++) {
-    //vector<std::string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
+    //vector<string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 	/*	if (m_var[ExpVarNr[i]].GetCodeWidth() > 8) {
 			fclose(fd);
 			return false;
@@ -157,7 +152,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "\n");
 
 	for (i = 0; i < nDim; i++) {
-		vector<std::string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
+		vector<string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 		int j, k, s;
 		fprintf(fd, "'Var %d'\n", i + 1);
 

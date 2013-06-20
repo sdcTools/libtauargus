@@ -1,11 +1,8 @@
-// JJFormat.cpp: implementation of the CJJFormat class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+#include <cmath>
 #include <vector>
+
+#include "General.h"
 #include "JJFormat.h"
-#include "math.h"
 
 using namespace std;
 

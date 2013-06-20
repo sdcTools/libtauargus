@@ -14,7 +14,6 @@
 #define DBL_EQ(x,v) (((v - EPSILON) < x) && (x <( v + EPSILON))) 
 
 enum CellHoldingSort	{
-
 	WITHOUT_HOLDING = -2,
 	WITH_HOLDING = -1
 };
@@ -29,7 +28,6 @@ enum CodeType {
 	CTY_BASIC = 1,
 	CTY_TOTAL
 };
-
 
 enum CountType {
 	CT_RESPONS = 1,
@@ -58,10 +56,8 @@ enum SecondarySuppressInputParam {
 	WITHOUT_SINGLETON = 1,
 	WITH_SINGLETON,
 	BOTH
-
 };
   
-
 // items should be a range, so don't use "= x" (except the first: always 1)
 enum CellStatusItems {
 	CS_SAFE = 1,                // always first! (see check in function SetTableCellStatus), value irrelevant
@@ -170,8 +166,6 @@ enum ErrorCodes {
 	// HITAS
 	HITAS_ = 4100,
 
-	
-
 	// JJFormat
 	JFF_NOFILE = 4200,
 	JJF_SOURCECELLINCORRECT,
@@ -186,11 +180,7 @@ enum ErrorCodes {
 	COULDNOTCREATESUBCODES,
 	COULDNOTOPENFILE,
 	COULDNOTCREATEAMPL,
-
 };
-
-
-
 
 #define COMPACT // bij tonen tabellen alleen RESP tonen
 

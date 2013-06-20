@@ -1,22 +1,12 @@
-/*#if !defined(AFX_DATACELL_H__87A5FD81_6949_11D5_BC5D_00C04F9A7DB5__INCLUDED_)
-#define AFX_DATACELL_H__87A5FD81_6949_11D5_BC5D_00C04F9A7DB5__INCLUDED_
-
-// Contents data cell TauArgus
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000 */
-// DataCell.h : header file
 #if !defined DataCell_h
 #define DataCell_h 
+
 #include <string>
+
 #include "defines.h"
+
 extern int CurrentHoldingNr;
 extern std::string LastHoldingCode;
-//#include "Globals.h"
-
-/////////////////////////////////////////////////////////////////////////////
-// CDataCell window
 
 class CDataCell
 {
@@ -27,11 +17,6 @@ public:
 
 // Operations
 public:
-
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDataCell)
-	//}}AFX_VIRTUAL
 
 // Implementation
 public:
@@ -254,20 +239,7 @@ protected:
 	double	UpperProtectionLevel;
   //double  SlidingProtectionLevel;
   //double  ProtectionCapacity;
-
-	
-	// Generated message map functions
-	//{{AFX_MSG(CDataCell)
-	// NOTE - the ClassWizard will add and remove member functions here.
-	//}}AFX_MSG
-
-//	DECLARE_MESSAGE_MAP()
 };
-#endif
 
-/////////////////////////////////////////////////////////////////////////////
+#endif // DataCell_h
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-//#endif // !defined(AFX_DATACELL_H__87A5FD81_6949_11D5_BC5D_00C04F9A7DB5__INCLUDED_)

@@ -1,8 +1,7 @@
 #if !defined  Globals_h
-# define Globals_h
+#define Globals_h
 
 int CurrentHoldingNr;
 std::string LastHoldingCode;
 
-
-# endif
+#endif // Globals_h

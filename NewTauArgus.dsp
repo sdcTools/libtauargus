@@ -57,7 +57,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 mfcs42d.lib MSVCRTD.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"mfcs42d.lib" /nodefaultlib:"MSVCRTD.lib" /pdbtype:sept /verbose:lib
+# SUBTRACT LINK32 /pdb:none
 # Begin Custom Build - Performing registration
 OutDir=.\Debug
 TargetPath=.\Debug\NewTauArgus.dll
@@ -157,9 +158,11 @@ SOURCE="$(InputPath)"
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "ReleaseMinDependency"
 # PROP Intermediate_Dir "ReleaseMinDependency"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /FR /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /YX /FD /c
+# SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x413 /d "NDEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x413 /d "NDEBUG" /d "_AFXDLL"
@@ -168,7 +171,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 /nologo /subsystem:windows /dll /machine:I386
+# ADD LINK32 mfcs42.lib MSVCRT.lib /nologo /subsystem:windows /dll /machine:I386 /nodefaultlib:"mfcs42.lib" /nodefaultlib:"MSVCRT.lib"
+# SUBTRACT LINK32 /pdb:none
 # Begin Custom Build - Performing registration
 OutDir=.\ReleaseMinDependency
 TargetPath=.\ReleaseMinDependency\NewTauArgus.dll
@@ -290,6 +294,10 @@ SOURCE=.\DataCell.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\General.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Ghmiter.cpp
 # End Source File
 # Begin Source File
@@ -382,6 +390,10 @@ SOURCE=.\DataCell.h
 # Begin Source File
 
 SOURCE=.\defines.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\General.h
 # End Source File
 # Begin Source File
 
