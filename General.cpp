@@ -1,3 +1,4 @@
+#include <cstring>
 #include <cstdlib>
 #include <algorithm>
 
@@ -55,7 +56,7 @@ void QuickSortStringArray(vector<string> &s)
 // taking in to account weather to look at missings or not.
 // returns the position if the string is found -1 if not.
 // IsMissing on true if x = Missing1 or x = Missing2
-int BinSearchStringArray(vector<string> &s, string x, int nMissing, bool &IsMissing)
+int BinSearchStringArray(vector<string> &s, const string &x, int nMissing, bool &IsMissing)
 {
 	ASSERT(s.size() > nMissing);
 

@@ -1,8 +1,8 @@
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <cmath>
 #include <vector>
-#include <process.h>
-#include <io.h>
-#include <direct.h>
 
 #include "General.h"
 #include "Ghmiter.h"
@@ -212,8 +212,8 @@ bool CGhmiter::CellsTable(const char *FileName, CTable *tab, CVariable *m_var, b
 	if (fd == 0) return false;
 
 	// compute fixed data
-	n = sprintf(str, "%d", tab->GetCell(0L)->GetFreq());
-	m = sprintf(str, "%.*f", m_var[tab->ResponseVarnr].nDec, tab->GetCell(0L)->GetResp());
+	n = sprintf(str, "%ld", tab->GetCell(0L)->GetFreq());
+	m = sprintf(str, "%.*f", (int)m_var[tab->ResponseVarnr].nDec, tab->GetCell(0L)->GetResp());
 
 	// write for each cell a record in "eingabe"
 	WriteCell(fd, tab, m_var, n, m, m_var[tab->ResponseVarnr].nDec,
@@ -271,7 +271,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 		tempFreq = Freq;
 	}
 	if (!IsSingleton) {
-		fprintf(fd, "%5d %*d %*.*f 1   1  %.*f %*.*f ",
+		fprintf(fd, "%5d %*ld %*.*f 1   1  %.*f %*.*f ",
 				WertArt,
 				FreqWidth, tempFreq,
 				RespWidth, nDecResp, dc->GetResp(),
@@ -280,7 +280,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 	}
 	else { // Is Singleton
 		if (WertArt == 1) {
-			fprintf(fd, "%5d %*d %*.*f 1   1   1  %.*f %*.*f ",
+			fprintf(fd, "%5d %*ld %*.*f 1   1   1  %.*f %*.*f ",
 				WertArt,
 				FreqWidth, tempFreq,
 				RespWidth, nDecResp, dc->GetResp(),
@@ -290,7 +290,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 		}
 		else {
 			if (Freq == 1) {
-				 fprintf(fd, "%5d %*d %*.*f 1   1   1  %.*f %*.*f ",
+				 fprintf(fd, "%5d %*ld %*.*f 1   1   1  %.*f %*.*f ",
 								WertArt,
 								FreqWidth, tempFreq,
 								RespWidth, nDecResp, dc->GetResp(),
@@ -299,7 +299,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 			}
 			else {
 				WertArt = 1;
-				fprintf(fd, "%5d %*d %*.*f 1   9   1  %.*f %*.*f ",
+				fprintf(fd, "%5d %*ld %*.*f 1   9   1  %.*f %*.*f ",
 				WertArt,
 				FreqWidth, tempFreq,
 				RespWidth, nDecResp, dc->GetResp(),
@@ -312,7 +312,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 	}
 	// Anco toegevoegd op verzoek van Sarah 17 4 2003
    for (i = 0; i < tab->nDim; i++) {
-		fprintf(fd, "'%08d' ", Dim[i]);
+		fprintf(fd, "'%08ld' ", Dim[i]);
 	}
 
    for (i = 0; i < tab->nDim; i++) {

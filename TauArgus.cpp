@@ -1,6 +1,9 @@
+#include <cstdio>
+#include <cstring>
 #include <cfloat>
 #include <cmath>
 #include <cstdarg>
+#include <algorithm>
 #include <vector>
 #include <sstream>
 
@@ -22,7 +25,7 @@ static char THIS_FILE[] = __FILE__;
 // TauArgus
 
 #ifdef _DEBUG
-	static int DEBUGprintf(char *fmt, ...)
+	static int DEBUGprintf(const char *fmt, ...)
 	{
 		int retval = -1;
 //		FILE *f = fopen("C:\\Users\\Gebruiker\\Documents\\debug.txt","a");
@@ -36,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 		return retval;
 	}
 #else
-	inline static int DEBUGprintf(char *fmt, ...) { return 0; }
+	inline static int DEBUGprintf(const char *fmt, ...) { return 0; }
 #endif
 
 void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
@@ -53,7 +56,8 @@ void TauArgus::FireUpdateProgress(int Perc)
 {
 	DEBUGprintf("m_ProgressListener->UpdateProgress(Perc)\n");
 	if (m_ProgressListener != NULL) {
-		DEBUGprintf("%p-%p\n", m_ProgressListener, m_ProgressListener->UpdateProgress);
+//    Next line does not compile with g++ on Linux.
+//		DEBUGprintf("%p-%p\n", m_ProgressListener, (void*)(m_ProgressListener->UpdateProgress));
 		m_ProgressListener->UpdateProgress(Perc);
 	}
 }
@@ -1760,7 +1764,8 @@ bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex,
 	// compute Freq
 	for (t = 0; t < m_ntab; t++) {
 		CTable *tab = GetTable(t);
-		for (int var = 0; var < tab->nDim; var++) {
+		int var;
+		for (var = 0; var < tab->nDim; var++) {
 			if (tab->ExplVarnr[var] == VarIndex) break;  // hebbes
 		}
 		if (var < tab->nDim) {
@@ -2826,7 +2831,7 @@ void TauArgus::MaximumProtectionLevel(long TableIndex, double *Maximum)
 		long St = dc->GetStatus();
 		// 10 juni 2005 toegevoegd: alleen voor onveilige cellen AHNL
 		if (St >= CS_UNSAFE_RULE && St <= CS_UNSAFE_MANUAL) {
-			maxprot = __max(maxprot,dc->GetLowerProtectionLevel() + dc ->GetUpperProtectionLevel());
+			maxprot = max(maxprot,dc->GetLowerProtectionLevel() + dc ->GetUpperProtectionLevel());
 		}
 	}
 
@@ -2844,8 +2849,8 @@ double TauArgus::GetMinimumCellValue(long TableIndex, double *Maximum)
 		long St = dc->GetStatus();
 		// 10 juni 2005 toegevoegd: alleen voor onveilige cellen AHNL
 		if ( St < CS_EMPTY) {
-			mincell = __min(mincell, dc->GetResp());
-			maxcell = __max(maxcell, dc->GetResp());
+			mincell = min(mincell, dc->GetResp());
+			maxcell = max(maxcell, dc->GetResp());
 		}
 
 	}
@@ -2878,7 +2883,7 @@ bool TauArgus::SetRoundedResponse(const char* RoundedFile, long TableIndex)
 		double RoundedResp; //was float
 		fscanf( frounded, "%ld", &CellNum );
 		fscanf( frounded, "%s", s);
-		fscanf ( frounded, "%f", &d); // original value
+		fscanf ( frounded, "%lf", &d); // original value
 		fscanf (frounded,"%s", s); // to
 		//fscanf (frounded, "%f", &RoundedResp);
 		fscanf (frounded, "%s", s);
@@ -3336,7 +3341,8 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 
 	// Find Variable indexes for a code
 	ErrorVarNo = 0;
-	for (int j = 0; j < tab->nDim; j++)  {
+	int j;
+	for (j = 0; j < tab->nDim; j++)  {
 		CVariable *var = &(m_var[tab->ExplVarnr[j]]);
 		if (var->IsHierarchical && var->nDigitSplit == 0) {
 			var->TableIndex = var->FindAllHierarchicalCode(sCodes[j].c_str());
@@ -3880,7 +3886,7 @@ bool TauArgus::ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* 
 			return false;
 		}
 		LineNumber++;
-		char *p = strstr(&RecodeString[PosInString], SEPARATOR);
+		const char *p = strstr(&RecodeString[PosInString], SEPARATOR);
 		if (p == 0) break;
 		PosInString = p - RecodeString + strlen(SEPARATOR);
 	}
@@ -4486,7 +4492,7 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 			if (i == 0) {
 				if (tab->nDim > 2) { // one or more layers in table?
 					for (int j = 0; j < niv; j++) {
-  						fprintf(fd, "Var %d,", DimSequence[j] + 1);
+  						fprintf(fd, "Var %ld,", DimSequence[j] + 1);
   						WriteCSVLabel(fd, tab, DimSequence[j], Dims[DimSequence[j]]);  // show all previous layer label(s)
   						fprintf(fd, ", ");
 					}
@@ -4554,7 +4560,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 		case CS_PROTECT_MANUAL:
 			switch (RespType ){
 			case 0: fprintf(fd, "%.*f", nDec, dc->GetResp()); break;
-			case 1: fprintf(fd, "%d", dc->GetRoundedResponse());	break;
+			case 1: fprintf(fd, "%ld", dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
 			}
 			break;
@@ -4573,7 +4579,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 					   fprintf(fd, "x");
 					}
 					break;
-			case 1: fprintf(fd, "%d", dc->GetRoundedResponse());	break;
+			case 1: fprintf(fd, "%ld", dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
 			}
 
@@ -4595,13 +4601,13 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 	}
 	if ( ShowUnsafe && ( SBSCode == 0) ) {
 		switch (RespType){
-			case 0:	fprintf(fd, ",%d", dc->GetStatus()); 
+			case 0:	fprintf(fd, ",%ld", dc->GetStatus()); 
 				    break;
 			case 1:// fprintf(fd, ",%.*f", nDec, dc->GetResp()); break;
 			case 2: 
      				if (dc->GetStatus() == CS_EMPTY) {fprintf(fd, ",-");}
 	    			else                             {fprintf(fd, ",%.*f", nDec, dc->GetResp());}
-		    		if (RespType = 2){fprintf(fd, ",%d", dc->GetStatus());}
+		    		if (RespType = 2){fprintf(fd, ",%ld", dc->GetStatus());}
 			    	break;
 		}
 //		fprintf(fd, ",%d", dc->GetStatus());
@@ -4775,7 +4781,7 @@ void TauArgus::ShowCodeLists()  // in output pane
   char s[100];
   for (int i = 0; i < m_nvar; i++) {
     CVariable *v = &(m_var[i]);
-		sprintf(s, "%3d %3d %3d %3d %8.0f %8.0f", v->bPos + 1, v->nPos, v->nDec, v->GetnCode(), v->MaxValue, v->MinValue);
+		sprintf(s, "%3ld %3ld %3ld %3d %8.0f %8.0f", v->bPos + 1, v->nPos, v->nDec, v->GetnCode(), v->MaxValue, v->MinValue);
     TRACE("Var %2d. %s\n", i + 1, s);
 		for (int j = 0; j < v->GetnCode(); j++) {
       TRACE("  %4d. [%s]\n", j + 1, v->GetCode(j).c_str() );
@@ -4803,7 +4809,7 @@ bool TauArgus::ShowTable(const char *fname, CTable& tab)
 				if (dc->GetFreq() == 0) {
 					fprintf(fd, "%5s \n", "-");
 				} else {
-					fprintf(fd, "%5d \n", dc->GetFreq());
+					fprintf(fd, "%5ld \n", dc->GetFreq());
 				}
 			}
 		}
@@ -4848,7 +4854,7 @@ int TauArgus::ShowTableLayerCell(char *str, long val)
 { int c;
 
 	if (val == 0) c = sprintf(str, "%6s ", "-");
-	else    	    c = sprintf(str, "%6d ", val);
+	else    	    c = sprintf(str, "%6ld ", val);
   return c;
 }
 
@@ -5260,13 +5266,13 @@ bool TauArgus::ReadVariableFreeFormat(char *Str, long VarIndex, string *VarCode)
 // returns depth of hierarchical tree.
 long TauArgus::MaxDiepteVanSpanVariablen(CTable *tab)
 {
-	long max = 0;
+	long maximum = 0;
 	for (long i = 0; i < tab->nDim; i++)	{
 		CVariable *var = &(m_var[tab->ExplVarnr[i]]);
 		long maxvardiepte = var->GetDepthOfHerarchicalBoom();
-		max = __max(max, maxvardiepte);
+		maximum = max(maximum, maxvardiepte);
 	}
-	return max;
+	return maximum;
 }
 
 // Test the subcode list (Networking. This is just a test program and can be converted to
@@ -5368,8 +5374,8 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 				//then print the stuff and go on to see if it
 				// occurs in other tables
 				dc = tab->GetCell(CellNum);
-				fprintf(fdtemp, "%d    %d    " , teller, i);
-				fprintf(fdtemp, "%d    %d    ", SubTableCellIndex[0], SubTableCellIndex[1]);
+				fprintf(fdtemp, "%ld    %ld    " , teller, i);
+				fprintf(fdtemp, "%ld    %ld    ", SubTableCellIndex[0], SubTableCellIndex[1]);
 				UPL = dc->GetUpperProtectionLevel();
 				LPL = dc->GetLowerProtectionLevel();
 				if (MaxScale > 0){
@@ -5377,7 +5383,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 				 if ( UPL > MaxScale * dc->GetResp()) UPL = MaxScale * dc->GetResp();
 				}
 //				fprintf (fdtemp, "%.*f    %.*f\n", nDec, dc->GetLowerProtectionLevel(),nDec, dc->GetUpperProtectionLevel());
-				fprintf (fdtemp, "%.*f    %.*f\n", nDec, LPL,nDec, UPL);
+				fprintf (fdtemp, "%.*f    %.*f\n", (int)nDec, LPL, (int)nDec, UPL);
 				teller++;
 				break;
 			}
@@ -5398,8 +5404,8 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 				marginal = 0;
 				if (SubTableCellNum == CellNum)	{
 					dc = tab->GetCell(CellNum);
-					fprintf(fdtemp, "%d    %d    " , teller, i);
-					fprintf(fdtemp, "%d    %d    ", MarginalCellIndex[0], MarginalCellIndex[1]);
+					fprintf(fdtemp, "%ld    %ld    " , teller, i);
+					fprintf(fdtemp, "%ld    %ld    ", MarginalCellIndex[0], MarginalCellIndex[1]);
 					UPL = dc->GetUpperProtectionLevel();
 					LPL = dc->GetLowerProtectionLevel();
 					if ( MaxScale > 0) {
@@ -5407,7 +5413,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 					 if ( UPL > MaxScale * dc->GetResp()) UPL = MaxScale * dc->GetResp();
 					}
 					//fprintf (fdtemp, "%.*f    %.*f\n", nDec, dc->GetLowerProtectionLevel(),nDec, dc->GetUpperProtectionLevel());
-					fprintf (fdtemp, "%.*f    %.*f\n", nDec, LPL, nDec, UPL);
+					fprintf (fdtemp, "%.*f    %.*f\n", (int)nDec, LPL, (int)nDec, UPL);
 					teller++;
 					break;
 				}
@@ -5434,8 +5440,8 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 				//then print the stuff and go on to see if it
 				// occurs in other tables
 					dc = tab->GetCell(CellNum);
-					fprintf(fdtemp, "%d    %d    " , teller, i);
-					fprintf(fdtemp, "%d    %d    ", MarginalCellIndex[0], MarginalCellIndex[1]);
+					fprintf(fdtemp, "%ld    %ld    " , teller, i);
+					fprintf(fdtemp, "%ld    %ld    ", MarginalCellIndex[0], MarginalCellIndex[1]);
 					UPL = dc->GetUpperProtectionLevel();
 					LPL = dc->GetLowerProtectionLevel();
 					if (MaxScale > 0 ) {
@@ -5443,7 +5449,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 					 if ( UPL > MaxScale * dc->GetResp()) UPL = MaxScale * dc->GetResp();
 					}
 //					fprintf (fdtemp, "%.*f    %.*f\n", nDec, dc->GetLowerProtectionLevel(),nDec, dc->GetUpperProtectionLevel());
-					fprintf (fdtemp, "%.*f    %.*f\n", nDec, LPL, nDec, UPL);
+					fprintf (fdtemp, "%.*f    %.*f\n", (int)nDec, LPL, (int)nDec, UPL);
 	  				teller++;
 				//break;
 			}
@@ -5460,8 +5466,8 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 			//then print the stuff and go on to see if it
 			// occurs in other tables
 			dc = tab->GetCell(CellNum);
-			fprintf(fdtemp, "%d    %d    " , teller, i);
-			fprintf(fdtemp, "%d    %d    ", MarginalCellIndex[0], MarginalCellIndex[1]);
+			fprintf(fdtemp, "%ld    %ld    " , teller, i);
+			fprintf(fdtemp, "%ld    %ld    ", MarginalCellIndex[0], MarginalCellIndex[1]);
 			UPL = dc->GetUpperProtectionLevel();
 			LPL = dc->GetLowerProtectionLevel();
 			if (MaxScale > 0) {
@@ -5469,7 +5475,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 			 if ( UPL > MaxScale * dc->GetResp()) UPL = MaxScale * dc->GetResp();
 			}
 //			fprintf (fdtemp, "%.*f    %.*f\n", nDec, dc->GetLowerProtectionLevel(),nDec, dc->GetUpperProtectionLevel());
-			fprintf (fdtemp, "%.*f    %.*f\n", nDec, LPL, nDec, UPL);
+			fprintf (fdtemp, "%.*f    %.*f\n", (int)nDec, LPL, (int)nDec, UPL);
 
 			teller++;
 			//break;
@@ -5621,8 +5627,8 @@ bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 			FindCellIndexForSubTable(TableCellIndex,tabind,SubTableTuple,j, SubTableCellIndex);
 			cellnr = tab->GetCellNrFromIndices(TableCellIndex);
 			CDataCell *dc = tab->GetCell(cellnr);
-			fprintf (fd, "%d    %d    %d    ",  i, SubTableCellIndex[0], SubTableCellIndex[1]);
-			fprintf (fd, "%.*f    %.*f\n", nDecResp, dc->GetResp(),nDecResp, dc->GetCost(tab->Lambda));
+			fprintf (fd, "%ld    %ld    %ld    ",  i, SubTableCellIndex[0], SubTableCellIndex[1]);
+			fprintf (fd, "%.*f    %.*f\n", (int)nDecResp, dc->GetResp(), (int)nDecResp, dc->GetCost(tab->Lambda));
 
 			marginal++;
 			// Last Column (marginal column)
@@ -5645,8 +5651,8 @@ bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 				cellnr = tab->GetCellNrFromIndices(TableCellIndex);
 				dc = tab->GetCell(cellnr);
 				// print table number etc
-				fprintf (fd, "%d    %d    %d    " , i, MarginalCellIndex[0], MarginalCellIndex[1]);
-				fprintf(fd,"%.*f    %.*f\n",	nDecResp, dc->GetResp(),nDecResp, dc->GetCost(tab->Lambda));
+				fprintf (fd, "%ld    %ld    %ld    " , i, MarginalCellIndex[0], MarginalCellIndex[1]);
+				fprintf(fd,"%.*f    %.*f\n",	(int)nDecResp, dc->GetResp(), (int)nDecResp, dc->GetCost(tab->Lambda));
 
 				marginal = 0;
 			}
@@ -5669,9 +5675,9 @@ bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 			cellnr = tab->GetCellNrFromIndices(TableCellIndex);
 			CDataCell *dc = tab->GetCell(cellnr);
 			// print table number etc
-			fprintf (fd, "%d    %d    %d    ", i, MarginalCellIndex[0], MarginalCellIndex[1]);
+			fprintf (fd, "%ld    %ld    %ld    ", i, MarginalCellIndex[0], MarginalCellIndex[1]);
 
-			fprintf(fd,"%.*f    %.*f\n",	nDecResp, dc->GetResp(),nDecResp, dc->GetCost(tab->Lambda));
+			fprintf(fd,"%.*f    %.*f\n",	(int)nDecResp, dc->GetResp(), (int)nDecResp, dc->GetCost(tab->Lambda));
 		}
 		//Now the last lot of the sub table i.e. the totaal generaal of the sub table
 		for (long l= 0; l<tab->nDim; l++)	{
@@ -5682,8 +5688,8 @@ bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 		cellnr = tab->GetCellNrFromIndices(TableCellIndex);
 		CDataCell *dc = tab->GetCell(cellnr);
 		// print table number etc
-		fprintf (fd, "%d    %d    %d    ", i, MarginalCellIndex[0], MarginalCellIndex[1]);
-		fprintf(fd,"%.*f    %.*f\n" ,nDecResp, dc->GetResp(),nDecResp, dc->GetCost(tab->Lambda));
+		fprintf (fd, "%ld    %ld    %ld    ", i, MarginalCellIndex[0], MarginalCellIndex[1]);
+		fprintf(fd,"%.*f    %.*f\n", (int)nDecResp, dc->GetResp(), (int)nDecResp, dc->GetCost(tab->Lambda));
 
 
 	}
@@ -5755,7 +5761,7 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 				}
 				if (foundParent)	{
 					//Print the stuff
-					fprintf (fd, "%d    %d    %d   %d\n", param,RowNum, SubTableIndex, ChildSubTableIndex);
+					fprintf (fd, "%ld    %ld    %ld   %ld\n", param,RowNum, SubTableIndex, ChildSubTableIndex);
 					param ++;
 					foundParent = false;
 					foundRowNum = false;
@@ -5777,7 +5783,7 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 // This can only be used if the first dimension of the table
 // is hierarchical and the second dimension is not.
 // The table should be 2 dimensional.
-bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, string TempDir, double MaxScale)
+bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, const string &TempDir, double MaxScale)
 {
 	FILE *fdtempw = fopen((TempDir +"/TMPAMPLU").c_str(), "w");
 	if (fd == 0)	{
@@ -5793,7 +5799,7 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, string TempDir, doubl
 	// The number of sub tables
 	fprintf(fd, "%s\n", "#T = number of 2D tables");
 	long nsubtab = NumberOfSubTables(tabind);
-	fprintf (fd, "%s%d%s\n", "param T := ", nsubtab, ";");
+	fprintf (fd, "%s%ld%s\n", "param T := ", nsubtab, ";");
 
 	// Print Number of Rows
 	fprintf (fd, "%s\n", "#M = number of rows of each table (without marginal row)");
@@ -5801,13 +5807,13 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, string TempDir, doubl
 	CVariable *var0 = &(m_var[tab->ExplVarnr[0]]);
 	CVariable *var1 = &(m_var[tab->ExplVarnr[1]]);
 	for (i = 0; i < var0->NumSubCodes; i++)	{
-		fprintf(fd,"%d                  %d\n", i, var0->m_SubCodes[i].NumberOfSubCodes());
+		fprintf(fd,"%ld                  %ld\n", i, var0->m_SubCodes[i].NumberOfSubCodes());
 	}
 	fprintf(fd,"%s\n", ";");
 
 	// Print Number Of Columns
 	fprintf (fd, "%s\n", "#N = number of columns common to each table (without marginal row)");
-	fprintf (fd,"%s%d%s\n", "param N := ", var1->m_SubCodes[0].NumberOfSubCodes(), ";");
+	fprintf (fd,"%s%ld%s\n", "param N := ", var1->m_SubCodes[0].NumberOfSubCodes(), ";");
 
 	// Print Hierarchical info
 	// since the first variable is hierarchical
@@ -5827,7 +5833,7 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, string TempDir, doubl
 	}
 	fclose(fdtempw);
 	fprintf (fd, "%s\n", "#P = number of primary supression cells of each table;");
-	fprintf (fd,"%s %d %s\n", "param P := ", nUnsafe, ";");
+	fprintf (fd,"%s %ld %s\n", "param P := ", nUnsafe, ";");
 	//and where the unsafe cells occur with LPL and UPL.
 	fprintf (fd, "%s\n", "# for each primary : table, row, column, lower prot, and upper prot.");
 	fprintf  (fd,"%s\n", "param : p_t    p_r    p_c    lpl    upl  :=");

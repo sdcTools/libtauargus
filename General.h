@@ -11,7 +11,7 @@ unsigned long GetTempDir(unsigned long BufferLength, char* Buffer);
 int RemoveStringInPlace(std::string& subject, char ch);
 void ReplaceStringInPlace(std::string& subject, const char search, const char replace);
 void QuickSortStringArray(std::vector<std::string> &s);
-int BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissing, bool &IsMissing);
+int BinSearchStringArray(std::vector<std::string> &s, const std::string &x, int nMissing, bool &IsMissing);
 
 #ifndef LPCTSTR
 #define LPCTSTR const char*
@@ -35,6 +35,20 @@ int BinSearchStringArray(std::vector<std::string> &s, std::string x, int nMissin
 
 #ifndef TRACE
 #define TRACE              ::ArgusTrace
+#endif
+
+#ifdef _WIN32
+#ifndef _WINDEF_
+template <typename T> T min(T a, T b)
+{
+	return (a < b) ? a : b;
+}
+
+template <class T> T max(T a, T b)
+{
+	return (a > b) ? a : b;
+}
+#endif
 #endif
 
 #endif // General_h

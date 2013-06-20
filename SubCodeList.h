@@ -1,6 +1,7 @@
 #if !defined SubCodeList_h
 #define SubCodeList_h
 
+#include <string>
 #include <vector>
 
 class CSubCodeList
@@ -34,9 +35,9 @@ public:
 	}
 	std::string GetSubCode(long icodenum);
 	void FillSubCodes(std::vector<std::string> &codes, long *indices);
-	long IsInSubCodes(std::string sCode);
+	long IsInSubCodes(const std::string &sCode);
 	void SetSequenceNumber(long num);
-	void SetParentCode(std::string code);
+	void SetParentCode(const std::string &code);
 	void SetParentIndex(long Index);
 
 	long GetSubCodeIndex(long i);

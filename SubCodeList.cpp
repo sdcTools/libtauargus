@@ -34,7 +34,7 @@ void CSubCodeList::FillSubCodes(vector<string> &codes, long *indices)
 
 }
 
-long CSubCodeList::IsInSubCodes(string sCode)
+long CSubCodeList::IsInSubCodes(const string &sCode)
 {
 	for (long i = 0; i < m_colSubCodeCollection.size(); i++)	{
 		if (sCode.compare(m_colSubCodeCollection[i]) == 0)	{
@@ -45,7 +45,7 @@ long CSubCodeList::IsInSubCodes(string sCode)
 }
 
 
-void CSubCodeList::SetParentCode(string code)
+void CSubCodeList::SetParentCode(const string &code)
 {
 	m_sParentCode = code;
 }

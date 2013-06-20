@@ -1,3 +1,6 @@
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <cmath>
 #include <vector>
 
@@ -59,13 +62,14 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 	else {
 		n = nCell;
 	}
-	fprintf(fd,"%d\n", n);  // write number of cells
+	fprintf(fd,"%ld\n", n);  // write number of cells
 
 	for (i = j = 0; i < nCell; i++, j++) {
 		if (WithBogus) {
 			long DimIndices[MAXDIM]; // work, work, work...
 			tab->GetIndicesFromCellNr(i, DimIndices);
-			for (int d = 0; d < tab->nDim; d++) {
+			int d;
+			for (d = 0; d < tab->nDim; d++) {
 				if (var[tab->ExplVarnr[d]].IsHierarchical) {
 					if (var[tab->ExplVarnr[d]].GethCode()[DimIndices[d]].IsBogus) {
 						break;
@@ -80,15 +84,15 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 		// no bogus
 		dc = tab->GetCell(i);
 		RespValue = dc->GetResp();
-		fprintf(fd, "%d ", j);  // index cell, base zero!
+		fprintf(fd, "%ld ", j);  // index cell, base zero!
 		fprintf(fd, "%.*f ", nDecResp, RespValue);
 
 		//write the freqs to a seperate file for the singletons tricks
 		frq = dc->GetFreq();
-		fprintf(fdFrq, "%d ", frq);
+		fprintf(fdFrq, "%ld ", frq);
 
 		frq = dc->GetFreqHolding();;
-		fprintf(fdFrq, "%d\n", frq);
+		fprintf(fdFrq, "%ld\n", frq);
 
 		// compute scaled cost value
 		if (tab->CostVarnr < 0) { // special value
@@ -110,7 +114,7 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 			if (ScaledCost == 0) ScaledCost = 1;
 		}
 
-		fprintf(fd, "%d ", ScaledCost);
+		fprintf(fd, "%ld ", ScaledCost);
 
 		UPL = 0; LPL = 0; Sliding = 0; Capacity = 0;
 		// status
@@ -204,7 +208,7 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 //	fprintf(fd, " %.*f %.*f ", nDecRespPlus,  LBound, nDecRespPlus, UBound + 2*dRoundConst);
 //	fprintf(fd, "%.*f %.*f %.*f\n", nDecRespPlus, LPL , nDecRespPlus, UPL+dRoundConst, nDecRespPlus, Sliding);
 	fprintf(fd, " %.*f %.*f ", nDecResp,  LBound, nDecResp, UBound );
-	fprintf(fd, "%.*f %.*f %.*f\n", nDecRespPlus, LPL , nDecRespPlus, UPL, nDecResp, Sliding);
+	fprintf(fd, "%.*f %.*f %.*f\n", (int)nDecRespPlus, LPL , (int)nDecRespPlus, UPL, nDecResp, Sliding);
   }
 
   return true;
@@ -307,7 +311,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 						}
 					}
 					DimNr[TargetDim] = k;
-    				fprintf(fd, "0 %d : %d (-1) ", n + 1, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+    				fprintf(fd, "0 %d : %ld (-1) ", n + 1, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 					for (j = 0; j < n; j++) {
 						long RealCode = Children[j];
 						if (WithBogus) {
@@ -320,7 +324,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 						}
   						DimNr[TargetDim] = RealCode;
 
-    					fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp));
+    					fprintf(fd, "%ld (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp));
 					}
 
 
@@ -332,11 +336,11 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 		else {  // not hierarchical
 			DimNr[TargetDim] = 0;
 
-			fprintf(fd, "0 %d : %d (-1) ", nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+			fprintf(fd, "0 %d : %ld (-1) ", nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 //			fprintf(fd, "%.*f %d : %d (-1) ", 1,0, nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 			for (int i = 1; i < nCode; i++) {
 				DimNr[TargetDim] = i;
-				fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+				fprintf(fd, "%ld (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 			}
 			fprintf(fd,"\n");
 		}

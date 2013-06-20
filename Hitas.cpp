@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cmath>
 
 #include "Hitas.h"
@@ -79,9 +80,9 @@ bool CHitas::WriteParameterFile(FILE *fd, CTable& tab)
 
 bool CHitas::MakeTempPath()
 {	
-	char path[_MAX_PATH];
+	char path[MAX_PATH];
 	
-	if (!GetTempDir(_MAX_PATH, path)) {
+	if (!GetTempDir(MAX_PATH, path)) {
 		return false;
 	}
 
@@ -104,7 +105,7 @@ bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 //	string fname/*, varname*/;
 	char fname[MAX_PATH];
 	char varname[10];
-	fprintf(fd, "%d\n", tab.nDim); // dimensies
+	fprintf(fd, "%ld\n", tab.nDim); // dimensies
 
 	// name files with codelists
 	for (i = 0; i < tab.nDim; i++) {
@@ -157,7 +158,7 @@ bool CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var,
 		CDataCell *dc = tab.GetCell(dimsCell);
 		double cell = dc->GetResp();
 		for (i = 0; i < tab.nDim; i++) {
-			fprintf(fd, "%5d ", dimsCodeList[i]);
+			fprintf(fd, "%5ld ", dimsCodeList[i]);
 		}
 
 		fprintf(fd, "%12.*f ", nDecResp, cell);

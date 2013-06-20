@@ -1,4 +1,7 @@
+#include <cstdio>
+#include <cstring>
 #include <cmath>
+#include <algorithm>
 #include <vector>
 
 #include "General.h"
@@ -113,12 +116,14 @@ bool CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing
 			Missing1 = Missing2;
 		}
 
-		if (Missing1.empty() ) {
+		if (Missing1.empty()) {
 			nMissing = 0;
 		}
+		else if (Missing2.empty()) {
+			nMissing = 1;
+		}
 		else {
-		if (Missing2.empty() ) nMissing = 1;
-		else                     nMissing = 2;
+			nMissing = 2;
 		}
 	}
 	else {
@@ -809,7 +814,7 @@ long CVariable::OrganizeCodelist()
 	return 1;
 }
 
-bool CVariable::SetPeepCodes(string Peep1, string Peep2)
+bool CVariable::SetPeepCodes(const string &Peep1, const string &Peep2)
 {
 	if (IsPeeper)	{
 		if ((Peep1.empty()) &&  (Peep2.empty()))	{
@@ -830,14 +835,14 @@ bool CVariable::SetPeepCodes(string Peep1, string Peep2)
 // to calculate marginals.
 long CVariable::GetDepthOfHerarchicalBoom()
 {
-	long maxdepth =0,i;
 	if (!IsHierarchical)	{
-		return maxdepth;
+		return 0;
 	}
 	else	{
 		// figure out what to do with recodes
-		for (i=0; i<nCode; i++)	{
-			maxdepth = __max(maxdepth,hCode[i].Level);
+		int maxdepth = 0;
+		for (int i = 0; i < nCode; i++)	{
+			maxdepth = max(maxdepth, hCode[i].Level);
 		}
 		return maxdepth;
 	}

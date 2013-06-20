@@ -58,7 +58,7 @@ private:
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
 	void FillTables(char *str);
 	bool ConvertNumeric(char *code, double &d);
-	char m_fname[_MAX_PATH];
+	char m_fname[MAX_PATH];
 	int  DoMicroRecord(char *str, int *varindex);
 	int  ReadMicroRecord(FILE *fd, char *str);
   // int  MakeSafeGHM(int TableIndex, long *nSetSecondary);
@@ -120,7 +120,7 @@ private:
 	long FindNumberOfElementsInSubTable(long *SubTableTuple, long TableIndex);
 	bool FindCellIndexForSubTable(long *TableCellIndex, long TableIndex, long *SubTableTuple,long CellIndexInSubTable, long *SubTableCellIndex);
 	long FindSubTableForCell(long CellIndex, long TableIndex, long *SubTableTupleIndex);
-	bool WriteHierTableInAMPL(FILE *fd, long tabind, std::string TempDir, double MaxScale);
+	bool WriteHierTableInAMPL(FILE *fd, long tabind, const std::string &TempDir, double MaxScale);
 	long SubTableForCellDimension(long TableIndex, long *CellDimension, long * SubTableTupleIndex);
 	bool WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind, long varind);
 	bool ArrayCompare (long *arr1, long *arr2, long nDim);

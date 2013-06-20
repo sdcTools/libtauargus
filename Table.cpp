@@ -1,9 +1,13 @@
-#include <cstdio>
-#include <cmath>
 #include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
 
 #include "General.h"
 #include "Table.h"
+
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -389,20 +393,20 @@ bool CTable::PrepareTable()
 	// of the dom numbers and PQN +1
 	if (DominanceRule)	{
 
-		nScoreCellDom = __max(DominanceNumberCell_1, DominanceNumberCell_2);
+		nScoreCellDom = max(DominanceNumberCell_1, DominanceNumberCell_2);
 		if (ApplyHolding)	{
-			nScoreHoldingDom = __max(DominanceNumberHolding_1, DominanceNumberHolding_2);
+			nScoreHoldingDom = max(DominanceNumberHolding_1, DominanceNumberHolding_2);
 		}
 	}
 	if (PQRule)	{
-		nScoreCellPQ = __max(PQ_NCell_1,PQ_NCell_2) + 1;
-		if ((ApplyHolding) && __max(PQ_NHolding_1,PQ_NHolding_2) > 0)	{
-			nScoreHoldingPQ = __max(PQ_NHolding_1,PQ_NHolding_2) +1;
+		nScoreCellPQ = max(PQ_NCell_1,PQ_NCell_2) + 1;
+		if ((ApplyHolding) && max(PQ_NHolding_1,PQ_NHolding_2) > 0)	{
+			nScoreHoldingPQ = max(PQ_NHolding_1,PQ_NHolding_2) +1;
 		}
 	}
 
-	NumberofMaxScoreCell= __max(nScoreCellDom, nScoreCellPQ);
-	NumberofMaxScoreHolding = __max(nScoreHoldingDom,nScoreHoldingPQ);
+	NumberofMaxScoreCell= max(nScoreCellDom, nScoreCellPQ);
+	NumberofMaxScoreHolding = max(nScoreHoldingDom,nScoreHoldingPQ);
 	Prepared = true;
 	return true;
 
@@ -447,15 +451,15 @@ long CTable::GetMemSizeTable()
 
 /*
 	case DOMINANCE:
-		nScoreCell = __max(DominanceNumberCell_1, DominanceNumberCell_2);
+		nScoreCell = max(DominanceNumberCell_1, DominanceNumberCell_2);
 		if (ApplyHolding)	{
-			nScoreHolding = __max(DominanceNumberHolding_1, DominanceNumberHolding_2);
+			nScoreHolding = max(DominanceNumberHolding_1, DominanceNumberHolding_2);
 		}
 		break;
 	case PQRULE:
-		nScoreCell = __max(PQ_NCell_1,PQ_NCell_2) + 1;
-		if ((ApplyHolding) && __max(PQ_NHolding_1,PQ_NHolding_2) > 0)	{
-			nScoreHolding = __max(PQ_NHolding_1,PQ_NHolding_2) +1;
+		nScoreCell = max(PQ_NCell_1,PQ_NCell_2) + 1;
+		if ((ApplyHolding) && max(PQ_NHolding_1,PQ_NHolding_2) > 0)	{
+			nScoreHolding = max(PQ_NHolding_1,PQ_NHolding_2) +1;
 		}
 		break;
 
@@ -1208,26 +1212,26 @@ bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 			if ((DominancePercCell_1 >0) && (DominanceNumberCell_1 >0))	{
 				tempProtectionLevel = 100.0 * datacell.ComputeWeightedScoreCell(ApplyWeight,DominanceNumberCell_1) / DominancePercCell_1;
 				if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-					UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+					UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 				}
 			}
 			if ((DominancePercCell_2 >0) && (DominanceNumberCell_2 >0))	{
 				tempProtectionLevel = 100.0 * datacell.ComputeWeightedScoreCell(ApplyWeight,DominanceNumberCell_2) / DominancePercCell_2;
 				if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-					UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+					UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 				}
 			}
 			if (ApplyHolding)	{
 				if ((DominancePercHolding_1 >0) && (DominanceNumberHolding_1 >0))	{
 					tempProtectionLevel = 100.0 * datacell.ComputeWeightedScoreHolding(ApplyWeight,DominanceNumberHolding_1) / DominancePercHolding_1;
 					if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-						UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+						UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 					}
 				}
 				if ((DominancePercHolding_2 >0) && (DominanceNumberHolding_2 >0))	{
 					tempProtectionLevel = 100.0 * datacell.ComputeWeightedScoreHolding(ApplyWeight,DominanceNumberHolding_2) / DominancePercHolding_2;
 					if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-						UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+						UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 					}
 				}
 			}
@@ -1236,13 +1240,13 @@ bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 			if ((PQ_PCell_1 >0) && (PQ_NCell_1 >0))	{
 				tempProtectionLevel = (PQ_PCell_1 * datacell.MaxScoreCell[0] / PQ_QCell_1) + datacell.ComputeWeightedScoreCell(ApplyWeight, PQ_NCell_1+1);
 				if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-					UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+					UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 				}
 			}
 			if ((PQ_PCell_2 >0) && (PQ_NCell_2 >0))	{
 				tempProtectionLevel = (PQ_PCell_2 * datacell.MaxScoreCell[0] / PQ_QCell_2) + datacell.ComputeWeightedScoreCell(ApplyWeight, PQ_NCell_2 +1);
 				if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-					UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+					UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 				}
 			}
 			if (ApplyHolding)	{
@@ -1250,13 +1254,13 @@ bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 					tempProtectionLevel =  (PQ_PHolding_1 * datacell.MaxScoreHolding[0] / PQ_QHolding_1) + datacell.ComputeWeightedScoreHolding(ApplyWeight, PQ_NHolding_1+1);
 					if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
 
-						UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+						UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 					}
 				}
 				if ((PQ_PHolding_2) && (PQ_NHolding_2))	{
 					tempProtectionLevel = (PQ_PHolding_2 * datacell.MaxScoreHolding[0] / PQ_QHolding_2) + datacell.ComputeWeightedScoreHolding(ApplyWeight, PQ_NHolding_2+1);
 					if ((tempProtectionLevel - datacell.GetShadow()) > 0)	{
-						UpperProtectionLevel = __max(UpperProtectionLevel,tempProtectionLevel);
+						UpperProtectionLevel = max(UpperProtectionLevel,tempProtectionLevel);
 					}
 				}
 			}
@@ -1272,7 +1276,7 @@ bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 				SafetyPerc = CellFreqSafetyPerc;
 				if (ApplyHolding) {
 					if (datacell.GetFreqHolding() <= SafeMinHoldings) {
-						SafetyPerc = __max(SafetyPerc,HoldingFreqSafetyPerc);
+						SafetyPerc = max(SafetyPerc,HoldingFreqSafetyPerc);
 					}
 				}
 			}
@@ -1298,7 +1302,7 @@ bool CTable::SetProtectionLevelCell(CDataCell &datacell)
 			Perc = PeepSafetyRangePercCell / 100.0;
 			if (ApplyHolding)	{
 					tempPerc = PeepSafetyRangePercHolding/100.0;
-					Perc= __max(Perc,tempPerc);
+					Perc= max(Perc,tempPerc);
 			}
 			break;
 		case CS_UNSAFE_FREQ:
@@ -1359,13 +1363,13 @@ bool CTable::SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, lon
 	double LowerProtectionLevel = 0;
 	if (datacell.GetStatus() == CS_UNSAFE_FREQ)	{
 		if (!ApplyHolding)	{
-			UpperProtectionLevel = (double)__max(K,Base-SafeMinRec);
+			UpperProtectionLevel = (double) max<long>(K, Base-SafeMinRec);
 			LowerProtectionLevel = datacell.GetResp();
 			datacell.SetUpperProtectionLevel(UpperProtectionLevel);
 			datacell.SetLowerProtectionLevel(LowerProtectionLevel);
 		}
 		else	{
-			UpperProtectionLevel = (double)__max(K,Base-SafeMinHoldings);
+			UpperProtectionLevel = (double) max<long>(K, Base-SafeMinHoldings);
 			LowerProtectionLevel = datacell.GetResp();
 			datacell.SetUpperProtectionLevel(UpperProtectionLevel);
 			datacell.SetLowerProtectionLevel(LowerProtectionLevel);

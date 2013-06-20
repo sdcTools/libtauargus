@@ -109,7 +109,7 @@ public:
 	bool SetMissing(LPCTSTR Missing1, LPCTSTR Missing2, long NumMissing);
 	bool SetTotalCode(LPCTSTR sTotalCode);
 	bool SetType(bool IsCategorical, bool IsNumeric, bool IsWeight, bool IsHierarchical, bool IsHolding, bool IsPeeper);
-	bool SetPeepCodes(std::string Peep1, std::string Peep2);
+	bool SetPeepCodes(const std::string &Peep1, const std::string &Peep2);
 	bool SetPosition(long bPos, long nPos, long nDec);
 	bool SetDecPosition(long lnDec);
 	virtual ~CVariable();
