@@ -42,7 +42,7 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 //	double MaxResp = tab->GetCell(0L)->GetResp();
 	// DIT INS ONZIN VOOR Pos/Neg tabellen!!!
 	double LBound, UBound;
-	double UPL, LPL, Sliding, Capacity;
+	double UPL, LPL, Sliding; // Capacity;
 
 
 //	double dRoundConst = 0; //= (0.5)/pow(10,nDecResp);
@@ -116,7 +116,7 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 
 		fprintf(fd, "%ld ", ScaledCost);
 
-		UPL = 0; LPL = 0; Sliding = 0; Capacity = 0;
+		UPL = 0; LPL = 0; Sliding = 0; // Capacity = 0;
 		// status
 		switch (dc->GetStatus() ) {
 		case CS_SAFE:
@@ -240,7 +240,7 @@ bool CJJFormat::WriteRestrictions(FILE *fd, CTable *tab, CVariable *var, bool Wi
 			tdp[d].nParent = 1; // total always parent
 			int nCode = v->GetnCode();
 			for (int i = 1; i < nCode; i++) {
-				int numRange = GetRange(*v, i, Children, WithBogus);
+				/* int numRange = */ GetRange(*v, i, Children, WithBogus);
 				//fprintf(ftemp,"%d  %d\n",i, numRange);
 				//	for (int j = 0; j < numRange; j++)  {
 

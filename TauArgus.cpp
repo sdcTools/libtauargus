@@ -3431,7 +3431,6 @@ void TauArgus::FillTables(char *str)
 	int i, j;
 	char code[MAXCODEWIDTH];
 	bool IsMissing;
-	double Weight = 0;
 	string tempcode;
 	CVariable *var;
 	CDataCell dc;
@@ -3703,10 +3702,8 @@ void TauArgus::AddTableCells(CTable &t, CDataCell AddCell, int niv, long cellind
 //is added to the cells that already exists in the table
 void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 {
-
 	int i, j;
 	double weight = 1;
-	bool IsexistingHolding = false;
 	double x ;
 	ASSERT(cellindex >= 0 && cellindex < t.nCell);
 	CDataCell *dc = t.GetCell(cellindex);
@@ -3761,7 +3758,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 				x = fabs(dc->GetTempShadow());
 				if (x> 0)
 				{
-					double dtemp = x;
+					// double dtemp = x;
 				}
 				for (i = 0; i < t.NumberofMaxScoreHolding; i++) {
 					if (x > dc->MaxScoreHolding[i]) {
@@ -4607,7 +4604,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 			case 2: 
      				if (dc->GetStatus() == CS_EMPTY) {fprintf(fd, ",-");}
 	    			else                             {fprintf(fd, ",%.*f", nDec, dc->GetResp());}
-		    		if (RespType = 2){fprintf(fd, ",%ld", dc->GetStatus());}
+		    		if (RespType == 2){fprintf(fd, ",%ld", dc->GetStatus());}
 			    	break;
 		}
 //		fprintf(fd, ",%d", dc->GetStatus());

@@ -183,8 +183,8 @@ bool CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var,
 //			if (dc->GetFreq() <= tab.SafeMinRec) {
 //  			fprintf(fd, "1 1 ");  // Anco, niet altijd sporend met de wensch van PP
 //			} else {
-			double UPL, LPL, Sliding, Capacity;
-			LPL =0; UPL =0; Sliding =0; Capacity = 0;
+			double UPL, LPL; // Sliding, Capacity;
+			LPL =0; UPL =0; // Sliding =0; Capacity = 0;
   			//fprintf(fd, "%.0f %.0f ", UPL, LPL);
 			LPL = dc->GetLowerProtectionLevel();
 			UPL = dc->GetUpperProtectionLevel();

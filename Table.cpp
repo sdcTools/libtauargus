@@ -443,8 +443,9 @@ bool CTable::CleanUp()
 // got to do this
 
 long CTable::GetMemSizeTable()
-{ int nScoreCellDom = 1;
-  int nScoreHoldingDom = 0;
+{ 
+  // int nScoreCellDom = 1;
+  // int nScoreHoldingDom = 0;
   long MemUsage;
 
 	MemUsage = GetSizeTable() * sizeof(CDataCell);
