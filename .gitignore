@@ -21,3 +21,5 @@ Linux
 /TauArgusJava_wrap.h
 /NewTauArgus.h
 /*.java
+*.aps
+/TopicHelp.h
