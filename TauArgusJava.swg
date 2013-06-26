@@ -6,6 +6,7 @@
 %include <windows.i>
 %include <arrays_java.i>
 %include <various.i>
+%include <std_string.i>
 
 // Defines not covered by the above ".i" files of SWIG
 #define FAR                     __far

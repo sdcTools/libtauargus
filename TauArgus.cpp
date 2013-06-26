@@ -1,3 +1,5 @@
+#include "TauArgus.h"
+
 #include <cstdio>
 #include <cstring>
 #include <cfloat>
@@ -9,7 +11,7 @@
 
 #include "General.h"
 #include "Globals.h"
-#include "TauArgus.h"
+#include "Properties.h"
 
 using namespace std;
 
@@ -18,6 +20,8 @@ using namespace std;
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+static Properties TauArgusErrors("TauArgus.properties");
 
 //extern int CurrentHoldingNr;
 
@@ -3137,6 +3141,15 @@ bool TauArgus::SetAllNonStructuralAsEmpty(long TableIndex)
 	}
 
 	return true;
+}
+
+string TauArgus::GetErrorString(long ErrorNumber)
+{
+	char Buf[10];
+
+	sprintf(Buf, "%ld", ErrorNumber);
+
+	return TauArgusErrors.getProperty(Buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////

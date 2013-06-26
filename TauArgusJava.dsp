@@ -126,6 +126,10 @@ SOURCE=.\JJFormat.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Properties.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SubCodeList.cpp
 # End Source File
 # Begin Source File
@@ -196,6 +200,10 @@ SOURCE=.\JavaProgressListener.h
 # Begin Source File
 
 SOURCE=.\JJFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Properties.h
 # End Source File
 # Begin Source File
 
