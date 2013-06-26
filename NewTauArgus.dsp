@@ -327,6 +327,10 @@ SOURCE=.\NewTauArgus.rc
 # End Source File
 # Begin Source File
 
+SOURCE=.\Properties.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -418,6 +422,10 @@ SOURCE=.\JJFormat.h
 # Begin Source File
 
 SOURCE=.\NewTauArgusCP.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Properties.h
 # End Source File
 # Begin Source File
 
