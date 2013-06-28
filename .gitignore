@@ -23,3 +23,5 @@ Linux
 /*.java
 *.aps
 /TopicHelp.h
+*.CHM
+*.chw
