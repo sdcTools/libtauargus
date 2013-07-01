@@ -427,7 +427,7 @@ bool CTable::CleanUp()
 	for (i=0; i<nCell+1; i++) {
 		if (CellPtr[i] != NULL) {
 			CDataCell *dc;
-			dc = (CDataCell *)CellPtr[i];
+			dc = CellPtr[i];
 			delete[] dc;
 			//delete[] CellPtr.GetAt(i);
 			CellPtr[i] = NULL;
@@ -511,8 +511,7 @@ CDataCell* CTable::GetCell(long CellNr)
 	CDataCell *dc;
 
 	if (CellPtr[CellNr] != NULL) {
-
-		dc = (CDataCell *) CellPtr[CellNr];
+		dc = CellPtr[CellNr];
 		switch (CostVarnr) {
 		case CVT_DISTANCE:
 			dc->SetCost(1); // provisional solution, Anco
@@ -529,7 +528,7 @@ CDataCell* CTable::GetCell(long CellNr)
 	}
 
 	else {
-		dc = (CDataCell *) CellPtr[nCell]; // return last empty cell;
+		dc = CellPtr[nCell]; // return last empty cell;
 		return dc;
 	}
 }

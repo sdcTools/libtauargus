@@ -93,7 +93,7 @@ public:
 	double ZeroSafetyRange;
 
 //	CDataCell *Cell;          // counting space
-	std::vector<void*> CellPtr;
+	std::vector<CDataCell*> CellPtr;
 	long nCell;               // number of cells
 	//int nMaxCellValues;
 
