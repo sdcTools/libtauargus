@@ -267,7 +267,7 @@ public:
 	bool SetNumberVar(/*[in]*/ long nVar);
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
-	std::string TauArgus::GetErrorString(long ErrorNumber);
+	std::string GetErrorString(long ErrorNumber);
 };
 
 #endif // TauArgus_h

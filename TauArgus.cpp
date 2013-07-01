@@ -1379,11 +1379,10 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 													 double *Lower, double *Upper,
 													 double *RealizedLower,double * RealizedUpper)
 {
-	int tab = TableIndex, i;
-
+	int i;
 
 	// check parameters
-	if (tab < 0 || tab >= m_ntab) {
+	if (TableIndex < 0 || TableIndex >= m_ntab) {
 		return false;
 	}
 
@@ -1398,7 +1397,7 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 		return false;
 	}
 
-	CTable *table = GetTable(tab);
+	CTable *table = GetTable(TableIndex);
 
 	// check DimIndices
 	for (i = 0; i < table->nDim; i++) {
@@ -1409,8 +1408,7 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 		}
 	}
 
-	CDataCell *dc;
-	dc = table->GetCell(DimIndex);
+	CDataCell *dc = table->GetCell(DimIndex);
 
 	*CellResponse = dc->GetResp();
 	*CellRoundedResp = dc->GetRoundedResponse();
@@ -3145,11 +3143,17 @@ bool TauArgus::SetAllNonStructuralAsEmpty(long TableIndex)
 
 string TauArgus::GetErrorString(long ErrorNumber)
 {
-	char Buf[10];
+	char ErrorNumberString[10];
 
-	sprintf(Buf, "%ld", ErrorNumber);
+	sprintf(ErrorNumberString, "%ld", ErrorNumber);
 
-	return TauArgusErrors.getProperty(Buf);
+	string Error = TauArgusErrors.getProperty(ErrorNumberString);
+
+	if (Error.empty()) {
+		Error = string("UnKnown Error (") + ErrorNumberString + ")";
+	}
+
+	return Error;
 }
 
 ///////////////////////////////////////////////////////////////////////////
