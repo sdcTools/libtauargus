@@ -3472,7 +3472,7 @@ void TauArgus::FillTables(char *str)
 				}
 			}
 
-			if (LastHoldingCode.compare(code) != 0){
+			if (LastHoldingCode != code){
 				CurrentHoldingNr++;
 				LastHoldingCode = code;
 			}
@@ -3626,11 +3626,11 @@ void TauArgus::FillTables(char *str)
 
 		if (m_tab[i].ApplyPeeper) {
 
-			if ((tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0) ||
-			  (tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode2) == 0))	{
+			if (tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode1 ||
+			  tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode2) {
 			  dc.SetPeepCell(m_var[m_tab[i].ShadowVarnr].Value);
 			  dc.SetPeepHolding(m_var[m_tab[i].ShadowVarnr].Value);
-			  if ( tempPeepCode.compare(m_var[m_tab[i].PeepVarnr].PeepCode1) == 0)	{
+			  if (tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode1)	{
 					dc.SetPeepSortCell(PEEP1);
 					dc.SetPeepSortHolding(PEEP1);
 			  }

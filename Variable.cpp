@@ -153,7 +153,7 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 	if (tail) {
 		// not already in list?
 		for (i = 0; i < n; i++) {
-			if (sCode[i].compare(newcode) == 0) break;  // found!
+			if (sCode[i] == newcode) break;  // found!
 		}
 		if (i == n) {  // not found
 			sCode.push_back(newcode);
@@ -169,7 +169,7 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 		int res = BinSearchStringArray(sCode, newcode, 0, IsMissing);
 		if (res < 0) { // not found
 			for (i = 0; i < n; i++) {
-				if (sCode[i].compare(newcode) > 0) break;
+				if (sCode[i] > newcode) break;
 			}
 			if (i < n) {
 				vector<string>::iterator p = sCode.begin() + i;
@@ -497,7 +497,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 //		fprintf(ftemp,"%s","hLevel   ");
 //		fprintf(ftemp,"%i\n",hLevel.GetAt(num));
 		s = &str[i * LenLevelString];
-		if (s.compare(Missing1) == 0 || (nMissing == 2 && s.compare(Missing2) == 0) ) {
+		if (s == Missing1 || (nMissing == 2 && s == Missing2) ) {
 			return HC_CODEISMISSING;
 		}
 
@@ -575,7 +575,7 @@ int CVariable::FindHierarchicalCode(LPCTSTR code)
 	int n = sCode.size();
 
 	for (int i = 0; i < n; i++) {
-		if (hLevelBasic[i] && sCode[i].compare(code) == 0) {
+		if (hLevelBasic[i] && sCode[i] == code) {
 			return i; // found
 		}
 	}
