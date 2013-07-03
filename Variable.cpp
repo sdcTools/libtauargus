@@ -561,7 +561,7 @@ int CVariable::FindAllHierarchicalCode(LPCTSTR code)
 	int n = sCode.size();
 
 	for (int i = 0; i < n; i++) {
-		if (sCode[i].compare(code) == 0) {
+		if (sCode[i] == code) {
 			return i; // found
 		}
 	}

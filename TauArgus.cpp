@@ -866,6 +866,20 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 
 	// add hierarchy, Missing1 and -2
 	for (i = 0; i < m_nvar; i++) {
+		// add hierarchy for split levels
+		if (m_var[i].nDigitSplit > 0) {
+			if (!m_var[i].ComputeHierarchicalCodes() ) {
+				*ErrorCode = WRONGHIERARCHY;
+				*LineNumber = -1;
+				return false;
+			}
+		}
+
+		// add total
+		if (!m_var[i].IsHierarchical || m_var[i].nDigitSplit > 0) {
+			m_var[i].AddCode("", false);
+		}
+
 		// add Missing1 and -2
 		if (m_var[i].IsCategorical) {
 			if (m_var[i].nMissing != 0)	{
@@ -882,20 +896,6 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 					}
 				}
 			}
-		}
-
-		// add hierarchy for split levels
-		if (m_var[i].nDigitSplit > 0) {
-			if (!m_var[i].ComputeHierarchicalCodes() ) {
-				*ErrorCode = WRONGHIERARCHY;
-				*LineNumber = -1;
-				return false;
-			}
-		}
-
-		// add total
-		if (!m_var[i].IsHierarchical || m_var[i].nDigitSplit > 0) {
-			m_var[i].AddCode("", false);
 		}
 
 		m_var[i].nCode = m_var[i].sCode.size();
@@ -3263,8 +3263,7 @@ int TauArgus::DoMicroRecord(char *str, int *varindex)
 		if (var->IsNumeric) {
 			double d;
 			// exclude missings for calculating min/max
-			if (var->Missing1.compare(code) != 0 &&
-				var->Missing2.compare(code) != 0) {
+			if (var->Missing1 != code && var->Missing2 != code) {
 				if (!ConvertNumeric(code, d) ) {
 					return ISNOTNUMERIC;   // is not numeric! (variabelenummer meegeven voor gebruiker)
 				}
