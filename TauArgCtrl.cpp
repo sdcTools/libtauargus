@@ -758,7 +758,7 @@ STDMETHODIMP CTauArgCtrl::SetProtectionLevelsForResponseTable(long TableIndex, l
 
 STDMETHODIMP CTauArgCtrl::MaximumProtectionLevel(long TableIndex, double *Maximum)
 {
-	tauArgus.MaximumProtectionLevel(TableIndex - 1, Maximum);
+	*Maximum = tauArgus.MaximumProtectionLevel(TableIndex - 1);
 
 	return S_OK;
 }

@@ -2823,7 +2823,7 @@ bool TauArgus::SetProtectionLevelsForResponseTable(long TableIndex, long *DimInd
 }
 
 
-void TauArgus::MaximumProtectionLevel(long TableIndex, double *Maximum)
+double TauArgus::MaximumProtectionLevel(long TableIndex)
 {
 	CTable *tab = &m_tab[TableIndex];
 	double maxprot = 0;
@@ -2837,7 +2837,7 @@ void TauArgus::MaximumProtectionLevel(long TableIndex, double *Maximum)
 		}
 	}
 
-	*Maximum = maxprot;
+	return maxprot;
 }
 
 //GetMinimumCellValue

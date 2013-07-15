@@ -167,7 +167,7 @@ public:
 	bool SetSecondaryFromHierarchicalAMPL(/*[in]*/  const char* FileName, /*[in]*/ long TableIndex,  /*[in,out]*/ long *ErrorCode);
 	bool WriteHierarchicalTableInAMPLFormat(/*[in]*/ const char* AMPLFilename, const char* TempDir, /*[in]*/  long Tableindex, /*[in]*/ double MaxScale, long *ErrorCode);
 	bool SetRoundedResponse(/*[in]*/  const char* RoundedFile,  /*[in]*/ long TableIndex);
-	void MaximumProtectionLevel(/*[in]*/ long TableIndex, /*[retval,out]*/ double *Maximum);
+	double MaximumProtectionLevel(/*[in]*/ long TableIndex);
 	bool SetProtectionLevelsForFrequencyTable(long TableIndex,/*[in]*/ long Base, /*[in]*/ long K);
 	bool SetTableCellCost(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ double Cost);
 	bool GetCellStatusStatistics(/*[in]*/ long TableIndex, /*[in,out]*/ long * StatusFreq, /*[in,out]*/ long * StatusCellFreq, /*[in,out] */ long * StatusHoldingFreq, /*[in,out]*/ double *StatusCellResponse, /*[in,out]*/ double * StatusCellCost);
