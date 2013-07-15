@@ -59,9 +59,11 @@ IProgressListener* TauArgus::GetProgressListener()
 void TauArgus::FireUpdateProgress(int Perc)
 {
 	DEBUGprintf("m_ProgressListener->UpdateProgress(Perc)\n");
+
 	if (m_ProgressListener != NULL) {
 //    Next line does not compile with g++ on Linux.
 //		DEBUGprintf("%p-%p\n", m_ProgressListener, (void*)(m_ProgressListener->UpdateProgress));
+
 		m_ProgressListener->UpdateProgress(Perc);
 	}
 }
@@ -85,9 +87,8 @@ bool TauArgus::UndoSecondarySuppress(long TableIndex, long SortSuppress)
 // Set number of Variables
 bool TauArgus::SetNumberVar(long nVar)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetNumberVar(%ld)\n", nVar);
-	#endif
+	DEBUGprintf("SetNumberVar(%ld)\n", nVar);
+	
 	if (nVar < 1) {
 		return false;
 	}
@@ -110,9 +111,8 @@ bool TauArgus::SetNumberVar(long nVar)
 // set number of tables
 bool TauArgus::SetNumberTab(long nTab)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetNumberTab(%ld)\n", nTab);
-	#endif
+	DEBUGprintf("SetNumberTab(%ld)\n", nTab);
+
 	// Not the right moment, first call SetNumberVar
 	if (m_nvar == 0 || nTab < 1) {
 		return false;
@@ -575,18 +575,15 @@ void TauArgus::ApplyRecode()
 // Clean all allocated memory. Destructor does this
 void TauArgus::CleanAll()
 {
-	#ifdef _DEBUG
-		DEBUGprintf("CleanAll()\n");
-	#endif
+	DEBUGprintf("CleanAll()\n");
+
 	CleanUp();
 }
 
 // Used for setting Hierarchical Variables with digit Split
 bool TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetHierarchicalDigits(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)\n", VarIndex, nDigitPairs, nDigits[0], nDigits[1], nDigits[2], nDigits[3], nDigits[4], nDigits[5], nDigits[6], nDigits[7], nDigits[8], nDigits[9]);
-	#endif
+	DEBUGprintf("SetHierarchicalDigits(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)\n", VarIndex, nDigitPairs, nDigits[0], nDigits[1], nDigits[2], nDigits[3], nDigits[4], nDigits[5], nDigits[6], nDigits[7], nDigits[8], nDigits[9]);
 			
 	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return false;
@@ -1134,9 +1131,8 @@ bool TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
 	*NumberOfCodes = m_var[VarIndex].GetnCode();
 	*NumberOfActiveCodes = m_var[VarIndex].GetnCodeActive();
 
-	#ifdef _DEBUG
-		DEBUGprintf("GetVarNumberOfCodes(%ld, %ld, %ld)\n", VarIndex, *NumberOfCodes, *NumberOfActiveCodes);
-	#endif
+	DEBUGprintf("GetVarNumberOfCodes(%ld, %ld, %ld)\n", VarIndex, *NumberOfCodes, *NumberOfActiveCodes);
+
 	return true;
 }
 
@@ -1176,10 +1172,8 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 												 bool IsHierarchical,
 												 bool IsHolding)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetVariable(%ld, %ld, %ld, %ld, %ld, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d)\n",
+	DEBUGprintf("SetVariable(%ld, %ld, %ld, %ld, %ld, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d)\n",
 			VarIndex, bPos, nPos, nDec, nMissing, Missing1, Missing2, TotalCode, IsPeeper, PeeperCode1, PeeperCode2, IsCategorical, IsNumeric, IsWeight, IsHierarchical, IsHolding);
-	#endif
 
 	// index oke?
 	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
@@ -1445,8 +1439,8 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 			HoldingNrPerMaxScore[i] = dc->HoldingnrPerMaxScore[i];
 		}
 	}
-	#ifdef _DEBUG
-		DEBUGprintf("GetTableCell(%ld, (%ld, %ld), %6.2f, %ld, %6.2f, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %ld, %6.2f, %ld, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %6.2f, %6.2f)\n",
+
+	DEBUGprintf("GetTableCell(%ld, (%ld, %ld), %6.2f, %ld, %6.2f, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %ld, %6.2f, %ld, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %6.2f, %6.2f)\n",
 														TableIndex, DimIndex[0], DimIndex[1],
 														*CellResponse, *CellRoundedResp, *CellCTAResp,
 														*CellShadow, *CellCost,
@@ -1457,7 +1451,6 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 														*PeepCell, *PeepHolding, *PeepSortCell, *PeepSortHolding,
 														*Lower, *Upper,
 														*RealizedLower, *RealizedUpper);
-	#endif
 	return true;
 }
 
@@ -1480,7 +1473,6 @@ bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long ZeroSafetyRange,	long ManualSafetyPerc,
 														long * CellAndHoldingFreqSafetyPerc)
 {
-	#ifdef _DEBUG
 		DEBUGprintf("SetTableSafety( %ld, %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld), %d, %d, %d, %d, %d, %d, %ld, %ld, %ld, (%ld, %ld))\n",
 				Index, DominanceRule,
 				DominanceNumber[0], DominanceNumber[1], DominanceNumber[2], DominanceNumber[3],
@@ -1499,7 +1491,7 @@ bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 				EmptyCellAsNonStructural, NSEmptySafetyRange,
 				ZeroSafetyRange, ManualSafetyPerc,
 				CellAndHoldingFreqSafetyPerc[0], CellAndHoldingFreqSafetyPerc[1]);
-	#endif
+
 	int i = Index;
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
@@ -1676,9 +1668,7 @@ bool TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary)
 // through digit splits)
 long TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetHierarchicalCodelist(%ld, %s, %s)\n", VarIndex, FileName, LevelString);
-	#endif
+	DEBUGprintf("SetHierarchicalCodelist(%ld, %s, %s)\n", VarIndex, FileName, LevelString);
 
 	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return HC_NOTHIERARCHICAL;
@@ -1727,9 +1717,7 @@ bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   *CodeString = m_var[v].GetCode(CodeIndex).c_str();
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
-	#ifdef _DEBUG
 	DEBUGprintf("GetVarCode(%ld, %ld, %ld, %s, %ld, %ld)\n", VarIndex, CodeIndex, *CodeType, * CodeString, *IsMissing, *Level);
-	#endif
 
 	return true;
 }
