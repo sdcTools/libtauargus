@@ -1056,10 +1056,9 @@ void CTable::SetCellSecondaryUnsafe(long *dims)
 
 // Get information per status
 void CTable::GetStatusStatistics(long *Freq, long *CellFreq, long *HoldingFreq,
-											double * CellResp, double *CellCost)
+											double *CellResp, double *CellCost)
 {
 	int i;
-	CDataCell *dc;
 	// compute number of CellStatuses
 	// Cell is not bounded
 	for (i = 0; i < NCELLSTATUS; i++) {
@@ -1071,16 +1070,18 @@ void CTable::GetStatusStatistics(long *Freq, long *CellFreq, long *HoldingFreq,
 	}
 
 	for (i = 0; i < nCell; i++) {
-		ASSERT(GetCell(i)->GetStatus() > 0 && GetCell(i)->GetStatus() <= NCELLSTATUS);
-		dc= GetCell(i);
-		Freq[GetCell(i)->GetStatus() - 1]++;
-		CellFreq[GetCell(i)->GetStatus()-1] =	CellFreq[GetCell(i)->GetStatus()-1] + dc->GetFreq();
-		if (ApplyHolding)	{
-			HoldingFreq[GetCell(i)->GetStatus()-1] =	HoldingFreq[GetCell(i)->GetStatus()-1] + dc->GetFreqHolding();
-		}
-		CellResp[GetCell(i)->GetStatus() - 1]= CellResp[GetCell(i)->GetStatus() - 1] +dc->GetResp();
-		CellCost[GetCell(i)->GetStatus() - 1] =CellCost[GetCell(i)->GetStatus() - 1] + dc->GetCost(Lambda);
+		CDataCell *dc = GetCell(i);
+		long status = dc->GetStatus();
+		ASSERT(status > 0 && status <= NCELLSTATUS);
+		int statusIndex = status - 1;
 
+		Freq[statusIndex]++;
+		CellFreq[statusIndex] += dc->GetFreq();
+		if (ApplyHolding)	{
+			HoldingFreq[statusIndex] += dc->GetFreqHolding();
+		}
+		CellResp[statusIndex] += dc->GetResp();
+		CellCost[statusIndex] += dc->GetCost(Lambda);
 	}
 }
 
