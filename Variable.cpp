@@ -192,7 +192,7 @@ bool CVariable::ComputeHierarchicalCodes()
 
 	if (nDigitSplit < 2) return false;
 
-	for (i = 0; i < sCode.size() - nMissing; i++) {
+	for (i = 0; i < sCode.size(); i++) {
 		n = 0;
 		t = sCode[i];
 		if (t.length() != nPos) continue; // no datafile code

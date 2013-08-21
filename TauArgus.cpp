@@ -2180,6 +2180,19 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 
 		if (var->IsCategorical)  {
 
+			if ((var->nDigitSplit > 0)) {
+				if (!(var->ComputeHierarchicalCodes()) ) {
+					*ErrorCode = WRONGHIERARCHY;
+					return false;
+				}
+			}
+
+			// Add Totals to the Code
+			if (!var->IsHierarchical || var->nDigitSplit > 0) {
+				var->AddCode("", false);
+			}
+
+
 			if (var->nMissing > 0)	{
 				var->AddCode(var->Missing1.c_str(), true);
 				if (var->IsHierarchical && var->nDigitSplit == 0) {
@@ -2195,20 +2208,6 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 					}
 				}
 			}
-		}
-
-			if ((var->nDigitSplit > 0)) {
-				if (!(var->ComputeHierarchicalCodes()) ) {
-					*ErrorCode = WRONGHIERARCHY;
-					return false;
-				}
-			}
-
-			// Add Totals to the Code
-			if (!var->IsHierarchical || var->nDigitSplit > 0) {
-				var->AddCode("", false);
-			}
-
 
 //			m_var[i].nCode = m_var[i].sCode.GetSize();
 			long n = m_var[lvarindex].sCode.size();
@@ -2219,7 +2218,7 @@ bool TauArgus::SetTotalsInCodeList(long NumberofVariables, long *VarIndex, long 
 					return false;
 				}
 			}
-
+		}
 
 	}
 
@@ -3675,22 +3674,20 @@ void TauArgus::AddTableCells(CTable &t, CDataCell AddCell, int niv, long cellind
 
 	// do hierarchical codelists
 
-
 	if (var->IsHierarchical) {
-		bool IsMissing;
-		int i, hIndex, n = 0;
-		string s;
 		if (var->nDigitSplit > 0) {
-			for (i = 0; i < var->nDigitSplit - 1; i++) {
+			int n = 0;
+			for (int i = 0; i < var->nDigitSplit - 1; i++) {
 				n += var->DigitSplit[i];
-				s = var->sCode[var->TableIndex].substr(0, n);
-				hIndex = BinSearchStringArray(var->sCode, s, var->nMissing, IsMissing);
+				string s = var->sCode[var->TableIndex].substr(0, n);
+				bool IsMissing;
+				int hIndex = BinSearchStringArray(var->sCode, s, var->nMissing, IsMissing);
 				ASSERT(hIndex >= 0 && hIndex < var->GetnCode());
 				AddTableCells(t, AddCell, niv + 1, cellindex + hIndex); // for subtotals in codelist
 			}
 		}
 		else {
-			i = var->TableIndex;
+			int i = var->TableIndex;
 			int level = var->GethCode()[i].Level;
 			for (i = i - 1; i > 0 && level > 1; i--) {
 				if (var->GethCode()[i].Level == level - 1) {
