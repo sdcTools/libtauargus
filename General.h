@@ -37,8 +37,8 @@ int BinSearchStringArray(std::vector<std::string> &s, const std::string &x, int 
 #define TRACE              ::ArgusTrace
 #endif
 
-#ifdef _WIN32
-#ifndef _WINDEF_
+// Visual C++ 6.0 fix
+#if _MSC_VER == 1200 && !defined(_WINDEF_)
 template <typename T> T min(T a, T b)
 {
 	return (a < b) ? a : b;
@@ -48,7 +48,6 @@ template <class T> T max(T a, T b)
 {
 	return (a > b) ? a : b;
 }
-#endif
 #endif
 
 #endif // General_h

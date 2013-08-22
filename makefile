@@ -1,25 +1,64 @@
 # ====================================================
+# Detect architecture on which we're running (limited)
+# ====================================================
+
+ifndef OS
+	OS := $(shell uname)
+endif
+
+ifeq ($(OS),Linux)
+	ARC=Linux
+else
+	ARC=Win32
+endif
+
+# ====================================================
 # Configurable items
 # ====================================================
-GNUDIR  = /usr/bin
-SWIGDIR = /usr/local/bin
-JAVADIR = /home/argus/jdk1.7.0_25
+
+ifeq ($(ARC),Linux)
+	GNUDIR  = /usr/bin
+	SWIGDIR = /usr/local/bin
+	JAVADIR = /home/argus/jdk1.7.0_25
+else
+	GNUDIR  = c:/MinGW/bin
+	SWIGDIR = c:/swigwin-2.0.10
+	JAVADIR = c:/Progra~1/Java/jdk1.7.0_17
+endif
 
 LIBNAME       = TauArgusJava
 MAJOR_VERSION = 1
 MINOR_VERSION = 0
 JAVAPACKAGE   = tauargus.extern
 
+# ======================================================================
+# Set directories for input and output files
+# ======================================================================
+
+ARCDIR = $(ARC)
+ifdef debug
+	VERDIR = $(ARCDIR)/debug
+#CFLAGS += $(CFLAGS_D)
+else
+	VERDIR = $(ARCDIR)/release
+#CFLAGS += $(CFLAGS_R)
+endif
+
 SRCDIR = .
-OBJDIR = Linux
-LIBDIR = Linux
-OUTDIR = Linux
+OBJDIR = $(VERDIR)
+LIBDIR = $(VERDIR)
+OUTDIR = $(VERDIR)
 
 # ====================================================
 # Non configurable items
 # ====================================================
 
-INCDIRS = $(JAVADIR)/include $(JAVADIR)/include/linux
+INCDIRS = $(JAVADIR)/include 
+ifeq ($(ARC),Linux)
+	INCDIRS += $(JAVADIR)/include/linux
+else
+	INCDIRS += $(JAVADIR)/include/Win32
+endif
 
 CXX     = $(GNUDIR)/g++
 SWIG    = $(SWIGDIR)/swig
@@ -42,7 +81,7 @@ SWIGSOURCES       = $(wildcard $(SRCDIR)/*.swg)
 GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
 
 OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
-INCLUDES = $(INCDIRS:/%=-I/%)
+INCLUDES = $(INCDIRS:%=-I%)
 
 LIBBASEFILENAME = lib$(LIBNAME).so
 SONAME = lib$(LIBNAME).so
@@ -54,6 +93,10 @@ TARGET = $(LIBDIR)/$(LIBBASEFILENAME)
 .PHONY: all clean clean_all
 
 all : $(OBJDIR) $(LIBDIR) $(TARGET)
+	echo $(INCDIRS)
+	
+clean :
+	rm -rf $(OBJDIR) $(LIBDIR)
 
 $(TARGET) : $(OBJECTS)
 	$(LINK) -shared -Wl,-soname,$(SONAME) -o $@ $^
@@ -61,10 +104,7 @@ $(TARGET) : $(OBJECTS)
 #	ln -sf /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION).$(MINOR_VERSION) /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION)
 #	ln -sf /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION) /opt/lib/$(LIBBASEFILENAME)
 
-$(OBJDIR) :
-	mkdir -p $@
-
-$(LIBDIR) :
+$(ARCDIR) $(OBJDIR) $(LIBDIR) :
 	mkdir -p $@
 
 # pull in dependency info for *existing* .o files
@@ -75,9 +115,8 @@ $(LIBDIR) :
 #############################################################################
 # compile and generate dependency info
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	rm -f $@
-	$(CXX) $(CFLAGS) -c $< -o $@ 
-	$(CXX) $(CFLAGS) -MM $< > $(@:.o=.d)
+#	rm -f $@
+	$(CXX) $(CFLAGS) -c -MMD $< -o $@ 
 
 $(OBJDIR)/%.o: Makefile
 
