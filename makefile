@@ -2,14 +2,10 @@
 # Detect architecture on which we're running (limited)
 # ====================================================
 
-ifndef OS
-	OS := $(shell uname)
-endif
-
-ifeq ($(OS),Linux)
-	ARC=Linux
-else
+ifeq ($(OS),Windows_NT)
 	ARC=Win32
+else
+	ARC=Linux
 endif
 
 # ====================================================
@@ -38,10 +34,8 @@ JAVAPACKAGE   = tauargus.extern
 ARCDIR = $(ARC)
 ifdef debug
 	VERDIR = $(ARCDIR)/debug
-#CFLAGS += $(CFLAGS_D)
 else
 	VERDIR = $(ARCDIR)/release
-#CFLAGS += $(CFLAGS_R)
 endif
 
 SRCDIR = .
@@ -64,9 +58,19 @@ CXX     = $(GNUDIR)/g++
 SWIG    = $(SWIGDIR)/swig
 LINK    = $(GNUDIR)/g++
 
-CFLAGS  = $(INCLUDES) -Wall -fPIC
 SFLAGS  = -c++ -java -package $(JAVAPACKAGE) -outdir $(OUTDIR)
-LFLAGS  = $(LINK) -shared -Wl,-soname,$(TARGET).1 -o $(TARGET).1.0 $(OBJECTS)
+CFLAGS  = $(INCLUDES) -Wall #-fPIC
+ifdef debug
+	CFLAGS += -D_DEBUG -g3 -ggdb
+else
+	CFLAGS += -DNDEBUG -O3
+endif
+LFLAGS = -shared 
+ifeq ($(ARC),Linux)
+	LFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
+else
+	LFLAGS += -Wl,--subsystem,windows  
+endif
 
 # Use all .cpp files except 4 specific files used under Windows and the generate source files
 # Use := for static evaluation!
@@ -83,26 +87,29 @@ GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCE
 OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
 INCLUDES = $(INCDIRS:%=-I%)
 
-LIBBASEFILENAME = lib$(LIBNAME).so
-SONAME = lib$(LIBNAME).so
-#.$(MAJOR_VERSION)
+ifeq ($(ARC),Linux)
+	LIBBASENAME = lib$(LIBNAME).so
+	SONAME = $(LIBBASENAME) #.$(MAJOR_VERSION)
+	LIBFILENAME = $(SONAME) #.$(MINOR_VERSION)
+else
+	LIBFILENAME = $(LIBNAME).dll
+endif
 
-TARGET = $(LIBDIR)/$(LIBBASEFILENAME)
-#.$(MAJOR_VERSION).$(MINOR_VERSION)
+TARGET = $(LIBDIR)/$(LIBFILENAME)
 
-.PHONY: all clean clean_all
+.PHONY: all clean
 
 all : $(OBJDIR) $(LIBDIR) $(TARGET)
-	echo $(INCDIRS)
+	echo $(VERDIR)
 	
 clean :
 	rm -rf $(OBJDIR) $(LIBDIR)
 
 $(TARGET) : $(OBJECTS)
-	$(LINK) -shared -Wl,-soname,$(SONAME) -o $@ $^
+	$(LINK) $(LFLAGS) -o $@ $^
 #	cp -p $(TARGET) /opt/lib
-#	ln -sf /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION).$(MINOR_VERSION) /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION)
-#	ln -sf /opt/lib/$(LIBBASEFILENAME).$(MAJOR_VERSION) /opt/lib/$(LIBBASEFILENAME)
+#	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
+#	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
 
 $(ARCDIR) $(OBJDIR) $(LIBDIR) :
 	mkdir -p $@
@@ -115,7 +122,6 @@ $(ARCDIR) $(OBJDIR) $(LIBDIR) :
 #############################################################################
 # compile and generate dependency info
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-#	rm -f $@
 	$(CXX) $(CFLAGS) -c -MMD $< -o $@ 
 
 $(OBJDIR)/%.o: Makefile
