@@ -59,7 +59,12 @@ SWIG    = $(SWIGDIR)/swig
 LINK    = $(GNUDIR)/g++
 
 SFLAGS  = -c++ -java -package $(JAVAPACKAGE) -outdir $(OUTDIR)
-CFLAGS  = $(INCLUDES) -Wall #-fPIC
+CFLAGS  = $(INCLUDES) -Wall
+ifeq ($(ARC),Linux)
+	CFLAGS += -fPIC
+else
+	CFLAGS += -D_WIN32
+endif
 ifdef debug
 	CFLAGS += -D_DEBUG -g3 -ggdb
 else
@@ -69,7 +74,7 @@ LFLAGS = -shared
 ifeq ($(ARC),Linux)
 	LFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
 else
-	LFLAGS += -Wl,--subsystem,windows  
+	LFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
 endif
 
 # Use all .cpp files except 4 specific files used under Windows and the generate source files
@@ -98,12 +103,14 @@ endif
 TARGET = $(LIBDIR)/$(LIBFILENAME)
 
 .PHONY: all clean
+
+.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
 
 all : $(OBJDIR) $(LIBDIR) $(TARGET)
-	echo $(VERDIR)
 	
 clean :
 	rm -rf $(OBJDIR) $(LIBDIR)
+	rm -f $(SRCDIR)/*_wrap.*
 
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LFLAGS) -o $@ $^

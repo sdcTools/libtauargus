@@ -11,6 +11,7 @@
 
 #include "General.h"
 #include "Globals.h"
+#include "AMPL.h"
 #include "Properties.h"
 
 using namespace std;
