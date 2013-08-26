@@ -70,11 +70,11 @@ ifdef debug
 else
 	CFLAGS += -DNDEBUG -O2
 endif
-LFLAGS = -shared 
+LDFLAGS = -shared 
 ifeq ($(ARC),Linux)
-	LFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
+	LDFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
 else
-	LFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
+	LDFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
 endif
 
 # Use all .cpp files except 4 specific files used under Windows and the generate source files
@@ -113,7 +113,7 @@ clean :
 	rm -f $(SRCDIR)/*_wrap.*
 
 $(TARGET) : $(OBJECTS)
-	$(LINK) $(LFLAGS) -o $@ $^
+	$(LINK) $(LDFLAGS) -o $@ $^
 #	cp -p $(TARGET) /opt/lib
 #	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
 #	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
