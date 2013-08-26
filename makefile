@@ -23,8 +23,8 @@ else
 endif
 
 LIBNAME       = TauArgusJava
-MAJOR_VERSION = 1
-MINOR_VERSION = 0
+#MAJOR_VERSION = 1
+#MINOR_VERSION = 0
 JAVAPACKAGE   = tauargus.extern
 
 # ======================================================================
@@ -68,7 +68,7 @@ endif
 ifdef debug
 	CFLAGS += -D_DEBUG -g3 -ggdb
 else
-	CFLAGS += -DNDEBUG -O3
+	CFLAGS += -DNDEBUG -O2
 endif
 LFLAGS = -shared 
 ifeq ($(ARC),Linux)
@@ -104,7 +104,7 @@ TARGET = $(LIBDIR)/$(LIBFILENAME)
 
 .PHONY: all clean
 
-.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
+#.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
 
 all : $(OBJDIR) $(LIBDIR) $(TARGET)
 	
@@ -131,7 +131,7 @@ $(ARCDIR) $(OBJDIR) $(LIBDIR) :
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	$(CXX) $(CFLAGS) -c -MMD $< -o $@ 
 
-$(OBJDIR)/%.o: Makefile
+$(OBJDIR)/%.o: makefile
 
 $(SRCDIR)/%_wrap.cpp : $(SRCDIR)/%.swg
 	$(SWIG) $(SFLAGS) -o $@ $<
