@@ -5004,9 +5004,6 @@ int TauArgus::GetChildren(CVariable &var, int CodeIndex, vector<unsigned int> &C
 // similar to Is Table except here the totals are created instead of verified
 void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, long niv)
 {
-
-	long ramya=1;
-	long robbert = 1;
 	vector<unsigned int> Children;
 	CDataCell *dc;
 	CDataCell *dctemp, *dcramya;
