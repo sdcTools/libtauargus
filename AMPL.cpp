@@ -31,13 +31,13 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 		tempcode = tempvar->sCode[i];
 	}*/
 	rows = tempvar->nCode-1;
-	fprintf(fd, "%s %d %s\n", "param m := ", rows, ";");
+	fprintf(fd, "%s %ld %s\n", "param m := ", rows, ";");
 	tempvar = &(var[tab->ExplVarnr[1]]);
 	columns = tempvar->nCode-1;
 	fprintf(fd,"\n");
 	fprintf(fd,"%s\n", "#m= number of columns of the table (without marginal columns)");
 
-	fprintf(fd,"%s %d %s\n","param p := ", columns, ";");
+	fprintf(fd,"%s %ld %s\n","param p := ", columns, ";");
 	fprintf(fd,"\n");
 	
 	for(i=0; i<tab->nCell; i++) {
@@ -51,7 +51,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 
 	fprintf(fd,"%s\n", "#p= number of primary suppression cells");
 
-	fprintf(fd,"%s %d %s\n","param p := ", No_Unsafe, ";");
+	fprintf(fd,"%s %ld %s\n","param p := ", No_Unsafe, ";");
 	fprintf(fd,"\n");
 	fprintf(fd,"%s\n", "#row, column, low_pl and upp_pl of each primary suppression cell");
 	fprintf(fd,"%s\n","param: 		 p_r 		 p_c 		 p_lpl 		 p_upl:=");
@@ -65,7 +65,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 			(tempstatus == CS_UNSAFE_SINGLETON) || (tempstatus == CS_UNSAFE_ZERO)) {
 			dc = tab->GetCell(i);
 			tab->GetIndicesFromCellNr(i,ind);
-			fprintf(fd,"%d", volgnum); volgnum++;
+			fprintf(fd,"%ld", volgnum); volgnum++;
 			for (j=0; j<tab->nDim; j++) {
 				// Think about this if ind[j] = 0; 
 				if (ind[j] == 0) {
@@ -73,7 +73,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 					fprintf(fd,"   %d", tempvar->nCode);
 				}
 				else {
-					fprintf (fd,"   %d", ind[j]);
+					fprintf (fd,"   %ld", ind[j]);
 				}
 			}
 			//print lpl en upl
@@ -110,7 +110,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 
 	// Now write the protected cells;
 	fprintf(fd, "%s\n", "#p= number of protected cells");
-	fprintf(fd,"%s %d %s\n","param p := ", No_Protected, ";");
+	fprintf(fd,"%s %ld %s\n","param p := ", No_Protected, ";");
 
 
 	fprintf(fd,"\n");
@@ -131,7 +131,7 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 					fprintf(fd,"   %d", tempvar->nCode);
 				}
 				else {
-					fprintf (fd,"   %d", ind[j]);
+					fprintf (fd,"   %ld", ind[j]);
 				}
 			}
 			fprintf(fd,"\n");
@@ -157,13 +157,13 @@ bool CAMPL::WriteTableInAMPL(CTable *tab, CVariable *var, FILE *fd)
 					fprintf(fd,"    %d", tempvar->nCode);
 				}
 				else {
-					fprintf (fd,"   %d", ind[j]);
+					fprintf (fd,"   %ld", ind[j]);
 				}
 		}
 		ScaledCost = (long) (dc->GetCost(tab->Lambda) * tab->MaxScaledCost / MaxCost + .5);
 		if (ScaledCost == 0) ScaledCost = 1;
 			
-		fprintf(fd, "    %.*f		%d\n", RespVar->nDec,  dc->GetResp(),ScaledCost);
+		fprintf(fd, "    %.*f		%ld\n", (int)RespVar->nDec,  dc->GetResp(),ScaledCost);
 	}
 
 	fprintf(fd,"%s\n", ";");
