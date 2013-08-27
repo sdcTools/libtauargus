@@ -59,7 +59,7 @@ IProgressListener* TauArgus::GetProgressListener()
 
 void TauArgus::FireUpdateProgress(int Perc)
 {
-	DEBUGprintf("m_ProgressListener->UpdateProgress(Perc)\n");
+	DEBUGprintf("m_ProgressListener->UpdateProgress(%d)\n", Perc);
 
 	if (m_ProgressListener != NULL) {
 //    Next line does not compile with g++ on Linux.
@@ -233,6 +233,7 @@ bool TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 
 oke:
 	fclose(fd);
+	FireUpdateProgress(100);  // for progressbar in container
 	// Once more add freq
 	// For holding tables the last holding has to be
 	// corrected
