@@ -88,8 +88,6 @@ bool TauArgus::UndoSecondarySuppress(long TableIndex, long SortSuppress)
 // Set number of Variables
 bool TauArgus::SetNumberVar(long nVar)
 {
-	DEBUGprintf("SetNumberVar(%ld)\n", nVar);
-	
 	if (nVar < 1) {
 		return false;
 	}
@@ -112,8 +110,6 @@ bool TauArgus::SetNumberVar(long nVar)
 // set number of tables
 bool TauArgus::SetNumberTab(long nTab)
 {
-	DEBUGprintf("SetNumberTab(%ld)\n", nTab);
-
 	// Not the right moment, first call SetNumberVar
 	if (m_nvar == 0 || nTab < 1) {
 		return false;
@@ -134,8 +130,6 @@ bool TauArgus::SetNumberTab(long nTab)
 // Compute the Tabels. In this function all the tables are filled.
 bool TauArgus::ComputeTables(long *ErrorCode, long *TableIndex)
 {
-	DEBUGprintf("ComputeTables\n");
-	
 	// long MemSizeAll = 0, MemSizeTable;
 
 	// initialize errorcodes
@@ -576,16 +570,12 @@ void TauArgus::ApplyRecode()
 // Clean all allocated memory. Destructor does this
 void TauArgus::CleanAll()
 {
-	DEBUGprintf("CleanAll()\n");
-
 	CleanUp();
 }
 
 // Used for setting Hierarchical Variables with digit Split
 bool TauArgus::SetHierarchicalDigits(long VarIndex, long nDigitPairs, long *nDigits)
 {
-	DEBUGprintf("SetHierarchicalDigits(%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld)\n", VarIndex, nDigitPairs, nDigits[0], nDigits[1], nDigits[2], nDigits[3], nDigits[4], nDigits[5], nDigits[6], nDigits[7], nDigits[8], nDigits[9]);
-			
 	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return false;
 	}
@@ -750,8 +740,6 @@ bool TauArgus::UnsafeVariable(long VarIndex, long *Count, long *UCArray)
 // In this function the input file is read and the code list is built
 bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumber, long *ErrorVarIndex)
 {
-	DEBUGprintf("ExploreFile\n");
-
    char str[MAXRECORDLENGTH];
    int i, length, recnr = 0, Result;
 
@@ -1132,8 +1120,6 @@ bool TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes,
 	*NumberOfCodes = m_var[VarIndex].GetnCode();
 	*NumberOfActiveCodes = m_var[VarIndex].GetnCodeActive();
 
-	DEBUGprintf("GetVarNumberOfCodes(%ld, %ld, %ld)\n", VarIndex, *NumberOfCodes, *NumberOfActiveCodes);
-
 	return true;
 }
 
@@ -1173,9 +1159,6 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 												 bool IsHierarchical,
 												 bool IsHolding)
 {
-	DEBUGprintf("SetVariable(%ld, %ld, %ld, %ld, %ld, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d)\n",
-			VarIndex, bPos, nPos, nDec, nMissing, Missing1, Missing2, TotalCode, IsPeeper, PeeperCode1, PeeperCode2, IsCategorical, IsNumeric, IsWeight, IsHierarchical, IsHolding);
-
 	// index oke?
 	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
 		return false;
@@ -1245,14 +1228,6 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 												long PeepVarnr,
 												bool SetMissingAsSafe)
 {
-	#ifdef _DEBUG
-		DEBUGprintf("SetTable(%ld, %ld, (", Index, nDim);
-		for (int k=0; k<nDim; k++) 
-			DEBUGprintf("%ld, ", ExplanatoryVarList[k]);
-		DEBUGprintf("), %d, %ld, %ld, %ld, %f, %f, %ld, %d)\n",
-				IsFrequencyTable, ResponseVar, ShadowVar, CostVar, Lambda, MaxScaledCost, PeepVarnr, SetMissingAsSafe);
-	#endif
-
 	int i = Index, j;
 	long nd;
 
@@ -1265,9 +1240,6 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 	if (nDim < 1 || nDim > MAXDIM) {
 		return false;
 	}
-
-
-
 
 	if (!IsFrequencyTable)	{
 		if (ResponseVar < 0 || ResponseVar >= m_nvar || !m_var[ResponseVar].IsNumeric) {
@@ -1441,17 +1413,6 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 		}
 	}
 
-	DEBUGprintf("GetTableCell(%ld, (%ld, %ld), %6.2f, %ld, %6.2f, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %ld, %6.2f, %ld, %6.2f, %6.2f, %ld, %ld, %6.2f, %6.2f, %6.2f, %6.2f)\n",
-														TableIndex, DimIndex[0], DimIndex[1],
-														*CellResponse, *CellRoundedResp, *CellCTAResp,
-														*CellShadow, *CellCost,
-														*CellFreq, *CellStatus,
-														*CellMaxScore, *CellMAXScoreWeight,
-														*HoldingFreq,
-														*HoldingMaxScore, *HoldingNrPerMaxScore,
-														*PeepCell, *PeepHolding, *PeepSortCell, *PeepSortHolding,
-														*Lower, *Upper,
-														*RealizedLower, *RealizedUpper);
 	return true;
 }
 
@@ -1474,25 +1435,6 @@ bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														long ZeroSafetyRange,	long ManualSafetyPerc,
 														long * CellAndHoldingFreqSafetyPerc)
 {
-		DEBUGprintf("SetTableSafety( %ld, %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), %d, (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld, %ld, %ld), (%ld, %ld), (%ld, %ld), %d, %d, %d, %d, %d, %d, %ld, %ld, %ld, (%ld, %ld))\n",
-				Index, DominanceRule,
-				DominanceNumber[0], DominanceNumber[1], DominanceNumber[2], DominanceNumber[3],
-				DominancePerc[0], DominancePerc[1], DominancePerc[2], DominancePerc[3],
-				PQRule,
-				PriorPosteriorP[0], PriorPosteriorP[1], PriorPosteriorP[2], PriorPosteriorP[3], 
-				PriorPosteriorQ[0], PriorPosteriorQ[1], PriorPosteriorQ[2], PriorPosteriorQ[3], 
-				PriorPosteriorN[0], PriorPosteriorN[1], PriorPosteriorN[2], PriorPosteriorN[3],
-				SafeMinRecAndHoldings[0], SafeMinRecAndHoldings[1],
-				PeepPerc[0], PeepPerc[1], PeepPerc[2], PeepPerc[3],
-				PeepSafetyRange[0], PeepSafetyRange[1], 
-				PeepMinFreqCellAndHolding[0], PeepMinFreqCellAndHolding[1],
-				ApplyPeep,
-				ApplyWeight, ApplyWeightOnSafetyRule,
-				ApplyHolding, ApplyZeroRule,
-				EmptyCellAsNonStructural, NSEmptySafetyRange,
-				ZeroSafetyRange, ManualSafetyPerc,
-				CellAndHoldingFreqSafetyPerc[0], CellAndHoldingFreqSafetyPerc[1]);
-
 	int i = Index;
 	// check TableIndex
 	if (m_nvar == 0 || i < 0 || i >= m_ntab) {
@@ -1669,8 +1611,6 @@ bool TauArgus::SetSecondaryHITAS(long TableIndex, long *nSetSecondary)
 // through digit splits)
 long TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, const char* LevelString)
 {
-	DEBUGprintf("SetHierarchicalCodelist(%ld, %s, %s)\n", VarIndex, FileName, LevelString);
-
 	if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical) {
 		return HC_NOTHIERARCHICAL;
 	}
@@ -1717,8 +1657,6 @@ bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
   // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
   *CodeString = m_var[v].GetCode(CodeIndex).c_str();
   *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
-
-	DEBUGprintf("GetVarCode(%ld, %ld, %ld, %s, %ld, %ld)\n", VarIndex, CodeIndex, *CodeType, * CodeString, *IsMissing, *Level);
 
 	return true;
 }
@@ -2294,22 +2232,12 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 //	sFileName = FileName;
 	CDataCell *dc ;
 
-//	FILE *fddebug;
-
 //	CDataCell *dcempty = new CDataCell(m_tab[Index].NumberofMaxScoreCell,m_tab[Index].NumberofMaxScoreHolding,m_tab[Index].ApplyHolding);
-
-//	fddebug = fopen("f:TMPTest", "w");
-//	fprintf(fddebug,"%s\n", "CompletedTable");
-//	fclose(fddebug);
 
 	// if status for each cel is given
 	bool IsAdditive = true;
 	int i = 1;
 	if (m_HasStatus)  {
-
-//	fddebug = fopen("f:TMPText", "a");
-//	fprintf(fddebug,"%s\n", "Has status so filled");
-//	fclose(fddebug);
 
 //  WriteJJFormat(Index, FileName, -1000, 1000, true, false, false);
 //													double LowerBound, double UpperBound,
@@ -2401,17 +2329,8 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 
 	} // End loop status is given
 
-//	fddebug = fopen("f:TMPText", "a");
-//	fprintf(fddebug,"%s\n", "End loop status is given");
-//	fclose(fddebug);
-
 	if ((m_HasFreq) || (m_HasMaxScore))  {
 		//ComputeCellStatuses(m_tab[Index]);
-
-
-//	fddebug = fopen("f:TMPText", "a");
-//	fprintf(fddebug,"%s\n", "(m_HasFreq) || (m_HasMaxScore)");
-//	fclose(fddebug);
 
 		//Once more check all statuses are filled
 		for (i=0; i <m_tab[Index].nCell; i++)  {
@@ -2454,11 +2373,6 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 		ComputeCellStatuses(m_tab[Index]);
 		SetProtectionLevels(m_tab[Index]);
 	} //end loop HasFreq or HasMaxScore
-
-//	fddebug = fopen("f:TMPText", "a");
-//	fprintf(fddebug,"%s\n", "end loop HasFreq or HasMaxScore");
-//	fclose(fddebug);
-
 
 	// finale check: alles met status = 0  wordt empty als leeg or safe als niet leeg
     // Bijvoorbeeld als er niets bekend is over de status
