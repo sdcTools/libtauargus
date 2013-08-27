@@ -79,77 +79,77 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libNewTauComDLL.${CND_DLIB_EXT}: ${OB
 ${OBJECTDIR}/AMPL.o: AMPL.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/AMPL.o AMPL.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/AMPL.o AMPL.cpp
 
 ${OBJECTDIR}/Code.o: Code.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Code.o Code.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Code.o Code.cpp
 
 ${OBJECTDIR}/DataCell.o: DataCell.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/DataCell.o DataCell.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/DataCell.o DataCell.cpp
 
 ${OBJECTDIR}/General.o: General.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/General.o General.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/General.o General.cpp
 
 ${OBJECTDIR}/Ghmiter.o: Ghmiter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
 
 ${OBJECTDIR}/Hitas.o: Hitas.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Hitas.o Hitas.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Hitas.o Hitas.cpp
 
 ${OBJECTDIR}/JJFormat.o: JJFormat.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
 
 ${OBJECTDIR}/JavaProgressListener.o: JavaProgressListener.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JavaProgressListener.o JavaProgressListener.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JavaProgressListener.o JavaProgressListener.cpp
 
 ${OBJECTDIR}/Properties.o: Properties.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Properties.o Properties.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Properties.o Properties.cpp
 
 ${OBJECTDIR}/SubCodeList.o: SubCodeList.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
 
 ${OBJECTDIR}/Table.o: Table.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Table.o Table.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Table.o Table.cpp
 
 ${OBJECTDIR}/TauArgus.o: TauArgus.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
 
 ${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
 
 ${OBJECTDIR}/Variable.o: Variable.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Variable.o Variable.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Variable.o Variable.cpp
 
 ${OBJECTDIR}/tauargus_extern_TauArgusX.o: tauargus_extern_TauArgusX.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/tauargus_extern_TauArgusX.o tauargus_extern_TauArgusX.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/tauargus_extern_TauArgusX.o tauargus_extern_TauArgusX.cpp
 
 # Subprojects
 .build-subprojects:
