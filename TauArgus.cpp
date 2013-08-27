@@ -3097,7 +3097,7 @@ bool TauArgus::SetSingleNonStructuralAsEmpty(long TableIndex, long *DimIndex)
 	if (dc->GetStatus() == CS_EMPTY_NONSTRUCTURAL)	{
 		//dcempty = new CDataCell(tab->NumberofMaxScoreCell,tab->NumberofMaxScoreHolding,tab->ApplyHolding, tab->ApplyWeight);
 		dc = tab->GetCell(tab->	GetCellNrFromIndices(DimIndex));
-		delete[]  dc;
+		delete dc;
 		tab->CellPtr.SetAt(tab-> GetCellNrFromIndices(DimIndex),NULL);
 	}
 	else {
@@ -3119,9 +3119,7 @@ bool TauArgus::SetAllNonStructuralAsEmpty(long TableIndex)
 	for (long i=0; tab->nCell; i++)	{
 		CDataCell *dc = tab->GetCell(i);
 		if (dc->GetStatus() == CS_EMPTY_NONSTRUCTURAL)	{
-			//dcempty = new CDataCell(tab->NumberofMaxScoreCell,tab->NumberofMaxScoreHolding,tab->ApplyHolding, tab->ApplyWeight);
-			dc = tab->GetCell(i);
-			delete [] dc;
+			delete dc;
 			tab->CellPtr[i] = NULL;
 		}
 	}
@@ -5140,12 +5138,12 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 					//dctemp = addcell; //maybe I need a way to set equality
 					//delete[] dctemp;
 						if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
-							delete [] dctemp;
+							delete dctemp;
 						}
 						tab->CellPtr[tempDimNr] = addcell;
 					}
 					else {
-						delete[] addcell;
+						delete addcell;
 					}
 				}
 				k++;
@@ -5179,13 +5177,13 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 				//dctemp = addcell; //maybe I need a way to set equality
 				//delete [] dctemp;
 				if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
-					delete [] dctemp;
+					delete dctemp;
 				}
 				tab->CellPtr[tempDimNr] = addcell;
 			}
 			else {
 
-				delete[] addcell;
+				delete addcell;
 			}
 			dcramya = tab->GetCell(tempDimNr);
 		}

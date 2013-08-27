@@ -145,7 +145,6 @@ CDataCell::CDataCell()
   //ProtectionCapacity = 0;
 }
 
-
 // Destructor. All arrays that are created should be cleaned.
 CDataCell::~CDataCell()
 {
@@ -154,25 +153,14 @@ CDataCell::~CDataCell()
 //	fprintf(fd,"%Xh%s\n", this,"		CDatacell		Dest  ");
 //	fclose(fd);
 
-	if (MaxScoreCell != 0) {
-			delete [] MaxScoreCell;
-	}
-	if (MaxScoreWeightCell != 0) {
-		delete MaxScoreWeightCell;
-	}
+	delete [] MaxScoreCell;
+	delete [] MaxScoreWeightCell;
 	
-	if (MaxScoreHolding != 0) {
-			delete [] MaxScoreHolding;
-	}
-	if (MaxScoreWeightHolding != 0) {
-		delete MaxScoreWeightHolding;
-	}
-
-	if (HoldingnrPerMaxScore != 0) {
-		delete [] HoldingnrPerMaxScore;
-	}
-	
+	delete [] MaxScoreHolding;
+	delete [] MaxScoreWeightHolding;
+	delete [] HoldingnrPerMaxScore;
 }
+
 // merges the max score holding from two cells along with the holding numbers.
 // this is used in recoded tables.
 void CDataCell::MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n)

@@ -420,25 +420,16 @@ bool CTable::CleanUp()
 		return true;  // nothing to do
 	}
 
-	if (CellDistance != 0) {
-		delete [] CellDistance;
-	}
+	delete [] CellDistance;
 
 	for (i=0; i<nCell+1; i++) {
-		if (CellPtr[i] != NULL) {
-			CDataCell *dc;
-			dc = CellPtr[i];
-			delete[] dc;
-			//delete[] CellPtr.GetAt(i);
-			CellPtr[i] = NULL;
-		}
+		delete CellPtr[i];
+		CellPtr[i] = NULL;
 	}
 	CellPtr.clear();
 
 	return true;
 }
-
-
 
 // got to do this
 
