@@ -78,17 +78,11 @@ else
 	LDFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
 endif
 
-# Use all .cpp files except 4 specific files used under Windows and the generate source files
-# Use := for static evaluation!
-SOURCES := $(wildcard $(SRCDIR)/*.cpp)
-SOURCES := $(patsubst $(SRCDIR)/GhmiterANCO.cpp,,$(SOURCES)) 
-SOURCES := $(patsubst $(SRCDIR)/TauArgCtrl.cpp,,$(SOURCES))
-SOURCES := $(patsubst $(SRCDIR)/StdAfx.cpp,,$(SOURCES))
-SOURCES := $(patsubst $(SRCDIR)/NewTauArgus.cpp,,$(SOURCES))
-SOURCES := $(patsubst $(SRCDIR)/%_wrap.cpp,,$(SOURCES))
-
+# Exclude source files needed for a COM dll for Visual Basic 6.0
+NOSOURCES         = $(SRCDIR)/GhmiterANCO.cpp $(SRCDIR)/TauArgCtrl.cpp $(SRCDIR)/StdAfx.cpp $(SRCDIR)/NewTauArgus.cpp
 SWIGSOURCES       = $(wildcard $(SRCDIR)/*.swg)
 GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
+SOURCES           = $(filter-out $(NOSOURCES),$(wildcard $(SRCDIR)/*.cpp))
 
 OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
 INCLUDES = $(INCDIRS:%=-I%)
@@ -123,7 +117,6 @@ $(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR
 	mkdir -p $@
 
 # pull in dependency info for *existing* .o files
-#-include $(OBJECTS:.o=.d)
 -include $(wildcard $(addsuffix .d, ${OBJECTS})) 
 
 #############################################################################
