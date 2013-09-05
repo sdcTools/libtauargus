@@ -1,18 +1,25 @@
 # ====================================================
-# Detect architecture on which we're running (limited)
+# Detect platform on which we're running (limited)
 # ====================================================
 
-ifeq ($(OS),Windows_NT)
-	ARC=Win32
+BUILDDIR = build
+DISTDIR  = dist
+ifdef debug
+	CONF = Debug
 else
-	ARC=Linux
+	CONF = Release
+endif
+ifeq ($(OS),Windows_NT)
+	PLATFORM=MinGW-Windows
+else
+	PLATFORM=Linux
 endif
 
 # ====================================================
 # Configurable items
 # ====================================================
 
-ifeq ($(ARC),Linux)
+ifeq ($(PLATFORM),Linux)
 	GNUDIR  = /usr/bin
 	SWIGDIR = /usr/local/bin
 	JAVADIR = /home/argus/jdk1.7.0_25
@@ -31,24 +38,20 @@ JAVAPACKAGE   = tauargus.extern
 # Set directories for input and output files
 # ======================================================================
 
-ARCDIR = $(ARC)
-ifdef debug
-	VERDIR = $(ARCDIR)/debug
-else
-	VERDIR = $(ARCDIR)/release
-endif
+BUILDFILEDIR = $(BUILDDIR)/$(CONF)/$(PLATFORM)
+DISTFILEDIR  = $(DISTDIR)/$(CONF)/$(PLATFORM)
 
 SRCDIR = .
-OBJDIR = $(VERDIR)
-LIBDIR = $(VERDIR)
-OUTDIR = $(VERDIR)
+OBJDIR = $(BUILDFILEDIR)
+LIBDIR = $(DISTFILEDIR)
+OUTDIR = $(DISTFILEDIR)
 
 # ====================================================
 # Non configurable items
 # ====================================================
 
 INCDIRS = $(JAVADIR)/include 
-ifeq ($(ARC),Linux)
+ifeq ($(PLATFORM),Linux)
 	INCDIRS += $(JAVADIR)/include/linux
 else
 	INCDIRS += $(JAVADIR)/include/Win32
@@ -60,18 +63,16 @@ LINK    = $(GNUDIR)/g++
 
 SFLAGS  = -c++ -java -package $(JAVAPACKAGE) -outdir $(OUTDIR)
 CFLAGS  = $(INCLUDES) -Wall
-ifeq ($(ARC),Linux)
+ifeq ($(PLATFORM),Linux)
 	CFLAGS += -fPIC
-else
-	CFLAGS += -D_WIN32
 endif
 ifdef debug
-	CFLAGS += -D_DEBUG -g3 -ggdb
+	CFLAGS += -D_DEBUG -g
 else
 	CFLAGS += -DNDEBUG -O2
 endif
 LDFLAGS = -shared 
-ifeq ($(ARC),Linux)
+ifeq ($(PLATFORM),Linux)
 	LDFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
 else
 	LDFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
@@ -92,7 +93,7 @@ GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCE
 OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
 INCLUDES = $(INCDIRS:%=-I%)
 
-ifeq ($(ARC),Linux)
+ifeq ($(PLATFORM),Linux)
 	LIBBASENAME = lib$(LIBNAME).so
 	SONAME = $(LIBBASENAME) #.$(MAJOR_VERSION)
 	LIBFILENAME = $(SONAME) #.$(MINOR_VERSION)
@@ -104,7 +105,7 @@ TARGET = $(LIBDIR)/$(LIBFILENAME)
 
 .PHONY: all clean
 
-#.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
+.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
 
 all : $(OBJDIR) $(LIBDIR) $(TARGET)
 	
@@ -118,18 +119,19 @@ $(TARGET) : $(OBJECTS)
 #	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
 #	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
 
-$(ARCDIR) $(OBJDIR) $(LIBDIR) :
+$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
 	mkdir -p $@
 
 # pull in dependency info for *existing* .o files
--include $(OBJECTS:.o=.d)
+#-include $(OBJECTS:.o=.d)
+-include $(wildcard $(addsuffix .d, ${OBJECTS})) 
 
 #############################################################################
 # Implicit rules
 #############################################################################
 # compile and generate dependency info
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	$(CXX) $(CFLAGS) -c -MMD $< -o $@ 
+	$(CXX) $(CFLAGS) -c -MMD -MP -MF $@.d $< -o $@ 
 
 $(OBJDIR)/%.o: makefile
 

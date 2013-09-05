@@ -84,6 +84,7 @@
           <warningLevel>2</warningLevel>
         </ccTool>
         <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}</output>
           <commandLine>-Wl,--kill-at</commandLine>
         </linkerTool>
       </compileType>
@@ -140,6 +141,10 @@
       <item path="TauArgus.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
+        <customTool>
+          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
+        </customTool>
       </item>
       <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -170,7 +175,6 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
-            <pElem>/MinGW/include</pElem>
             <pElem>../../../../Progra~1/Java/jdk1.7.0_17/include</pElem>
             <pElem>../../../../Progra~1/Java/jdk1.7.0_17/include/win32</pElem>
           </incDir>
@@ -186,6 +190,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}</output>
           <commandLine>-Wl,--kill-at</commandLine>
         </linkerTool>
       </compileType>
@@ -242,6 +247,10 @@
       <item path="TauArgus.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
+        <customTool>
+          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
+        </customTool>
       </item>
       <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
       </item>

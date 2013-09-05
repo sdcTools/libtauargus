@@ -70,11 +70,11 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libNewTauComDLL.${CND_DLIB_EXT}
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libNewTauComDLL.${CND_DLIB_EXT}: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libNewTauComDLL.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -Wl,--kill-at -shared
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -Wl,--kill-at -shared
 
 ${OBJECTDIR}/AMPL.o: AMPL.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -136,6 +136,11 @@ ${OBJECTDIR}/TauArgus.o: TauArgus.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
 
+.NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
+TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg 
+	@echo Performing Custom Build Step
+	c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+
 ${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -157,7 +162,8 @@ ${OBJECTDIR}/tauargus_extern_TauArgusX.o: tauargus_extern_TauArgusX.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libNewTauComDLL.${CND_DLIB_EXT}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}
+	${RM} TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 
 # Subprojects
 .clean-subprojects:
