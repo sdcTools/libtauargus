@@ -4,10 +4,6 @@
 /ReleaseMinSize
 /ReleaseUMinDependency
 /ReleaseUMinSize
-/TauArgusJava___Win32_Release
-/TauArgusJava___Win32_Debug
-/Linux
-/Win32
 /build
 /dist
 /NewTauArgus_i.c
@@ -25,7 +21,6 @@
 *.tlb
 *.zip
 *.dep
-*.java
 *.aps
 *.CHM
 *.chw
