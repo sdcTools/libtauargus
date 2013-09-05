@@ -2,13 +2,6 @@
 # Detect platform on which we're running (limited)
 # ====================================================
 
-BUILDDIR = build
-DISTDIR  = dist
-ifdef debug
-	CONF = Debug
-else
-	CONF = Release
-endif
 ifeq ($(OS),Windows_NT)
 	PLATFORM=MinGW-Windows
 else
@@ -38,6 +31,13 @@ JAVAPACKAGE   = tauargus.extern
 # Set directories for input and output files
 # ======================================================================
 
+BUILDDIR = build
+DISTDIR  = dist
+ifdef debug
+	CONF = Debug
+else
+	CONF = Release
+endif
 BUILDFILEDIR = $(BUILDDIR)/$(CONF)/$(PLATFORM)
 DISTFILEDIR  = $(DISTDIR)/$(CONF)/$(PLATFORM)
 
