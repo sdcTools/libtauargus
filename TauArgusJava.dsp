@@ -38,8 +38,8 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "TauArgusJava___Win32_Release"
-# PROP Intermediate_Dir "TauArgusJava___Win32_Release"
+# PROP Output_Dir "dist\Release\MSVC6"
+# PROP Intermediate_Dir "build\Release\MSVC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /c
@@ -65,8 +65,8 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "TauArgusJava___Win32_Debug"
-# PROP Intermediate_Dir "TauArgusJava___Win32_Debug"
+# PROP Output_Dir "dist\Debug\MSVC6"
+# PROP Intermediate_Dir "build\Debug\MSVC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "TAUARGUSJAVA_EXPORTS" /YX /FD /GZ /c
@@ -237,24 +237,26 @@ SOURCE=.\TauArgusJava.swg
 !IF  "$(CFG)" == "TauArgusJava - Win32 Release"
 
 # Begin Custom Build
+OutDir=.\dist\Release\MSVC6
 ProjDir=.
 InputPath=.\TauArgusJava.swg
 InputName=TauArgusJava
 
 "$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -outdir $(OutDir) -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "TauArgusJava - Win32 Debug"
 
 # Begin Custom Build
+OutDir=.\dist\Debug\MSVC6
 ProjDir=.
 InputPath=.\TauArgusJava.swg
 InputName=TauArgusJava
 
 "$(ProjDir)\$(InputName)_wrap.cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
+	$(SWIG_HOME)\swig -c++ -java -package tauargus.extern -outdir $(OutDir) -o $(ProjDir)\$(InputName)_wrap.cpp $(InputPath)
 
 # End Custom Build
 
