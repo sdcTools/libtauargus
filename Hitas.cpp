@@ -78,18 +78,6 @@ bool CHitas::WriteParameterFile(FILE *fd, CTable& tab)
 	return true;
 }
 
-bool CHitas::MakeTempPath()
-{	
-	char path[MAX_PATH];
-	
-	if (!GetTempDir(MAX_PATH, path)) {
-		return false;
-	}
-
-	TempPath = path;
-	return true;
-}
-
 /*
 3                                            // aantal dimensies tabel
 c:\knb\hitas\test3\data\SBI3.txt             // naam bestand met opspanvariabele 1

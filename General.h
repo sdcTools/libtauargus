@@ -6,7 +6,6 @@
 #include <string>
 
 void ArgusTrace(const char* Format, ...);
-unsigned long GetTempDir(unsigned long BufferLength, char* Buffer);
 
 int RemoveStringInPlace(std::string& subject, char ch);
 void ReplaceStringInPlace(std::string& subject, const char search, const char replace);

@@ -10,23 +10,6 @@ void ArgusTrace(const char* Format, ...)
 {
 }
 
-unsigned long GetTempDir(unsigned long BufferLength, char* Buffer)
-{
-	const char* val = 0;
-
-	(val = getenv("TMPDIR"      )) || // POSIX
-	(val = getenv("TMP"         )) || // POSIX/Windows
-	(val = getenv("TEMP"        )) || // POSIX/Windows
-	(val = getenv("TEMPDIR"     )) || // POSIX
-	(val = getenv("USERPROFILE" )) || // Windows
-	(val = getenv("WINDIR"      )) || // Windows
-   (val = "/tmp"                );
-
-	strncpy(Buffer, val, BufferLength);
-
-	return strlen(val);
-}
-
 int RemoveStringInPlace(string& subject, char ch) {
 	int occurences = 0;
 	size_t pos = 0;

@@ -14,7 +14,6 @@ public:
 	bool WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var);
 	bool WriteFilesFile(FILE *fd, CTable& tab, CVariable *var);
 	bool WriteParameterFile(FILE *fd, CTable& tab);
-	bool MakeTempPath();
 	std::string TempPath;
 	CHitas();
 	virtual ~CHitas();
