@@ -11,7 +11,11 @@
 #define MAXDIGITGROUP 10
 #define MAXLEVEL 8
 #define EPSILON 0.0001 //0.0000001
-#define DBL_EQ(x,v) (((v - EPSILON) < x) && (x <( v + EPSILON))) 
+
+inline double DBL_EQ(double x, double v)
+{ 
+    return (x > v - EPSILON) && (x < v + EPSILON); 
+}
 
 enum CellHoldingSort	{
 	WITHOUT_HOLDING = -2,

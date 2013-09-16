@@ -196,7 +196,7 @@ public:
                                    int npqCell_1,int npqCell_2, int npqHolding_1, int npqHolding_2, 
 											  double *Upper, double *Lower, 
                                    double *Sliding, double *Capacity); */
-	bool Compare(CDataCell &a);
+	bool Compare(const CDataCell &a) const;
 	 
 	 // void SortMaxScoreHolding();
 

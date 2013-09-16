@@ -547,25 +547,12 @@ void CDataCell::SortMaxScoreHolding()
 */
 // compare tow cells. comparison bases is frequency, shadow, response and cost.
 // returns true if the two cells are equal and false if not.
-bool CDataCell::Compare(CDataCell &a)
+bool CDataCell::Compare(const CDataCell &a) const
 {
-	if (!DBL_EQ(Resp,a.Resp))	
-	{
-		return false;
-	}
-	if (!DBL_EQ(Cost,a.Cost))    
-	{
-		return false;
-	}
-	if (!DBL_EQ(Shadow,a.Shadow))
-	{
-		return false;
-	}
-	if (Freq != a.Freq)
-	{
-		return false;
-	}
-	return true;
+	return Freq == a.Freq
+                && DBL_EQ(Resp, a.Resp) 
+                && DBL_EQ(Shadow, a.Shadow)
+                && DBL_EQ(Cost, a.Cost);
 }
 
 double CDataCell::GetCost(double Lambda)
