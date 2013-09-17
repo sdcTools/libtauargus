@@ -3477,7 +3477,7 @@ void TauArgus::FillTables(char *str)
 		}
 
 		// RespVarnr
-		if ((tab->ResponseVarnr > 0) && (tab->ResponseVarnr <m_nvar))	{
+		if ((tab->ResponseVarnr >= 0) && (tab->ResponseVarnr <m_nvar))	{
 			var = &(m_var[tab->ResponseVarnr]);
 			if (var->ValueToggle == 0) { // first time, so compute value
 				if (InFileIsFixedFormat) {
@@ -3550,7 +3550,7 @@ void TauArgus::FillTables(char *str)
 	  }
 
 		dc.SetWeight(m_var[m_VarNrWeight].Value);
-		if ((m_tab[i].ResponseVarnr > 0) && (m_tab[i].ResponseVarnr < m_nvar))	{
+		if ((m_tab[i].ResponseVarnr >= 0) && (m_tab[i].ResponseVarnr < m_nvar))	{
 			dc.SetResp(m_var[m_tab[i].ResponseVarnr].Value);
 		}
 		else	{	//freq table
