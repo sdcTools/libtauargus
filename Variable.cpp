@@ -1041,6 +1041,35 @@ bool CVariable::FindChildren(long NumChild, vector<string> & Child, long CodeInd
 
 }
 
+/* 
+ * Note for change: Don't write beyond the original '\0' terminator.
+ */
+bool CVariable::NormaliseCode(char *Code)
+{
+	// trim left and right
+    char *s = Code;
+    while (*s == ' ' || *s == '\t') {
+        s++;
+    }
+    
+    if (*s == '\0') {
+        *Code = '\0';
+    } 
+    else {
+	char *e = s + strlen(s);
+        while (e != s
+                && (*(e-1) == ' ' || *(e-1) == '\t')) {
+            e--;
+        }
+        int length = e - s;
+        memmove(Code, s, length);
+        Code[length] = '\0';
+	int inrem = RemoveStringInPlace(Code, '"');
+	ASSERT ((inrem == 2) || (inrem == 0));
+        AddSpacesBefore(Code, nPos);
+    }
+}
+
 /*void CVariable:: ShowhCode()
 {
 	FILE *fdshow;

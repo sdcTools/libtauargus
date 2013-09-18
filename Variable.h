@@ -121,6 +121,7 @@ public:
 	bool FillSubCodeList();
 	long FindNumberOfChildren(long CodeIndex);
 	bool FindChildren(long NumChild, std::vector<std::string> &Child, long CodeIndex, long *Index);
+        bool NormaliseCode(char *Code);
 };
 
 #endif // Variable_h

@@ -1,5 +1,6 @@
-#include <cstring>
 #include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <algorithm>
 
 #include "General.h"
@@ -8,6 +9,16 @@ using namespace std;
 
 void ArgusTrace(const char* Format, ...)
 {
+}
+
+int RemoveStringInPlace(char* subject, char ch) {
+    int occurences = 0;
+    char *pos = subject;
+    while ((pos = strchr(pos, ch)) != NULL) {
+        memmove(pos, pos + 1, strlen(pos));
+        occurences++;
+    }
+    return occurences;
 }
 
 int RemoveStringInPlace(string& subject, char ch) {
@@ -65,3 +76,27 @@ int BinSearchStringArray(vector<string> &s, const string &x, int nMissing, bool 
 	return -1;
 }
 
+// add spaces before to make the string the right length
+void AddSpacesBefore(char *str, int len)
+{
+    int lstr = strlen(str);
+
+    if (lstr < len) {
+        char *dest = str + len - lstr;
+        memmove(dest, str, lstr);
+        while (dest-- != str) {
+            *dest = ' ';
+        }
+        str[len] = '\0';
+    }
+}
+
+void AddSpacesBefore(string& str, int len)
+{
+	int width = str.length();
+
+	if (width < len)
+	{
+		str.insert((size_t)0, (size_t)(len - width), ' ');
+	}
+}

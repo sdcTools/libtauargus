@@ -4,13 +4,17 @@
 #include <cassert>
 #include <vector>
 #include <string>
+#include "defines.h"
 
 void ArgusTrace(const char* Format, ...);
 
+int RemoveStringInPlace(char* subject, char ch);
 int RemoveStringInPlace(std::string& subject, char ch);
 void ReplaceStringInPlace(std::string& subject, const char search, const char replace);
 void QuickSortStringArray(std::vector<std::string> &s);
 int BinSearchStringArray(std::vector<std::string> &s, const std::string &x, int nMissing, bool &IsMissing);
+void AddSpacesBefore(char *str, int len);
+void AddSpacesBefore(std::string &str, int len);
 
 #ifndef LPCTSTR
 #define LPCTSTR const char*

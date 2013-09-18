@@ -3115,12 +3115,18 @@ int TauArgus::ReadMicroRecord(FILE *fd, char *str)
 int TauArgus::DoMicroRecord(char *str, int *varindex)
 {
 	string tempcode;
+        vector<char *> VarCodes;
 
+	if (!InFileIsFixedFormat) {
+            if (!ReadVariablesFreeFormat(str, VarCodes)) {
+                return PROBLEMSREADINGFREEFORMAT;
+            }
+        }
 	for (int i = 0; i < m_nvar; i++) {
 		*varindex = i;
 		CVariable *var = &(m_var[i]);
-		char code[MAXCODEWIDTH];
 		if (var->IsCategorical || var->IsNumeric) {
+        		char code[MAXCODEWIDTH];
 			if (InFileIsFixedFormat) {
 				int bp = var->bPos;         // startposition
 				int ap = var->nPos;         // number of positions
@@ -3129,51 +3135,37 @@ int TauArgus::DoMicroRecord(char *str, int *varindex)
 			}
 			else {
 				int ap = var->nPos;         // number of positions
-				if (ReadVariableFreeFormat(str,i,&(tempcode))) {
-					strcpy(code,(const char*)tempcode.c_str());
-					code[ap] = 0;
-				}
-				else {
-					return PROBLEMSREADINGFREEFORMAT;
-				}
+				strcpy(code, VarCodes[i]);
+                		var->NormaliseCode(code);
+				code[ap] = 0;
 			}
-		}
-		else {
-			continue;
-		}
+                        // exclude missing codes
+                        if (var->Missing1 != code && var->Missing2 != code) {
+                                if (var->IsCategorical) { // only a categorical var has a codelist
+                                        if (var->IsHierarchical && var->nDigitSplit == 0) {
+                                                // code should be in already defined list of codes
+                                                if (var->FindHierarchicalCode(code) < 0) { // not found by normal basis ones
+                                                        return CODENOTINCODELIST;
+                                                }
+                                        }
+                                        else {
+                                                if (!var->AddCode(code, false) ) {   // adds if new, else does nothing
+                                                        return PROGRAMERROR;
+                                                }
+                                        }
+                                }
 
-		if (var->IsCategorical) { // only a categorical var has a codelist
-			if (var->IsHierarchical && var->nDigitSplit == 0) {
-			// code should be in already defined list of codes
-				if (var->FindHierarchicalCode(code) < 0) { // not found by normal basis ones
-					if (var->Missing1 != code && var->Missing2 != code) {
-						return CODENOTINCODELIST;
-					}
-				}
-			}
-			else { // check if its a missing code
-				if (var->Missing1 != code && var->Missing2 != code) {
-					// Only nonmissingcodes
-					if (!var->AddCode(code, false) ) {   // adds if new, else does nothing
-						return PROGRAMERROR;
-					}
-				}
-			}
-		}
-
-		if (var->IsNumeric) {
-			double d;
-			// exclude missings for calculating min/max
-			if (var->Missing1 != code && var->Missing2 != code) {
-				if (!ConvertNumeric(code, d) ) {
-					return ISNOTNUMERIC;   // is not numeric! (variabelenummer meegeven voor gebruiker)
-				}
-				if (d > var->MaxValue) var->MaxValue = d;
-				if (d < var->MinValue) var->MinValue = d;
-			}
+                                if (var->IsNumeric) {
+                                        double d;
+                                        if (!ConvertNumeric(code, d) ) {
+                                                return ISNOTNUMERIC;   // is not numeric! (variabelenummer meegeven voor gebruiker)
+                                        }
+                                        if (d > var->MaxValue) var->MaxValue = d;
+                                        if (d < var->MinValue) var->MinValue = d;
+                                }
+                        }
 		}
 	}
-
 
 	return true;
 }
@@ -3352,8 +3344,12 @@ void TauArgus::FillTables(char *str)
 	CVariable *var;
 	CDataCell dc;
 	string  tempPeepCode;
+        vector<char *> VarCodes;
+        bool readingFreeFormatResult;
 
-
+	if (!InFileIsFixedFormat) {
+            readingFreeFormatResult = ReadVariablesFreeFormat(str, VarCodes);
+        }
 	//find the holding code and correct Holding Nr
 	// if a new holding code is found.
 	for (i = 0; i < m_ntab; i++){
@@ -3367,8 +3363,9 @@ void TauArgus::FillTables(char *str)
 				code[var->nPos] = 0;
 			}
 			else {
-				if (ReadVariableFreeFormat(str,m_VarNrHolding,&(tempcode))) {
-					strcpy(code, tempcode.c_str());
+				if (readingFreeFormatResult) {
+					strcpy(code, VarCodes[m_VarNrHolding]);
+                        		var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
 			}
@@ -3401,8 +3398,9 @@ void TauArgus::FillTables(char *str)
 					code[var->nPos] = 0;
 				}
 				else {
-					if (ReadVariableFreeFormat(str,tab->ExplVarnr[j],&(tempcode))) {
-						strcpy(code, tempcode.c_str());
+					if (readingFreeFormatResult) {
+						strcpy(code, VarCodes[tab->ExplVarnr[j]]);
+                                		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
 				}
@@ -3426,8 +3424,9 @@ void TauArgus::FillTables(char *str)
 				code[var->nPos] = 0;
 			}
 			else {
-				if (ReadVariableFreeFormat(str,tab->PeepVarnr,&(tempcode))) {
-					strcpy(code, tempcode.c_str());
+				if (readingFreeFormatResult) {
+					strcpy(code, VarCodes[tab->PeepVarnr]);
+                        		var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
 			}
@@ -3443,8 +3442,9 @@ void TauArgus::FillTables(char *str)
 					code[var->nPos] = 0;
 				}
 				else {
-					if (ReadVariableFreeFormat(str,tab->ShadowVarnr,&(tempcode))) {
-						strcpy(code, tempcode.c_str());
+					if (readingFreeFormatResult) {
+						strcpy(code, VarCodes[tab->ShadowVarnr]);
+                                		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
 				}
@@ -3466,8 +3466,9 @@ void TauArgus::FillTables(char *str)
 					code[var->nPos] = 0;
 				}
 				else {
-					if (ReadVariableFreeFormat(str,tab->CostVarnr,&(tempcode))) {
-						strcpy(code, tempcode.c_str());
+					if (readingFreeFormatResult) {
+						strcpy(code, VarCodes[tab->CostVarnr]);
+                                		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
 				}
@@ -3485,8 +3486,9 @@ void TauArgus::FillTables(char *str)
 					code[var->nPos] = 0;
 				}
 				else {
-					if (ReadVariableFreeFormat(str,tab->ResponseVarnr,&(tempcode))) {
-						strcpy(code, tempcode.c_str());
+					if (readingFreeFormatResult) {
+						strcpy(code, VarCodes[tab->ResponseVarnr]);
+                                		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
 				}
@@ -3511,8 +3513,9 @@ void TauArgus::FillTables(char *str)
 				code[var->nPos] = 0;
 			}
 			else {
-				if (ReadVariableFreeFormat(str,m_VarNrWeight,&(tempcode))) {
-					strcpy(code, tempcode.c_str());
+				if (readingFreeFormatResult) {
+					strcpy(code, VarCodes[m_VarNrWeight]);
+                                        var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
 			}
@@ -3523,15 +3526,16 @@ void TauArgus::FillTables(char *str)
 
 	// now tabulate all tables from list
 	for (i = 0; i < m_ntab; i++) {
+            CTable *table = &m_tab[i];
 		// set peeps to peep 1 and peep 2
 
-		if (m_tab[i].ApplyPeeper) {
+		if (table->ApplyPeeper) {
 
-			if (tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode1 ||
-			  tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode2) {
-			  dc.SetPeepCell(m_var[m_tab[i].ShadowVarnr].Value);
-			  dc.SetPeepHolding(m_var[m_tab[i].ShadowVarnr].Value);
-			  if (tempPeepCode == m_var[m_tab[i].PeepVarnr].PeepCode1)	{
+			if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1 ||
+			  tempPeepCode == m_var[table->PeepVarnr].PeepCode2) {
+			  dc.SetPeepCell(m_var[table->ShadowVarnr].Value);
+			  dc.SetPeepHolding(m_var[table->ShadowVarnr].Value);
+			  if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1)	{
 					dc.SetPeepSortCell(PEEP1);
 					dc.SetPeepSortHolding(PEEP1);
 			  }
@@ -3550,18 +3554,18 @@ void TauArgus::FillTables(char *str)
 	  }
 
 		dc.SetWeight(m_var[m_VarNrWeight].Value);
-		if ((m_tab[i].ResponseVarnr >= 0) && (m_tab[i].ResponseVarnr < m_nvar))	{
-			dc.SetResp(m_var[m_tab[i].ResponseVarnr].Value);
+		if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
+			dc.SetResp(m_var[table->ResponseVarnr].Value);
 		}
 		else	{	//freq table
 				dc.SetResp(1);
 		}
-		if ((m_tab[i].ShadowVarnr > 0) && (m_tab[i].ShadowVarnr < m_nvar))	{
+		if ((table->ShadowVarnr > 0) && (table->ShadowVarnr < m_nvar))	{
 
- 			dc.SetShadow(m_var[m_tab[i].ShadowVarnr].Value);
+ 			dc.SetShadow(m_var[table->ShadowVarnr].Value);
 		}
-		if (m_tab[i].CostVarnr >= 0) {
- 		  dc.SetCost(m_var[m_tab[i].CostVarnr].Value);
+		if (table->CostVarnr >= 0) {
+ 		  dc.SetCost(m_var[table->CostVarnr].Value);
 		}
 		else {
  		  dc.SetCost(0); // later comes freq or constant 1 etc
@@ -4016,30 +4020,6 @@ int TauArgus::ReadWord(LPCTSTR str, char* CodeFrom, char *CodeTo, char EndCode, 
 
   return i; // oke, return current position
 }
-
-// add spaces before to make the string the right length
-void TauArgus::AddSpacesBefore(char *str, int len)
-{
-	int lstr = strlen(str);
-
-	if (lstr >= len) return;  // nothing to do
-
-	char tempstr[MAXCODEWIDTH + 1];
-	strcpy(tempstr, str);
-	sprintf(str, "%*s%s", len - lstr, " ", tempstr);
-}
-
-void TauArgus::AddSpacesBefore(string& str, int len)
-{
-	int width = str.length();
-
-	if (width < len)
-	{
-		str.insert((size_t)0, (size_t)(len - width), ' ');
-	}
-}
-
-
 
 // codes fromto     :                SrcCode1  SrcCode2
 //  10. FROMTO_TO          -23              Y        NA
@@ -5123,53 +5103,31 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 }
 
 // read variables from a free formated file
-bool TauArgus::ReadVariableFreeFormat(char *Str, long VarIndex, string *VarCode)
+bool TauArgus::ReadVariablesFreeFormat(char *Str, vector<char *> &VarCodes)
 {
-	vector<string> VarCodes;
 	VarCodes.resize(m_nvar);
-	string stempstr = Str;
-	long lcount= 0;
-	if (InFileSeperator  != " ") {
-		long lseppos = stempstr.find(InFileSeperator);
-		while (lseppos != string::npos) {
-			VarCodes[lcount] = stempstr.substr(0, lseppos);
-			stempstr.erase(0, lseppos + 1);
-			lcount ++;
-			lseppos = stempstr.find(InFileSeperator);
-		}
-		//fill the stuff here
-		//Waarom mag de laatste niet leeg zijn?????
-//		if ((stempstr.GetLength() == 0) || (lcount <m_nvar - 1)
-//			|| (lcount >= m_nvar)) {
-		if ((lcount <m_nvar - 1) || (lcount >= m_nvar)) {
-			// string too short or too long
-
-			return false;
-		}
-		else {
-			VarCodes[lcount] = stempstr;
-		}
-		string tempvarcode = VarCodes[VarIndex];
-
-		// trim left and right
-		size_t s = tempvarcode.find_first_not_of(" \n\r\t");
-		size_t e = tempvarcode.find_last_not_of (" \n\r\t");
-		if (s == string::npos || e == string::npos)
-			tempvarcode = "";
-		else
-			tempvarcode = tempvarcode.substr(s, e - s + 1);
-
-		int inrem = RemoveStringInPlace(tempvarcode, '"');
-		ASSERT ((inrem == 2) || (inrem == 0));
-		CVariable *var = &(m_var[VarIndex]);
-		AddSpacesBefore(tempvarcode, var->nPos);
-		//Now add leading spaces
-		*VarCode = tempvarcode;
-		return true;
-	}
-	else {
+	if (InFileSeperator == " " || InFileSeperator.length() != 1)
 		return false;
+        
+	char separator = InFileSeperator[0];
+	char *startpos = Str;
+	char *endpos;
+	for (int varIndex = 0; varIndex < m_nvar; varIndex++) {
+		CVariable *var = &(m_var[varIndex]);
+		endpos = strchr(startpos, separator);
+		if (endpos == NULL) {
+			if (varIndex != m_nvar - 1)
+				return false; // not enough variables
+		} 
+		VarCodes[varIndex] = startpos;
+		if (endpos != NULL) {
+			*endpos = '\0';
+			startpos = endpos + 1;
+		}
 	}
+	if (endpos != NULL)
+		return false; // too many variables
+	return true;
 }
 
 // returns depth of hierarchical tree.

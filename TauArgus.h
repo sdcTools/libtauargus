@@ -84,7 +84,7 @@ private:
 
 
 	// for RECODE
-	bool ReadVariableFreeFormat(char *Str, long VarIndex, std::string *VarCode);
+        bool ReadVariablesFreeFormat(char *Str, std::vector<char *> &VarCodes);
 	void InitializeHoldingTables();
 	void MergeLastTempShadow();
 	bool ParseRecodeString(long VarIndex, LPCTSTR RecodeString, long FAR* ErrorType, long FAR* ErrorLine, long FAR* ErrorPos, int Phase);
@@ -92,8 +92,6 @@ private:
 	int  AddRecode(int varnr, const char *newcode);
 	int  MakeRecodelistEqualWidth(int VarIndex, LPCTSTR Missing1, LPCTSTR Missing2);
 	int  ReadWord(LPCTSTR str, char* CodeFrom, char *CodeTo, char EndCode, int& fromto, int& pos);
-	void AddSpacesBefore(char *str, int len);
-	void AddSpacesBefore(std::string& str, int len);
 	int  SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char *SrcCode2, int fromto);
 	bool ComputeRecodeTables();
 	bool ComputeRecodeTable(CTable& srctab, CTable& dsttab);
