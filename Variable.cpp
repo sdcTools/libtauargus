@@ -1047,27 +1047,28 @@ bool CVariable::FindChildren(long NumChild, vector<string> & Child, long CodeInd
 bool CVariable::NormaliseCode(char *Code)
 {
 	// trim left and right
-    char *s = Code;
-    while (*s == ' ' || *s == '\t') {
-        s++;
-    }
+   char *s = Code;
+	while (*s == ' ' || *s == '\t') {
+		s++;
+	}
     
-    if (*s == '\0') {
-        *Code = '\0';
-    } 
-    else {
-	char *e = s + strlen(s);
-        while (e != s
-                && (*(e-1) == ' ' || *(e-1) == '\t')) {
-            e--;
-        }
-        int length = e - s;
-        memmove(Code, s, length);
-        Code[length] = '\0';
-	int inrem = RemoveStringInPlace(Code, '"');
-	ASSERT ((inrem == 2) || (inrem == 0));
-        AddSpacesBefore(Code, nPos);
-    }
+	if (*s == '\0') {
+		*Code = '\0';
+	} 
+	else {
+		char *e = s + strlen(s);
+		while (e != s
+				&& (*(e-1) == ' ' || *(e-1) == '\t')) {
+			e--;
+		}
+		int length = e - s;
+		memmove(Code, s, length);
+		Code[length] = '\0';
+		int inrem = RemoveStringInPlace(Code, '"');
+		ASSERT ((inrem == 2) || (inrem == 0));
+		AddSpacesBefore(Code, nPos);
+	}
+	return true;
 }
 
 /*void CVariable:: ShowhCode()
