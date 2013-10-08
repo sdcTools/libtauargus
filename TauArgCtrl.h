@@ -22,9 +22,10 @@ class ATL_NO_VTABLE CTauArgCtrl :
 {
 private:
 	TauArgus tauArgus;
+	bool isFixedFormat; 
 
 public:
-	CTauArgCtrl() : tauArgus()
+	CTauArgCtrl() : tauArgus(), isFixedFormat(true)
 	{
 		tauArgus.SetProgressListener(this);
 	}

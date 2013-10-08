@@ -37,6 +37,7 @@ private:
 	bool m_HasStatus;
 	long m_nRecFile;
 	long m_fixedlength;
+   long m_maxBPos;
 	long m_fSize;
 
 	long m_ntab;

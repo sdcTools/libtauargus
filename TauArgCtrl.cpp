@@ -316,6 +316,10 @@ STDMETHODIMP CTauArgCtrl::SetVariable(long VarIndex, long bPos,
 												 VARIANT_BOOL IsHolding,
 												 VARIANT_BOOL *pVal)
 {
+	if (!isFixedFormat)
+	{
+		bPos = VarIndex;
+	}
 	*pVal = tauArgus.SetVariable(VarIndex - 1, bPos, nPos, nDec, nMissing, B2CString(Missing1), B2CString(Missing2), B2CString(TotalCode), IsPeeper==VARIANT_TRUE, B2CString(PeeperCode1), B2CString(PeeperCode2), IsCategorical==VARIANT_TRUE, IsNumeric==VARIANT_TRUE, IsWeight==VARIANT_TRUE, IsHierarchical==VARIANT_TRUE, IsHolding==VARIANT_TRUE)
 		? VARIANT_TRUE 
 		: VARIANT_FALSE;
@@ -724,7 +728,8 @@ STDMETHODIMP CTauArgCtrl::ComputeCodesToIndices(long TableIndex, VARIANT *sCode,
 //Give input file information. This important when you are reading a file with free format
 STDMETHODIMP CTauArgCtrl::SetInFileInfo(VARIANT_BOOL IsFixedFormat, BSTR Seperator)
 {
-	tauArgus.SetInFileInfo(IsFixedFormat==VARIANT_TRUE, B2CString(Seperator));
+	isFixedFormat = IsFixedFormat==VARIANT_TRUE;
+	tauArgus.SetInFileInfo(isFixedFormat, B2CString(Seperator));
 
 	return S_OK;
 }

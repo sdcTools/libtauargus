@@ -794,6 +794,15 @@ bool TauArgus::ExploreFile(const char* FileName, long *ErrorCode, long *LineNumb
 		goto error;
 	}
 
+	if (!InFileIsFixedFormat) {
+		m_maxBPos = -1;
+		for (i = 0; i < m_nvar; i++) {
+			if (m_var[i].bPos > m_maxBPos) {
+				m_maxBPos = m_var[i].bPos;            
+			}
+		}
+   }
+
 	// record length oke? hierachie oke?
 	for (i = 0; i < m_nvar; i++) {
 		if (InFileIsFixedFormat) {
@@ -3115,7 +3124,7 @@ int TauArgus::ReadMicroRecord(FILE *fd, char *str)
 int TauArgus::DoMicroRecord(char *str, int *varindex)
 {
 	string tempcode;
-        vector<char *> VarCodes;
+		vector<char *> VarCodes;
 
 	if (!InFileIsFixedFormat) {
             if (!ReadVariablesFreeFormat(str, VarCodes)) {
@@ -3135,8 +3144,8 @@ int TauArgus::DoMicroRecord(char *str, int *varindex)
 			}
 			else {
 				int ap = var->nPos;         // number of positions
-				strcpy(code, VarCodes[i]);
-                		var->NormaliseCode(code);
+				strcpy(code, VarCodes[var->bPos]);
+				var->NormaliseCode(code);
 				code[ap] = 0;
 			}
                         // exclude missing codes
@@ -3364,7 +3373,7 @@ void TauArgus::FillTables(char *str)
 			}
 			else {
 				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[m_VarNrHolding]);
+					strcpy(code, VarCodes[var->bPos]);
                         		var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
@@ -3399,7 +3408,7 @@ void TauArgus::FillTables(char *str)
 				}
 				else {
 					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[tab->ExplVarnr[j]]);
+						strcpy(code, VarCodes[var->bPos]);
                                 		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
@@ -3425,7 +3434,7 @@ void TauArgus::FillTables(char *str)
 			}
 			else {
 				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[tab->PeepVarnr]);
+					strcpy(code, VarCodes[var->bPos]);
                         		var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
@@ -3443,7 +3452,7 @@ void TauArgus::FillTables(char *str)
 				}
 				else {
 					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[tab->ShadowVarnr]);
+						strcpy(code, VarCodes[var->bPos]);
                                 		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
@@ -3467,7 +3476,7 @@ void TauArgus::FillTables(char *str)
 				}
 				else {
 					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[tab->CostVarnr]);
+						strcpy(code, VarCodes[var->bPos]);
                                 		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
@@ -3487,7 +3496,7 @@ void TauArgus::FillTables(char *str)
 				}
 				else {
 					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[tab->ResponseVarnr]);
+						strcpy(code, VarCodes[var->bPos]);
                                 		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
@@ -3514,7 +3523,7 @@ void TauArgus::FillTables(char *str)
 			}
 			else {
 				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[m_VarNrWeight]);
+					strcpy(code, VarCodes[var->bPos]);
                                         var->NormaliseCode(code);
 					code[var->nPos] = 0;
 				}
@@ -5105,18 +5114,18 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 // read variables from a free formated file
 bool TauArgus::ReadVariablesFreeFormat(char *Str, vector<char *> &VarCodes)
 {
-	VarCodes.resize(m_nvar);
+	VarCodes.resize(m_maxBPos + 1);
 	if (InFileSeperator == " " || InFileSeperator.length() != 1)
 		return false;
         
 	char separator = InFileSeperator[0];
 	char *startpos = Str;
 	char *endpos;
-	for (int varIndex = 0; varIndex < m_nvar; varIndex++) {
+	for (int varIndex = 0; varIndex <= m_maxBPos; varIndex++) {
 		CVariable *var = &(m_var[varIndex]);
 		endpos = strchr(startpos, separator);
 		if (endpos == NULL) {
-			if (varIndex != m_nvar - 1)
+			if (varIndex != m_maxBPos)
 				return false; // not enough variables
 		} 
 		VarCodes[varIndex] = startpos;
@@ -5125,8 +5134,6 @@ bool TauArgus::ReadVariablesFreeFormat(char *Str, vector<char *> &VarCodes)
 			startpos = endpos + 1;
 		}
 	}
-	if (endpos != NULL)
-		return false; // too many variables
 	return true;
 }
 
