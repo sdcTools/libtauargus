@@ -48,8 +48,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Table.o \
 	${OBJECTDIR}/TauArgus.o \
 	${OBJECTDIR}/TauArgusJava_wrap.o \
-	${OBJECTDIR}/Variable.o \
-	${OBJECTDIR}/tauargus_extern_TauArgusX.o
+	${OBJECTDIR}/Variable.o
 
 
 # C Compiler Flags
@@ -150,11 +149,6 @@ ${OBJECTDIR}/Variable.o: Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/Variable.o Variable.cpp
-
-${OBJECTDIR}/tauargus_extern_TauArgusX.o: tauargus_extern_TauArgusX.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/tauargus_extern_TauArgusX.o tauargus_extern_TauArgusX.cpp
 
 # Subprojects
 .build-subprojects:
