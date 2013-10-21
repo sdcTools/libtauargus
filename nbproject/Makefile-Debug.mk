@@ -42,7 +42,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Ghmiter.o \
 	${OBJECTDIR}/Hitas.o \
 	${OBJECTDIR}/JJFormat.o \
-	${OBJECTDIR}/JavaProgressListener.o \
 	${OBJECTDIR}/Properties.o \
 	${OBJECTDIR}/SubCodeList.o \
 	${OBJECTDIR}/Table.o \
@@ -109,11 +108,6 @@ ${OBJECTDIR}/JJFormat.o: JJFormat.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
-
-${OBJECTDIR}/JavaProgressListener.o: JavaProgressListener.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I../../../../Progra~1/Java/jdk1.7.0_17/include -I../../../../Progra~1/Java/jdk1.7.0_17/include/win32  -MMD -MP -MF $@.d -o ${OBJECTDIR}/JavaProgressListener.o JavaProgressListener.cpp
 
 ${OBJECTDIR}/Properties.o: Properties.cpp 
 	${MKDIR} -p ${OBJECTDIR}

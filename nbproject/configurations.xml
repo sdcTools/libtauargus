@@ -13,7 +13,6 @@
       <itemPath>Hitas.h</itemPath>
       <itemPath>IProgressListener.h</itemPath>
       <itemPath>JJFormat.h</itemPath>
-      <itemPath>JavaProgressListener.h</itemPath>
       <itemPath>Properties.h</itemPath>
       <itemPath>SubCodeList.h</itemPath>
       <itemPath>Table.h</itemPath>
@@ -37,7 +36,6 @@
       <itemPath>Ghmiter.cpp</itemPath>
       <itemPath>Hitas.cpp</itemPath>
       <itemPath>JJFormat.cpp</itemPath>
-      <itemPath>JavaProgressListener.cpp</itemPath>
       <itemPath>Properties.cpp</itemPath>
       <itemPath>SubCodeList.cpp</itemPath>
       <itemPath>Table.cpp</itemPath>
@@ -118,10 +116,6 @@
       <item path="JJFormat.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="JJFormat.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="JavaProgressListener.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="JavaProgressListener.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -220,10 +214,6 @@
       <item path="JJFormat.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="JJFormat.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="JavaProgressListener.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="JavaProgressListener.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
