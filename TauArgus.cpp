@@ -54,12 +54,7 @@ void TauArgus::SetProgressListener(IProgressListener* ProgressListener)
 
 void TauArgus::FireUpdateProgress(int Perc)
 {
-	DEBUGprintf("m_ProgressListener->UpdateProgress(%d)\n", Perc);
-
 	if (m_ProgressListener != NULL) {
-//    Next line does not compile with g++ on Linux.
-//		DEBUGprintf("%p-%p\n", m_ProgressListener, (void*)(m_ProgressListener->UpdateProgress));
-
 		m_ProgressListener->UpdateProgress(Perc);
 	}
 }
