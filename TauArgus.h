@@ -158,7 +158,6 @@ public:
 
 public:
 	void SetProgressListener(IProgressListener *ProgressListener);
-	IProgressListener * GetProgressListener();
 	bool SetAllNonStructuralAsEmpty(/*[in]*/ long TableIndex);
 	bool SetSingleNonStructuralAsEmpty(/*[in]*/ long TableIndex,/*[in,out]*/  long *DimIndex);
 	bool SetSingleEmptyAsNonStructural(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex);
