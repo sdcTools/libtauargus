@@ -128,5 +128,5 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 
 $(OBJDIR)/%.o: makefile
 
-$(SRCDIR)/%_wrap.cpp : $(SRCDIR)/%.swg
+$(SRCDIR)/TauArgusJava_wrap.cpp : $(SRCDIR)/TauArgusJava.swg $(SRCDIR)/TauArgus.h
 	$(SWIG) $(SFLAGS) -o $@ $<
