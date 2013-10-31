@@ -52,14 +52,14 @@
                    displayName="Important Files"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>GNUmakefile</itemPath>
       <itemPath>Makefile</itemPath>
+      <itemPath>NBMakefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
   </sourceRootList>
-  <projectmakefile>Makefile</projectmakefile>
+  <projectmakefile>NBMakefile</projectmakefile>
   <confs>
     <conf name="Debug" type="2">
       <toolsSet>

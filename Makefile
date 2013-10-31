@@ -1,128 +1,132 @@
-#
-#  There exist several targets which are by default empty and which can be 
-#  used for execution of your targets. These targets are usually executed 
-#  before and after some main targets. They are: 
-#
-#     .build-pre:              called before 'build' target
-#     .build-post:             called after 'build' target
-#     .clean-pre:              called before 'clean' target
-#     .clean-post:             called after 'clean' target
-#     .clobber-pre:            called before 'clobber' target
-#     .clobber-post:           called after 'clobber' target
-#     .all-pre:                called before 'all' target
-#     .all-post:               called after 'all' target
-#     .help-pre:               called before 'help' target
-#     .help-post:              called after 'help' target
-#
-#  Targets beginning with '.' are not intended to be called on their own.
-#
-#  Main targets can be executed directly, and they are:
-#  
-#     build                    build a specific configuration
-#     clean                    remove built files from a configuration
-#     clobber                  remove all built files
-#     all                      build all configurations
-#     help                     print help mesage
-#  
-#  Targets .build-impl, .clean-impl, .clobber-impl, .all-impl, and
-#  .help-impl are implemented in nbproject/makefile-impl.mk.
-#
-#  Available make variables:
-#
-#     CND_BASEDIR                base directory for relative paths
-#     CND_DISTDIR                default top distribution directory (build artifacts)
-#     CND_BUILDDIR               default top build directory (object files, ...)
-#     CONF                       name of current configuration
-#     CND_PLATFORM_${CONF}       platform name (current configuration)
-#     CND_ARTIFACT_DIR_${CONF}   directory of build artifact (current configuration)
-#     CND_ARTIFACT_NAME_${CONF}  name of build artifact (current configuration)
-#     CND_ARTIFACT_PATH_${CONF}  path to build artifact (current configuration)
-#     CND_PACKAGE_DIR_${CONF}    directory of package (current configuration)
-#     CND_PACKAGE_NAME_${CONF}   name of package (current configuration)
-#     CND_PACKAGE_PATH_${CONF}   path to package (current configuration)
-#
-# NOCDDL
+# ====================================================
+# Detect platform on which we're running (limited)
+# ====================================================
 
+ifeq ($(OS),Windows_NT)
+	PLATFORM=MinGW-Windows
+else
+	PLATFORM=Linux
+endif
 
-# Environment 
-MKDIR=mkdir
-CP=cp
-CCADMIN=CCadmin
+# ====================================================
+# Configurable items
+# ====================================================
 
+ifeq ($(PLATFORM),Linux)
+	GNUDIR  = /usr/bin
+	SWIGDIR = /usr/local/bin
+	JAVADIR = /home/argus/jdk1.7.0_25
+else
+	GNUDIR  = c:/MinGW/bin
+	SWIGDIR = c:/swigwin-2.0.10
+	JAVADIR = c:/Progra~1/Java/jdk1.7.0_17
+endif
 
-# build
-build: .build-post
+LIBNAME       = TauArgusJava
+#MAJOR_VERSION = 1
+#MINOR_VERSION = 0
+JAVAPACKAGE   = tauargus.extern
 
-.build-pre:
-# Add your pre 'build' code here...
+# ======================================================================
+# Set directories for input and output files
+# ======================================================================
 
-.build-post: .build-impl
-# Add your post 'build' code here...
+BUILDDIR = build
+DISTDIR  = dist
+ifdef debug
+	CONF = Debug
+else
+	CONF = Release
+endif
+BUILDFILEDIR = $(BUILDDIR)/$(CONF)/$(PLATFORM)
+DISTFILEDIR  = $(DISTDIR)/$(CONF)/$(PLATFORM)
 
+SRCDIR = .
+OBJDIR = $(BUILDFILEDIR)
+LIBDIR = $(DISTFILEDIR)
+OUTDIR = $(DISTFILEDIR)
 
-# clean
-clean: .clean-post
+# ====================================================
+# Non configurable items
+# ====================================================
 
-.clean-pre:
-# Add your pre 'clean' code here...
+INCDIRS = $(JAVADIR)/include 
+ifeq ($(PLATFORM),Linux)
+	INCDIRS += $(JAVADIR)/include/linux
+else
+	INCDIRS += $(JAVADIR)/include/Win32
+endif
 
-.clean-post: .clean-impl
-# Add your post 'clean' code here...
+CXX     = $(GNUDIR)/g++
+SWIG    = $(SWIGDIR)/swig
+LINK    = $(GNUDIR)/g++
 
+SFLAGS  = -c++ -java -package $(JAVAPACKAGE) -outdir $(OUTDIR)
+CFLAGS  = $(INCLUDES) -Wall
+ifeq ($(PLATFORM),Linux)
+	CFLAGS += -fPIC
+endif
+ifdef debug
+	CFLAGS += -D_DEBUG -g
+else
+	CFLAGS += -DNDEBUG -O2
+endif
+LDFLAGS = -shared 
+ifeq ($(PLATFORM),Linux)
+	LDFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
+else
+	LDFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
+endif
 
-# clobber
-clobber: .clobber-post
+# Exclude source files needed for a COM dll for Visual Basic 6.0
+NOSOURCES         = $(SRCDIR)/GhmiterANCO.cpp $(SRCDIR)/TauArgCtrl.cpp $(SRCDIR)/StdAfx.cpp $(SRCDIR)/NewTauArgus.cpp
+SWIGSOURCES       = $(wildcard $(SRCDIR)/*.swg)
+GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
+SOURCES           = $(filter-out $(NOSOURCES),$(wildcard $(SRCDIR)/*.cpp))
 
-.clobber-pre:
-# Add your pre 'clobber' code here...
+OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
+INCLUDES = $(INCDIRS:%=-I%)
 
-.clobber-post: .clobber-impl
-# Add your post 'clobber' code here...
+ifeq ($(PLATFORM),Linux)
+	LIBBASENAME = lib$(LIBNAME).so
+	SONAME = $(LIBBASENAME) #.$(MAJOR_VERSION)
+	LIBFILENAME = $(SONAME) #.$(MINOR_VERSION)
+else
+	LIBFILENAME = $(LIBNAME).dll
+endif
 
+TARGET = $(LIBDIR)/$(LIBFILENAME)
 
-# all
-all: .all-post
+.PHONY: all clean
 
-.all-pre:
-# Add your pre 'all' code here...
+.SECONDARY: $(SRCDIR)/TauArgusJava_wrap.cpp
 
-.all-post: .all-impl
-# Add your post 'all' code here...
+all : $(OBJDIR) $(LIBDIR) $(TARGET)
+	
+clean :
+	rm -rf $(OBJDIR) $(LIBDIR)
+	rm -f $(SRCDIR)/*_wrap.*
 
+$(TARGET) : $(OBJECTS)
+	$(LINK) $(LDFLAGS) -o $@ $^
+#	cp -p $(TARGET) /opt/lib
+#	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
+#	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
 
-# build tests
-build-tests: .build-tests-post
+$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
+	mkdir -p $@
 
-.build-tests-pre:
-# Add your pre 'build-tests' code here...
+# pull in dependency info for *existing* .o files
+-include $(wildcard $(addsuffix .d, ${OBJECTS})) 
 
-.build-tests-post: .build-tests-impl
-# Add your post 'build-tests' code here...
+#############################################################################
+# Implicit rules
+#############################################################################
+# compile and generate dependency info
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+	$(CXX) $(CFLAGS) -c -MMD -MP -MF $@.d $< -o $@ 
 
+$(OBJDIR)/%.o: makefile
 
-# run tests
-test: .test-post
-
-.test-pre: build-tests
-# Add your pre 'test' code here...
-
-.test-post: .test-impl
-# Add your post 'test' code here...
-
-
-# help
-help: .help-post
-
-.help-pre:
-# Add your pre 'help' code here...
-
-.help-post: .help-impl
-# Add your post 'help' code here...
-
-
-
-# include project implementation makefile
-include nbproject/Makefile-impl.mk
-
-# include project make variables
-include nbproject/Makefile-variables.mk
+$(SRCDIR)/TauArgusJava_wrap.cpp : $(SRCDIR)/TauArgusJava.swg $(SRCDIR)/TauArgus.h
+	$(SWIG) $(SFLAGS) -o $@ $<

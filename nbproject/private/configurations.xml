@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="89">
-  <projectmakefile>Makefile</projectmakefile>
+  <projectmakefile>NBMakefile</projectmakefile>
   <confs>
     <conf name="Debug" type="2">
       <toolsSet>
