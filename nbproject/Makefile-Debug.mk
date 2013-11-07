@@ -132,7 +132,7 @@ ${OBJECTDIR}/TauArgus.o: TauArgus.cpp
 .NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg 
 	@echo Performing Custom Build Step
-	c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+	c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
 
 ${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp 
 	${MKDIR} -p ${OBJECTDIR}

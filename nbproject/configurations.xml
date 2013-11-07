@@ -135,7 +135,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>
@@ -233,7 +233,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>

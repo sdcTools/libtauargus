@@ -25,7 +25,7 @@ endif
 LIBNAME       = TauArgusJava
 #MAJOR_VERSION = 1
 #MINOR_VERSION = 0
-JAVAPACKAGE   = tauargus.extern
+JAVAPACKAGE   = tauargus.extern.dataengine
 
 # ======================================================================
 # Set directories for input and output files
