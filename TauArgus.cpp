@@ -1540,8 +1540,7 @@ bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 
 // Prepare the file for Hitas. The table is written in a file that could be used by
 //Hitas for secondary supressions
-bool TauArgus::PrepareHITAS(long TableIndex, const char* NameParameterFile,
-												  const char* NameFilesFile, const char* TauTemp)
+bool TauArgus::PrepareHITAS(long TableIndex, const char* NameParameterFile, const char* NameFilesFile, const char* TauTemp)
 {
     m_hitas.TempPath = TauTemp; // Temp doorgeven vanuit de TAU ipv zlf bepalen.
 
@@ -1622,9 +1621,8 @@ long TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, cons
 }
 
 // Gets a code if given an index and a variable number
-bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
-												long *CodeType, const char** CodeString,
-												long *IsMissing, long *Level)
+bool TauArgus::GetVarCode(long VarIndex, long CodeIndex, long *CodeType, const char** CodeString,
+                          long *IsMissing, long *Level)
 {
 	int v = VarIndex, nCodes;
 
@@ -1663,10 +1661,8 @@ bool TauArgus::GetVarCode(long VarIndex, long CodeIndex,
 
 
 // return the codes for unsafe variables
-bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex,
-															long *IsMissing, long *Freq,
-															const char **Code, long *Count,
-															long *UCArray)
+bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissing, long *Freq, 
+                                    const char **Code, long *Count, long *UCArray)
 {
 	int t;
 

@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "defines.h"
-#include "datacell.h"
-#include "variable.h"
+#include "DataCell.h"
+#include "Variable.h"
 
 class CTable
 {

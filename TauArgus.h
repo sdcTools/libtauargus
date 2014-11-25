@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-#include "resource.h"       // main symbols
+//#include "resource.h"       // main symbols
 #include "Variable.h"
 #include "Table.h"
 #include "DataCell.h"

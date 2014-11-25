@@ -18,7 +18,7 @@ static char THIS_FILE[]=__FILE__;
 // Write files to be used in Hitas
 CHitas::CHitas()
 {
-	NameTabFile = "hitastab.txt";
+	NameTabFile = "Hitastab.txt";
 	NameSecFile = "hitassec.txt";
 }
 
