@@ -247,7 +247,8 @@ public:
 										long * CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
-										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
+//										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
+        									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
 										/*[in,out]*/ long * CellFreq, /*[in,out]*/ long * CellStatus,
 										/*[in,out]*/  double * CellMaxScore, /*[in,out]*/ double * CellMaxScoreWeight,
 										long *HoldingFreq,

@@ -1353,7 +1353,8 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 
 // Returns the information in a cell.
 bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
-													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
+//													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
+        												double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
 													double *CellShadow, double *CellCost,
 													 long *CellFreq, long *CellStatus,
 													 double *CellMaxScore,double *CellMAXScoreWeight,
@@ -2822,7 +2823,8 @@ bool TauArgus::SetRoundedResponse(const char* RoundedFile, long TableIndex)
 
 		}
 
-		dc->SetRoundedResponse((long) RoundedResp);
+		//dc->SetRoundedResponse((long) RoundedResp);
+                dc->SetRoundedResponse(RoundedResp);
 
 		itel++;
 	}
