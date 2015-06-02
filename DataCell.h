@@ -138,7 +138,7 @@ public:
 
   // set counting data
 	void SetResp(double Resp)								{	this->Resp = Resp; }
-	void SetRoundedResponse(long roundedresp)			{	this ->RoundedResp = roundedresp;}
+	void SetRoundedResponse(double roundedresp)			{	this ->RoundedResp = roundedresp;}
 	void SetWeight(double weight)							{	this->Weight = weight;}
 	void SetFreq(long Freq) 								{	this->Freq = Freq; }
 	void SetFreqHolding(long FreqHolding)				{	this->FreqHolding = FreqHolding;}
@@ -161,7 +161,8 @@ public:
 	
 	// get counting data
 	double GetResp()							{	return Resp;  }
-	long   GetRoundedResponse()			{	return RoundedResp; }
+	//long   GetRoundedResponse()			{	return RoundedResp; }
+        double   GetRoundedResponse()			{	return RoundedResp; }
 	double GetShadow()						{	return Shadow;}
 	double GetCost(double Lambda);//	 { return Cost;  }
 	long   GetFreq()							{	return Freq;  }
@@ -225,7 +226,8 @@ protected:
 	long	Freq;
 	double	Weight;
 	long	FreqHolding;
-	long    RoundedResp;
+	//long    RoundedResp;
+        double  RoundedResp;
 	double  CTAValue;
 
 	int		Status;
