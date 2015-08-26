@@ -14,7 +14,8 @@
 * This software is distributed on an "AS IS" basis without 
 * warranties or conditions of any kind, either express or implied.
 */
-
+#include <cmath>
+#include <limits>
 #ifndef __TAUARGUSDEFINESH
 #define __TAUARGUSDEFINESH
 
@@ -29,9 +30,9 @@
 #define MAXLEVEL 8
 #define EPSILON 0.0001 //0.0000001
 
-inline double DBL_EQ(double x, double v)
+inline bool DBL_EQ(double x, double v)
 { 
-    return (x > v - EPSILON) && (x < v + EPSILON); 
+    return fabs(x - v) <= 4*std::numeric_limits<double>::epsilon();
 }
 
 enum CellHoldingSort	{

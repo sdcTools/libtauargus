@@ -4871,11 +4871,12 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
 // checks if the table is additive
 bool TauArgus::IsTable (CTable *tab)
 {
+        long DimNr[MAXDIM];
 	bool IsGoodTable = true;
 
 	for (long d = 0; d < tab->nDim; d++) {
 		//WriteRange(fd, tab, var, d, DimNr, 0, WithBogus, tdp);
-		long DimNr[MAXDIM];
+		//long DimNr[MAXDIM];
 		TestTable(tab, d, DimNr, 0, &(IsGoodTable));
 		if (!IsGoodTable) {
 				return false;
@@ -4927,9 +4928,9 @@ void TauArgus::TestTable(CTable *tab, long TargetDim,
 						dc = tab-> GetCell(DimNr);
 						sum = sum + dc->GetResp();
 					}
-
+                                        
 					if (!DBL_EQ(sum,test))	{
-						*IsGoodTable = false;
+					    *IsGoodTable = false;
 					}
 				}
 				k++;
