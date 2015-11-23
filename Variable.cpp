@@ -209,10 +209,10 @@ bool CVariable::ComputeHierarchicalCodes()
 
 	if (nDigitSplit < 2) return false;
 
-	for (i = 0; i < sCode.size(); i++) {
+	for (i = 0; i < (int) sCode.size(); i++) {
 		n = 0;
 		t = sCode[i];
-		if (t.length() != nPos) continue; // no datafile code
+		if (((int) t.length()) != nPos) continue; // no datafile code
 		for (j = 0; j < nDigitSplit - 1; j++) {
 			n += DigitSplit[j];
 			s = t.substr(0, n);
@@ -332,7 +332,7 @@ CCode* CVariable::GethCode()
 bool CVariable::IsCodeBasic(int i)
 {
 	ASSERT(IsHierarchical == false);
-	return (*GetCodeList())[i].length() == GetCodeWidth();
+	return ((int)(*GetCodeList())[i].length() == GetCodeWidth());
 }
 
 // returns code width
@@ -535,7 +535,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
   // check and compute hLevelBasic
 	for (i = 1; i < nCode; i++) {
 		// compute max width code
-		if (sCode[i].length() > hfCodeWidth) {
+		if (((int)sCode[i].length()) > hfCodeWidth) {
 			hfCodeWidth = sCode[i].length();
 		}
 
@@ -724,7 +724,7 @@ bool CVariable::SetHierarchicalRecode()
 		if (hCode[i].Active) {
 			Recode.sCode.push_back(sCode[i]);
 			// compute max width code
-			if (sCode[i].length() > Recode.CodeWidth) {
+			if (((int) sCode[i].length()) > Recode.CodeWidth) {
 				Recode.CodeWidth = sCode[i].length();
 			}
 			Recode.DestCode[i] = j++;
@@ -810,7 +810,7 @@ long CVariable::OrganizeCodelist()
 	for (i = 0; i < n; i++) {
 		if (hLevel[i] == lowestlevel) {
 			string s = sCode[i];
-			if (s.length() > nPos) {
+			if (((int)s.length()) > nPos) {
 				string temps = s;
 				s.substr(0, nPos);
 				temps.substr(nPos);
@@ -820,7 +820,7 @@ long CVariable::OrganizeCodelist()
 				}
 			}
 
-			if (s.length() < nPos) {
+			if (((int)s.length()) < nPos) {
 				// add spaces.
 				s.insert((size_t)0, (size_t)(nPos - s.length()), ' ');
 			}
@@ -1081,8 +1081,8 @@ bool CVariable::NormaliseCode(char *Code)
 		int length = e - s;
 		memmove(Code, s, length);
 		Code[length] = '\0';
-		int inrem = RemoveStringInPlace(Code, '"');
-		ASSERT ((inrem == 2) || (inrem == 0));
+		//int inrem = RemoveStringInPlace(Code, '"');
+		ASSERT ((RemoveStringInPlace(Code, '"') == 2) || (RemoveStringInPlace(Code, '"') == 0));
 		AddSpacesBefore(Code, nPos);
 	}
 	return true;
@@ -1101,9 +1101,9 @@ bool CVariable::NormaliseCode(char *Code)
 	fprintf(fdshow, "%s\n"," Code IsParent, Level, nChilderen");
 	for (i=0; i<nCode; i++)	{
 		fprintf(fdshow,"%s	%d		%d		%d\n", sCode.GetAt(i),
-															/*hCode->Active, hCode->IsBogus,
-															hCode->IsParent, hCode->Level,
-															hCode->nChildren);
+		hCode->Active, hCode->IsBogus,
+		hCode->IsParent, hCode->Level,
+                hCode->nChildren);
 	}
 	fprintf(fdshow,"%s\n", "______________________");
 	fclose(fdshow);
