@@ -83,7 +83,7 @@ int BinSearchStringArray(vector<string> &s, const string &x, int nMissing, bool 
 
 	// equal to missing1 or -2? // code missing not always the highest
 
-	for (int mis = s.size() - nMissing; mis < s.size(); mis++) {
+	for (int mis = s.size() - nMissing; mis < (int) (s.size()); mis++) {
 		if (x == s[mis]) {
 			IsMissing = true;
 			return mis;

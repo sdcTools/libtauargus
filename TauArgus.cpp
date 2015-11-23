@@ -364,7 +364,7 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
 	if (Missing1.empty() && Missing2.empty()) {
 		Missing1 = m_var[v].Missing1;
 		if (m_var[v].nMissing == 2) {
-			Missing2, m_var[v].Missing2;
+			Missing2 = m_var[v].Missing2;
 		}
 		else {
 			Missing2 = Missing1;
@@ -4123,7 +4123,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 	}
 
 	ASSERT(DestIndex >= 0 && DestIndex < v->Recode.sCode.size() );
-	if (DestIndex < 0 || DestIndex >= v->Recode.sCode.size() ) {
+	if (DestIndex < 0 || DestIndex >= ((int) v->Recode.sCode.size()) ) {
 		return PROGRAMERROR;
 	}
 
@@ -4466,7 +4466,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 		case CS_PROTECT_MANUAL:
 			switch (RespType ){
 			case 0: fprintf(fd, "%.*f", nDec, dc->GetResp()); break;
-			case 1: fprintf(fd, "%ld", dc->GetRoundedResponse());	break;
+			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
 			}
 			break;
@@ -4485,7 +4485,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 					   fprintf(fd, "x");
 					}
 					break;
-			case 1: fprintf(fd, "%ld", dc->GetRoundedResponse());	break;
+			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
 			}
 
@@ -4538,7 +4538,7 @@ void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, l
 {
 	CDataCell *dc = tab->GetCell(Dim);
 	double X, X1, X2, XS;
-	bool DomRule = tab->DominanceRule;
+	//bool DomRule = tab->DominanceRule;
 	bool PQRule = tab->PQRule;
 	int f1 = dc->GetFreq();
 	int f2 = dc->GetFreqHolding();
@@ -4892,14 +4892,13 @@ void TauArgus::AdjustTable(CTable *tab)
 		long DimNr[MAXDIM];
 		AdjustNonBasalCells(tab,d,DimNr,0);
 	}
-	for (int i = 0; i < tab->nCell; i++) {
+        for (int i = 0; i < tab->nCell; i++) {
 		CDataCell *dctemp = tab->GetCell(i);
 	}
 }
 
 // Is good table is false if the table is not additive
-void TauArgus::TestTable(CTable *tab, long TargetDim,
-									 long *DimNr, long niv, bool	*IsGoodTable)
+void TauArgus::TestTable(CTable *tab, long TargetDim, long *DimNr, long niv, bool *IsGoodTable)
 {
 	vector<unsigned int> Children;
 	CDataCell *dc;

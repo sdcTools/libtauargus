@@ -389,7 +389,7 @@ void CJJFormat::WriteRange(FILE *fd, CTable *tab, CVariable *var,
 int CJJFormat::GetRange(CVariable &var, int CodeIndex, vector<unsigned int> &Children,
 								bool WithBogus)
 {
-	int i, n = 0, LevelParent, LevelDesc, nCode;
+	int i, n = 0, LevelParent, LevelDesc=0, nCode;
 	CCode *hCode = var.GethCode();
 	ASSERT(var.IsHierarchical);
 

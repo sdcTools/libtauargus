@@ -87,7 +87,7 @@ public:
 	std::string PeepCode2;
 
 	bool PositionSet;
-	long NumSubCodes;
+	unsigned long NumSubCodes;
 	CSubCodeList *m_SubCodes;
 // Operations
 public:

@@ -26,7 +26,7 @@ string CSubCodeList::GetSubCode(long isubcodenum)
 	if (isubcodenum < 0)	{
 		return m_colSubCodeCollection[0];
 	}
-	if (isubcodenum > m_colSubCodeCollection.size() - 1) {
+	if (isubcodenum > ((int) (m_colSubCodeCollection.size())) - 1) {
 		return m_colSubCodeCollection[m_colSubCodeCollection.size() - 1];
 	}
 	else
@@ -42,7 +42,7 @@ void CSubCodeList::FillSubCodes(vector<string> &codes, long *indices)
 	m_colSubCodeCollection.resize(codes.size());
 	m_lSubCodeIndex = new long[codes.size()];
 
-	for (i= 0; i< codes.size(); i++)
+	for (i= 0; i< ((int) codes.size()); i++)
 	{
 		m_colSubCodeCollection[i] = codes[i];
 		m_lSubCodeIndex[i] = indices[i];
@@ -53,7 +53,7 @@ void CSubCodeList::FillSubCodes(vector<string> &codes, long *indices)
 
 long CSubCodeList::IsInSubCodes(const string &sCode)
 {
-	for (long i = 0; i < m_colSubCodeCollection.size(); i++)	{
+	for (long i = 0; i < ((int) m_colSubCodeCollection.size()); i++)	{
 		if (sCode == m_colSubCodeCollection[i])	{
 			return i;
 		}
