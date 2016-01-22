@@ -116,7 +116,7 @@ public:
 	int  GetnMissing();
 	std::string GetCode(int i);
 	int GetLevel(int i);
-	long GetDepthOfHerarchicalBoom();
+	long GetDepthOfHerarchicalBoom(bool Recoded);
 	int  GetnCode();
 	int  GetnBogus();
 	int  GetnCodeActive();

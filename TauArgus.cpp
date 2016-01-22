@@ -1677,6 +1677,15 @@ bool TauArgus::GetVarCode(long VarIndex, long CodeIndex, long *CodeType, const c
 	return true;
 }
 
+long TauArgus::GetVarHierarchyDepth(long VarIndex, bool Recoded)
+{
+    if (VarIndex < 0 || VarIndex >= m_nvar || !m_var[VarIndex].IsHierarchical)
+        return -1;
+    else
+    {
+        return m_var[VarIndex].GetDepthOfHerarchicalBoom(Recoded);
+    }
+}
 
 // return the codes for unsafe variables
 bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissing, long *Freq, 
@@ -5148,7 +5157,7 @@ long TauArgus::MaxDiepteVanSpanVariablen(CTable *tab)
 	long maximum = 0;
 	for (long i = 0; i < tab->nDim; i++)	{
 		CVariable *var = &(m_var[tab->ExplVarnr[i]]);
-		long maxvardiepte = var->GetDepthOfHerarchicalBoom();
+		long maxvardiepte = var->GetDepthOfHerarchicalBoom(false); // false = original coding, no recoding
 		maximum = max(maximum, maxvardiepte);
 	}
 	return maximum;

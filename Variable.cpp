@@ -850,18 +850,27 @@ bool CVariable::SetPeepCodes(const string &Peep1, const string &Peep2)
 
 // returns the depth of Hierarchical codelist. This is used
 // to calculate marginals.
-long CVariable::GetDepthOfHerarchicalBoom()
+long CVariable::GetDepthOfHerarchicalBoom(bool Recoded)
 {
 	if (!IsHierarchical)	{
 		return 0;
 	}
-	else	{
+	else
+	{
+            int maxdepth = 0;
 		// figure out what to do with recodes
-		int maxdepth = 0;
+            if (HasRecode && Recoded) {
+		for (int i = 0; i < Recode.nCode; i++)	{
+			maxdepth = max(maxdepth, Recode.hCode[i].Level);
+		}
+            }
+            else
+            {
 		for (int i = 0; i < nCode; i++)	{
 			maxdepth = max(maxdepth, hCode[i].Level);
 		}
-		return maxdepth;
+            }
+            return maxdepth;
 	}
 }
 
