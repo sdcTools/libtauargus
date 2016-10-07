@@ -1450,7 +1450,7 @@ bool TauArgus::SetTableSafety( long Index, bool DominanceRule,
 														bool ApplyWeight, bool ApplyWeightOnSafetyRule,
 														bool ApplyHolding,bool ApplyZeroRule,
 														bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
-														long ZeroSafetyRange,	long ManualSafetyPerc,
+														double ZeroSafetyRange,	long ManualSafetyPerc,
 														long * CellAndHoldingFreqSafetyPerc)
 {
 	int i = Index;
@@ -2467,7 +2467,7 @@ bool TauArgus::SetTableSafetyInfo(long TabIndex,
 															bool HasFreq,
 															long CellFreqSafetyPerc, long SafeMinRec,
 															bool HasStatus, long ManualSafetyPerc,
-															bool ApplyZeroRule, long ZeroSafetyRange,
+															bool ApplyZeroRule, double ZeroSafetyRange,
 															bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 															long *ErrorCode)
 {
