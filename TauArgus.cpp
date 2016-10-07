@@ -4392,7 +4392,7 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 	// write Cell
 	if (niv == tab->nDim) {
 		WriteCSVCell(fd, tab, Dims, false, 0, RespType);
-		fprintf(fd, "%c", ValueSep);
+		if (Dims[DimSequence[niv-1]] < m_var[tab->ExplVarnr[DimSequence[niv-1]]].GetnCode()-1) fprintf(fd, "%c", ValueSep);
 		return;
 	}
 
@@ -4409,7 +4409,7 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 					for (int j = 0; j < niv; j++) {
   						fprintf(fd, "Var %ld,", DimSequence[j] + 1);
   						WriteCSVLabel(fd, tab, DimSequence[j], Dims[DimSequence[j]]);  // show all previous layer label(s)
-  						fprintf(fd, ", ");
+  						if (j < (niv - 1)) fprintf(fd, ", ");
 					}
 					fprintf(fd, "\n");
 				}
