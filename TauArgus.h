@@ -202,7 +202,7 @@ public:
 											bool HasFreq,
 											long CellFreqSafetyPerc, long SafeMinRec,
 											bool HasStatus, long ManualSafetyPerc,
-											bool ApplyZeroRule, long ZeroSafetyRange,
+											bool ApplyZeroRule, double ZeroSafetyRange,
 											bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 											long *ErrorCode);
 	bool SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2,
@@ -244,7 +244,7 @@ public:
 										bool ApplyPeep,bool ApplyWeight, bool ApplyWeightOnSafetyRule,
 										bool ApplyHolding,bool ApplyZeroRule,
 										bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
-										long ZeroSafetyRange,	long ManualSafetyPerc,
+										double ZeroSafetyRange,	long ManualSafetyPerc,
 										long * CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
