@@ -71,8 +71,8 @@
         <ccTool>
           <commandlineTool>g++</commandlineTool>
           <incDir>
-            <pElem>../../../../Progra~1/Java/jdk1.7.0_17/include</pElem>
-            <pElem>../../../../Progra~1/Java/jdk1.7.0_17/include/win32</pElem>
+            <pElem>C:/Program Files/Java/jdk1.7.0_07/include</pElem>
+            <pElem>C:/Program Files/Java/jdk1.7.0_07/include/win32</pElem>
           </incDir>
           <preprocessorList>
             <Elem>_DEBUG</Elem>
@@ -134,7 +134,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>c:\swigwin-2.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>D:\Users\pwof\Documents\swig\swigwin-3.0.7\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>

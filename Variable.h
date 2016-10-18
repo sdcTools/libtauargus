@@ -109,7 +109,8 @@ public:
 	int  SetCodeList(LPCTSTR FileName, LPCTSTR LevelString);
 	void SetActive(long CodeIndex, bool active);
 	bool SetHierarch();
-	void GetGHMITERCode(int i, char* code);
+	//void GetGHMITERCode(int i, char* code);
+        void GetGHMITERCode(int i, std::string &code);
 	int  GetCodeWidth();
 	bool IsCodeBasic(int i);
 	std::vector<std::string> * GetCodeList();

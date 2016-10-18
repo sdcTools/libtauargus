@@ -280,7 +280,7 @@ int CVariable::GetnCodeInActive()
 // be done for a categorical variable
 string CVariable::GetCode(int i)
 {
-	string s;
+	//string s; // not used?
 
 	if (HasRecode) {
 		return Recode.sCode[i];
@@ -357,14 +357,19 @@ int CVariable::GetCodeWidth()
 
 
 // always with width of 8 characters
-void CVariable::GetGHMITERCode(int i, char *code)
+// not needed: code is original code, not the one used to feed GHMIter
+//void CVariable::GetGHMITERCode(int i, char *code)
+void CVariable::GetGHMITERCode(int i, std::string &code)
 {
-	string s;
+	//string s;
 
 	ASSERT(i >= 0 && i < GetCodeList()->size() );
-	s = GetCode(i);
-	ASSERT(s.length() < 9);
-	sprintf(code, "%8s", s.c_str());
+	//s = GetCode(i);
+        code = GetCode(i);
+	//ASSERT(s.length() < 9);
+        //ASSERT(s.length() < 64);
+	//sprintf(code, "%8s", s.c_str());
+        //sprintf(code, "%s", s.c_str());
 }
 
 // set the hierarchy. Very important and used by explore file and

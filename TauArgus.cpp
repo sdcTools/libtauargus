@@ -3138,7 +3138,7 @@ int TauArgus::ReadMicroRecord(FILE *fd, char *str)
 int TauArgus::DoMicroRecord(char *str, int *varindex)
 {
 	string tempcode;
-		vector<char *> VarCodes;
+	vector<char *> VarCodes;
 
 	if (!InFileIsFixedFormat) {
             if (!ReadVariablesFreeFormat(str, VarCodes)) {
