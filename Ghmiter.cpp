@@ -137,7 +137,9 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 {
 	FILE *fd;
 	int i, nGroup[MAXLEVEL + 1];
-	char code[10];
+	//char code[10];
+        //char code[64];
+        string code;
 
 	fd = fopen(FileName, "w");
 	if (fd == 0) return false;
@@ -333,9 +335,11 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
 	}
 
    for (i = 0; i < tab->nDim; i++) {
-		char code[10];
+		//char code[10];
+                //char code[64];
+                string code;
 		m_var[tab->ExplVarnr[i]].GetGHMITERCode((int) Dim[i], code);
-			fprintf(fd, "'%s' ", code);
+		fprintf(fd, "'%s' ", code.c_str());
 	}
    fprintf(fd, "\n");
 	return;
