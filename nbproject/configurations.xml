@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="97">
+<configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -53,13 +53,12 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
-      <itemPath>NBMakefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
   </sourceRootList>
-  <projectmakefile>NBMakefile</projectmakefile>
+  <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="2">
       <toolsSet>
@@ -71,8 +70,8 @@
         <ccTool>
           <commandlineTool>g++</commandlineTool>
           <incDir>
-            <pElem>C:/Program Files/Java/jdk1.7.0_07/include</pElem>
-            <pElem>C:/Program Files/Java/jdk1.7.0_07/include/win32</pElem>
+            <pElem>C:/Program Files (x86)/Java/jdk1.7.0_79/include</pElem>
+            <pElem>C:/Program Files (x86)/Java/jdk1.7.0_79/include/win32</pElem>
           </incDir>
           <preprocessorList>
             <Elem>_DEBUG</Elem>
@@ -81,7 +80,7 @@
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}</output>
-          <commandLine>-Wl,--kill-at</commandLine>
+          <commandLine>-Wl,--kill-at -fno-strict-aliasing</commandLine>
         </linkerTool>
       </compileType>
       <item path="AMPL.cpp" ex="false" tool="1" flavor2="0">
@@ -134,7 +133,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>D:\Users\pwof\Documents\swig\swigwin-3.0.7\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>
@@ -162,8 +161,8 @@
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
-            <pElem>C:/Program Files/Java/jdk1.7.0_07/include</pElem>
-            <pElem>C:/Program Files/Java/jdk1.7.0_07/include/win32</pElem>
+            <pElem>C:/Program Files (x86)/Java/jdk1.7.0_79/include</pElem>
+            <pElem>C:/Program Files (x86)/Java/jdk1.7.0_79/include/win32</pElem>
           </incDir>
           <preprocessorList>
             <Elem>NDEBUG</Elem>
@@ -231,7 +230,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>D:\Users\pwof\Documents\swig\swigwin-3.0.7\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>C:\swigwin-2.0.11\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>
