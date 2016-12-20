@@ -17,9 +17,9 @@ ifeq ($(PLATFORM),Linux)
 	SWIGDIR = /usr/local/bin
 	JAVADIR = /home/argus/jdk1.7.0_25
 else
-	GNUDIR  = c:/MinGW/bin
-	SWIGDIR = c:/swigwin-2.0.10
-	JAVADIR = c:/Progra~1/Java/jdk1.7.0_17
+	GNUDIR  = C:/mingw/bin
+	SWIGDIR = C:/swigwin-3.0.10
+	JAVADIR = C:/Progra~2/Java/jdk1.7.0_80
 endif
 
 LIBNAME       = TauArgusJava
@@ -33,6 +33,7 @@ JAVAPACKAGE   = tauargus.extern.dataengine
 
 BUILDDIR = build
 DISTDIR  = dist
+debug=yes
 ifdef debug
 	CONF = Debug
 else
@@ -67,7 +68,7 @@ ifeq ($(PLATFORM),Linux)
 	CFLAGS += -fPIC
 endif
 ifdef debug
-	CFLAGS += -D_DEBUG -g
+	CFLAGS += -D_DEBUG -g 
 else
 	CFLAGS += -DNDEBUG -O2
 endif
@@ -75,7 +76,7 @@ LDFLAGS = -shared
 ifeq ($(PLATFORM),Linux)
 	LDFLAGS += $(CFLAGS) -Wl,-soname,$(SONAME)
 else
-	LDFLAGS += -Wl,--subsystem,windows -Wl,--kill-at
+	LDFLAGS += $(CFLAGS) -Wl,--subsystem,windows -Wl,--kill-at -static-libgcc -static-libstdc++
 endif
 
 # Exclude source files needed for a COM dll for Visual Basic 6.0
