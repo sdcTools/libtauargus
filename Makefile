@@ -17,7 +17,7 @@ ifeq ($(PLATFORM),Linux)
 	SWIGDIR = /usr/local/bin
 	JAVADIR = /home/argus/jdk1.7.0_25
 else
-	GNUDIR  = C:/mingw/bin
+	GNUDIR  = C:/MinGW/bin
 	SWIGDIR = C:/swigwin-3.0.10
 	JAVADIR = C:/Progra~2/Java/jdk1.7.0_80
 endif
@@ -33,8 +33,8 @@ JAVAPACKAGE   = tauargus.extern.dataengine
 
 BUILDDIR = build
 DISTDIR  = dist
-debug=yes
-ifdef debug
+
+ifdef debug # NB: does not set CONF correctly from within Netbeans IDE
 	CONF = Debug
 else
 	CONF = Release
@@ -68,9 +68,9 @@ ifeq ($(PLATFORM),Linux)
 	CFLAGS += -fPIC
 endif
 ifdef debug
-	CFLAGS += -D_DEBUG -g 
+	CFLAGS += -D_DEBUG -g
 else
-	CFLAGS += -DNDEBUG -O2
+	CFLAGS += -DNDEBUG -O2 -fno-strict-aliasing
 endif
 LDFLAGS = -shared 
 ifeq ($(PLATFORM),Linux)
@@ -108,14 +108,15 @@ clean :
 	rm -rf $(OBJDIR) $(LIBDIR)
 	rm -f $(SRCDIR)/*_wrap.*
 
+$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
+	mkdir -p $@
+
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LDFLAGS) -o $@ $^
+	cp -p $(TARGET) $(SRCDIR)/../tauargus/TauArgusJava.dll
 #	cp -p $(TARGET) /opt/lib
 #	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
 #	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
-
-$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
-	mkdir -p $@
 
 # pull in dependency info for *existing* .o files
 -include $(wildcard $(addsuffix .d, ${OBJECTS})) 

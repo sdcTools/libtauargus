@@ -18,13 +18,14 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include <cmath>
 #include <vector>
 
 #include "General.h"
 #include "Ghmiter.h"
 
-using namespace std;
+//using namespace std;
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -139,7 +140,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	int i, nGroup[MAXLEVEL + 1];
 	//char code[10];
         //char code[64];
-        string code;
+        std::string code;
 
 	fd = fopen(FileName, "w");
 	if (fd == 0) return false;
@@ -171,7 +172,7 @@ bool CGhmiter::ControlDataTable(const char *FileName, const char *TableName,
 	fprintf(fd, "\n");
 
 	for (i = 0; i < nDim; i++) {
-		vector<string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
+		std::vector<std::string> *Codes = m_var[ExpVarNr[i]].GetCodeList();
 		int j, k, s;
 		fprintf(fd, "'Var %d'\n", i + 1);
 
@@ -224,7 +225,7 @@ bool CGhmiter::CellsTable(const char *FileName, CTable *tab, CVariable *m_var, b
 	FILE *fd;
 	int n, m;
 	long Dim[MAXDIM];
-	char str[100];
+	char str[256];
 
 
 	fd = fopen(FileName, "w");
@@ -337,7 +338,7 @@ void CGhmiter::WriteCell(FILE *fd, CTable *tab, CVariable *m_var, int FreqWidth,
    for (i = 0; i < tab->nDim; i++) {
 		//char code[10];
                 //char code[64];
-                string code;
+                std::string code;
 		m_var[tab->ExplVarnr[i]].GetGHMITERCode((int) Dim[i], code);
 		fprintf(fd, "'%s' ", code.c_str());
 	}
@@ -453,10 +454,10 @@ bool CGhmiter::SetSecUnSafe(CTable *tab, FILE *fd, long *Dims, int niv, bool IsS
 
 	if (niv < 0) {
 		CDataCell *dc;
-		char str[2000];
+		char str[2048];
 
 		dc = tab->GetCell(Dims);
-		fgets(str, 2000, fd);
+		fgets(str, 2048, fd);
 		if (atoi(str) == 1129)
 		{ // first number 1129 = secondary set
 			int Status = dc->GetStatus();

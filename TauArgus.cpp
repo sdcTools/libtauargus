@@ -1639,42 +1639,46 @@ long TauArgus::SetHierarchicalCodelist(long VarIndex, const char* FileName, cons
 }
 
 // Gets a code if given an index and a variable number
-bool TauArgus::GetVarCode(long VarIndex, long CodeIndex, long *CodeType, const char** CodeString,
+//bool TauArgus::GetVarCode(long VarIndex, long CodeIndex, long *CodeType, const char **CodeString,
+//                          long *IsMissing, long *Level)
+bool TauArgus::GetVarCode(long VarIndex, long CodeIndex, long *CodeType, std::string *CodeString,
                           long *IsMissing, long *Level)
 {
-	int v = VarIndex, nCodes;
+    int v = VarIndex, nCodes;
 
-	if (v < 0 || v >= m_nvar)	{
-		return false;
-	}
+    if (v < 0 || v >= m_nvar)	{
+	return false;
+    }
 
-  nCodes = m_var[v].GetnCode();
-  if (CodeIndex < 0 || CodeIndex >= nCodes)	{
-		return false;
-  }
+    nCodes = m_var[v].GetnCode();
+    if (CodeIndex < 0 || CodeIndex >= nCodes)	{
+	return false;
+    }
 
   /*if (m_Using MicroData)  {
 	if (m_fname[0] == 0) return false;
   }*/
-  if (!m_CompletedCodeList)	{
-		return false;
-  }
+    if (!m_CompletedCodeList)	{
+	return false;
+    }
 
-	if (m_var[v].IsHierarchical) {
-    if (m_var[v].GethCode()[CodeIndex].IsParent) *CodeType = CTY_TOTAL;
-		else                                         *CodeType = CTY_BASIC;
-    *Level = m_var[v].GethCode()[CodeIndex].Level;
-	} else {
-		if (m_var[v].IsCodeBasic(CodeIndex) ) *CodeType = CTY_BASIC;
-		else                                  *CodeType = CTY_TOTAL;
-    *Level = (CodeIndex == 0 ? 0 : 1);
-  }
+    if (m_var[v].IsHierarchical) {
+        if (m_var[v].GethCode()[CodeIndex].IsParent) *CodeType = CTY_TOTAL;
+        else                                         *CodeType = CTY_BASIC;
+        *Level = m_var[v].GethCode()[CodeIndex].Level;
+    } 
+    else {
+        if (m_var[v].IsCodeBasic(CodeIndex) ) *CodeType = CTY_BASIC;
+	else                                  *CodeType = CTY_TOTAL;
+        *Level = (CodeIndex == 0 ? 0 : 1);
+    }
 
-  // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
-  *CodeString = m_var[v].GetCode(CodeIndex).c_str();
-  *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
+    // Gets a pointer to an internal buffer. It is still safe because the referenced object keeps living
+    //*CodeString = m_var[v].GetCode(CodeIndex).c_str();
+    *CodeString = m_var[v].GetCode(CodeIndex);
+    *IsMissing = (CodeIndex >= m_var[v].GetnCode() - m_var[v].GetnMissing());
 
-	return true;
+    return true;
 }
 
 long TauArgus::GetVarHierarchyDepth(long VarIndex, bool Recoded)
@@ -1688,8 +1692,10 @@ long TauArgus::GetVarHierarchyDepth(long VarIndex, bool Recoded)
 }
 
 // return the codes for unsafe variables
+//bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissing, long *Freq, 
+//                                    const char **Code, long *Count, long *UCArray)
 bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissing, long *Freq, 
-                                    const char **Code, long *Count, long *UCArray)
+                                    std::string *Code, long *Count, long *UCArray)
 {
 	int t;
 
@@ -1747,7 +1753,8 @@ bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissin
 		}
 	}
 
-	*Code = m_var[VarIndex].GetCode(CodeIndex).c_str();
+	//*Code = m_var[VarIndex].GetCode(CodeIndex).c_str();
+        *Code = m_var[VarIndex].GetCode(CodeIndex);
 	*IsMissing = (CodeIndex >= nCodes - m_var[VarIndex].GetnMissing() );
 
 	// TRACE("Var %d Code [%s] Freq = %d, unsafe %d %d %d\n", VarIndex + 1, (LPCTSTR) m_var[VarIndex].GetCode(CodeIndex), *Freq, UCArray[0], UCArray[1], UCArray[2]);
@@ -1756,10 +1763,9 @@ bool TauArgus::UnsafeVariableCodes(long VarIndex, long CodeIndex, long *IsMissin
 }
 
 // return properties given a Variable and Code Index
-bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex,
-															 long *IsParent, long *IsActive,
-															 long *IsMissing, long *Level,
-															 long *nChildren, const char** Code)
+bool TauArgus::GetVarCodeProperties(long VarIndex, long CodeIndex, long *IsParent, 
+                                    long *IsActive, long *IsMissing, long *Level, 
+                                    long *nChildren, const char** Code)
 {
 	int v = VarIndex, c = CodeIndex;
 
@@ -3368,7 +3374,7 @@ void TauArgus::FillTables(char *str)
 	CDataCell dc;
 	string  tempPeepCode;
         vector<char *> VarCodes;
-        bool readingFreeFormatResult;
+        bool readingFreeFormatResult=false; // Just to initialize PWOF 20170127
 
 	if (!InFileIsFixedFormat) {
             readingFreeFormatResult = ReadVariablesFreeFormat(str, VarCodes);
@@ -4546,7 +4552,7 @@ void TauArgus::WriteFirstLine(FILE *fd, LPCTSTR FirstLine)
 void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, long SBSCode)
 {
 	CDataCell *dc = tab->GetCell(Dim);
-	double X, X1, X2, XS;
+	double X=0, X1=0, X2=0, XS=0; // Just to initialize PWOF 20170127
 	//bool DomRule = tab->DominanceRule;
 	bool PQRule = tab->PQRule;
 	int f1 = dc->GetFreq();
@@ -4901,9 +4907,10 @@ void TauArgus::AdjustTable(CTable *tab)
 		long DimNr[MAXDIM];
 		AdjustNonBasalCells(tab,d,DimNr,0);
 	}
-        for (int i = 0; i < tab->nCell; i++) {
-		CDataCell *dctemp = tab->GetCell(i);
-	}
+        //Why is this needed? Does nothing???
+        //for (int i = 0; i < tab->nCell; i++) {
+	//	CDataCell *dctemp = tab->GetCell(i);
+	//}
 }
 
 // Is good table is false if the table is not additive
@@ -5010,10 +5017,10 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 {
 	vector<unsigned int> Children;
 	CDataCell *dc;
-	CDataCell *dctemp, *dcramya;
+	CDataCell *dctemp;//, *dcramya;
    CDataCell *addcell;
 	long tempDimNr;
-	double sum,test;
+	double sum;//,test;
 
 
 	if (niv == tab->nDim) {
@@ -5071,7 +5078,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 			sum = 0;
 			tempDimNr = tab->GetCellNrFromIndices(DimNr);
 			dctemp = tab->GetCell(DimNr);
-			test = dctemp->GetResp();
+			//test = dctemp->GetResp(); // Is not used ??? PWOF 20170127
 			//fprintf(fd, "0.0 %d : %d (-1) ", nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
 			addcell = new CDataCell(tab->NumberofMaxScoreCell, tab->NumberofMaxScoreCell,
 				tab->ApplyHolding, tab->ApplyWeight);
@@ -5100,7 +5107,8 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 
 				delete addcell;
 			}
-			dcramya = tab->GetCell(tempDimNr);
+                        // Does not do anything ??? PWOF 20170127
+			//dcramya = tab->GetCell(tempDimNr);
 		}
 
 	}
@@ -5136,7 +5144,7 @@ bool TauArgus::ReadVariablesFreeFormat(char *Str, vector<char *> &VarCodes)
 	char *startpos = Str;
 	char *endpos;
 	for (int varIndex = 0; varIndex <= m_maxBPos; varIndex++) {
-		CVariable *var = &(m_var[varIndex]);
+                //CVariable *var = &(m_var[varIndex]); // Not used ???? PWOF 20170127
 		endpos = strchr(startpos, separator);
 		if (endpos == NULL) {
 			if (varIndex != m_maxBPos)
@@ -5179,12 +5187,12 @@ bool TauArgus::TestSubCodeList()
 				return false;
 			}
 			// just to see sub codes are filled
-			for (long l = 0; l<var->NumSubCodes; l++) {
-				for (long k = 0; k < var->m_SubCodes[l].NumberOfSubCodes(); k++) {
-					long test = var->m_SubCodes[l].
-					GetSubCodeIndex(k);
+			/* Does not do anything. Will crash if sub codes are not filled?  PWOF 20170127
+                         for (long l = 0; l<var->NumSubCodes; l++) { 
+                        	for (long k = 0; k < var->m_SubCodes[l].NumberOfSubCodes(); k++) {
+					long test = var->m_SubCodes[l].GetSubCodeIndex(k);
 				}
-			}
+			}*/
 		}
 	}
 	return true;
@@ -5229,10 +5237,10 @@ bool TauArgus::SubTableTupleForSubTable(long TableIndex, long SubTableIndex,
 long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long CellNum, FILE *fdtemp, double MaxScale) //long *CellDimension)
 {
 	long i,j,k,l;
-	long SubTableIndex = -1;
+//	long SubTableIndex = -1; // Not used PWOF 20170127
 	long nCellSubTable;
 	CTable *tab = &(m_tab[TableIndex]);
-	bool found = false;
+//	bool found = false; // Not used PWOF 20170127
 	long SubTableCellNum;
 	long teller = UnsafeCellNum;
 	CVariable *var;
@@ -5509,7 +5517,7 @@ bool TauArgus::WriteAllSubTablesInAMPL(FILE *fd, long tabind)
 	for (i =0; i<NumSubTables; i++)	{
 		SubTableTupleForSubTable(tabind,i,SubTableTuple);
 		long NumSubTableCells = FindNumberOfElementsInSubTable(SubTableTuple,tabind);
-		marginal = 0; long sum = 0;
+		marginal = 0; //long sum = 0; Not used PWOF 20170127
 		for (j= 0; j<NumSubTableCells; j++)	{
 			// just print cell
 			FindCellIndexForSubTable(TableCellIndex,tabind,SubTableTuple,j, SubTableCellIndex);
@@ -5681,7 +5689,7 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, const string &TempDir
 	long *DimNr = new long [tab->nDim];
 	long *RowColIndex = new long [tab->nDim];
 	long i;
-	long nDec = 8;
+	//long nDec = 8;
 	fprintf(fd,"%s\n", "# AMPL generated By TauArgus");
 	fprintf(fd,"%s\n", "#");
 	// The number of sub tables
@@ -5694,8 +5702,9 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, const string &TempDir
 	fprintf (fd,"%s\n", "param M := ");
 	CVariable *var0 = &(m_var[tab->ExplVarnr[0]]);
 	CVariable *var1 = &(m_var[tab->ExplVarnr[1]]);
-	for (i = 0; i < var0->NumSubCodes; i++)	{
-		fprintf(fd,"%ld                  %ld\n", i, var0->m_SubCodes[i].NumberOfSubCodes());
+	//for (i = 0; i < var0->NumSubCodes; i++)	{
+        for (unsigned long j = 0; j < var0->NumSubCodes; j++)	{
+		fprintf(fd,"%ld                  %ld\n", j, var0->m_SubCodes[j].NumberOfSubCodes());
 	}
 	fprintf(fd,"%s\n", ";");
 
@@ -5733,7 +5742,8 @@ bool TauArgus::WriteHierTableInAMPL(FILE *fd, long tabind, const string &TempDir
 	fseek( fdtempr, 0L, SEEK_SET );
 	for (i=0; i<nUnsafe; i++)	{
 		char str[MAXRECORDLENGTH];
-		int res = ReadMicroRecord(fdtempr, str);
+		//int res = ReadMicroRecord(fdtempr, str);
+                ReadMicroRecord(fdtempr, str);
 		fprintf(fd,"%s\n",str);
 	}
 	fprintf(fd,"%s\n", ";");
@@ -5788,12 +5798,12 @@ bool TauArgus::testampl(long ind)
 			return false;
 		}
 		// just to see sub codes are filled
+                /* Does not really do anything PWOF 20170127
 		for (long l = 0; l < var->NumSubCodes; l++) {
 			for (long k = 0; k < var->m_SubCodes[l].NumberOfSubCodes(); k++) {
-				long test = var->m_SubCodes[l].
-				GetSubCodeIndex(k);
+				long test = var->m_SubCodes[l].GetSubCodeIndex(k);
 			}
-		}
+		}*/
 	}
 
 	FILE *fd = fopen ("E:/Temp/Hierampl.txt", "w");

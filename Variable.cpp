@@ -175,7 +175,7 @@ bool CVariable::AddCode(const char *newcode, bool tail)
 		if (i == n) {  // not found
 			sCode.push_back(newcode);
 		}
-		return true;
+                return true;
 	}
 
 	// keep list sorted
@@ -278,7 +278,7 @@ int CVariable::GetnCodeInActive()
 
 // Given a position i returns the code for that position. Can only
 // be done for a categorical variable
-string CVariable::GetCode(int i)
+std::string CVariable::GetCode(int i)
 {
 	//string s; // not used?
 
@@ -471,7 +471,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 	FILE *fd;
 	int i, LenLevelString;
 	string s;
-
+        
 
 
 	if (LenLevelString = strlen(LevelString), LenLevelString < 1) return HC_LEVELSTRINGEMPTY;
@@ -571,7 +571,7 @@ int CVariable::SetCodeList(LPCTSTR FileName, LPCTSTR LevelString)
 //	ret = OrganizeCodelist();
 //  Maar even niet; slaat tenslotte nergens op; AHNL 9 juni 2005
 	ret = 1;
-	if (!ret == 1) {
+	if (!(ret == 1)) {
 		return HC_CODETOOLONG;
 	}
 	return true;
