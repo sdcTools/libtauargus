@@ -28,7 +28,7 @@ CND_DISTDIR=dist
 CND_BUILDDIR=build
 
 # Include project Makefile
-include NBMakefile
+include Makefile
 
 # Object Directory
 OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -74,75 +74,75 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}: ${OBJEC
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -Wl,--kill-at -shared
 
-${OBJECTDIR}/AMPL.o: AMPL.cpp 
+${OBJECTDIR}/AMPL.o: AMPL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AMPL.o AMPL.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AMPL.o AMPL.cpp
 
-${OBJECTDIR}/Code.o: Code.cpp 
+${OBJECTDIR}/Code.o: Code.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Code.o Code.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Code.o Code.cpp
 
-${OBJECTDIR}/DataCell.o: DataCell.cpp 
+${OBJECTDIR}/DataCell.o: DataCell.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DataCell.o DataCell.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DataCell.o DataCell.cpp
 
-${OBJECTDIR}/General.o: General.cpp 
+${OBJECTDIR}/General.o: General.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/General.o General.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/General.o General.cpp
 
-${OBJECTDIR}/Ghmiter.o: Ghmiter.cpp 
+${OBJECTDIR}/Ghmiter.o: Ghmiter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
 
-${OBJECTDIR}/Hitas.o: Hitas.cpp 
+${OBJECTDIR}/Hitas.o: Hitas.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Hitas.o Hitas.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Hitas.o Hitas.cpp
 
-${OBJECTDIR}/JJFormat.o: JJFormat.cpp 
+${OBJECTDIR}/JJFormat.o: JJFormat.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
 
-${OBJECTDIR}/Properties.o: Properties.cpp 
+${OBJECTDIR}/Properties.o: Properties.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Properties.o Properties.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Properties.o Properties.cpp
 
-${OBJECTDIR}/SubCodeList.o: SubCodeList.cpp 
+${OBJECTDIR}/SubCodeList.o: SubCodeList.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
 
-${OBJECTDIR}/Table.o: Table.cpp 
+${OBJECTDIR}/Table.o: Table.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Table.o Table.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Table.o Table.cpp
 
-${OBJECTDIR}/TauArgus.o: TauArgus.cpp 
+${OBJECTDIR}/TauArgus.o: TauArgus.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
 
 .NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
-TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg 
+TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg
 	@echo Performing Custom Build Step
-	D:\Users\pwof\Documents\swig\swigwin-3.0.7\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+	C:\swigwin-2.0.11\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
 
-${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp 
+${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
 
-${OBJECTDIR}/Variable.o: Variable.cpp 
+${OBJECTDIR}/Variable.o: Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -DNDEBUG -I/C/Program\ Files/Java/jdk1.7.0_07/include -I/C/Program\ Files/Java/jdk1.7.0_07/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Variable.o Variable.cpp
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Variable.o Variable.cpp
 
 # Subprojects
 .build-subprojects:
@@ -150,7 +150,6 @@ ${OBJECTDIR}/Variable.o: Variable.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}
 	${RM} TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 
 # Subprojects

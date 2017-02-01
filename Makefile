@@ -17,9 +17,9 @@ ifeq ($(PLATFORM),Linux)
 	SWIGDIR = /usr/local/bin
 	JAVADIR = /home/argus/jdk1.7.0_25
 else
-	GNUDIR  = C:/MinGW/bin
-	SWIGDIR = C:/swigwin-3.0.10
-	JAVADIR = C:/Progra~2/Java/jdk1.7.0_80
+	GNUDIR  = C:/mingw/bin
+	SWIGDIR = E:/W7/Users/Peter-Paul/MyDocuments/Thuiswerk/Programmatuur/swigwin-3.0.2
+	JAVADIR = C:/Progra~2/Java/jdk1.7.0_17
 endif
 
 LIBNAME       = TauArgusJava
@@ -114,6 +114,7 @@ $(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LDFLAGS) -o $@ $^
 	cp -p $(TARGET) $(SRCDIR)/../tauargus/TauArgusJava.dll
+	cp -p $(LIBDIR)/*.java $(SRCDIR)/../tauargus/src/tauargus/extern/dataengine
 #	cp -p $(TARGET) /opt/lib
 #	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
 #	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
