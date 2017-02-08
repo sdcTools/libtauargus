@@ -85,7 +85,7 @@ SWIGSOURCES       = $(wildcard $(SRCDIR)/*.swg)
 GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
 SOURCES           = $(filter-out $(NOSOURCES),$(wildcard $(SRCDIR)/*.cpp))
 
-OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
+OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES)) $(OBJDIR)/Versioninfo.o
 INCLUDES = $(INCDIRS:%=-I%)
 
 ifeq ($(PLATFORM),Linux)
@@ -133,3 +133,6 @@ $(OBJDIR)/%.o: makefile
 
 $(SRCDIR)/TauArgusJava_wrap.cpp : $(SRCDIR)/TauArgusJava.swg $(SRCDIR)/TauArgus.h
 	$(SWIG) $(SFLAGS) -o $@ $<
+
+$(OBJDIR)/Versioninfo.o : $(SRCDIR)/Versioninfo.rc
+	windres Versioninfo.rc $(OBJDIR)/Versioninfo.o
