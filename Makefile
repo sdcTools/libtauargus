@@ -18,8 +18,8 @@ ifeq ($(PLATFORM),Linux)
 	JAVADIR = /home/argus/jdk1.7.0_25
 else
 	GNUDIR  = C:/mingw/bin
-	SWIGDIR = C:/swigwin-3.0.10
-	JAVADIR = C:/Progra~2/Java/jdk1.7.0_80
+	SWIGDIR = E:/W7/Users/Peter-Paul/MyDocuments/Thuiswerk/Programmatuur/swigwin-3.0.2
+	JAVADIR = C:/Progra~2/Java/jdk1.7.0_17
 endif
 
 LIBNAME       = TauArgusJava
@@ -33,8 +33,8 @@ JAVAPACKAGE   = tauargus.extern.dataengine
 
 BUILDDIR = build
 DISTDIR  = dist
-debug=yes
-ifdef debug
+
+ifdef debug # NB: does not set CONF correctly from within Netbeans IDE
 	CONF = Debug
 else
 	CONF = Release
@@ -68,9 +68,9 @@ ifeq ($(PLATFORM),Linux)
 	CFLAGS += -fPIC
 endif
 ifdef debug
-	CFLAGS += -D_DEBUG -g 
+	CFLAGS += -D_DEBUG -g
 else
-	CFLAGS += -DNDEBUG -O2
+	CFLAGS += -DNDEBUG -O2 -fno-strict-aliasing
 endif
 LDFLAGS = -shared 
 ifeq ($(PLATFORM),Linux)
@@ -85,7 +85,7 @@ SWIGSOURCES       = $(wildcard $(SRCDIR)/*.swg)
 GENERATED_SOURCES = $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
 SOURCES           = $(filter-out $(NOSOURCES),$(wildcard $(SRCDIR)/*.cpp))
 
-OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES))
+OBJECTS  = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES) $(GENERATED_SOURCES)) $(OBJDIR)/Versioninfo.o
 INCLUDES = $(INCDIRS:%=-I%)
 
 ifeq ($(PLATFORM),Linux)
@@ -108,14 +108,16 @@ clean :
 	rm -rf $(OBJDIR) $(LIBDIR)
 	rm -f $(SRCDIR)/*_wrap.*
 
+$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
+	mkdir -p $@
+
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LDFLAGS) -o $@ $^
+	cp -p $(TARGET) $(SRCDIR)/../tauargus/TauArgusJava.dll
+	cp -p $(LIBDIR)/*.java $(SRCDIR)/../tauargus/src/tauargus/extern/dataengine
 #	cp -p $(TARGET) /opt/lib
 #	ln -sf /opt/lib/$(LIBFILENAME) /opt/lib/$(SONAME)
 #	ln -sf /opt/lib/$(SONAME) /opt/lib/$(LIBBASENAME)
-
-$(BUILDDIR) $(BUILDDIR)/$(CONF) $(OBJDIR) $(DISTDIR) $(DISTDIR)/$(CONF) $(LIBDIR) :
-	mkdir -p $@
 
 # pull in dependency info for *existing* .o files
 -include $(wildcard $(addsuffix .d, ${OBJECTS})) 
@@ -131,3 +133,6 @@ $(OBJDIR)/%.o: makefile
 
 $(SRCDIR)/TauArgusJava_wrap.cpp : $(SRCDIR)/TauArgusJava.swg $(SRCDIR)/TauArgus.h
 	$(SWIG) $(SFLAGS) -o $@ $<
+
+$(OBJDIR)/Versioninfo.o : $(SRCDIR)/Versioninfo.rc
+	windres Versioninfo.rc $(OBJDIR)/Versioninfo.o
