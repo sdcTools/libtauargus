@@ -30,9 +30,18 @@
 #define MAXLEVEL 8
 #define EPSILON 0.0001 //0.0000001
 
+//inline bool DBL_EQ(double x, double v)
+//{ 
+//    return fabs(x - v) <= 4*std::numeric_limits<double>::epsilon();
+//}
+
 inline bool DBL_EQ(double x, double v)
-{ 
-    return fabs(x - v) <= 4*std::numeric_limits<double>::epsilon();
+// Using way of comparing two floats as suggested on http://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+// Using ULP = 2 as is usually appropriate for the values we are facing
+{
+    int ulp = 2;
+    return (std::fabs(x-v) < std::numeric_limits<double>::epsilon() * std::fabs(x+v) * ulp) 
+                || (std::abs(x-v) < std::numeric_limits<double>::min());
 }
 
 enum CellHoldingSort	{
