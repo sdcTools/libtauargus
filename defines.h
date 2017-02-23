@@ -37,11 +37,14 @@
 
 inline bool DBL_EQ(double x, double v)
 // Using way of comparing two floats as suggested on http://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+// std::fabs(x-v) < std::numeric_limits<double>::epsilon() * std::fabs(x+v) * ulp
 // Using ULP = 2 as is usually appropriate for the values we are facing
+// Using std::numeric_limits<double>::epsilon() = 1E-14 (should be enough, machine precision 64 bit in 32 bit application could
+// give strange results
 {
     int ulp = 2;
-    return (std::fabs(x-v) < std::numeric_limits<double>::epsilon() * std::fabs(x+v) * ulp) 
-                || (std::abs(x-v) < std::numeric_limits<double>::min());
+    double eps = 1E-14;
+    return (std::fabs(x-v) < eps * std::fabs(x+v) * ulp);
 }
 
 enum CellHoldingSort	{
