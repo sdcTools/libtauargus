@@ -4943,7 +4943,7 @@ void TauArgus::TestTable(CTable *tab, long TargetDim, long *DimNr, long niv, boo
 						dc = tab-> GetCell(DimNr);
 						sum = sum + dc->GetResp();
 					}
-                                        
+
 					if (!DBL_EQ(sum,test))	{
 					    *IsGoodTable = false;
 					}
