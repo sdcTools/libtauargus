@@ -1904,7 +1904,7 @@ bool TauArgus::GetCellDistance(long TableIndex, long *DimIndex, long *Distance)
 }
 
 // Write a table as Comma seperated file
-bool TauArgus::WriteCSV(long TableIndex, const char* FileName,
+bool TauArgus::WriteCSV(long TableIndex, const char* FileName, bool EmbedQuotes, 
 						long *DimSequence, long RespType)
 {
 	if (TableIndex < 0 || TableIndex >= m_ntab)	{
@@ -1933,7 +1933,7 @@ bool TauArgus::WriteCSV(long TableIndex, const char* FileName,
 	// get pointer to (recoded) table
 	CTable *tab = GetTable(TableIndex);
 	long Dims[MAXDIM];
-	WriteCSVTable(fd, tab, DimSequence, Dims, 0, m_ValueSeparator, RespType);
+	WriteCSVTable(fd, tab, EmbedQuotes, DimSequence, Dims, 0, m_ValueSeparator, RespType);
 
 	fclose(fd);
 
@@ -1941,7 +1941,8 @@ bool TauArgus::WriteCSV(long TableIndex, const char* FileName,
 }
 
 // Write a table as Comma seperated file
-bool TauArgus::WriteCSVBasic(long TableIndex, const char* FileName,
+// Not used
+/*bool TauArgus::WriteCSVBasic(long TableIndex, const char* FileName,
 							 long *DimSequence, long RespType)
 {
 	if (TableIndex < 0 || TableIndex >= m_ntab)	{
@@ -1953,7 +1954,7 @@ bool TauArgus::WriteCSVBasic(long TableIndex, const char* FileName,
 	}
 
 	return WriteCSV(TableIndex, FileName, DimSequence, RespType);
-}
+}*/
 
 // Write Table in JJ Format
 bool TauArgus::WriteJJFormat(long TableIndex, const char* FileName,
@@ -2039,7 +2040,8 @@ bool TauArgus::WriteCellRecords(long TableIndex, const char* FileName,
 								bool SuppressEmpty, 
 								const char* FirstLine,
 								bool ShowUnsafe,
-								long RespType)
+								bool EmbedQuotes,
+                                                                long RespType)
 {
 	if (TableIndex < 0 || TableIndex >= m_ntab) {
 		return false;
@@ -2072,7 +2074,7 @@ bool TauArgus::WriteCellRecords(long TableIndex, const char* FileName,
 			SBSCode = 5;}
 	}
 	long Dims[MAXDIM];
-	WriteCellRecord(fd, tab, Dims, 0, m_ValueSeparator, SBSCode, SBSLevel, SuppressEmpty, ShowUnsafe, RespType);
+	WriteCellRecord(fd, tab, Dims, 0, m_ValueSeparator, SBSCode, SBSLevel, SuppressEmpty, ShowUnsafe, EmbedQuotes, RespType);
 
 	fclose(fd);
 
@@ -4393,7 +4395,7 @@ void TauArgus::SetTableHasRecode()
 }
 
 // write table in comma seperated format
-void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dims, int niv, char ValueSep, long RespType)
+void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, bool EmbedQuotes, long *DimSequence, long *Dims, int niv, char ValueSep, long RespType)
 {
 	// write Cell
 	if (niv == tab->nDim) {
@@ -4403,7 +4405,7 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 	}
 
 	if (tab->nDim == 1) {
-		WriteCSVColumnLabels(fd, tab, 0, ValueSep);
+		WriteCSVColumnLabels(fd, tab, 0, ValueSep, EmbedQuotes);
 		fprintf(fd, "%c", ValueSep);
 	}
 
@@ -4414,19 +4416,19 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 				if (tab->nDim > 2) { // one or more layers in table?
 					for (int j = 0; j < niv; j++) {
   						fprintf(fd, "Var %ld,", DimSequence[j] + 1);
-  						WriteCSVLabel(fd, tab, DimSequence[j], Dims[DimSequence[j]]);  // show all previous layer label(s)
+  						WriteCSVLabel(fd, tab, DimSequence[j], Dims[DimSequence[j]], EmbedQuotes);  // show all previous layer label(s)
   						if (j < (niv - 1)) fprintf(fd, ", ");
 					}
 					fprintf(fd, "\n");
 				}
-				WriteCSVColumnLabels(fd, tab, DimSequence[tab->nDim - 1], ValueSep);
+				WriteCSVColumnLabels(fd, tab, DimSequence[tab->nDim - 1], ValueSep, EmbedQuotes);
 			}
-			WriteCSVLabel(fd, tab, DimSequence[niv], i);  // show row label
+			WriteCSVLabel(fd, tab, DimSequence[niv], i, EmbedQuotes);  // show row label
 			fprintf(fd, "%c", ValueSep);
 		}
 
 		Dims[DimSequence[niv]] = i;
-		WriteCSVTable(fd, tab, DimSequence, Dims, niv + 1, ValueSep, RespType);
+		WriteCSVTable(fd, tab, EmbedQuotes, DimSequence, Dims, niv + 1, ValueSep, RespType);
 		if (niv == tab->nDim - 2) {
 			fprintf(fd, "\n");
 		}
@@ -4439,19 +4441,19 @@ void TauArgus::WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dim
 }
 
 // show column labels
-void TauArgus::WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueSep)
+void TauArgus::WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueSep, bool EmbedQuotes)
 {
 	int i, n = m_var[tab->ExplVarnr[dim]].GetnCode();
 
 	fprintf(fd, "%c", ValueSep); // first label in table always empty
 	for (i = 0; i < n; i++) {
-		WriteCSVLabel(fd, tab, dim, i);
+		WriteCSVLabel(fd, tab, dim, i, EmbedQuotes);
 		if (i < n - 1) fprintf(fd, "%c", ValueSep);
 	}
 	fprintf(fd, "\n");
 }
 
-void TauArgus::WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code)
+void TauArgus::WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code, bool EmbedQuotes)
 {
 	string s;
 	ASSERT(dim >= 0 && dim < tab->nDim);
@@ -4464,8 +4466,10 @@ void TauArgus::WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code)
 	}
 	if (s.empty() ) s = m_ValueTotal;
 	ReplaceStringInPlace(s, '"', '\'');
-
-	fprintf(fd, "\"%s\"", s.c_str());
+        if (EmbedQuotes)
+            fprintf(fd, "\"%s\"", s.c_str());
+        else
+            fprintf(fd, "%s", s.c_str());
 }
 
 // write cells
@@ -4633,35 +4637,31 @@ void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, l
 }
 
 // write cell
-void TauArgus::WriteCellRecord(FILE *fd, CTable *tab,
-											 long *Dims, int niv, char ValueSep, long SBSCode,
-											 bool bSBSLevel,
-											 bool SuppressEmpty, bool ShowUnsafe, long RespType)
+void TauArgus::WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel,
+                                    bool SuppressEmpty, bool ShowUnsafe, bool EmbedQuotes, long RespType)
 {
 	// write Cell
 	if (niv == tab->nDim) {
 		if (SuppressEmpty) {
 			if (tab->GetCell(Dims)->GetFreq() == 0) return;
 		}
-		WriteCellDimCell(fd, tab, Dims, ValueSep, SBSCode, bSBSLevel, ShowUnsafe, RespType);
+		WriteCellDimCell(fd, tab, Dims, ValueSep, SBSCode, bSBSLevel, ShowUnsafe, EmbedQuotes, RespType);
 		return;
 	}
 
 	int n = m_var[tab->ExplVarnr[niv]].GetnCode();
 	for (int i = 0; i < n; i++) {
 		Dims[niv] = i;
-		WriteCellRecord(fd, tab, Dims, niv + 1, ValueSep, SBSCode, bSBSLevel, SuppressEmpty, ShowUnsafe, RespType);
+		WriteCellRecord(fd, tab, Dims, niv + 1, ValueSep, SBSCode, bSBSLevel, SuppressEmpty, ShowUnsafe, EmbedQuotes, RespType);
 	}
 }
 
-void TauArgus::WriteCellDimCell(FILE *fd, CTable *tab,
-											  long *Dims, char ValueSep, long SBSCode,
-											  bool SBSLevel,
-											  bool ShowUnsafe, long RespType)
+void TauArgus::WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel,
+                                    bool ShowUnsafe, bool EmbedQuotes, long RespType)
 {
 	int l, n = tab->nDim;
 	for (int i = 0; i < n; i++) {
-		WriteCSVLabel(fd, tab, i, Dims[i]);
+		WriteCSVLabel(fd, tab, i, Dims[i], EmbedQuotes);
 		fprintf(fd, "%c", ValueSep);
 		if (SBSLevel) {
 			if (Dims[i] == 0 || !m_var[tab->ExplVarnr[i]].IsHierarchical) {

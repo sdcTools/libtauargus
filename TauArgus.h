@@ -70,7 +70,7 @@ private:
 	std::string m_WarningRecode;
 
 
-   void CleanUp();
+        void CleanUp();
 	void CleanTables();
 	void AddTableCells(CTable& t, CDataCell AddCell, int niv, long cellindex);
 	void AddTableCell(CTable& t, CDataCell AddCell, long cellindex);
@@ -82,14 +82,14 @@ private:
   // int  MakeSafeGHM(int TableIndex, long *nSetSecondary);
 
 // for export files
-	void WriteCSVTable(FILE *fd, CTable *tab, long *DimSequence, long *Dims, int niv, char ValueSep, long RespType);
-	void WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueSep);
-	void WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code);
+	void WriteCSVTable(FILE *fd, CTable *tab, bool EmbedQuotes, long *DimSequence, long *Dims, int niv, char ValueSep, long RespType);
+	void WriteCSVColumnLabels(FILE *fd, CTable *tab, long dim, char ValueSep, bool EmbedQuotes);
+	void WriteCSVLabel(FILE *fd, CTable *tab, long dim, int code, bool EmbedQuotes);
 	void WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, int SBSCode, long RespType);
 	void WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, long SBSCode);
-	void WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel, bool SuppressEmpty, bool ShowUnsafe, long RespType);
-   void WriteFirstLine(FILE *fd, LPCTSTR FirstLine);
-   void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, long RespType);
+	void WriteCellRecord(FILE *fd, CTable *tab, long *Dims, int niv, char ValueSep, long SBSCode, bool bSBSLevel, bool SuppressEmpty, bool ShowUnsafe, bool EmbedQuotes, long RespType);
+        void WriteFirstLine(FILE *fd, LPCTSTR FirstLine);
+        void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, bool EmbedQuotes, long RespType);
 	void ComputeCellStatuses(CTable &tab);
 	void SetProtectionLevels(CTable &tab);
 
@@ -190,7 +190,7 @@ public:
 	void SetInFileInfo(/*[in]*/ bool IsFixedFormat, /*[in]*/ const char* Seperator);
 	bool ComputeCodesToIndices(/*[in]*/ long TableIndex, /*[in,out]*/ char* sCode[], /*[in,out]*/ long *DimIndex);
 	long CheckRealizedLowerAndUpperValues(/*[in]*/long TabNr);
-    bool SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
+        bool SetCTAValues(/*[in]*/ long TabIndex, /*[in]*/ long CelNr, /*[in]*/double OrgVal, /*[in]*/double CTAVal,/*[in,out]*/  long *Sec);
 	bool SetRealizedLowerAndUpper(/*[in]*/ long TabNr,/*[in]*/ long CelNr, /*[in]*/ double RealizedUpper, /*[in]*/ double RealizedLower);
 	bool UndoSecondarySuppress(/*[in]*/ long TableIndex, long SortSuppress);
 	bool SetTableSafetyInfo(long TabIndex,
@@ -217,12 +217,12 @@ public:
 	void ThroughTable();
 	bool SetTotalsInCodeList(/*[in]*/ long NumberofVariables,/*[in]*/  long * VarIndex,/*[in,out]*/  long * ErrorCode, /*[in,out]*/  long *  ErrorInVarIndex);
 	bool SetInCodeList(/*[in]*/ long NumberofVar,  /*[in]*/ long * VarIndex, /*[in]*/ char* sCode[], /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrorInVarIndex);
-	bool WriteCellRecords(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/  long SBS, /*[in]*/ bool SBSLevel, /*[in]*/ bool SuppressEmpty, /*[in]*/ const char* FirstLine, bool ShowUnsafe, long RespType);
+	bool WriteCellRecords(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/  long SBS, /*[in]*/ bool SBSLevel, /*[in]*/ bool SuppressEmpty, /*[in]*/ const char* FirstLine, bool ShowUnsafe, /*[in]*/ bool EmbedQuotes, long RespType);
 	void GetTotalTabelSize(/*[in]*/ long TableIndex,/*[in,out]*/ long* nCell, /*[in,out]*/ long * SizeDataCell);
 	long SetSecondaryJJFORMAT(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ bool WithBogus, /*[in,out]*/ long * nSetSecondary);
 	bool WriteJJFormat(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ double LowerBound,  /*[in]*/ double UpperBound, /*[in]*/ bool WithBogus , bool AsPerc, bool ForRounding);
-	bool WriteCSV(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
-	bool WriteCSVBasic(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
+	bool WriteCSV(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in]*/ bool EmbedQuotes, /*[in,out]*/ long * DimSequence,long RespType);
+	//Not used! bool WriteCSVBasic(/*[in]*/ long TableIndex, /*[in]*/ const char* FileName, /*[in,out]*/ long * DimSequence,long RespType);
 	bool GetCellDistance(/*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ long * Distance);
 	bool PrepareCellDistance(/*[in]*/ long TableIndex);
 	long SetSecondaryGHMITER(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, /*[in,out]*/ long *nSetSecondary, bool IsSingleton);
