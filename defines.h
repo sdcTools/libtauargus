@@ -27,7 +27,7 @@
 #define FIREPROGRESS 1000
 #define MAXDIM 10
 #define MAXDIGITGROUP 10
-#define MAXLEVEL 8
+#define MAXLEVEL 10 //8
 #define EPSILON 0.0001 //0.0000001
 
 //inline bool DBL_EQ(double x, double v)
