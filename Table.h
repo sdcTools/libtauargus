@@ -36,7 +36,7 @@ public:
 	long NumberofMaxScoreHolding; //Saves the number of MaxScore to be stored per cell--Holding Level
 	bool Prepared;         // if table is already prepared
 	long nDim;              // number of variables (= dimensions) in table
-   int  SizeDim[MAXDIM];   // = nCode of corresponding variable
+        int  SizeDim[MAXDIM];   // = nCode of corresponding variable
 
 	int ExplVarnr[MAXDIM];  // index of each explanatory variable
 	int ResponseVarnr;      // index of respons variable

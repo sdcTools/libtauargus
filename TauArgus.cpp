@@ -4305,9 +4305,8 @@ void TauArgus::ComputeRecodeTableCells(
 	bool HasRecode = m_var[iVar].HasRecode;
 
 	// for total
-	ComputeRecodeTableCells(srctab, dsttab, niv + 1,
-									iCellSrc * srctab.SizeDim[niv],
-									iCellDst * dsttab.SizeDim[niv]);
+	ComputeRecodeTableCells(srctab, dsttab, niv + 1, iCellSrc * srctab.SizeDim[niv],
+							 iCellDst * dsttab.SizeDim[niv]);
 
 
 	for (i = 1; i < n; i++) {
@@ -4322,8 +4321,8 @@ void TauArgus::ComputeRecodeTableCells(
 			desti = i;
 		}
 		ComputeRecodeTableCells(srctab, dsttab, niv + 1,
-      iCellSrc * srctab.SizeDim[niv] + i,
-      iCellDst * dsttab.SizeDim[niv] + desti);
+                                        iCellSrc * srctab.SizeDim[niv] + i,
+                                        iCellDst * dsttab.SizeDim[niv] + desti);
 	}
 }
 

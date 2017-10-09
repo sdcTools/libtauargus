@@ -42,6 +42,9 @@ void CTable:: operator = (CTable & table2)
 {
 	long  i;
 
+        NumberofMaxScoreCell = table2.NumberofMaxScoreCell;
+	NumberofMaxScoreHolding = table2.NumberofMaxScoreHolding;
+        
 	Prepared = table2.Prepared;
 	nDim  = table2.nDim;
 	for (i=0; i<MAXDIM; i++) {
@@ -52,20 +55,17 @@ void CTable:: operator = (CTable & table2)
 		ExplVarnr[i] = table2.ExplVarnr[i];
 	}
 
-	CellFreqSafetyPerc = table2.CellFreqSafetyPerc;
-	HoldingFreqSafetyPerc = table2.HoldingFreqSafetyPerc;
-	ManualSafetyPerc = table2.ManualSafetyPerc;
-	ApplyHolding	= table2.ApplyHolding;
-	ApplyWeight	= table2.ApplyWeight;
-	ApplyWeightOnSafetyRule = table2.ApplyWeightOnSafetyRule;
-	ResponseVarnr = table2.ResponseVarnr;
+        ResponseVarnr = table2.ResponseVarnr;
 	ShadowVarnr = table2.ShadowVarnr ;
 	CostVarnr = table2.CostVarnr ;
-	//SafetyRule = table2.SafetyRule ;
-/*
-	TwoRulesForCell = table2.TwoRulesForCell;
-	TwoRulesForHolding = table2.TwoRulesForHolding;
-*/
+        PeepVarnr = table2.PeepVarnr;
+        
+        Lambda = table2.Lambda;
+	MaxScaledCost = table2.MaxScaledCost;
+        MinLPL = table2.MinLPL;
+        
+	SetMissingAsSafe = table2.SetMissingAsSafe;
+
 	DominanceRule = table2.DominanceRule;
 	DominanceNumberCell_1 = table2.DominanceNumberCell_1 ;
 	DominancePercCell_1 = table2.DominancePercCell_1 ;
@@ -77,7 +77,7 @@ void CTable:: operator = (CTable & table2)
 	DominanceNumberHolding_2 = table2.DominanceNumberHolding_2 ;
 	DominancePercHolding_2 = table2.DominancePercHolding_2;
 
-	PQRule = table2.PQRule;
+        PQRule = table2.PQRule;
 	PQ_PCell_1 = table2.PQ_PCell_1 ;
 	PQ_QCell_1 = table2.PQ_QCell_1 ;
 	PQ_NCell_1 = table2.PQ_NCell_1 ;
@@ -85,43 +85,47 @@ void CTable:: operator = (CTable & table2)
 	PQ_QCell_2 = table2.PQ_QCell_2 ;
 	PQ_NCell_2 = table2.PQ_NCell_2 ;
 
-
 	PQ_PHolding_1 = table2.PQ_PHolding_1 ;
 	PQ_QHolding_1 = table2.PQ_QHolding_1 ;
 	PQ_NHolding_1 = table2.PQ_NHolding_1 ;
 	PQ_PHolding_2 = table2.PQ_PHolding_2 ;
 	PQ_QHolding_2 = table2.PQ_QHolding_2 ;
 	PQ_NHolding_2 = table2.PQ_NHolding_2 ;
-
+        
 	PeepPercCell_1 = table2.PeepPercCell_1;
 	PeepPercCell_2 = table2.PeepPercCell_2;
+        
 	PeepPercHolding_1 = table2.PeepPercHolding_1;
 	PeepPercHolding_2 = table2.PeepPercHolding_2;
-
+        
 	PeepSafetyRangePercCell = table2.PeepSafetyRangePercCell;
 	PeepSafetyRangePercHolding = table2.PeepSafetyRangePercHolding;
-
-	PeepMinFreqCell =table2.PeepMinFreqCell;
-	PeepMinFreqHold =table2.PeepMinFreqHold;
+        
+	PeepMinFreqCell = table2.PeepMinFreqCell;
+	PeepMinFreqHold = table2.PeepMinFreqHold;
 
 	SafeMinRec = table2.SafeMinRec ;
 	SafeMinHoldings = table2.SafeMinHoldings;
-	HasRecode = table2.HasRecode ;
-	SetMissingAsSafe = table2.SetMissingAsSafe;
-	nCell = 0 ;
-	//nMaxCellValues = table2.nMaxCellValues;
-	NumberofMaxScoreCell = table2.NumberofMaxScoreCell;
-	IsFrequencyTable = table2.IsFrequencyTable;
-	NumberofMaxScoreHolding = table2.NumberofMaxScoreHolding;
-	ApplyPeeper=table2.ApplyPeeper;
+        
+	CellFreqSafetyPerc = table2.CellFreqSafetyPerc;
+	HoldingFreqSafetyPerc = table2.HoldingFreqSafetyPerc;
+	ManualSafetyPerc = table2.ManualSafetyPerc;
+	NSEmptySafetyRange = table2.NSEmptySafetyRange;        
 	SingletonSafetyRangePerc = table2.SingletonSafetyRangePerc;
-	Lambda = table2.Lambda;
-	MaxScaledCost = table2.MaxScaledCost;
-	EmptyCellsAsNSEmpty = table2.EmptyCellsAsNSEmpty;
-	NSEmptySafetyRange = table2.NSEmptySafetyRange;
+        ZeroSafetyRange = table2.ZeroSafetyRange;        
+        
 	CellPtr.resize(1);
+	nCell = 0 ;        
 
+	IsFrequencyTable = table2.IsFrequencyTable;
+	ApplyHolding = table2.ApplyHolding;
+	ApplyWeight = table2.ApplyWeight;
+	ApplyWeightOnSafetyRule = table2.ApplyWeightOnSafetyRule;
+	ApplyPeeper = table2.ApplyPeeper;
+        ApplyZeroRule = table2.ApplyZeroRule;
+	EmptyCellsAsNSEmpty = table2.EmptyCellsAsNSEmpty;
 
+	HasRecode = table2.HasRecode ;
 }
 
 // Table constructor. All values are initialized as zeros.
