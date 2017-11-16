@@ -205,7 +205,7 @@ public:
 											bool ApplyZeroRule, double ZeroSafetyRange,
 											bool EmptyCellAsNonStructural, long NSEmptySafetyRange,
 											long *ErrorCode);
-	bool SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2,
+	bool SetVariableForTable(/*[in]*/ long Index, /*[in]*/long nMissing,  const char* Missing1, /*[in]*/ const char* Missing2, /*[in]*/ const char* TotalCode,
 		/*[in]*/ long nDec, bool IsPeeper, const char* PeeperCode, /*[in]*/ bool IsHierarchical, /*[in]*/ bool IsNumeriek, /*[in]*/ long nPos);
 	bool CompletedTable(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ const char* FileName, /*[in]*/ bool CalculateTotals,/*[in]*/ bool SetCalculatedTotalsAsSafe,/*[in]*/ bool ForCoverTable);
 	bool SetInTable(/*[in]*/ long Index, /*[in]*/ char* sCode[],

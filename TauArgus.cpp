@@ -1168,13 +1168,13 @@ bool TauArgus::DoActiveRecode(long VarIndex)
 
 // Set Variable. All information to set in the variable object is given
 bool TauArgus::SetVariable(long VarIndex, long bPos,
-												 long nPos, long nDec, long nMissing, const char* Missing1,
-												 const char* Missing2, const char* TotalCode, bool IsPeeper,
-												 const char* PeeperCode1, const char* PeeperCode2,
-												 bool IsCategorical,
-												 bool IsNumeric, bool IsWeight,
-												 bool IsHierarchical,
-												 bool IsHolding)
+				long nPos, long nDec, long nMissing, const char* Missing1,
+				const char* Missing2, const char* TotalCode, bool IsPeeper,
+				const char* PeeperCode1, const char* PeeperCode2,
+				bool IsCategorical,
+				bool IsNumeric, bool IsWeight,
+				bool IsHierarchical,
+				bool IsHolding)
 {
 	// index oke?
 	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
@@ -2430,10 +2430,11 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 // variable set. This is incase table is given
 //directly and not built from micro data
 bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missing1,
-															const char* Missing2, long nDec, bool IsPeeper,
-															const char* PeeperCode,
-															bool IsHierarchical,
-															bool IsNumeriek, long nPos)
+					const char* Missing2, const char* TotalCode,
+                                        long nDec, bool IsPeeper,
+					const char* PeeperCode,
+					bool IsHierarchical,
+					bool IsNumeriek, long nPos)
 {
 	if (Index < 0 || Index >= m_nvar) {
 		return false;
@@ -2444,8 +2445,11 @@ bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missin
 	if (!m_var[Index].SetMissing(Missing1, Missing2, nMissing)) {
 		return false;
 	}
-
-   m_var[Index].nPos = nPos;
+        if (!m_var[Index].SetTotalCode(TotalCode) ) {
+		return false;
+	}
+        
+        m_var[Index].nPos = nPos;
 	//variable ia always categorical, weight and holdings don't come into play
 	if (IsNumeriek) {
 		if (!m_var[Index].SetDecPosition(nDec))	{
