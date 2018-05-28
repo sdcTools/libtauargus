@@ -18,8 +18,8 @@ ifeq ($(PLATFORM),Linux)
 	JAVADIR = /home/argus/jdk1.7.0_25
 else
 	GNUDIR  = C:/mingw/bin
-	SWIGDIR = C:/swigwin-3.0.10
-	JAVADIR = C:/Progra~2/Java/jdk1.7.0_80
+	SWIGDIR = E:/W7/Users/Peter-Paul/MyDocuments/Thuiswerk/Programmatuur/swigwin-3.0.2
+	JAVADIR = C:/Progra~2/Java/jdk1.7.0_51
 endif
 
 LIBNAME       = TauArgusJava

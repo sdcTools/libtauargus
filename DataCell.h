@@ -54,6 +54,7 @@ public:
 		Shadow += a.Shadow;
 		Cost += a.Cost;
 		Weight += a.Weight;
+                CellKey += a.CellKey;
 		// Not too sure about this
 		
 		// add frequencies only if holding number is different
@@ -144,6 +145,7 @@ public:
 	void SetFreqHolding(long FreqHolding)				{	this->FreqHolding = FreqHolding;}
 	void SetShadow(double Shadow)							{	this->Shadow = Shadow; }
 	void SetCost(double Cost)								{	this->Cost = Cost; }
+        void SetCellKey(double CellKey)                 {this->CellKey = CellKey;}
 	void SetStatus(long Status)							{	this->Status = Status; }
 	void SetCTAValue(double CTAValue)                   { this->CTAValue = CTAValue; }
 	void SetTempShadow(double TempShadow)				{	this->TempShadow = TempShadow; }
@@ -164,6 +166,7 @@ public:
 	//long   GetRoundedResponse()			{	return RoundedResp; }
         double   GetRoundedResponse()			{	return RoundedResp; }
 	double GetShadow()						{	return Shadow;}
+        double GetCellKey() {return CellKey;}
 	double GetCost(double Lambda);//	 { return Cost;  }
 	long   GetFreq()							{	return Freq;  }
 	double GetWeight()						{	return Weight; }
@@ -223,6 +226,7 @@ protected:
 	double	Resp;
 	double	Cost;    // value depends on CostVarnr
 	double	Shadow;  // only relevant for primary suppression pattern
+        double  CellKey;
 	long	Freq;
 	double	Weight;
 	long	FreqHolding;

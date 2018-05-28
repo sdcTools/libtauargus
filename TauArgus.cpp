@@ -249,13 +249,18 @@ oke:
 
 	// compute Status Cells for all base tables
 	for (i = 0; i < m_ntab; i++) {
-		ComputeCellStatuses(m_tab[i]);
+            ComputeCellStatuses(m_tab[i]);
 	}
 
 	// compute protection levels
 	for (i=0; i<m_ntab; i++)	{
-		SetProtectionLevels(m_tab[i]);
+            SetProtectionLevels(m_tab[i]);
 	}
+        
+        // compute cellkey from added recordkeys
+        for (i=0; i<m_ntab;i++){
+            ComputeCellKeys(m_tab[i]);
+        }
 
 
 #ifdef _DEBUGG
@@ -1238,12 +1243,12 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 // Sets all the information for the Table object this together with
 // SetTableSafety does the trick.
 bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
-												bool IsFrequencyTable,
-												long ResponseVar, long ShadowVar, long CostVar,
-												double Lambda,
-												double MaxScaledCost,
-												long PeepVarnr,
-												bool SetMissingAsSafe)
+                        bool IsFrequencyTable,
+			long ResponseVar, long ShadowVar, long CostVar, long CellKeyVar,
+			double Lambda,
+			double MaxScaledCost,
+			long PeepVarnr,
+			bool SetMissingAsSafe)
 {
 	int i = Index, j;
 	long nd;
@@ -1324,7 +1329,7 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 	}
 	m_tab[i].MaxScaledCost = MaxScaledCost;
 	// set table variables
-	m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, PeepVarnr);
+	m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, CellKeyVar, PeepVarnr);
 
 	// add SizeDim to tab
 	for (int d = 0; d < nDim; d++) {
@@ -1352,17 +1357,15 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 
 
 // Returns the information in a cell.
-bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
-//													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
-        												double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
-													double *CellShadow, double *CellCost,
-													 long *CellFreq, long *CellStatus,
-													 double *CellMaxScore,double *CellMAXScoreWeight,
-													 long *HoldingFreq,
-													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
-													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
-													 double *Lower, double *Upper,
-													 double *RealizedLower,double * RealizedUpper)
+bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
+				double *CellShadow, double *CellCost, double *CellKey,
+				long *CellFreq, long *CellStatus,
+				double *CellMaxScore,double *CellMAXScoreWeight,
+				long *HoldingFreq,
+				double *HoldingMaxScore, long *HoldingNrPerMaxScore,
+				double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
+				double *Lower, double *Upper,
+				double *RealizedLower,double * RealizedUpper)
 {
 	int i;
 
@@ -1400,6 +1403,7 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 	*CellCTAResp = dc->GetCTAValue();
 	*CellShadow  = dc->GetShadow();
 	*CellCost    = dc->GetCost(table->Lambda);
+        *CellKey     = dc->GetCellKey();
 	*CellFreq    = dc->GetFreq();
 	*CellStatus  = dc->GetStatus();
 	*RealizedUpper = dc->GetRealizedUpperValue();
@@ -3370,6 +3374,8 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 
 // str: content microdata record
 // fill tables from a micro record
+
+//TODO: add computation of cellkey
 void TauArgus::FillTables(char *str)
 {
 	int i, j;
@@ -3531,10 +3537,26 @@ void TauArgus::FillTables(char *str)
 				var->ValueToggle = 1;
 			}
 		}
-		/*else	{
-			var->Value = 1;
-			var->ValueToggle = 1;
-		}*/
+                
+                // CellKeyVarnr
+                if ((tab->CellKeyVarnr >= 0) && (tab->CellKeyVarnr < m_nvar)) {
+                    var = &(m_var[tab->CellKeyVarnr]);
+                    if (var->ValueToggle == 0) { // first time, so compute value
+                        if (InFileIsFixedFormat) {
+                            strncpy(code, (char *)&str[var->bPos], var->nPos);
+                            code[var->nPos] = 0;
+                        }
+                        else {
+                            if (readingFreeFormatResult){
+                                strcpy(code, VarCodes[var->bPos]);
+                                var->NormaliseCode(code);
+                                code[var->nPos] = 0;
+                            }
+                        }
+                        var->Value = atof(code);
+                        var->ValueToggle = 1;
+                    }
+                }
 	}
 
 	// since there is only one weight var
@@ -3599,6 +3621,12 @@ void TauArgus::FillTables(char *str)
 
  			dc.SetShadow(m_var[table->ShadowVarnr].Value);
 		}
+                
+                if ((table->CellKeyVarnr > 0) && (table->CellKeyVarnr < m_nvar))	{
+
+ 			dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
+		}
+                
 		if (table->CostVarnr >= 0) {
  		  dc.SetCost(m_var[table->CostVarnr].Value);
 		}
@@ -4381,6 +4409,14 @@ void TauArgus::SetProtectionLevels(CTable &tab)
 		CDataCell *dc = tab.GetCell(c);
 		tab.SetProtectionLevelCell(*dc);
 	}
+}
+
+void TauArgus::ComputeCellKeys(CTable &tab)
+{
+    for (int c=0; c<tab.nCell; c++){
+        CDataCell *dc = tab.GetCell(c);
+        tab.ComputeCellKeyCell(*dc);
+    }
 }
 
 // set that the table has been recoded

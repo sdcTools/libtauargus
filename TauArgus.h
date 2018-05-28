@@ -92,6 +92,7 @@ private:
         void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, bool EmbedQuotes, long RespType);
 	void ComputeCellStatuses(CTable &tab);
 	void SetProtectionLevels(CTable &tab);
+        void ComputeCellKeys(CTable &tab);
 
 // for debug
 	void ShowCodeLists();
@@ -250,17 +251,18 @@ public:
 										long * CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
-//										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
-        									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
-										/*[in,out]*/ long * CellFreq, /*[in,out]*/ long * CellStatus,
-										/*[in,out]*/  double * CellMaxScore, /*[in,out]*/ double * CellMaxScoreWeight,
-										long *HoldingFreq,
-													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
-													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
-										double * Lower, double * Upper, double * RealizedLower, double * RealizedUpper);
+        									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, 
+                                                                                /*[in,out]*/ double *CellShadow, /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey,
+										/*[in,out]*/ long *CellFreq, /*[in,out]*/ long *CellStatus,
+										/*[in,out]*/  double *CellMaxScore, /*[in,out]*/ double *CellMaxScoreWeight,
+                                                                                            long *HoldingFreq,
+                                                                                            double *HoldingMaxScore, long *HoldingNrPerMaxScore,
+                                                                                            double *PeepCell, double *PeepHolding, long *PeepSortCell, long *PeepSortHolding,
+                                                                                            double *Lower, double *Upper, double *RealizedLower, double *RealizedUpper);
 	bool SetTable(/*[in]*/ long Index, /*[in]*/ long nDim,
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
+                /*[in]*/  long CellKeyVar,
 		double Lambda, double MaxScaledCost,
 		long PeepVarnr,bool SetMissingAsSafe);
 	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
