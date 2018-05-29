@@ -1179,13 +1179,14 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 				bool IsCategorical,
 				bool IsNumeric, bool IsWeight,
 				bool IsHierarchical,
-				bool IsHolding)
+				bool IsHolding,
+                                bool IsRecordKey)
 {
 	// index oke?
 	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
 		return false;
 	}
-
+        
 	// holding?
 	if (IsHolding) {
 		if (m_VarNrHolding >= 0)	{
@@ -1215,13 +1216,13 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 /*	if (IsCategorical && Missing1[0] == 0 && Missing2[0] == 0)	{
 		return false;
 	}*/
-
+        
 	// save properties
 	if (!m_var[VarIndex].SetPosition(bPos, nPos, nDec) )	{
 		return false;
 	}
 	if (!m_var[VarIndex].SetType(IsCategorical, IsNumeric, IsWeight, IsHierarchical,
-	  IsHolding, IsPeeper) ) {
+	  IsHolding, IsPeeper, IsRecordKey) ) {
 		return false;
 	}
 	if (nMissing < 0 || nMissing > 2) {
@@ -1236,7 +1237,16 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 	if (!m_var[VarIndex].SetPeepCodes(PeeperCode1, PeeperCode2)) {
 		return false;
 	}
-
+        
+        if (IsRecordKey){
+		if (m_VarNrRecordKey >= 0) {
+			return false;
+		}// recordkey variable already given
+		if (IsCategorical || IsWeight || IsHierarchical || IsHolding) {
+			return false;
+		}
+                m_VarNrRecordKey = VarIndex;
+        }
 	return true;
 }
 
@@ -1329,7 +1339,7 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 	}
 	m_tab[i].MaxScaledCost = MaxScaledCost;
 	// set table variables
-	m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, CellKeyVar, PeepVarnr);
+        m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, CellKeyVar, PeepVarnr);
 
 	// add SizeDim to tab
 	for (int d = 0; d < nDim; d++) {
@@ -2459,12 +2469,12 @@ bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missin
 		if (!m_var[Index].SetDecPosition(nDec))	{
 			return false;
 		}
-		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false)) {
+		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false, false)) {
 			return false;
 		}
 	}
 	else {
-		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false)) {
+		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false, false)) {
 			return false;
 		}
 	}
@@ -3121,6 +3131,7 @@ void TauArgus::CleanUp()
 	m_ValueTotal = "Total";
 	m_VarNrHolding = -1;
 	m_VarNrWeight = -1;
+        m_VarNrRecordKey = -1;
 
 }
 
@@ -3623,7 +3634,6 @@ void TauArgus::FillTables(char *str)
 		}
                 
                 if ((table->CellKeyVarnr > 0) && (table->CellKeyVarnr < m_nvar))	{
-
  			dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
 		}
                 

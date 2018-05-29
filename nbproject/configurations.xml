@@ -226,7 +226,7 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>C:\swigwin-2.0.11\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>

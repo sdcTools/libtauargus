@@ -1401,4 +1401,5 @@ bool CTable::ComputeCellKeyCell(CDataCell &datacell)
     double intpart;
     CellKeyResult = modf(datacell.GetCellKey(),&intpart); // fractional part 
     datacell.SetCellKey(CellKeyResult);
+    return true;
 }

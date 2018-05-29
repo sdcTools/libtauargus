@@ -55,6 +55,7 @@ public:
 	bool IsWeight;		    	// variable is weight
 	bool IsHierarchical;   	// variable is hierarchical
 	bool IsHolding;       	// variable is holding indicator
+        bool IsRecordKey;       // variable is recordkey
 
 	int nMissing;	          // number of missing codes (usually 1 or 2)
 	std::string Missing1;       // first missing value
@@ -126,7 +127,7 @@ public:
 	bool ComputeHierarchicalCodes();
 	bool SetMissing(LPCTSTR Missing1, LPCTSTR Missing2, long NumMissing);
 	bool SetTotalCode(LPCTSTR sTotalCode);
-	bool SetType(bool IsCategorical, bool IsNumeric, bool IsWeight, bool IsHierarchical, bool IsHolding, bool IsPeeper);
+	bool SetType(bool IsCategorical, bool IsNumeric, bool IsWeight, bool IsHierarchical, bool IsHolding, bool IsPeeper, bool bIsRecordKey);
 	bool SetPeepCodes(const std::string &Peep1, const std::string &Peep2);
 	bool SetPosition(long bPos, long nPos, long nDec);
 	bool SetDecPosition(long lnDec);

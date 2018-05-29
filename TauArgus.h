@@ -42,6 +42,7 @@ private:
 	CTable * GetTable(int t);
 	int  m_VarNrWeight;
 	int  m_VarNrHolding;
+        int  m_VarNrRecordKey;
 	char m_ValueSeparator;
 	std::string m_ValueTotal;
 
@@ -267,8 +268,8 @@ public:
 		long PeepVarnr,bool SetMissingAsSafe);
 	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
 		/*[in]*/ long nDec, long nMissing,/*[in]*/ const char* Missing1, /*[in]*/ const char* Missing2,/*[in]*/ const char* TotalCode,bool IsPeeper, const char* PeeperCode1, const char* PeeperCode2, /*[in]*/ bool IsCategorical,
-		/*[in]*/  bool IsNumeric, /*[in]*/  bool IsWeight, /*[in]*/ bool IsHierarchical,
-		/*[in]*/ bool IsHolding);
+		/*[in]*/  bool IsNumeric, /*[in]*/ bool IsWeight, /*[in]*/ bool IsHierarchical,
+		/*[in]*/ bool IsHolding, /*[in]*/ bool IsRecordKey);
 	bool DoActiveRecode(/*[in]*/ long VarIndex);
 	bool GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
 	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);

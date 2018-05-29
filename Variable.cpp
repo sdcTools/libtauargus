@@ -107,9 +107,8 @@ bool CVariable::SetDecPosition(long lnDec)
 
 // Set what type the variable is.
 // Categorical, Numerical etc
-bool CVariable::SetType(bool bIsCategorical, bool bIsNumeric,
-								bool bIsWeight, bool bIsHierarchical,
-								bool bIsHolding, bool bIsPeeper)
+bool CVariable::SetType(bool bIsCategorical, bool bIsNumeric, bool bIsWeight, bool bIsHierarchical,
+			bool bIsHolding, bool bIsPeeper, bool bIsRecordKey)
 {
 	IsCategorical = bIsCategorical;
 	IsNumeric = bIsNumeric;
@@ -117,6 +116,7 @@ bool CVariable::SetType(bool bIsCategorical, bool bIsNumeric,
 	IsHierarchical = bIsHierarchical;
 	IsHolding = bIsHolding;
 	IsPeeper = bIsPeeper;
+        IsRecordKey = bIsRecordKey;
 	return true;
 }
 
