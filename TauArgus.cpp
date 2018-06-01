@@ -30,6 +30,7 @@
 #include "Globals.h"
 #include "AMPL.h"
 #include "Properties.h"
+#include "PTable.h"
 
 using namespace std;
 
@@ -5860,4 +5861,13 @@ bool TauArgus::testampl(long ind)
 	WriteHierTableInAMPL(fd, ind, sTempDir, 0.0);
 	fclose(fd);
 	return true;
+}
+
+bool TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
+    PTable ptable;
+    ptable.ReadFromFile(PTableFile);
+    printf("maxNi=%d\n",ptable.GetmaxNi());
+    printf("minDiff=%d\n",ptable.GetminDiff());
+    printf("maxDiff=%d\n",ptable.GetmaxDiff());
+    return true;
 }
