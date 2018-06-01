@@ -93,7 +93,6 @@ void PTable::SetmaxDiff(){
     i0 = atoi(strtok(line,";"));
     j = atoi(strtok(NULL,";"));
     row[j] = atof(strtok(NULL,";"));
-printf("i0=%d j=%d row[j]=%lf\n",i0,j,row[j]);
 
     while (fgets((char *)line, MAXRECORDLENGTH, ptable_in) != NULL){
         i = atoi(strtok(line,";"));
