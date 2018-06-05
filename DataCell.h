@@ -138,52 +138,54 @@ public:
 	}
 
   // set counting data
-	void SetResp(double Resp)								{	this->Resp = Resp; }
-	void SetRoundedResponse(double roundedresp)			{	this ->RoundedResp = roundedresp;}
-	void SetWeight(double weight)							{	this->Weight = weight;}
-	void SetFreq(long Freq) 								{	this->Freq = Freq; }
-	void SetFreqHolding(long FreqHolding)				{	this->FreqHolding = FreqHolding;}
-	void SetShadow(double Shadow)							{	this->Shadow = Shadow; }
-	void SetCost(double Cost)								{	this->Cost = Cost; }
-        void SetCellKey(double CellKey)                 {this->CellKey = CellKey;}
-	void SetStatus(long Status)							{	this->Status = Status; }
-	void SetCTAValue(double CTAValue)                   { this->CTAValue = CTAValue; }
-	void SetTempShadow(double TempShadow)				{	this->TempShadow = TempShadow; }
-	void SetHoldingNr(int HoldingNr)						{	this->HoldingNr = HoldingNr; }
-	void SetRealizedUpperValue(double UpperValue)	{	this-> RealizedUpperValue = UpperValue;}
-	void SetRealizedLowerValue(double LowerValue)	{	this-> RealizedLowerValue = LowerValue;}
-	void SetPeepCell(double PeepValue)					{	this->PeepCell = PeepValue;}
-	void SetPeepHolding(double PeepValue)				{	this->PeepHolding = PeepValue;}
-	void SetPeepSortCell(int iPeepsort)					{	this->PeepSortCell = iPeepsort;} 
-	void SetPeepSortHolding(int iPeepsort)				{	this->PeepSortHolding = iPeepsort;}
-	void SetUpperProtectionLevel(double UPL)			{	this->UpperProtectionLevel = UPL;}
-	void SetLowerProtectionLevel(double LPL)			{	this->LowerProtectionLevel = LPL;}
+	void SetResp(double Resp)			{ this->Resp = Resp; }
+	void SetRoundedResponse(double roundedresp)	{ this->RoundedResp = roundedresp; }
+	void SetWeight(double weight)			{ this->Weight = weight; }
+	void SetFreq(long Freq) 			{ this->Freq = Freq; }
+	void SetFreqHolding(long FreqHolding)		{ this->FreqHolding = FreqHolding; }
+	void SetShadow(double Shadow)			{ this->Shadow = Shadow; }
+	void SetCost(double Cost)			{ this->Cost = Cost; }
+        void SetCellKey(double CellKey)                 { this->CellKey = CellKey; }
+        void SetCKMValue(double CKMValue)               { this->CKMValue = CKMValue; }
+	void SetStatus(long Status)			{ this->Status = Status; }
+	void SetCTAValue(double CTAValue)               { this->CTAValue = CTAValue; }
+	void SetTempShadow(double TempShadow)		{ this->TempShadow = TempShadow; }
+	void SetHoldingNr(int HoldingNr)		{ this->HoldingNr = HoldingNr; }
+	void SetRealizedUpperValue(double UpperValue)	{ this->RealizedUpperValue = UpperValue; }
+	void SetRealizedLowerValue(double LowerValue)	{ this->RealizedLowerValue = LowerValue; }
+	void SetPeepCell(double PeepValue)		{ this->PeepCell = PeepValue; }
+	void SetPeepHolding(double PeepValue)		{ this->PeepHolding = PeepValue; }
+	void SetPeepSortCell(int iPeepsort)		{ this->PeepSortCell = iPeepsort; }
+	void SetPeepSortHolding(int iPeepsort)		{ this->PeepSortHolding = iPeepsort; }
+	void SetUpperProtectionLevel(double UPL)	{ this->UpperProtectionLevel = UPL; }
+	void SetLowerProtectionLevel(double LPL)	{ this->LowerProtectionLevel = LPL; }
 
 	
 	
 	// get counting data
-	double GetResp()							{	return Resp;  }
-	//long   GetRoundedResponse()			{	return RoundedResp; }
-        double   GetRoundedResponse()			{	return RoundedResp; }
-	double GetShadow()						{	return Shadow;}
-        double GetCellKey() {return CellKey;}
+	double GetResp()			{ return Resp; }
+	//long   GetRoundedResponse()		{ return RoundedResp; }
+        double GetRoundedResponse()		{ return RoundedResp; }
+	double GetShadow()			{ return Shadow; }
+        double GetCellKey()                     { return CellKey; }
+        double GetCKMValue()                    { return CKMValue; }
 	double GetCost(double Lambda);//	 { return Cost;  }
-	long   GetFreq()							{	return Freq;  }
-	double GetWeight()						{	return Weight; }
-	long   GetFreqHolding()					{	return FreqHolding;}
-	long   GetStatus()						{	return Status;}
-	double GetCTAValue()                    {   return CTAValue; }
-	double GetTempShadow()					{	return TempShadow;  }
-	long   GetTempPeepSortCell()        {  return TempPeepSort; } //AHNL 5.1.2004
-	int   GetHoldingNr()						{	return HoldingNr;  }
-	double GetRealizedUpperValue()		{	return RealizedUpperValue;}
-	double GetRealizedLowerValue()		{	return RealizedLowerValue;}
-	double GetPeepCell()                {	return PeepCell;}
-	double GetPeepHolding()					{	return PeepHolding; }
-	long GetPeepSortCell()					{	return PeepSortCell;}
-	long GetPeepSortHolding()				{	return PeepSortHolding;}
-	double GetUpperProtectionLevel()		{	return UpperProtectionLevel;}
-	double GetLowerProtectionLevel()		{	return LowerProtectionLevel;}
+	long   GetFreq()			{ return Freq; }
+	double GetWeight()			{ return Weight; }
+	long   GetFreqHolding()			{ return FreqHolding; }
+	long   GetStatus()			{ return Status; }
+	double GetCTAValue()                    { return CTAValue; }
+	double GetTempShadow()			{ return TempShadow; }
+	long   GetTempPeepSortCell()            { return TempPeepSort; } //AHNL 5.1.2004
+	int    GetHoldingNr()			{ return HoldingNr; }
+	double GetRealizedUpperValue()		{ return RealizedUpperValue; }
+	double GetRealizedLowerValue()		{ return RealizedLowerValue; }
+	double GetPeepCell()                    { return PeepCell; }
+	double GetPeepHolding()			{ return PeepHolding; }
+	long   GetPeepSortCell()		{ return PeepSortCell; }
+	long   GetPeepSortHolding()		{ return PeepSortHolding; }
+	double GetUpperProtectionLevel()	{ return UpperProtectionLevel; }
+	double GetLowerProtectionLevel()	{ return LowerProtectionLevel; }
 
 
 	void MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n);
@@ -233,13 +235,14 @@ protected:
 	//long    RoundedResp;
         double  RoundedResp;
 	double  CTAValue;
+        double  CKMValue;
 
-	int		Status;
+	int	Status;
 	double	TempShadow;
-	int		HoldingNr; //Holding number of the temp shadow
-	int		PeepSortCell;
-	int		PeepSortHolding;
-	int		TempPeepSort;
+	int	HoldingNr; //Holding number of the temp shadow
+	int	PeepSortCell;
+	int	PeepSortHolding;
+	int	TempPeepSort;
 
 //For Dick Windmeijer a few variable not relevant for him haved been shortened to long
 //	long	PeepCell;

@@ -14,8 +14,9 @@
 #ifndef PTABLE_H
 #define PTABLE_H
 
+typedef std::map<int,double> PTableRow;
+
 class PTable {
-    typedef std::map<int,double> PTableRow;
 public:
     PTable();
     PTable(const PTable& orig);
