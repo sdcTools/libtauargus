@@ -152,7 +152,9 @@ public:
 	{
 
 		//tyuuf
-		setlocale(LC_NUMERIC,"english");
+            // REALY NEEDED ??????
+		setlocale(LC_NUMERIC,"english"); // REALY NEEDED ??????
+            // REALY NEEDED ??????
 		m_ProgressListener = NULL;;
 		m_var  = 0;
 		m_nvar = 0;
@@ -253,6 +255,7 @@ public:
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
         									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, 
+                                                                                /*[in,out] */ double *CellCKMResp,
                                                                                 /*[in,out]*/ double *CellShadow, /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey,
 										/*[in,out]*/ long *CellFreq, /*[in,out]*/ long *CellStatus,
 										/*[in,out]*/  double *CellMaxScore, /*[in,out]*/ double *CellMaxScoreWeight,

@@ -1369,7 +1369,8 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 
 // Returns the information in a cell.
 bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
-				double *CellShadow, double *CellCost, double *CellKey,
+                                double *CellCKMResp,
+                                double *CellShadow, double *CellCost, double *CellKey,
 				long *CellFreq, long *CellStatus,
 				double *CellMaxScore,double *CellMAXScoreWeight,
 				long *HoldingFreq,
@@ -1412,6 +1413,7 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellRespons
 	*CellResponse = dc->GetResp();
 	*CellRoundedResp = dc->GetRoundedResponse();
 	*CellCTAResp = dc->GetCTAValue();
+        *CellCKMResp = dc->GetCKMValue();
 	*CellShadow  = dc->GetShadow();
 	*CellCost    = dc->GetCost(table->Lambda);
         *CellKey     = dc->GetCellKey();
@@ -3776,8 +3778,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 }
 
 // when a table is recoded. The cells are added. to create the recoded table
-void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto,
-												  long ifrom, long ito)
+void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, long ito)
 {
 	ASSERT(ifrom >= 0 && ifrom < tabfrom.nCell);
 	CDataCell *dc1 = tabfrom.GetCell(ifrom);
@@ -4248,6 +4249,7 @@ bool TauArgus::ComputeRecodeTables()
 		m_tab[m_ntab + i].HasRecode = false;
 		ComputeCellStatuses(m_tab[m_ntab + i]);
 		SetProtectionLevels(m_tab[m_ntab + i]);
+                ComputeCellKeys(m_tab[m_ntab + i]);
 
 #ifdef _DEBUGG
 		{ int i;

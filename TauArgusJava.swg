@@ -68,7 +68,7 @@
 
 // Arrays used as output
 %apply long[] { long *Status, long *HoldingNrPerMaxScore, long *UCArray };
-%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore, double *Cost, double *CellKey};
+%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore, double *Cost, double *CKMValue, double *CellKey};
 // GetCellStatusStatistics
 %apply long[] { long *StatusFreq, long *StatusCellFreq, long *StatusHoldingFreq };
 %apply double[] { double *StatusCellResponse, double *StatusCellCost };
