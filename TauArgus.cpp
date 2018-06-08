@@ -5865,7 +5865,7 @@ bool TauArgus::testampl(long ind)
 	return true;
 }
 
-bool TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
+int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
     CDataCell *dc;
     int RowNr, Diff;
     PTable ptable;
@@ -5875,7 +5875,7 @@ bool TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
     ptable.ReadFromFile(PTableFile);
 
     if (TabNo < 0 || TabNo >= m_ntab) {
-		return false;
+		return -1;
     }
     if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
     
@@ -5891,5 +5891,5 @@ bool TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
         dc->SetCKMValue((double) (dc->GetResp() + Diff));
     }
 
-    return true;
+    return ptable.GetmaxDiff();
 }

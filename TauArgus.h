@@ -293,7 +293,7 @@ public:
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 	std::string GetErrorString(long ErrorNumber);
-        bool SetCellKeyValues(long TabNo, const char* PTableFile);
+        int SetCellKeyValues(long TabNo, const char* PTableFile);
 };
 
 #endif // TauArgus_h
