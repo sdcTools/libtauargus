@@ -5865,6 +5865,14 @@ bool TauArgus::testampl(long ind)
 	return true;
 }
 
+/**
+ * Determines the noise to be added in a frequency count table, according to the 
+ * cell key method with probabilities in the p-table
+ * @param TabNo         table in tabeset to be protected
+ * @param PTableFile    name of file containing information on p-table
+ * @return              maximum amount of noise (absolute value)
+ */
+
 int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
     CDataCell *dc;
     int RowNr, Diff;
@@ -5872,8 +5880,8 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
     PTableRow row;
     PTableRow::iterator pos;
     
-    ptable.ReadFromFile(PTableFile);
-
+    if (!ptable.ReadFromFile(PTableFile)) return -9;
+    
     if (TabNo < 0 || TabNo >= m_ntab) {
 		return -1;
     }
@@ -5891,5 +5899,5 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
         dc->SetCKMValue((double) (dc->GetResp() + Diff));
     }
 
-    return ptable.GetmaxDiff();
+    return std::max(std::abs(ptable.GetminDiff()), std::abs(ptable.GetmaxDiff()));
 }

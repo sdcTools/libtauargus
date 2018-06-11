@@ -57,7 +57,7 @@ void PTable::SetmaxDiff(){
         
     for(i = 0; i < (int) Data.size(); i++){
         for (pos=Data[i].begin();pos!=Data[i].end();++pos){
-            diff = std::max(diff,pos->first - i);
+            diff = std::max(diff, pos->first - i);
         }
     }
     maxDiff = diff;
@@ -79,12 +79,12 @@ void PTable::SetmaxDiff(){
     PTableRow row;
     PTableRow::iterator pos;
     FILE* ptable_in;
-        
+     
     ptable_in = fopen(FileName,"r");
     if (ptable_in == NULL){
         return false;
     }
-
+    
     fgets((char *)line, MAXRECORDLENGTH, ptable_in); // Disregard first line: contains only names
     fgets((char *)line, MAXRECORDLENGTH, ptable_in);
 
@@ -122,3 +122,19 @@ void PTable::SetmaxDiff(){
     fclose(ptable_in);
     return true;
 }
+
+ void PTable::WriteToFile(){
+    int i;
+    PTableRow::iterator pos;
+    
+    FILE *pout = fopen("ptable_read.txt","w");
+    printf("Data.size() = %d\n",Data.size());
+    for(i = 0; i < (int) Data.size(); i++){
+        fprintf(pout,"row %d:",i);
+        for (pos=Data[i].begin();pos!=Data[i].end();++pos){
+            fprintf(pout," (%d, %17.15lf)", pos->first, pos->second);
+        }
+        fprintf(pout,"\n");
+    }
+    fclose(pout);
+ }

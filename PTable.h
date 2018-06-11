@@ -26,6 +26,7 @@ public:
     int GetminDiff() {return minDiff;}
     int GetmaxDiff() {return maxDiff;}
     std::vector<PTableRow> GetData() {return Data;}
+    void WriteToFile();
     
 private:
     int maxNi;
