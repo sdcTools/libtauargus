@@ -5868,12 +5868,12 @@ bool TauArgus::testampl(long ind)
 /**
  * Determines the noise to be added in a frequency count table, according to the 
  * cell key method with probabilities in the p-table
- * @param TabNo         table in tabeset to be protected
+ * @param TabNo         table in tableset to be protected
  * @param PTableFile    name of file containing information on p-table
  * @return              maximum amount of noise (absolute value)
  */
 
-int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
+int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
     CDataCell *dc;
     int RowNr, Diff;
     PTable ptable;
@@ -5889,15 +5889,22 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile){
     
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
-        RowNr = (dc->GetResp() >= ptable.GetmaxNi()) ? ptable.GetmaxNi() : (int) dc->GetResp();
-        row = ptable.GetData()[RowNr];
-        Diff = 0;
-        for (pos=row.begin();pos!=row.end();++pos){
-            Diff = pos->first - RowNr;
-            if (dc->GetCellKey() < pos->second) break;
+        if (dc->GetStatus() != CS_PROTECT_MANUAL){
+            RowNr = (dc->GetResp() >= ptable.GetmaxNi()) ? ptable.GetmaxNi() : (int) dc->GetResp();
+            row = ptable.GetData()[RowNr];
+            Diff = 0;
+            for (pos=row.begin();pos!=row.end();++pos){
+                Diff = pos->first - RowNr;
+                if (dc->GetCellKey() < pos->second) break;
+            }
+            dc->SetCKMValue((double) (dc->GetResp() + Diff));
         }
-        dc->SetCKMValue((double) (dc->GetResp() + Diff));
+        else{
+            dc->SetCKMValue((double) (dc->GetResp()));
+        }
     }
 
-    return std::max(std::abs(ptable.GetminDiff()), std::abs(ptable.GetmaxDiff()));
+    MinDiff[0] = ptable.GetminDiff();
+    MaxDiff[0] = ptable.GetmaxDiff();
+    return 1;
 }

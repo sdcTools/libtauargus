@@ -72,6 +72,7 @@
 // GetCellStatusStatistics
 %apply long[] { long *StatusFreq, long *StatusCellFreq, long *StatusHoldingFreq };
 %apply double[] { double *StatusCellResponse, double *StatusCellCost };
+%apply int[] {int *MaxDiff, int *MinDiff};
 
 // Include this block in the generated C++ wrapper code (TauArgus_wrap.cpp)
 %{

@@ -282,7 +282,7 @@ public:
 	long GetMaxnUc();
 	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
 	bool UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
-	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
+	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
 	bool SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
 	void CleanAll();
 	void ApplyRecode();
@@ -293,7 +293,7 @@ public:
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 	std::string GetErrorString(long ErrorNumber);
-        int SetCellKeyValues(long TabNo, const char* PTableFile);
+        int SetCellKeyValues(long TabNo, const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
 };
 
 #endif // TauArgus_h
