@@ -259,8 +259,9 @@ oke:
 	}
         
         // compute cellkey from added recordkeys
+        // only if record key variable is present
         for (i=0; i<m_ntab;i++){
-            ComputeCellKeys(m_tab[i]);
+            if (m_tab[i].CellKeyVarnr>=0){ ComputeCellKeys(m_tab[i]); }
         }
 
 
@@ -3627,9 +3628,11 @@ void TauArgus::FillTables(char *str)
 		dc.SetWeight(m_var[m_VarNrWeight].Value);
 		if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
 			dc.SetResp(m_var[table->ResponseVarnr].Value);
+                        dc.SetNWResp(m_var[table->ResponseVarnr].Value);
 		}
 		else	{	//freq table
 				dc.SetResp(1);
+                                dc.SetNWResp(1);
 		}
 		if ((table->ShadowVarnr > 0) && (table->ShadowVarnr < m_nvar))	{
 
@@ -5876,6 +5879,7 @@ bool TauArgus::testampl(long ind)
 int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
     CDataCell *dc;
     int RowNr, Diff;
+    double minDiffWeighted=1e10, maxDiffWeighted=-1e10;
     PTable ptable;
     PTableRow row;
     PTableRow::iterator pos;
@@ -5889,22 +5893,37 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff,
     
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
-        if (dc->GetStatus() != CS_PROTECT_MANUAL){
-            RowNr = (dc->GetResp() >= ptable.GetmaxNi()) ? ptable.GetmaxNi() : (int) dc->GetResp();
-            row = ptable.GetData()[RowNr];
-            Diff = 0;
-            for (pos=row.begin();pos!=row.end();++pos){
-                Diff = pos->first - RowNr;
-                if (dc->GetCellKey() < pos->second) break;
+        if (dc->GetStatus() != CS_EMPTY){
+            if (dc->GetStatus() != CS_PROTECT_MANUAL){
+                RowNr = (dc->GetNWResp() >= ptable.GetmaxNi()) ? ptable.GetmaxNi() : (int) dc->GetNWResp();
+                row = ptable.GetData()[RowNr];
+                Diff = 0;
+                for (pos=row.begin();pos!=row.end();++pos){
+                    Diff = pos->first - RowNr;
+                    if (dc->GetCellKey() < pos->second) break;
+                }
+                dc->SetCKMValue((double) (dc->GetNWResp() + Diff));
             }
-            dc->SetCKMValue((double) (dc->GetResp() + Diff));
+            else{
+                Diff = 0;
+                dc->SetCKMValue((double) (dc->GetNWResp()));
+            }
+            if (m_tab[TabNo].ApplyWeight) {
+                dc->SetCKMValue(dc->GetCKMValue()*dc->GetWeight()/dc->GetFreq());
+                minDiffWeighted = std::min(minDiffWeighted,Diff*dc->GetWeight()/dc->GetFreq());
+                maxDiffWeighted = std::max(maxDiffWeighted,Diff*dc->GetWeight()/dc->GetFreq());
+            }
         }
-        else{
-            dc->SetCKMValue((double) (dc->GetResp()));
-        }
+        else dc->SetCKMValue(0); // Empty cell
     }
-
-    MinDiff[0] = ptable.GetminDiff();
-    MaxDiff[0] = ptable.GetmaxDiff();
+    
+    if (!m_tab[TabNo].ApplyWeight){
+        MinDiff[0] = ptable.GetminDiff();
+        MaxDiff[0] = ptable.GetmaxDiff();
+    }
+    else{
+        MinDiff[0] = (int) std::round(minDiffWeighted);
+        MaxDiff[0] = (int) std::round(maxDiffWeighted);
+    }
     return 1;
 }
