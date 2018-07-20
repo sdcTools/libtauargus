@@ -4542,6 +4542,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 			case 0: fprintf(fd, "%.*f", nDec, dc->GetResp()); break;
 			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
+                        case 3: fprintf(fd, "%.*f", nDec, dc->GetCKMValue ());break;
 			}
 			break;
 		case CS_UNSAFE_FREQ:
@@ -4561,19 +4562,9 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 					break;
 			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
+                        case 3: fprintf(fd, "%.*f", nDec, dc->GetCKMValue ());break;
 			}
 
-			//			if (RespType)	{
-//				if (ShowUnsafe) {
-//					fprintf(fd, "%.*f", nDec, dc->GetResp());
-//				}
-//				else {
-//					fprintf(fd, "x");
-//				}
-//			}
-//			else	{
-//				fprintf(fd,"%d", dc->GetRoundedResponse());
-//			}
 			break;
 		case CS_EMPTY:
 			fprintf(fd, "-");

@@ -62,7 +62,7 @@
 // Instead of the default, treat these method parameters as array variables in Java...
 
 // Arrays used as input
-%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *nDigits, long *DimSequence, long *VarIndex, long *CellKeyVar };
+%apply long[] { long *ExplanatoryVarList, long *DominanceNumber, long *DominancePerc, long *PriorPosteriorP, long *PriorPosteriorQ, long *PriorPosteriorN, long *SafeMinRecAndHoldings, long *PeepPerc, long *PeepSafetyRange, long *PeepMinFreqCellAndHolding, long *CellAndHoldingFreqSafetyPerc, long *DimIndex, long *nDigits, long *DimSequence, long *VarIndex };
 %apply char **STRING_ARRAY { char* [] }
 %apply double[] { double *MaxScoreCell, double *MaxScoreHolding };
 
