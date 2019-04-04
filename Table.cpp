@@ -1399,7 +1399,7 @@ bool CTable::ComputeCellKeyCell(CDataCell &datacell)
 {
     double CellKeyResult = 0;
     double intpart;
-    CellKeyResult = modf(datacell.GetCellKey(),&intpart); // fractional part 
+    CellKeyResult = modf(datacell.GetCellKey(),&intpart); // = fractional part 
     datacell.SetCellKey(CellKeyResult);
     return true;
 }
