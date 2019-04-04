@@ -68,10 +68,11 @@
 
 // Arrays used as output
 %apply long[] { long *Status, long *HoldingNrPerMaxScore, long *UCArray };
-%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore, double *Cost };
+%apply double[] { double *Cell, double *CellMaxScore, double *CellMAXScoreWeight, double *HoldingMaxScore, double *Cost, double *CKMValue, double *CellKey};
 // GetCellStatusStatistics
 %apply long[] { long *StatusFreq, long *StatusCellFreq, long *StatusHoldingFreq };
 %apply double[] { double *StatusCellResponse, double *StatusCellCost };
+%apply int[] {int *MaxDiff, int *MinDiff};
 
 // Include this block in the generated C++ wrapper code (TauArgus_wrap.cpp)
 %{

@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Ghmiter.o \
 	${OBJECTDIR}/Hitas.o \
 	${OBJECTDIR}/JJFormat.o \
+	${OBJECTDIR}/PTable.o \
 	${OBJECTDIR}/Properties.o \
 	${OBJECTDIR}/SubCodeList.o \
 	${OBJECTDIR}/Table.o \
@@ -109,6 +110,11 @@ ${OBJECTDIR}/JJFormat.o: JJFormat.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
 
+${OBJECTDIR}/PTable.o: PTable.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTable.o PTable.cpp
+
 ${OBJECTDIR}/Properties.o: Properties.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -132,7 +138,7 @@ ${OBJECTDIR}/TauArgus.o: TauArgus.cpp
 .NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg
 	@echo Performing Custom Build Step
-	C:\swigwin-2.0.11\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+	C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
 
 ${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp
 	${MKDIR} -p ${OBJECTDIR}

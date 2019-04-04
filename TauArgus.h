@@ -42,6 +42,7 @@ private:
 	CTable * GetTable(int t);
 	int  m_VarNrWeight;
 	int  m_VarNrHolding;
+        int  m_VarNrRecordKey;
 	char m_ValueSeparator;
 	std::string m_ValueTotal;
 
@@ -92,6 +93,7 @@ private:
         void WriteCellDimCell(FILE *fd, CTable *tab, long *Dims, char ValueSep, long SBSCode, bool SBSLevel, bool ShowUnsafe, bool EmbedQuotes, long RespType);
 	void ComputeCellStatuses(CTable &tab);
 	void SetProtectionLevels(CTable &tab);
+        void ComputeCellKeys(CTable &tab);
 
 // for debug
 	void ShowCodeLists();
@@ -150,7 +152,9 @@ public:
 	{
 
 		//tyuuf
-		setlocale(LC_NUMERIC,"english");
+            // REALY NEEDED ??????
+		setlocale(LC_NUMERIC,"english"); // REALY NEEDED ??????
+            // REALY NEEDED ??????
 		m_ProgressListener = NULL;;
 		m_var  = 0;
 		m_nvar = 0;
@@ -250,23 +254,25 @@ public:
 										long * CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double*CellResponse,
-//										/*[in,out] */ long *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
-        									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, /*[in,out]*/ double * CellShadow, /*[in,out]*/ double * CellCost,
-										/*[in,out]*/ long * CellFreq, /*[in,out]*/ long * CellStatus,
-										/*[in,out]*/  double * CellMaxScore, /*[in,out]*/ double * CellMaxScoreWeight,
-										long *HoldingFreq,
-													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
-													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
-										double * Lower, double * Upper, double * RealizedLower, double * RealizedUpper);
+        									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, 
+                                                                                /*[in,out] */ double *CellCKMResp,
+                                                                                /*[in,out]*/ double *CellShadow, /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey,
+										/*[in,out]*/ long *CellFreq, /*[in,out]*/ long *CellStatus,
+										/*[in,out]*/  double *CellMaxScore, /*[in,out]*/ double *CellMaxScoreWeight,
+                                                                                            long *HoldingFreq,
+                                                                                            double *HoldingMaxScore, long *HoldingNrPerMaxScore,
+                                                                                            double *PeepCell, double *PeepHolding, long *PeepSortCell, long *PeepSortHolding,
+                                                                                            double *Lower, double *Upper, double *RealizedLower, double *RealizedUpper);
 	bool SetTable(/*[in]*/ long Index, /*[in]*/ long nDim,
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
+                /*[in]*/  long CellKeyVar,
 		double Lambda, double MaxScaledCost,
 		long PeepVarnr,bool SetMissingAsSafe);
 	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
 		/*[in]*/ long nDec, long nMissing,/*[in]*/ const char* Missing1, /*[in]*/ const char* Missing2,/*[in]*/ const char* TotalCode,bool IsPeeper, const char* PeeperCode1, const char* PeeperCode2, /*[in]*/ bool IsCategorical,
-		/*[in]*/  bool IsNumeric, /*[in]*/  bool IsWeight, /*[in]*/ bool IsHierarchical,
-		/*[in]*/ bool IsHolding);
+		/*[in]*/  bool IsNumeric, /*[in]*/ bool IsWeight, /*[in]*/ bool IsHierarchical,
+		/*[in]*/ bool IsHolding, /*[in]*/ bool IsRecordKey);
 	bool DoActiveRecode(/*[in]*/ long VarIndex);
 	bool GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
 	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
@@ -276,7 +282,7 @@ public:
 	long GetMaxnUc();
 	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
 	bool UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
-	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
+	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
 	bool SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
 	void CleanAll();
 	void ApplyRecode();
@@ -287,6 +293,7 @@ public:
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 	std::string GetErrorString(long ErrorNumber);
+        int SetCellKeyValues(long TabNo, const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
 };
 
 #endif // TauArgus_h

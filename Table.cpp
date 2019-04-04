@@ -219,7 +219,7 @@ bool CTable::SetExplVariables(int inDim, long* ExplVar)
 
 
 // other variables are set. In case only frequency tables are created, this has to be changed
-bool CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar)
+bool CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, long CostVar, long CellKeyVar, long PeepVar)
 {
 	// Add HoldingVarnr to this shit
 
@@ -243,6 +243,10 @@ bool CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, 
 		ShadowVarnr = -1;
 	}*/
 
+        if (CellKeyVar >= 0){
+            CellKeyVarnr = CellKeyVar;
+        }
+        
 	CostVarnr = CostVar;
 	PeepVarnr = PeepVar;
 
@@ -1389,4 +1393,13 @@ bool CTable::SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, lon
 		}
 	}
 	return true;
+}
+
+bool CTable::ComputeCellKeyCell(CDataCell &datacell)
+{
+    double CellKeyResult = 0;
+    double intpart;
+    CellKeyResult = modf(datacell.GetCellKey(),&intpart); // = fractional part 
+    datacell.SetCellKey(CellKeyResult);
+    return true;
 }

@@ -30,6 +30,7 @@
 #include "Globals.h"
 #include "AMPL.h"
 #include "Properties.h"
+#include "PTable.h"
 
 using namespace std;
 
@@ -249,13 +250,19 @@ oke:
 
 	// compute Status Cells for all base tables
 	for (i = 0; i < m_ntab; i++) {
-		ComputeCellStatuses(m_tab[i]);
+            ComputeCellStatuses(m_tab[i]);
 	}
 
 	// compute protection levels
 	for (i=0; i<m_ntab; i++)	{
-		SetProtectionLevels(m_tab[i]);
+            SetProtectionLevels(m_tab[i]);
 	}
+        
+        // compute cellkey from added recordkeys
+        // only if record key variable is present
+        for (i=0; i<m_ntab;i++){
+            if (m_tab[i].CellKeyVarnr>=0){ ComputeCellKeys(m_tab[i]); }
+        }
 
 
 #ifdef _DEBUGG
@@ -1174,13 +1181,14 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 				bool IsCategorical,
 				bool IsNumeric, bool IsWeight,
 				bool IsHierarchical,
-				bool IsHolding)
+				bool IsHolding,
+                                bool IsRecordKey)
 {
 	// index oke?
 	if (VarIndex < 0 || VarIndex >= m_nvar+1) {
 		return false;
 	}
-
+        
 	// holding?
 	if (IsHolding) {
 		if (m_VarNrHolding >= 0)	{
@@ -1210,13 +1218,13 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 /*	if (IsCategorical && Missing1[0] == 0 && Missing2[0] == 0)	{
 		return false;
 	}*/
-
+        
 	// save properties
 	if (!m_var[VarIndex].SetPosition(bPos, nPos, nDec) )	{
 		return false;
 	}
 	if (!m_var[VarIndex].SetType(IsCategorical, IsNumeric, IsWeight, IsHierarchical,
-	  IsHolding, IsPeeper) ) {
+	  IsHolding, IsPeeper, IsRecordKey) ) {
 		return false;
 	}
 	if (nMissing < 0 || nMissing > 2) {
@@ -1231,19 +1239,28 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 	if (!m_var[VarIndex].SetPeepCodes(PeeperCode1, PeeperCode2)) {
 		return false;
 	}
-
+        
+        if (IsRecordKey){
+		if (m_VarNrRecordKey >= 0) {
+			return false;
+		}// recordkey variable already given
+		if (IsCategorical || IsWeight || IsHierarchical || IsHolding) {
+			return false;
+		}
+                m_VarNrRecordKey = VarIndex;
+        }
 	return true;
 }
 
 // Sets all the information for the Table object this together with
 // SetTableSafety does the trick.
 bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
-												bool IsFrequencyTable,
-												long ResponseVar, long ShadowVar, long CostVar,
-												double Lambda,
-												double MaxScaledCost,
-												long PeepVarnr,
-												bool SetMissingAsSafe)
+                        bool IsFrequencyTable,
+			long ResponseVar, long ShadowVar, long CostVar, long CellKeyVar,
+			double Lambda,
+			double MaxScaledCost,
+			long PeepVarnr,
+			bool SetMissingAsSafe)
 {
 	int i = Index, j;
 	long nd;
@@ -1324,7 +1341,7 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 	}
 	m_tab[i].MaxScaledCost = MaxScaledCost;
 	// set table variables
-	m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, PeepVarnr);
+        m_tab[i].SetVariables(nDim, ExplanatoryVarList, ResponseVar, ShadowVar, CostVar, CellKeyVar, PeepVarnr);
 
 	// add SizeDim to tab
 	for (int d = 0; d < nDim; d++) {
@@ -1352,17 +1369,16 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 
 
 // Returns the information in a cell.
-bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
-//													double *CellResponse, long *CellRoundedResp, double *CellCTAResp,
-        												double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
-													double *CellShadow, double *CellCost,
-													 long *CellFreq, long *CellStatus,
-													 double *CellMaxScore,double *CellMAXScoreWeight,
-													 long *HoldingFreq,
-													 double *HoldingMaxScore, long *HoldingNrPerMaxScore,
-													 double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
-													 double *Lower, double *Upper,
-													 double *RealizedLower,double * RealizedUpper)
+bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
+                                double *CellCKMResp,
+                                double *CellShadow, double *CellCost, double *CellKey,
+				long *CellFreq, long *CellStatus,
+				double *CellMaxScore,double *CellMAXScoreWeight,
+				long *HoldingFreq,
+				double *HoldingMaxScore, long *HoldingNrPerMaxScore,
+				double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
+				double *Lower, double *Upper,
+				double *RealizedLower,double * RealizedUpper)
 {
 	int i;
 
@@ -1398,8 +1414,10 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex,
 	*CellResponse = dc->GetResp();
 	*CellRoundedResp = dc->GetRoundedResponse();
 	*CellCTAResp = dc->GetCTAValue();
+        *CellCKMResp = dc->GetCKMValue();
 	*CellShadow  = dc->GetShadow();
 	*CellCost    = dc->GetCost(table->Lambda);
+        *CellKey     = dc->GetCellKey();
 	*CellFreq    = dc->GetFreq();
 	*CellStatus  = dc->GetStatus();
 	*RealizedUpper = dc->GetRealizedUpperValue();
@@ -2455,12 +2473,12 @@ bool TauArgus::SetVariableForTable(long Index, long nMissing, const char* Missin
 		if (!m_var[Index].SetDecPosition(nDec))	{
 			return false;
 		}
-		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false)) {
+		if (!m_var[Index].SetType(false, IsNumeriek, false, IsHierarchical, false, false, false)) {
 			return false;
 		}
 	}
 	else {
-		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false)) {
+		if (!m_var[Index].SetType(true, false, false, IsHierarchical, false, false, false)) {
 			return false;
 		}
 	}
@@ -3117,6 +3135,7 @@ void TauArgus::CleanUp()
 	m_ValueTotal = "Total";
 	m_VarNrHolding = -1;
 	m_VarNrWeight = -1;
+        m_VarNrRecordKey = -1;
 
 }
 
@@ -3370,6 +3389,8 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 
 // str: content microdata record
 // fill tables from a micro record
+
+//TODO: add computation of cellkey
 void TauArgus::FillTables(char *str)
 {
 	int i, j;
@@ -3531,10 +3552,26 @@ void TauArgus::FillTables(char *str)
 				var->ValueToggle = 1;
 			}
 		}
-		/*else	{
-			var->Value = 1;
-			var->ValueToggle = 1;
-		}*/
+                
+                // CellKeyVarnr
+                if ((tab->CellKeyVarnr >= 0) && (tab->CellKeyVarnr < m_nvar)) {
+                    var = &(m_var[tab->CellKeyVarnr]);
+                    if (var->ValueToggle == 0) { // first time, so compute value
+                        if (InFileIsFixedFormat) {
+                            strncpy(code, (char *)&str[var->bPos], var->nPos);
+                            code[var->nPos] = 0;
+                        }
+                        else {
+                            if (readingFreeFormatResult){
+                                strcpy(code, VarCodes[var->bPos]);
+                                var->NormaliseCode(code);
+                                code[var->nPos] = 0;
+                            }
+                        }
+                        var->Value = atof(code);
+                        var->ValueToggle = 1;
+                    }
+                }
 	}
 
 	// since there is only one weight var
@@ -3591,14 +3628,21 @@ void TauArgus::FillTables(char *str)
 		dc.SetWeight(m_var[m_VarNrWeight].Value);
 		if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
 			dc.SetResp(m_var[table->ResponseVarnr].Value);
+                        dc.SetNWResp(m_var[table->ResponseVarnr].Value);
 		}
 		else	{	//freq table
 				dc.SetResp(1);
+                                dc.SetNWResp(1);
 		}
 		if ((table->ShadowVarnr > 0) && (table->ShadowVarnr < m_nvar))	{
 
  			dc.SetShadow(m_var[table->ShadowVarnr].Value);
 		}
+                
+                if ((table->CellKeyVarnr > 0) && (table->CellKeyVarnr < m_nvar))	{
+ 			dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
+		}
+                
 		if (table->CostVarnr >= 0) {
  		  dc.SetCost(m_var[table->CostVarnr].Value);
 		}
@@ -3737,8 +3781,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 }
 
 // when a table is recoded. The cells are added. to create the recoded table
-void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto,
-												  long ifrom, long ito)
+void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, long ito)
 {
 	ASSERT(ifrom >= 0 && ifrom < tabfrom.nCell);
 	CDataCell *dc1 = tabfrom.GetCell(ifrom);
@@ -4209,6 +4252,7 @@ bool TauArgus::ComputeRecodeTables()
 		m_tab[m_ntab + i].HasRecode = false;
 		ComputeCellStatuses(m_tab[m_ntab + i]);
 		SetProtectionLevels(m_tab[m_ntab + i]);
+                ComputeCellKeys(m_tab[m_ntab + i]);
 
 #ifdef _DEBUGG
 		{ int i;
@@ -4383,6 +4427,14 @@ void TauArgus::SetProtectionLevels(CTable &tab)
 	}
 }
 
+void TauArgus::ComputeCellKeys(CTable &tab)
+{
+    for (int c=0; c<tab.nCell; c++){
+        CDataCell *dc = tab.GetCell(c);
+        tab.ComputeCellKeyCell(*dc);
+    }
+}
+
 // set that the table has been recoded
 void TauArgus::SetTableHasRecode()
 {
@@ -4490,6 +4542,7 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 			case 0: fprintf(fd, "%.*f", nDec, dc->GetResp()); break;
 			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
+                        case 3: fprintf(fd, "%.*f", nDec, dc->GetCKMValue ());break;
 			}
 			break;
 		case CS_UNSAFE_FREQ:
@@ -4509,19 +4562,9 @@ void TauArgus::WriteCSVCell(FILE *fd, CTable *tab, long *Dim, bool ShowUnsafe, i
 					break;
 			case 1: fprintf(fd, "%.*f", nDec, dc->GetRoundedResponse());	break;
 			case 2: fprintf(fd, "%.*f", nDec, dc->GetCTAValue ());break;
+                        case 3: fprintf(fd, "%.*f", nDec, dc->GetCKMValue ());break;
 			}
 
-			//			if (RespType)	{
-//				if (ShowUnsafe) {
-//					fprintf(fd, "%.*f", nDec, dc->GetResp());
-//				}
-//				else {
-//					fprintf(fd, "x");
-//				}
-//			}
-//			else	{
-//				fprintf(fd,"%d", dc->GetRoundedResponse());
-//			}
 			break;
 		case CS_EMPTY:
 			fprintf(fd, "-");
@@ -5814,4 +5857,64 @@ bool TauArgus::testampl(long ind)
 	WriteHierTableInAMPL(fd, ind, sTempDir, 0.0);
 	fclose(fd);
 	return true;
+}
+
+/**
+ * Determines the noise to be added in a frequency count table, according to the 
+ * cell key method with probabilities in the p-table
+ * @param TabNo         table in tableset to be protected
+ * @param PTableFile    name of file containing information on p-table
+ * @return              maximum amount of noise (absolute value)
+ */
+
+int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
+    CDataCell *dc;
+    int RowNr, Diff;
+    double minDiffWeighted=1e10, maxDiffWeighted=-1e10;
+    PTable ptable;
+    PTableRow row;
+    PTableRow::iterator pos;
+    
+    if (!ptable.ReadFromFile(PTableFile)) return -9;
+    
+    if (TabNo < 0 || TabNo >= m_ntab) {
+		return -1;
+    }
+    if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
+    
+    for (long i=0; i < m_tab[TabNo].nCell; i++){
+        dc = m_tab[TabNo].GetCell(i);
+        if (dc->GetStatus() != CS_EMPTY){
+            if (dc->GetStatus() != CS_PROTECT_MANUAL){
+                RowNr = (dc->GetNWResp() >= ptable.GetmaxNi()) ? ptable.GetmaxNi() : (int) dc->GetNWResp();
+                row = ptable.GetData()[RowNr];
+                Diff = 0;
+                for (pos=row.begin();pos!=row.end();++pos){
+                    Diff = pos->first - RowNr;
+                    if (dc->GetCellKey() < pos->second) break;
+                }
+                dc->SetCKMValue((double) (dc->GetNWResp() + Diff));
+            }
+            else{
+                Diff = 0;
+                dc->SetCKMValue((double) (dc->GetNWResp()));
+            }
+            if (m_tab[TabNo].ApplyWeight) {
+                dc->SetCKMValue(dc->GetCKMValue()*dc->GetWeight()/dc->GetFreq());
+                minDiffWeighted = std::min(minDiffWeighted,Diff*dc->GetWeight()/dc->GetFreq());
+                maxDiffWeighted = std::max(maxDiffWeighted,Diff*dc->GetWeight()/dc->GetFreq());
+            }
+        }
+        else dc->SetCKMValue(0); // Empty cell
+    }
+    
+    if (!m_tab[TabNo].ApplyWeight){
+        MinDiff[0] = ptable.GetminDiff();
+        MaxDiff[0] = ptable.GetmaxDiff();
+    }
+    else{
+        MinDiff[0] = (int) std::round(minDiffWeighted);
+        MaxDiff[0] = (int) std::round(maxDiffWeighted);
+    }
+    return 1;
 }

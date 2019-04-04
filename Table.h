@@ -42,6 +42,7 @@ public:
 	int ResponseVarnr;      // index of respons variable
 	int ShadowVarnr;        // index of shadow variable
 	int CostVarnr;          // index of cost variable; or CVT_FREQ etc, these values are always < 0
+        int CellKeyVarnr;       // index of variable to compute cellkey
 	int PeepVarnr;
 
 	// Transformation the Cost function.
@@ -178,10 +179,11 @@ public:
 	//bool SetPQRule(long PriorPosteriorP, long PriorPosteriorQ, long PriorPosteriorN);
 	bool SetPQRule(long *PriorPosteriorP,long *PriorPosteriorQ, long *PriorPosteriorN);
 	bool SetSafeMinRecAndHold(long SafeMinRec, long SafeMinholdings);
-	bool SetVariables(int inDim, long* ExplVar, long RespVar, long ShadVar, long CostVar, long PeepVar);
+	bool SetVariables(int inDim, long* ExplVar, long RespVar, long ShadVar, long CostVar, long CellKeyVar, long PeepVar);
 	bool SetExplVariables(int nDim, long* ExplVar);
 	bool SetProtectionLevelCell(CDataCell &datacell);
 	bool SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K);
+        bool ComputeCellKeyCell(CDataCell &datacell);
 	virtual ~CTable();
 };
 
