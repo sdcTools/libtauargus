@@ -1,6 +1,6 @@
 1                  VERSIONINFO
-FILEVERSION        1,1,3,0
-PRODUCTVERSION     1,1,3,0
+FILEVERSION        1,1,4,1
+PRODUCTVERSION     1,1,4,1
 FILETYPE           2
 BEGIN
   BLOCK "StringFileInfo"
@@ -9,12 +9,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", ""
       VALUE "FileDescription", "Data Engine TauArgus"
-      VALUE "FileVersion", "BETA_1.1.3.0"
+      VALUE "FileVersion", "1.1.4.1"
       VALUE "InternalName", ""
       VALUE "LegalCopyright", ""
       VALUE "OriginalFilename", "TauArgusJava.dll"
       VALUE "ProductName", "TauArgusJava.dll"
-      VALUE "ProductVersion", "BETA_1.1.3.0"
+      VALUE "ProductVersion", "1.1.4.1"
     END
   END
   BLOCK "VarFileInfo"

@@ -3634,12 +3634,12 @@ void TauArgus::FillTables(char *str)
 				dc.SetResp(1);
                                 dc.SetNWResp(1);
 		}
-		if ((table->ShadowVarnr > 0) && (table->ShadowVarnr < m_nvar))	{
+		if ((table->ShadowVarnr >= 0) && (table->ShadowVarnr < m_nvar))	{
 
  			dc.SetShadow(m_var[table->ShadowVarnr].Value);
 		}
                 
-                if ((table->CellKeyVarnr > 0) && (table->CellKeyVarnr < m_nvar))	{
+                if ((table->CellKeyVarnr >= 0) && (table->CellKeyVarnr < m_nvar))	{
  			dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
 		}
                 
