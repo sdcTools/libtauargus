@@ -18,49 +18,16 @@
 #include <vector>
 #include "defines.h"
 
-#include "PTable.h"
+#include "PTableCont.h"
 
-PTable::PTable() {
-    maxNi = 0;
-    minDiff = 0;
-    maxDiff = 0;
+PTableCont::PTableCont() {
+
 }
 
-PTable::PTable(const PTable& orig) {
+PTableCont::PTableCont(const PTableCont& orig) {
 }
 
-PTable::~PTable() {
-}
-
-// PTable in file index i runs from 0 to MaxNi
-void PTable::SetmaxNi(){
-    maxNi = Data.size() - 1;
-}
-
-void PTable::SetminDiff(){
-    int diff = 2140000000;
-    int i;
-    PTableRow::iterator pos;
-        
-    for(i = 0; i < (int) Data.size(); i++){
-        for (pos=Data[i].begin();pos!=Data[i].end();++pos){
-            diff = std::min(diff, pos->first - i);
-        }
-    }
-    minDiff = diff;
-}
-
-void PTable::SetmaxDiff(){
-    int diff = -2140000000;
-    int i;
-    PTableRow::iterator pos;
-        
-    for(i = 0; i < (int) Data.size(); i++){
-        for (pos=Data[i].begin();pos!=Data[i].end();++pos){
-            diff = std::max(diff, pos->first - i);
-        }
-    }
-    maxDiff = diff;
+PTableCont::~PTableCont() {
 }
 
 /**
@@ -72,12 +39,13 @@ void PTable::SetmaxDiff(){
  * @param FileName
  * @return true if no error
  */    
- bool PTable::ReadFromFreqFile(const char* FileName){
+ bool PTableCont::ReadFromFile(const char* FileName){
     char line[MAXRECORDLENGTH];
-    int i=0, j=0, i0=0;
-    double bound;
-    PTableRow row;
-    PTableRow::iterator pos;
+    int  i0, i;
+    double j, pkum_o, dummy, bound, diff;
+    std::string type;
+    PTableDRow row;
+    PTableDRow::iterator pos;
     FILE* ptable_in;
      
     ptable_in = fopen(FileName,"r");
@@ -88,12 +56,16 @@ void PTable::SetmaxDiff(){
     fgets((char *)line, MAXRECORDLENGTH, ptable_in); // Disregard first line: contains only names
     fgets((char *)line, MAXRECORDLENGTH, ptable_in);
 
-    row = PTableRow();
+    row = PTableDRow();
     
-    i0 = atoi(strtok(line,";"));
-    j = atoi(strtok(NULL,";"));
-    row[j] = atof(strtok(NULL,";"));
-
+    i0 = atoi(strtok(line,";"));  // i
+    j = atof(strtok(NULL,";"));   // j
+    row[j] = atof(strtok(NULL,";"));  // p
+    dummy = atof(strtok(NULL,";")); // p_kum_u
+    pkum_o = atof(strtok(NULL,";")); // p_kum_o
+    diff = atof(strtok(NULL,";"));  // diff
+    type = strtok(NULL,"\n");       // type: even, odd or all
+    
     while (fgets((char *)line, MAXRECORDLENGTH, ptable_in) != NULL){
         i = atoi(strtok(line,";"));
         if (i != i0){
@@ -102,12 +74,16 @@ void PTable::SetmaxDiff(){
                 bound += pos->second;
                 row[pos->first] = bound;
             }
-            Data.push_back(row);
-            row = PTableRow();
+            Data[type][i] = row;
+            row = PTableDRow();
             i0=i;
         }
-        j = atoi(strtok(NULL,";"));
+        j = atof(strtok(NULL,";"));
         row[j] = atof(strtok(NULL,";"));
+        dummy = atof(strtok(NULL,";")); // p_kum_u
+        pkum_o = atof(strtok(NULL,";")); // p_kum_o
+        diff = atof(strtok(NULL,";"));  // diff
+        type = strtok(NULL,"\n");       // type: even, odd or all
     }
 
     bound = 0;
@@ -115,16 +91,14 @@ void PTable::SetmaxDiff(){
         bound += pos->second;
         row[pos->first] = bound;
     }
-    Data.push_back(row);
-    SetmaxNi();
-    SetminDiff();
-    SetmaxDiff();
+    Data[type][i]=row;
+
     fclose(ptable_in);
     return true;
 }
 
- void PTable::WriteToFile(){
-    int i;
+ void PTableCont::WriteToFile(){
+    /*int i;
     PTableRow::iterator pos;
     
     FILE *pout = fopen("ptable_read.txt","w");
@@ -136,19 +110,20 @@ void PTable::SetmaxDiff(){
         }
         fprintf(pout,"\n");
     }
-    fclose(pout);
+    fclose(pout);*/
  }
 
-  void PTable::Write(){
-    int i;
-    PTableRow::iterator pos;
+void PTableCont::Write(std::string type){
+    PTableDRow::iterator pos;
+    std::map<int,PTableDRow>::iterator rowpos;
     
-    printf("Data.size() = %d\n",Data.size());
-    for(i = 0; i < (int) Data.size(); i++){
-        printf("row %d:",i);
-        for (pos=Data[i].begin();pos!=Data[i].end();++pos){
-            printf(" (%d, %17.15lf)", pos->first, pos->second);
+    printf("Data[%s].size() = %d\n", type.c_str(),Data[type].size());
+    
+    for (rowpos=Data[type].begin();rowpos!=Data[type].end();++rowpos){
+        printf("row %d:",rowpos->first);
+        for (pos=rowpos->second.begin();pos!=rowpos->second.end();++pos){
+            printf(" (%3.1lf, %17.15lf)", pos->first, pos->second);
         }
         printf("\n");
     }
- }
+}

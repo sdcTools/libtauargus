@@ -21,12 +21,13 @@ public:
     PTable();
     PTable(const PTable& orig);
     virtual ~PTable();
-    bool ReadFromFile(const char* FileName);
+    bool ReadFromFreqFile(const char* FileName);
     int GetmaxNi() {return maxNi;}
     int GetminDiff() {return minDiff;}
     int GetmaxDiff() {return maxDiff;}
     std::vector<PTableRow> GetData() {return Data;}
     void WriteToFile();
+    void Write();
     
 private:
     int maxNi;

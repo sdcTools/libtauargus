@@ -31,6 +31,7 @@
 #include "AMPL.h"
 #include "Properties.h"
 #include "PTable.h"
+#include "PTableCont.h"
 
 using namespace std;
 
@@ -5867,7 +5868,7 @@ bool TauArgus::testampl(long ind)
  * @return              maximum amount of noise (absolute value)
  */
 
-int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
+int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
     CDataCell *dc;
     int RowNr, Diff;
     double minDiffWeighted=1e10, maxDiffWeighted=-1e10;
@@ -5875,7 +5876,7 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff,
     PTableRow row;
     PTableRow::iterator pos;
     
-    if (!ptable.ReadFromFile(PTableFile)) return -9;
+    if (!ptable.ReadFromFreqFile(PTableFile)) return -9;
     
     if (TabNo < 0 || TabNo >= m_ntab) {
 		return -1;
@@ -5916,5 +5917,17 @@ int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff,
         MinDiff[0] = (int) std::round(minDiffWeighted);
         MaxDiff[0] = (int) std::round(maxDiffWeighted);
     }
+    return 1;
+}
+
+int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
+    
+    PTableCont ptable;
+    
+    if (!ptable.ReadFromFile(PTableFile)) return -9;
+    ptable.Write("even");
+    ptable.Write("odd");
+    ptable.Write("all");
+    
     return 1;
 }
