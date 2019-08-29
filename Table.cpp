@@ -402,7 +402,7 @@ bool CTable::PrepareTable()
 		return false;
 	}
 	// one empty cell with last Cellptr pointing to.
-	CDataCell *dcempty = new CDataCell(NumberofMaxScoreCell, NumberofMaxScoreHolding,ApplyHolding,ApplyWeight);
+	CDataCell *dcempty = new CDataCell(NumberofMaxScoreCell, NumberofMaxScoreHolding, ApplyHolding, ApplyWeight);
 	//hier ook een nus struct empty maken; Size eentje hoger; Iedereen verwijst naaar de empty cell ipv NULL
 	CellPtr[nCell] = dcempty;
 	for (i=0; i<nCell; i++)	{
@@ -430,8 +430,22 @@ bool CTable::PrepareTable()
 		}
 	}
 
-	NumberofMaxScoreCell= max(nScoreCellDom, nScoreCellPQ);
-	NumberofMaxScoreHolding = max(nScoreHoldingDom,nScoreHoldingPQ);
+        NumberofMaxScoreHolding = max(nScoreHoldingDom,nScoreHoldingPQ);
+	
+        NumberofMaxScoreCell= max(nScoreCellDom, nScoreCellPQ);
+        // To be able to deal with CKMType = "T" with TopK
+        if (strcmp(CKMType, "T")==0) {
+            NumberofMaxScoreCell = max(NumberofMaxScoreCell, CKMTopK);
+        }
+        else{
+            if (strcmp(CKMType, "N") != 0) {
+                NumberofMaxScoreCell = max(NumberofMaxScoreCell, 1L);
+            }
+        }
+        
+        // If CKMType = "D" we need to keep smallest value per cell
+        KeepMinScore = (strcmp(CKMType, "D") == 0);
+	
 	Prepared = true;
 	return true;
 

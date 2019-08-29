@@ -72,7 +72,11 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 	RealizedLowerValue = 0;
 	UpperProtectionLevel = 0;
 	LowerProtectionLevel = 0;
-
+        
+        // Needed for CKMType = "D"
+        // Set to large double 
+        MinScoreCell = 1e99;
+        MinScoreWeightCell = 0;
 
 	if (nMaxScoreCell > 0) {
 			// allocate memory for MaxScore and MaxScoreWeight
@@ -144,7 +148,10 @@ CDataCell::CDataCell()
 	RealizedLowerValue = 0;
 	UpperProtectionLevel = 0;
 	LowerProtectionLevel = 0;
-
+        // Needed for CKMType = "D"
+        // Set to large double 
+        MinScoreCell = 1e99;
+        MinScoreWeightCell = 0;
 
 	//LowerProtectionLevel = 0;
         //UpperProtectionLevel = 0;
@@ -374,4 +381,11 @@ double CDataCell::GetCost(double Lambda)
 	{
 		return log(Cost + 1);
 	}
+}
+
+void CDataCell::Write(){
+    printf("NumberofMaxScoreCell = %d\n",nMaxScoreCell);
+    for (int i=0;i<nMaxScoreCell;i++){
+        printf("%7.5lf, ",MaxScoreCell[i]);
+    }
 }

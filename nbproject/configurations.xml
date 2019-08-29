@@ -14,6 +14,7 @@
       <itemPath>IProgressListener.h</itemPath>
       <itemPath>JJFormat.h</itemPath>
       <itemPath>PTable.h</itemPath>
+      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h</itemPath>
       <itemPath>Properties.h</itemPath>
       <itemPath>SubCodeList.h</itemPath>
       <itemPath>Table.h</itemPath>
@@ -39,6 +40,7 @@
       <itemPath>Hitas.cpp</itemPath>
       <itemPath>JJFormat.cpp</itemPath>
       <itemPath>PTable.cpp</itemPath>
+      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp</itemPath>
       <itemPath>Properties.cpp</itemPath>
       <itemPath>SubCodeList.cpp</itemPath>
       <itemPath>Table.cpp</itemPath>
@@ -89,6 +91,16 @@
       <item path="AMPL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="AMPL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.cpp"
             ex="false"
@@ -191,6 +203,16 @@
       <item path="AMPL.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="AMPL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.cpp"
             ex="false"

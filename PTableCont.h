@@ -23,7 +23,6 @@ public:
     virtual ~PTableCont();
     bool ReadFromFile(const char* FileName);
     std::map<int, PTableDRow> GetData(std::string type) {return Data[type];}
-    void WriteToFile();
     void Write(std::string type);
     
 private:

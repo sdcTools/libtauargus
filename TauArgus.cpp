@@ -1258,6 +1258,8 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
                         bool IsFrequencyTable,
 			long ResponseVar, long ShadowVar, long CostVar, long CellKeyVar,
+                        char* CKMType, 
+                        long CKMTopK,
 			double Lambda,
 			double MaxScaledCost,
 			long PeepVarnr,
@@ -1348,7 +1350,9 @@ bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
 	for (int d = 0; d < nDim; d++) {
 		m_tab[i].SetDimSize(d, m_var[ExplanatoryVarList[d]].nCode);
 	}
-
+        
+        m_tab[i].CKMType = CKMType;
+        m_tab[i].CKMTopK = CKMTopK;
 	return true;
 }
 
@@ -2226,11 +2230,11 @@ void TauArgus::ThroughTable()
 // Set data in table. Since table can be given in many ways.
 // See SetTableSafetyInfo, not all input is valid input.
 bool TauArgus::SetInTable(long Index, char *sCode[],
-												double Shadow, double Cost,
-												double Resp, long Freq,
-												double *MaxScoreCell, double *MaxScoreHolding,
-												long Status, double LowerProtectionLevel, double UpperProtectionLevel,
-												long *ErrorCode, long *ErrVNum)
+			  double Shadow, double Cost,
+			  double Resp, long Freq,
+			  double *MaxScoreCell, double *MaxScoreHolding,
+			  long Status, double LowerProtectionLevel, double UpperProtectionLevel,
+			  long *ErrorCode, long *ErrVNum)
 {
 	*ErrVNum = 0;
 
@@ -2256,9 +2260,8 @@ bool TauArgus::SetInTable(long Index, char *sCode[],
 	}
 
 	// fill it in the table cell
-	if (!FillInTable(Index, sCodes, Cost,
-								Resp, Shadow, Freq, MaxScoreCell, MaxScoreHolding,
-								LowerProtectionLevel, UpperProtectionLevel, Status, *ErrorCode, *ErrVNum))  {
+	if (!FillInTable(Index, sCodes, Cost, Resp, Shadow, Freq, MaxScoreCell, 
+                        MaxScoreHolding, LowerProtectionLevel, UpperProtectionLevel, Status, *ErrorCode, *ErrVNum))  {
 		delete [] sCodes;
 		return false;
 	}
@@ -3295,10 +3298,10 @@ bool TauArgus::ConvertNumeric(char *code, double &d)
 // fill code lists in a table. This is the sibling of do micro record
 
 bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
-							   double Resp,double Shadow, long Freq,
-							   double *TopNCell, double *TopNHolding,
-								double LPL, double UPL,
-								long Status, long & error, long & ErrorVarNo)
+			   double Resp,double Shadow, long Freq,
+			   double *TopNCell, double *TopNHolding,
+                           double LPL, double UPL,
+                           long Status, long & error, long & ErrorVarNo)
 {
 	CTable *tab = &(m_tab[Index]);
 	long *tabind = new long [tab->nDim];
@@ -3345,9 +3348,9 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 
 	// NOT too sure about this
 	// set value
-	dc ->SetResp(Resp);
-	dc ->SetShadow(Shadow);
-	dc ->SetCost(Cost);
+	dc->SetResp(Resp);
+	dc->SetShadow(Shadow);
+	dc->SetCost(Cost);
 	dc->SetStatus(Status);
 
 	// if frequency is given
@@ -3713,11 +3716,20 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 		dc = t.GetCell(cellindex);
 	}
 
-
 	// copy weight
 	if (t.ApplyWeight) {
 		weight = m_var[m_VarNrWeight].Value;
 	}
+
+        // Needed for CKMType = "D", if KeepMinScore = true
+        if (t.KeepMinScore){
+            x = fabs(m_var[t.ResponseVarnr].Value);
+            if (x < dc->MinScoreCell){
+                dc->MinScoreCell = x;
+                if (t.ApplyWeight) dc->MinScoreWeightCell = weight;
+            }
+        }
+
 	// adjust the max score array to make way for a new greater score
 	if (t.NumberofMaxScoreCell > 0) {
 		x = fabs(m_var[t.ShadowVarnr].Value);
@@ -5065,7 +5077,7 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 	vector<unsigned int> Children;
 	CDataCell *dc;
 	CDataCell *dctemp;//, *dcramya;
-   CDataCell *addcell;
+        CDataCell *addcell;
 	long tempDimNr;
 	double sum;//,test;
 
@@ -5876,12 +5888,10 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
     PTableRow row;
     PTableRow::iterator pos;
     
-    if (!ptable.ReadFromFreqFile(PTableFile)) return -9;
-    
-    if (TabNo < 0 || TabNo >= m_ntab) {
-		return -1;
-    }
+    if (TabNo < 0 || TabNo >= m_ntab) return -1;
     if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
+
+    if (!ptable.ReadFromFreqFile(PTableFile)) return -9;
     
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
@@ -5920,14 +5930,44 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
     return 1;
 }
 
-int TauArgus::SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff){
-    
-    PTableCont ptable;
-    
-    if (!ptable.ReadFromFile(PTableFile)) return -9;
-    ptable.Write("even");
-    ptable.Write("odd");
-    ptable.Write("all");
+int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CMKType, 
+                                    int topK, bool IncludeZeros, bool Parity, bool Separation, double m1sqr, const char* Scaling, 
+                                    double s0, double s1, double xstar, double q, double* epsilon){
+    CDataCell *dc;
+    int RowNr, Diff;
+    PTableCont ptableLarge;
+    PTableCont ptableSmall;
+    PTableDRow row;
+    PTableDRow::iterator pos;
+
+    if (TabNo < 0 || TabNo >= m_ntab) return -1;
+    if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
+
+    if (!ptableLarge.ReadFromFile(PTableFileCont)) return -9;
+    if (Separation) {if (!ptableSmall.ReadFromFile(PTableFileSep)) return -9;}
+    /*/ For debugging purposes write ptables to screen
+    ptableLarge.Write("even");
+    ptableLarge.Write("odd");
+    ptableLarge.Write("all");
+    ptableSmall.Write("even");
+    ptableSmall.Write("odd");
+    ptableSmall.Write("all");
+    /*/
+    // Loop through all cells of the table
+    for (long i=0; i < m_tab[TabNo].nCell; i++){
+        dc = m_tab[TabNo].GetCell(i);
+        if (dc->GetStatus() != CS_EMPTY){
+            if (m_tab[TabNo].KeepMinScore){
+                dc->SetCKMValue(dc->MinScoreCell); // set to largest contributor for debugging
+            }
+            else{
+                dc->SetCKMValue(dc->MaxScoreCell[0]); // set to largest contributor for debugging
+            }
+        }
+        else{
+            dc->SetCKMValue(0); // empty cell stays empty
+        }
+    }    
     
     return 1;
 }

@@ -64,12 +64,17 @@ protected:
 public:
 	CDataCell(int MaxScoreCell, int MaxScoreHolding, int IsHolding, int IsWeight );
 	CDataCell();
+        void Write();
 
 // Operations
 public:
 
 // Implementation
 public:
+        // Needed for CKMType = "D"
+        double MinScoreCell;// Shadow, unweighted
+        double MinScoreWeightCell; // corresponding weight
+        
 	int nMaxScoreCell;
 	double *MaxScoreCell;// Shadow, ongewogen!
 	double *MaxScoreWeightCell; // bijbehorend gewicht van ongewogen MaxScores, 0 indien nvt of niet toe te passen
@@ -82,6 +87,12 @@ public:
 	bool IsFilled;
 	void operator+=(CDataCell& a)
 	{ 
+                // When adding/merging two cells the minimum needs to be recalculated
+                if (a.MinScoreCell < MinScoreCell){
+                    MinScoreCell = a.MinScoreCell;
+                    MinScoreWeightCell = a.MinScoreWeightCell;
+                }
+                
 		IsFilled = true;
                 NWResp += a.NWResp;
 		Resp += a.Resp;

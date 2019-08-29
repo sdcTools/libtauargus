@@ -267,6 +267,7 @@ public:
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
                 /*[in]*/  long CellKeyVar,
+                char* CKMType, long CKMTopK,
 		double Lambda, double MaxScaledCost,
 		long PeepVarnr,bool SetMissingAsSafe);
 	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,
@@ -291,10 +292,14 @@ public:
 	bool SetNumberTab( /*[in]*/ long nTab);
 	bool SetNumberVar(/*[in]*/ long nVar);
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
-	bool SetProtectionLevelsForResponseTable(long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
-	std::string GetErrorString(long ErrorNumber);
-        int SetCellKeyValuesFreq(long TabNo, const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
-        int SetCellKeyValues(long TabNo, const char* PTableFile, int *MinDiff, int *MaxDiff);
+	bool SetProtectionLevelsForResponseTable(/*[in]*/ long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
+	std::string GetErrorString(/*[in]*/ long ErrorNumber);
+        int SetCellKeyValuesFreq(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
+        int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFileCont, /*[in]*/ const char* PTableFileSep, 
+                                 /*[in]*/ const char* CMKType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
+                                 /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ const char* Scaling, 
+                                 /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double xstar, /*[in]*/ double q, /*[in]*/ double* epsilon);
+
 };
 
 #endif // TauArgus_h
