@@ -27,6 +27,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#define BIGNUMBER 1.0E16
+
 /////////////////////////////////////////////////////////////////////////////
 // CDataCell
 // Constructor used in principle for creating a new cell that is added to the table
@@ -75,7 +77,7 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
         
         // Needed for CKMType = "D"
         // Set to large double 
-        MinScoreCell = 1e99;
+        MinScoreCell = BIGNUMBER;
         MinScoreWeightCell = 0;
 
 	if (nMaxScoreCell > 0) {
@@ -150,7 +152,7 @@ CDataCell::CDataCell()
 	LowerProtectionLevel = 0;
         // Needed for CKMType = "D"
         // Set to large double 
-        MinScoreCell = 1e99;
+        MinScoreCell = BIGNUMBER;
         MinScoreWeightCell = 0;
 
 	//LowerProtectionLevel = 0;

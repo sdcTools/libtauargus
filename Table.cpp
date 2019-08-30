@@ -42,6 +42,10 @@ void CTable:: operator = (CTable & table2)
 {
 	long  i;
 
+        CKMType = table2.CKMType;
+        CKMTopK = table2.CKMTopK;
+        KeepMinScore = table2.KeepMinScore;
+        
         NumberofMaxScoreCell = table2.NumberofMaxScoreCell;
 	NumberofMaxScoreHolding = table2.NumberofMaxScoreHolding;
         
@@ -128,7 +132,7 @@ void CTable:: operator = (CTable & table2)
 	HasRecode = table2.HasRecode ;
 }
 
-// Table constructor. All values are initialized as zeros.
+// Table constructor. All values are initialized.
 CTable::CTable()
 {
 
@@ -190,6 +194,11 @@ CTable::CTable()
 	EmptyCellsAsNSEmpty = false;
 	ApplyPeeper = false;
 	ApplyZeroRule = false;
+        
+        KeepMinScore = false;
+        CKMType = new char[2];
+        CKMType = (char*) "N";
+        CKMTopK = 1;
 
 	//Not too sure what the consequences are if I add This
 	//CellPtr.RemoveAll();
@@ -197,7 +206,6 @@ CTable::CTable()
 
 CTable::~CTable()
 {
-
 	CleanUp();
 }
 
@@ -460,6 +468,7 @@ bool CTable::CleanUp()
 	}
 
 	delete [] CellDistance;
+        delete [] CKMType;
 
 	for (i=0; i<nCell+1; i++) {
 		delete CellPtr[i];

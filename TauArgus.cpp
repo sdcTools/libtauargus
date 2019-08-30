@@ -3721,9 +3721,9 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 		weight = m_var[m_VarNrWeight].Value;
 	}
 
-        // Needed for CKMType = "D", if KeepMinScore = true
+        // Needed for CKMType = "D", i.e., if KeepMinScore = true
         if (t.KeepMinScore){
-            x = fabs(m_var[t.ResponseVarnr].Value);
+            x = fabs(m_var[t.ShadowVarnr].Value);
             if (x < dc->MinScoreCell){
                 dc->MinScoreCell = x;
                 if (t.ApplyWeight) dc->MinScoreWeightCell = weight;

@@ -166,13 +166,18 @@ public:
 					}
 				}
 			}
-			if (HoldingNr == WITHOUT_HOLDING)
-			{
-				MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);}
-			else{
-				MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
-				MergeScoreHolding(MaxScoreHolding, HoldingnrPerMaxScore, a.MaxScoreHolding, a.HoldingnrPerMaxScore, nMaxScoreHolding);
-			}
+		if (HoldingNr == WITHOUT_HOLDING){
+                    MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
+                }
+		else{
+                    MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
+                    MergeScoreHolding(MaxScoreHolding, HoldingnrPerMaxScore, a.MaxScoreHolding, a.HoldingnrPerMaxScore, nMaxScoreHolding);
+		}
+                if (a.MinScoreCell < MinScoreCell)
+                {
+                    MinScoreCell = a.MinScoreCell;
+                    MinScoreWeightCell = a.MinScoreWeightCell;
+                }
 	}
 
 	CDataCell operator+(CDataCell &a)
