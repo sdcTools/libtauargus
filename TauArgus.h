@@ -267,7 +267,7 @@ public:
 		/*[in,out]*/ long * ExplanatoryVarList, bool IsFrequencyTable,
 		/*[in]*/  long ResponseVar, /*[in]*/ long ShadowVar, /*[in]*/ long CostVar,
                 /*[in]*/  long CellKeyVar,
-                char* CKMType, long CKMTopK,
+                const char* CKMType, long CKMTopK,
 		double Lambda, double MaxScaledCost,
 		long PeepVarnr,bool SetMissingAsSafe);
 	bool SetVariable(/*[in]*/ long VarIndex, /*[in]*/ long bPos, /*[in]*/ long nPos,

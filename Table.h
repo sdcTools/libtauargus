@@ -33,7 +33,7 @@ public:
 // Attributes
 public:
         long CKMTopK;           // defines number of largest values percell needed for CKMType = T 
-        char* CKMType;    // defines multiplier to be used in CKM for magnitude tables
+        const char* CKMType;    // defines multiplier to be used in CKM for magnitude tables
         bool KeepMinScore;      // if true, save smallest value per cell
         
 	long NumberofMaxScoreCell; //Saves the number of MaxScore to be stored per cell--Cell Level

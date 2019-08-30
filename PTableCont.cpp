@@ -21,7 +21,6 @@
 #include "PTableCont.h"
 
 PTableCont::PTableCont() {
-
 }
 
 PTableCont::PTableCont(const PTableCont& orig) {
@@ -43,10 +42,9 @@ PTableCont::~PTableCont() {
  bool PTableCont::ReadFromFile(const char* FileName){
     char line[MAXRECORDLENGTH];
     int  i0, i;
-    double j, p_ub, p_lb, bound, diff, pij;
+    double j, p_ub, p_lb, diff, pij;
     std::string type;
     PTableDRow row;
-    PTableDRow::iterator pos;
     FILE* ptable_in;
      
     ptable_in = fopen(FileName,"r");
@@ -57,7 +55,8 @@ PTableCont::~PTableCont() {
     fgets((char *)line, MAXRECORDLENGTH, ptable_in); // Disregard first line: contains only names
     fgets((char *)line, MAXRECORDLENGTH, ptable_in);
 
-    row = PTableDRow();
+    //row = PTableDRow();
+    row.clear();
     
     // read first line with real data
     i0 = atoi(strtok(line,";"));  // i
@@ -73,7 +72,8 @@ PTableCont::~PTableCont() {
         i = atoi(strtok(line,";"));  // i
         if (i != i0){ // New entry for lookup value, so start new row
             Data[type][i0] = row;
-            row = PTableDRow();
+            //row = PTableDRow();
+            row.clear();
             i0 = i;
         }
         j = atof(strtok(NULL,";"));   // j

@@ -197,7 +197,7 @@ CTable::CTable()
         
         KeepMinScore = false;
         CKMType = new char[2];
-        CKMType = (char*) "N";
+        CKMType = "N";
         CKMTopK = 1;
 
 	//Not too sure what the consequences are if I add This
