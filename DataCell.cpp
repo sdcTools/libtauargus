@@ -50,6 +50,7 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 	Weight = 0;
 	Shadow = 0;
         CellKey = 0;
+        CellKeyNoZeros = 0;
 	Freq = 0;
 	FreqHolding = 0;
 	TempShadow = 0;
@@ -131,6 +132,7 @@ CDataCell::CDataCell()
 	Cost = 0;
 	Shadow = 0;
         CellKey = 0;
+        CellKeyNoZeros = 0;
 	Freq = 0;
 	FreqHolding = 0;
 	TempShadow = 0;

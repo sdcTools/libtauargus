@@ -196,7 +196,6 @@ CTable::CTable()
 	ApplyZeroRule = false;
         
         KeepMinScore = false;
-        CKMType = new char[2];
         CKMType = "N";
         CKMTopK = 1;
 
@@ -467,8 +466,7 @@ bool CTable::CleanUp()
 		return true;  // nothing to do
 	}
 
-	delete [] CellDistance;
-        delete [] CKMType;
+	//delete [] CellDistance; // CellDistance is no longer set with new[]
 
 	for (i=0; i<nCell+1; i++) {
 		delete CellPtr[i];
@@ -1422,7 +1420,11 @@ bool CTable::ComputeCellKeyCell(CDataCell &datacell)
 {
     double CellKeyResult = 0;
     double intpart;
+    // Standard cellkey
     CellKeyResult = modf(datacell.GetCellKey(),&intpart); // = fractional part 
     datacell.SetCellKey(CellKeyResult);
+    // Special cellkey: without recordkeys of zero contributions
+    CellKeyResult = modf(datacell.GetCellKeyNoZeros(),&intpart); // = fractional part 
+    datacell.SetCellKeyNoZeros(CellKeyResult);
     return true;
 }

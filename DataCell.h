@@ -33,6 +33,7 @@ protected:
 	double	Cost;    // value depends on CostVarnr
 	double	Shadow;  // only relevant for primary suppression pattern
         double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
+        double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
 	long	Freq;
 	double	Weight;
 	long	FreqHolding;
@@ -100,6 +101,7 @@ public:
 		Cost += a.Cost;
 		Weight += a.Weight;
                 CellKey += a.CellKey;
+                CellKeyNoZeros += a.CellKeyNoZeros;
 		// Not too sure about this
 		
 		// add frequencies only if holding number is different
@@ -197,6 +199,7 @@ public:
 	void SetShadow(double Shadow)			{ this->Shadow = Shadow; }
 	void SetCost(double Cost)			{ this->Cost = Cost; }
         void SetCellKey(double CellKey)                 { this->CellKey = CellKey; }
+        void SetCellKeyNoZeros(double CellKey)          { this->CellKeyNoZeros = CellKey; }        
         void SetCKMValue(double CKMValue)               { this->CKMValue = CKMValue; }
 	void SetStatus(long Status)			{ this->Status = Status; }
 	void SetCTAValue(double CTAValue)               { this->CTAValue = CTAValue; }
@@ -219,6 +222,7 @@ public:
         double GetRoundedResponse()		{ return RoundedResp; }
 	double GetShadow()			{ return Shadow; }
         double GetCellKey()                     { return CellKey; }
+        double GetCellKeyNoZeros()              { return CellKeyNoZeros;}
         double GetCKMValue()                    { return CKMValue; }
 	double GetCost(double Lambda);
 	long   GetFreq()			{ return Freq; }

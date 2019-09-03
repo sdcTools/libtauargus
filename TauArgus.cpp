@@ -17,6 +17,7 @@
 
 #include "TauArgus.h"
 
+#include <map>
 #include <cstdio>
 #include <cstring>
 #include <cfloat>
@@ -3131,7 +3132,7 @@ void TauArgus::CleanUp()
 		delete [] m_var;
 		m_nvar = 0;
 	}
-
+        
 	CleanTables();
 
 	m_fname[0] = 0;
@@ -3630,7 +3631,7 @@ void TauArgus::FillTables(char *str)
 	  }
 
 		dc.SetWeight(m_var[m_VarNrWeight].Value);
-		if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
+                if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
 			dc.SetResp(m_var[table->ResponseVarnr].Value);
                         dc.SetNWResp(m_var[table->ResponseVarnr].Value);
 		}
@@ -3639,12 +3640,19 @@ void TauArgus::FillTables(char *str)
                                 dc.SetNWResp(1);
 		}
 		if ((table->ShadowVarnr >= 0) && (table->ShadowVarnr < m_nvar))	{
-
  			dc.SetShadow(m_var[table->ShadowVarnr].Value);
 		}
                 
-                if ((table->CellKeyVarnr >= 0) && (table->CellKeyVarnr < m_nvar))	{
- 			dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
+                if ((table->CellKeyVarnr >= 0) && (table->CellKeyVarnr < m_nvar)){
+ 			// Standard cellkey: add all recordkeys
+                        dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
+                        
+                        // Special cellkey: only add recordkeys of |contributions| > 0 (in practice: >= 1E-8)
+                        if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar)){
+                            if (fabs(m_var[table->ResponseVarnr].Value) < 1E-8){
+                                dc.SetCellKeyNoZeros(m_var[table->CellKeyVarnr].Value);
+                            }
+                        }
 		}
                 
 		if (table->CostVarnr >= 0) {
@@ -3790,7 +3798,6 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 	}
 	// Do the cell addition
 	*dc += AddCell;
-
 }
 
 // when a table is recoded. The cells are added. to create the recoded table
@@ -5930,11 +5937,13 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
     return 1;
 }
 
-int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CMKType, 
+int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CKMType, 
                                     int topK, bool IncludeZeros, bool Parity, bool Separation, double m1sqr, const char* Scaling, 
                                     double s0, double s1, double xstar, double q, double* epsilon){
     CDataCell *dc;
     int RowNr, Diff;
+    double g1 = 0, E = 1; // defaults
+    double xj, Vj;
     PTableCont ptableLarge;
     PTableCont ptableSmall;
     PTableDRow row;
@@ -5943,8 +5952,19 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     if (TabNo < 0 || TabNo >= m_ntab) return -1;
     if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
 
-    if (!ptableLarge.ReadFromFile(PTableFileCont)) return -9;
-    if (Separation) {if (!ptableSmall.ReadFromFile(PTableFileSep)) return -9;}
+    if (!ptableLarge.ReadFromFile(PTableFileCont)) return -9; // Need ptable for continuous CKM
+    
+    if (topK > 1){ // Need E for proportional flex function and threshold g1 in case of Separation
+        E = 0;
+        for (int i=1; i<topK; i++){
+            E += epsilon[i]*epsilon[i];
+        }
+    }
+    
+    if (Separation) {
+        if (!ptableSmall.ReadFromFile(PTableFileSep)) return -92; // If Separation then need additional ptable
+        g1 = sqrt(m1sqr)/(s1*sqrt(E));
+    } 
     /*/ For debugging purposes write ptables to screen
     ptableLarge.Write("even");
     ptableLarge.Write("odd");
@@ -5953,10 +5973,34 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     ptableSmall.Write("odd");
     ptableSmall.Write("all");
     /*/
+    
+    int nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec;
+    printf("nDec=%d\n",nDec);
+    
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
+        
+        //printf("origcellkey %*.*lf shifted %*.*lf\n",nDec+2,nDec,dc->GetCellKey(),nDec+2,nDec,ShiftFirstDigit(dc->GetCellKey(),nDec));
+        
+        xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
+        
         if (dc->GetStatus() != CS_EMPTY){
+            std::map<int, PTableDRow> ptable;
+            if (Parity){
+                if (dc->GetFreq() % 2 == 0){ // even
+                    ptable = ptableLarge.GetData("even");
+                }
+                else{   //odd
+                    ptable = ptableLarge.GetData("odd");
+                }
+            }
+            else{
+                ptable = ptableLarge.GetData("all");
+            }
+            Vj = LookUpVinptable(ptable, dc->GetResp()/xj, dc->GetCellKey());
+            
+            
             if (m_tab[TabNo].KeepMinScore){
                 dc->SetCKMValue(dc->MinScoreCell); // set to largest contributor for debugging
             }
@@ -5970,4 +6014,83 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     }    
     
     return 1;
+}
+// nDec = number of decimals for the shift
+// Assumes 0 <= key < 1
+double TauArgus::ShiftFirstDigit(double key, int nDec){
+    char buffer[64];
+    snprintf(buffer,64,"%*.*f", nDec+2, nDec, key);
+    std::string cstr(buffer);
+    cstr = "0." + cstr.substr(3)+cstr.substr(2,1);
+    return atof(cstr.c_str());
+}
+
+// x: value to evaluate the flex function
+// g1: lower bound to define "small" = m_1/(sigma_1 * E)
+// s0, s1: sigma0 and sigma1, scaled for j-th largest observation
+// xstar: threshold to define "large" 
+double TauArgus::flexfunction(double x, double g1, double s0, double s1, double xstar, double q){
+    double result=0;
+    if (x > xstar){
+        result = s1 * (1.0 + ((s1*x - s0*xstar)/s0*xstar)*pow(2*xstar/(x+xstar),q));
+    }
+    else{
+        if (x > g1){
+            result = s1;
+        }
+        else{
+            result = 0.0;
+        }
+    }
+    return result;
+}
+
+// Find perturbation value V for value z
+// Interpolate between z_lower < z < z_upper if needed
+double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double key){
+    double result = 0;
+    double lambda;
+    std::map<int,PTableDRow>::iterator row1, row2;
+    
+    // ptable is sorted in the standard way on the keys, 
+    // so first element has smallest key, last element has largest key
+    int Jmin = ptable.begin()->first; // Should be 0
+    int Jmax = ptable.end()->first;
+    
+    if ((Jmin <= z) && (z <= Jmax)){
+        row1 = ptable.lower_bound(z);
+        if (row1->first == z){
+            printf("found %7.5lf = %d\n", z, row1->first);
+        }
+        else{
+            printf("closest to %7.5lf is %d\n", z, row1->first);
+        }
+    }
+    
+    if (z > Jmax){ // take difference from distribution of largest key in ptable
+        
+    }
+    
+    return result;
+}
+
+double TauArgus::GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied){
+    double result = 0;
+    if (strcmp(CKMType,"T")==0){
+        return  dc.MaxScoreCell[j-1]; // j = 1, ..., topK
+    }
+    if (strcmp(CKMType,"M")==0){
+        if (WeightApplied){
+            return (dc.GetResp()/dc.GetWeight());
+        }
+        else return dc.GetResp();
+    }
+    if (strcmp(CKMType,"D")==0){
+        return (dc.MaxScoreCell[0] - dc.MinScoreCell);
+    }
+    if (strcmp(CKMType,"V")==0){
+        return dc.GetResp();
+    }
+
+    return -9; // Should not happen
 }

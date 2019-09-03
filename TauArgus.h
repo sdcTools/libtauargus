@@ -18,6 +18,7 @@
 #ifndef TauArgus_h
 #define TauArgus_h
 
+#include <map>
 #include <clocale>
 #include <vector>
 #include <string>
@@ -31,6 +32,7 @@
 #include "JJFormat.h"
 #include "AMPL.h"
 #include "IProgressListener.h"
+#include "PTableCont.h"
 
 class TauArgus
 {
@@ -296,10 +298,15 @@ public:
 	std::string GetErrorString(/*[in]*/ long ErrorNumber);
         int SetCellKeyValuesFreq(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
         int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFileCont, /*[in]*/ const char* PTableFileSep, 
-                                 /*[in]*/ const char* CMKType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
+                                 /*[in]*/ const char* CKMType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
                                  /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ const char* Scaling, 
                                  /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double xstar, /*[in]*/ double q, /*[in]*/ double* epsilon);
 
+private:
+        double ShiftFirstDigit(double key, int nDec);
+        double flexfunction(double x, double g1, double s0, double s1, double xstar, double q);
+        double LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double key);
+        double GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied);
 };
 
 #endif // TauArgus_h
