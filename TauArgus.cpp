@@ -5908,8 +5908,10 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
                 row = ptable.GetData()[RowNr];
                 Diff = 0;
                 for (pos=row.begin();pos!=row.end();++pos){
-                    Diff = pos->first - RowNr;
-                    if (dc->GetCellKey() < pos->second) break;
+                    if (dc->GetCellKey() < pos->second){
+                        Diff = pos->first - RowNr;
+                        break;
+                    }
                 }
                 dc->SetCKMValue((double) (dc->GetNWResp() + Diff));
             }
@@ -5975,7 +5977,6 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     /*/
     
     int nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec;
-    printf("nDec=%d\n",nDec);
     
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
@@ -5983,9 +5984,9 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
         
         //printf("origcellkey %*.*lf shifted %*.*lf\n",nDec+2,nDec,dc->GetCellKey(),nDec+2,nDec,ShiftFirstDigit(dc->GetCellKey(),nDec));
         
-        xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
-        
         if (dc->GetStatus() != CS_EMPTY){
+            xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
+            
             std::map<int, PTableDRow> ptable;
             if (Parity){
                 if (dc->GetFreq() % 2 == 0){ // even
@@ -6015,6 +6016,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     
     return 1;
 }
+
 // nDec = number of decimals for the shift
 // Assumes 0 <= key < 1
 double TauArgus::ShiftFirstDigit(double key, int nDec){
@@ -6047,43 +6049,68 @@ double TauArgus::flexfunction(double x, double g1, double s0, double s1, double 
 
 // Find perturbation value V for value z
 // Interpolate between z_lower < z < z_upper if needed
-double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double key){
-    double result = 0;
-    double lambda;
-    std::map<int,PTableDRow>::iterator row1, row2;
+double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double RKey){
+    double result = 0, Diff0 = 0, Diff1 = 0;
+    double a0, a1, lambda;
+    std::map<int,PTableDRow>::iterator row1, row0;
+    PTableDRow::iterator PTRow;
     
     // ptable is sorted in the standard way on the keys, 
     // so first element has smallest key, last element has largest key
-    int Jmin = ptable.begin()->first; // Should be 0
-    int Jmax = ptable.end()->first;
+    double Jmin = (double) ptable.begin()->first; // Should be 0
+    double Jmax = (double) ptable.rbegin()->first;
     
-    if ((Jmin <= z) && (z <= Jmax)){
-        row1 = ptable.lower_bound(z);
-        if (row1->first == z){
-            printf("found %7.5lf = %d\n", z, row1->first);
+    if ((Jmin <= z) && (z < Jmax)){
+        row1 = ptable.upper_bound(z);
+        row0 = std::prev(row1);
+        a0 = row0->first;
+        a1 = row1->first;
+        lambda = (z - a0)/(a1-a0); // By construction a0 <= z < a1
+        
+        for (PTRow=row0->second.begin();PTRow!=row0->second.end();++PTRow){
+            if (RKey < PTRow->second){
+                Diff0 = PTRow->first - row0->first;
+                break;
+            }
         }
-        else{
-            printf("closest to %7.5lf is %d\n", z, row1->first);
+        
+        if (fabs(a0-z)>1E-8){ // Only needed if a0 != z, in practice if (a0 - z) > 1E-8
+            for (PTRow=row1->second.begin();PTRow!=row1->second.end();++PTRow){
+                if (RKey < PTRow->second){
+                    Diff1 = PTRow->first - row1->first;
+                    break;
+                }
+            }
         }
+        
+        result = (1.0-lambda)*Diff0 + lambda*Diff1;
+        
+        //printf("%7.5lf < %7.5lf < %7.5lf\t", a0, z, a1);
+        //printf("RKey=%13.11lf Diff0=%13.11lf Diff1=%13.11lf lambda=%13.11lf result=%13.11lf\n",RKey, Diff0, Diff1, lambda, result);
     }
     
-    if (z > Jmax){ // take difference from distribution of largest key in ptable
-        
+    if (z >= Jmax){ // take difference from distribution of largest key in ptable
+        for (PTRow=ptable.rbegin()->second.begin(); PTRow!=ptable.rbegin()->second.end(); ++PTRow){
+            if (RKey < PTRow->second) {
+                result = PTRow->first - ptable.rbegin()->first;
+                break;
+            }
+        }
+        //printf("%7.5lf >= %7.5lf\t",z,Jmax);
+        //printf("RKey=%13.11lf result=%13.11lf\n", RKey, result);
     }
     
     return result;
 }
 
 double TauArgus::GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied){
-    double result = 0;
+    ASSERT (dc.GetStatus() != CS_EMPTY);
+    
     if (strcmp(CKMType,"T")==0){
         return  dc.MaxScoreCell[j-1]; // j = 1, ..., topK
     }
     if (strcmp(CKMType,"M")==0){
-        if (WeightApplied){
-            return (dc.GetResp()/dc.GetWeight());
-        }
-        else return dc.GetResp();
+        return (WeightApplied ? dc.GetResp()/dc.GetWeight() : dc.GetResp()/dc.GetFreq());
     }
     if (strcmp(CKMType,"D")==0){
         return (dc.MaxScoreCell[0] - dc.MinScoreCell);

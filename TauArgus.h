@@ -305,7 +305,7 @@ public:
 private:
         double ShiftFirstDigit(double key, int nDec);
         double flexfunction(double x, double g1, double s0, double s1, double xstar, double q);
-        double LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double key);
+        double LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double RKey);
         double GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied);
 };
 
