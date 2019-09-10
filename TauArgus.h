@@ -300,7 +300,8 @@ public:
         int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFileCont, /*[in]*/ const char* PTableFileSep, 
                                  /*[in]*/ const char* CKMType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
                                  /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ const char* Scaling, 
-                                 /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double xstar, /*[in]*/ double q, /*[in]*/ double* epsilon);
+                                 /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double xstar, /*[in]*/ double q, /*[in]*/ double* epsilon,
+                                 /*[in]*/ double muC);
 
 private:
         double ShiftFirstDigit(double key, int nDec);

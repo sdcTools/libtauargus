@@ -42,6 +42,10 @@ using namespace std;
 static char THIS_FILE[] = __FILE__;
 #endif
 
+double sign(double x){
+    return ((0 < x) - (x < 0));
+}
+
 static Properties TauArgusErrors("TauArgus.properties");
 
 //extern int CurrentHoldingNr;
@@ -3647,9 +3651,9 @@ void TauArgus::FillTables(char *str)
  			// Standard cellkey: add all recordkeys
                         dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
                         
-                        // Special cellkey: only add recordkeys of |contributions| > 0 (in practice: >= 1E-8)
+                        // Special cellkey: only add recordkeys of |contributions| > 0 (in practice: > 1E-8)
                         if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar)){
-                            if (fabs(m_var[table->ResponseVarnr].Value) < 1E-8){
+                            if (fabs(m_var[table->ResponseVarnr].Value) > 1E-8){
                                 dc.SetCellKeyNoZeros(m_var[table->CellKeyVarnr].Value);
                             }
                         }
@@ -5941,11 +5945,13 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
 
 int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CKMType, 
                                     int topK, bool IncludeZeros, bool Parity, bool Separation, double m1sqr, const char* Scaling, 
-                                    double s0, double s1, double xstar, double q, double* epsilon){
+                                    double s0, double s1, double xstar, double q, double* epsilon, double muC){
     CDataCell *dc;
-    int RowNr, Diff;
+    int nDec;
     double g1 = 0, E = 1; // defaults
-    double xj, Vj;
+    double xj, Vj, cellKey;
+    double AddedValue = 0;
+    std::map<int, PTableDRow> ptable;
     PTableCont ptableLarge;
     PTableCont ptableSmall;
     PTableDRow row;
@@ -5963,54 +5969,44 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
         }
     }
     
-    if (Separation) {
+    if (Separation) { // If SEPARATION=N then g1=0 (default)
         if (!ptableSmall.ReadFromFile(PTableFileSep)) return -92; // If Separation then need additional ptable
         g1 = sqrt(m1sqr)/(s1*sqrt(E));
     } 
-    /*/ For debugging purposes write ptables to screen
-    ptableLarge.Write("even");
-    ptableLarge.Write("odd");
-    ptableLarge.Write("all");
-    ptableSmall.Write("even");
-    ptableSmall.Write("odd");
-    ptableSmall.Write("all");
-    /*/
     
-    int nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec;
+    nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
     
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
         
-        //printf("origcellkey %*.*lf shifted %*.*lf\n",nDec+2,nDec,dc->GetCellKey(),nDec+2,nDec,ShiftFirstDigit(dc->GetCellKey(),nDec));
-        
-        if (dc->GetStatus() != CS_EMPTY){
-            xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
-            
-            std::map<int, PTableDRow> ptable;
-            if (Parity){
-                if (dc->GetFreq() % 2 == 0){ // even
-                    ptable = ptableLarge.GetData("even");
+        cellKey = IncludeZeros ? dc->GetCellKey() : dc->GetCellKeyNoZeros();
+      
+        if (dc->GetStatus() != CS_EMPTY){ // not empty
+            if (dc->GetStatus() != CS_PROTECT_MANUAL){ // not protected
+                if (Parity){
+                    ptable = (dc->GetFreq() % 2 == 0) ? ptableLarge.GetData("even") : ptableLarge.GetData("odd");
                 }
-                else{   //odd
-                    ptable = ptableLarge.GetData("odd");
+                else{
+                    ptable = ptableLarge.GetData("all");
                 }
-            }
-            else{
-                ptable = ptableLarge.GetData("all");
-            }
-            Vj = LookUpVinptable(ptable, dc->GetResp()/xj, dc->GetCellKey());
+                // j = 1
+                // First implementation: SAMEKEY = NO, i.e., also perturb cell key for j=1
+                cellKey = ShiftFirstDigit(cellKey,nDec);
+                xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
+                
+                Vj = LookUpVinptable(ptable, dc->GetResp()/xj, cellKey);
             
-            
-            if (m_tab[TabNo].KeepMinScore){
-                dc->SetCKMValue(dc->MinScoreCell); // set to largest contributor for debugging
+                AddedValue = xj*flexfunction(xj,g1,s0,s1,xstar,q)*sign(Vj)*(muC + fabs(Vj));
+                
+                dc->SetCKMValue(dc->GetResp() + AddedValue);
             }
-            else{
-                dc->SetCKMValue(dc->MaxScoreCell[0]); // set to largest contributor for debugging
+            else{ // if protected do nothing, i.e., original response value
+                dc->SetCKMValue(dc->GetResp());
             }
         }
-        else{
-            dc->SetCKMValue(0); // empty cell stays empty
+        else{ // if empty cell stays empty, i.e., value 0
+            dc->SetCKMValue(0); 
         }
     }    
     
@@ -6034,7 +6030,7 @@ double TauArgus::ShiftFirstDigit(double key, int nDec){
 double TauArgus::flexfunction(double x, double g1, double s0, double s1, double xstar, double q){
     double result=0;
     if (x > xstar){
-        result = s1 * (1.0 + ((s1*x - s0*xstar)/s0*xstar)*pow(2*xstar/(x+xstar),q));
+        result = s0 * (1.0 + ((s1*x - s0*xstar)/(s0*xstar))*pow(2*xstar/(x+xstar),q));
     }
     else{
         if (x > g1){
@@ -6058,7 +6054,7 @@ double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, doub
     // ptable is sorted in the standard way on the keys, 
     // so first element has smallest key, last element has largest key
     double Jmin = (double) ptable.begin()->first; // Should be 0
-    double Jmax = (double) ptable.rbegin()->first;
+    double Jmax = (double) ptable.rbegin()->first; // rbegin() points to last item, end() points to past-the-end element
     
     if ((Jmin <= z) && (z < Jmax)){
         row1 = ptable.upper_bound(z);
@@ -6119,5 +6115,5 @@ double TauArgus::GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApp
         return dc.GetResp();
     }
 
-    return -9; // Should not happen
+    return -1E99; // Should not happen
 }
