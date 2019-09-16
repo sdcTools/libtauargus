@@ -66,7 +66,8 @@ PTableCont::~PTableCont() {
     p_ub = atof(strtok(NULL,";"));  // p_kum_o
     diff = atof(strtok(NULL,";"));  // diff
     type = strtok(NULL,"\n");       // type: even, odd or all
-    row[j] = p_ub;
+    row[j][0] = pij;
+    row[j][1] = p_ub;
     
     while (fgets((char *)line, MAXRECORDLENGTH, ptable_in) != NULL){
         i = atoi(strtok(line,";"));  // i
@@ -82,7 +83,8 @@ PTableCont::~PTableCont() {
         p_ub = atof(strtok(NULL,";"));  // p_kum_o
         diff = atof(strtok(NULL,";"));  // diff
         type = strtok(NULL,"\n");       // type: even, odd or all
-        row[j] = p_ub;
+        row[j][0] = pij;
+        row[j][1] = p_ub;
     }
     Data[type][i] = row;
         
@@ -102,7 +104,7 @@ void PTableCont::Write(std::string type){
     for (rowpos=Data[type].begin();rowpos!=Data[type].end();++rowpos){
         printf("row %d:",rowpos->first);
         for (pos=rowpos->second.begin();pos!=rowpos->second.end();++pos){
-            printf(" (%3.1lf, %10.8lf)", pos->first, pos->second);
+            printf(" (%3.1lf, %10.8lf, %10.8lf)", pos->first, pos->second[0], pos->second[1]);
         }
         printf("\n");
     }

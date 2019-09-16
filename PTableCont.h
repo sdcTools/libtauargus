@@ -14,7 +14,7 @@
 #ifndef PTABLECONT_H
 #define PTABLECONT_H
 
-typedef std::map<double, double> PTableDRow;
+typedef std::map<double, double[2]> PTableDRow;
 
 class PTableCont {
 public:
@@ -26,8 +26,9 @@ public:
     void Write(std::string type);
     
 private:
-    // Data["even"] has even ptable info or "all" ptable info
-    // Data["odd"] has odd ptable info
+    // Data["even"] has "even" ptable info
+    // Data["odd"] has "odd" ptable info
+    // Data["all"] has "no difference even/odd" ptable info
     std::map<std::string, std::map<int, PTableDRow> > Data;
 };
 
