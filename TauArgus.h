@@ -300,12 +300,12 @@ public:
         int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFileCont, /*[in]*/ const char* PTableFileSep, 
                                  /*[in]*/ const char* CKMType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
                                  /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ const char* Scaling, 
-                                 /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double xstar, /*[in]*/ double q, /*[in]*/ double* epsilon,
+                                 /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double z_f, /*[in]*/ double q, /*[in]*/ double* epsilon,
                                  /*[in]*/ double muC);
 
 private:
         double ShiftFirstDigit(double key, int nDec);
-        double flexfunction(double x, double g1, double s0, double s1, double xstar, double q);
+        double flexfunction(double z, double z_s, double s0, double s1, double z_f, double q);
         double LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double RKey);
         double GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied);
 };

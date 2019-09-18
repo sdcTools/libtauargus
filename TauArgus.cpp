@@ -5945,13 +5945,13 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
 
 int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CKMType, 
                                     int topK, bool IncludeZeros, bool Parity, bool Separation, double m1sqr, const char* Scaling, 
-                                    double s0, double s1, double xstar, double q, double* epsilon, double muC){
+                                    double s0, double s1, double z_f, double q, double* epsilon, double muC){
     CDataCell *dc;
     int nDec;
-    double g1 = 0, E = 1; // defaults
+    double z_s, E;
     double xj, Vj, cellKey, xdelta;
     double AddedValue = 0, m_one = 0;
-    std::map<int, PTableDRow> ptable;
+    std::map<int, PTableDRow> ptableL, ptableS;
     std::map<int, PTableDRow>::reverse_iterator ptablepos;
     PTableCont ptableLarge;
     PTableCont ptableSmall;
@@ -5961,16 +5961,16 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     if (TabNo < 0 || TabNo >= m_ntab) return -1;
     if (m_tab[TabNo].HasRecode) TabNo += m_ntab;
 
-    if (!ptableLarge.ReadFromFile(PTableFileCont)) return -9; // Need ptable for continuous CKM
+    if (!ptableLarge.ReadFromFile(PTableFileCont)) return -90; // Need ptable for continuous CKM
     
+    E = epsilon[0]*epsilon[0]; // Should be 1.0
     if (topK > 1){ // Need E for proportional flex function and threshold g1 in case of Separation and topK>=2
-        E = 0;
         for (int i=1; i<topK; i++){
             E += epsilon[i]*epsilon[i];
         }
     }
     
-    if (Separation) { // If SEPARATION=N then g1=0 (default)
+    if (Separation) { // If SEPARATION=N then z_s=0 
         if (!ptableSmall.ReadFromFile(PTableFileSep)) return -91; // If SEPARATION=Y then need additional ptable
         //Calculate m1sqr from ptable
         ptablepos = ptableSmall.GetData("all").rbegin();
@@ -5978,46 +5978,55 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
             m_one += pow((pos->first - ptablepos->first),2)*pos->second[0];  // (j-i)^2 * pij
         }
         m_one = sqrt(m_one);
-        g1 = sqrt(m_one)/(s1*sqrt(E));
+        z_s = sqrt(m_one)/(s1*sqrt(E));
+
+        ptableS = ptableSmall.GetData("all");
+        if (ptableS.size()==0) return 92; // No small table with "all"
     }
     else{
+        z_s = 0;
         m_one = 1;
     }
     
     nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
-    
+
+            
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
         
         cellKey = IncludeZeros ? dc->GetCellKey() : dc->GetCellKeyNoZeros();
-      
+        
         if (dc->GetStatus() != CS_EMPTY){ // not empty
             if (dc->GetStatus() != CS_PROTECT_MANUAL){ // not protected
                 if (Parity){
-                    ptable = (dc->GetFreq() % 2 == 0) ? ptableLarge.GetData("even") : ptableLarge.GetData("odd");
+                    ptableL = (dc->GetFreq() % 2 == 0) ? ptableLarge.GetData("even") : ptableLarge.GetData("odd");
+                    if (ptableL.size()==0) return -93; // No "even" or "odd" found
                 }
                 else{
-                    ptable = ptableLarge.GetData("all");
-                    if (ptable.size()==0) return -92; // No "all" found
+                    ptableL = ptableLarge.GetData("all");
+                    if (ptableL.size()==0) return -94; // No "all" found
                 }
                 // j = 1
                 // First implementation: SAMEKEY = NO, i.e., also perturb cell key for j=1
                 cellKey = ShiftFirstDigit(cellKey,nDec);
                 
+                // j = 1
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
-                xdelta = (xj >= g1) ? xj*flexfunction(xj,g1,s0,s1,xstar,q) : m_one;
-                Vj = LookUpVinptable(ptable, dc->GetResp()/xdelta, cellKey);
+                xdelta = (xj >= z_s) ? xj*flexfunction(xj,z_s,s0,s1,z_f,q) : m_one;
                 
-                muC = (xj>g1) ? muC : 0.0; // Only use muC in case x_1 > g1
+                Vj = LookUpVinptable(ptableL, dc->GetResp()/xdelta, cellKey);
+                
+                muC = (xj>z_s) ? muC : 0.0; // Only use muC in case x_1 > z_s
                                
                 AddedValue = xdelta*mysign(Vj)*(muC + fabs(Vj));
                 
+                // j = 2, ..., topK
                 for (int j=2; j<=topK; j++){ // Only in case topK >=2
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
-                    xdelta = (xj >= g1) ? xj*flexfunction(xj,g1,epsilon[j-1]*s0,epsilon[j-1]*s1,xstar,q) : m_one;
+                    xdelta = (xj >= z_s) ? xj*flexfunction(xj,z_s,epsilon[j-1]*s0,epsilon[j-1]*s1,z_f,q) : m_one;
                     cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
-                    Vj = LookUpVinptable(ptable, dc->GetResp()/xdelta, cellKey);
+                    Vj = LookUpVinptable(ptableL, dc->GetResp()/xdelta, cellKey);
                     AddedValue += xdelta*Vj; // No muC in case j>=2
                 }
                 
@@ -6049,13 +6058,13 @@ double TauArgus::ShiftFirstDigit(double key, int nDec){
 // g1: lower bound to define "small" = m_1/(sigma_1 * E)
 // s0, s1: sigma0 and sigma1, scaled for j-th largest observation
 // xstar: threshold to define "large" 
-double TauArgus::flexfunction(double x, double g1, double s0, double s1, double xstar, double q){
-    double result=0;
-    if (x > xstar){
-        result = s0 * (1.0 + ((s1*x - s0*xstar)/(s0*xstar))*pow(2*xstar/(x+xstar),q));
+double TauArgus::flexfunction(double z, double z_s, double s0, double s1, double z_f, double q){
+    double result;
+    if (z >= z_f){
+        result = s0 * (1.0 + ((s1*z - s0*z_f)/(s0*z_f))*pow(2*z_f/(z+z_f),q));
     }
     else{
-        if (x > g1){
+        if (z > z_s){
             result = s1;
         }
         else{
