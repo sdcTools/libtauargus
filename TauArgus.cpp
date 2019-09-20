@@ -3748,7 +3748,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 		for (i = 0; i < t.NumberofMaxScoreCell; i++) {
 			if (x > dc->MaxScoreCell[i]) {
 				// shift rest
-				for (j = t.NumberofMaxScoreCell- 2; j >= i; j--) {
+				for (j = t.NumberofMaxScoreCell - 2; j >= i; j--) {
 					dc->MaxScoreCell[j + 1] = dc->MaxScoreCell[j];
 					if (t.ApplyWeight)	{
 						dc->MaxScoreWeightCell[j + 1] = dc->MaxScoreWeightCell[j];
@@ -3762,7 +3762,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 				break;
 			}
 		}
-  }
+        }
 
 	// apply weight
 	if (t.ApplyWeight) {
@@ -5949,7 +5949,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     CDataCell *dc;
     int nDec;
     double z_s, E;
-    double xj, Vj, cellKey, xdelta;
+    double xj, Vj, cellKey, x, xdelta;
     double AddedValue = 0, m_one = 0;
     std::map<int, PTableDRow> ptableL, ptableS;
     std::map<int, PTableDRow>::reverse_iterator ptablepos;
@@ -5980,7 +5980,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
         m_one = sqrt(m_one);
         z_s = sqrt(m_one)/(s1*sqrt(E));
 
-        ptableS = ptableSmall.GetData("all");
+        ptableS = ptableSmall.GetData("all"); // Will need additional ptable for small values
         if (ptableS.size()==0) return 92; // No small table with "all"
     }
     else{
@@ -6012,19 +6012,26 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 cellKey = ShiftFirstDigit(cellKey,nDec);
                 
                 // j = 1
+                x = dc->GetResp();
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
-                xdelta = (xj >= z_s) ? xj*flexfunction(xj,z_s,s0,s1,z_f,q) : m_one;
+                xdelta = (fabs(xj) >= z_s) ? xj*flexfunction(fabs(xj),z_s,s0,s1,z_f,q) : 1.0;
+                if (fabs(x) < fabs(xdelta)){
+                    xdelta = x;
+                    xj = x/s1;
+                    if (fabs(xj) < z_s) xdelta = 1.0;
+                }
+                Vj = LookUpVinptable( (fabs(xj) >= z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
                 
-                Vj = LookUpVinptable(ptableL, dc->GetResp()/xdelta, cellKey);
+                muC = (fabs(xj) > z_s) ? muC : 0.0; // Only use muC in case x_1 > z_s
                 
-                muC = (xj>z_s) ? muC : 0.0; // Only use muC in case x_1 > z_s
-                               
+                x = x + 
+                
                 AddedValue = xdelta*mysign(Vj)*(muC + fabs(Vj));
                 
                 // j = 2, ..., topK
                 for (int j=2; j<=topK; j++){ // Only in case topK >=2
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
-                    xdelta = (xj >= z_s) ? xj*flexfunction(xj,z_s,epsilon[j-1]*s0,epsilon[j-1]*s1,z_f,q) : m_one;
+                    xdelta = (xj >= z_s) ? xj*epsilon[j-1]*flexfunction(xj,z_s,s0,s1,z_f,q) : 1.0;
                     cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
                     Vj = LookUpVinptable(ptableL, dc->GetResp()/xdelta, cellKey);
                     AddedValue += xdelta*Vj; // No muC in case j>=2
