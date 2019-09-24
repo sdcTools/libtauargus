@@ -5949,8 +5949,8 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     CDataCell *dc;
     int nDec;
     double z_s, E;
-    double xj, Vj, cellKey, x, xdelta;
-    double AddedValue = 0, m_one = 0;
+    double xj, Vj, cellKey, x, xdelta, X1help;
+    double m_one = 0;
     std::map<int, PTableDRow> ptableL, ptableS;
     std::map<int, PTableDRow>::reverse_iterator ptablepos;
     PTableCont ptableLarge;
@@ -6010,34 +6010,49 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 // j = 1
                 // First implementation: SAMEKEY = NO, i.e., also perturb cell key for j=1
                 cellKey = ShiftFirstDigit(cellKey,nDec);
-                
+
                 // j = 1
-                x = dc->GetResp();
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
+                // Use muC > 0 if unsafe cell and xj large enough
+                // otherwise set muC = 0
+                if (((dc->GetStatus() < CS_UNSAFE_RULE) || (dc->GetStatus() > CS_UNSAFE_MANUAL)) || (fabs(xj) < z_s)) muC = 0;
+
+                x = dc->GetResp();
                 xdelta = (fabs(xj) >= z_s) ? xj*flexfunction(fabs(xj),z_s,s0,s1,z_f,q) : 1.0;
                 if (fabs(x) < fabs(xdelta)){
                     xdelta = x;
                     xj = x/s1;
                     if (fabs(xj) < z_s) xdelta = 1.0;
                 }
-                Vj = LookUpVinptable( (fabs(xj) >= z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
+                Vj = LookUpVinptable( (fabs(xj) > z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
+
+                printf("j=%d x=%g ck=%g xj=%g xdelta=%g Vj=%g\n",1,x,cellKey,xj,xdelta,Vj);
                 
-                muC = (fabs(xj) > z_s) ? muC : 0.0; // Only use muC in case x_1 > z_s
-                
-                x = x + 
-                
-                AddedValue = xdelta*mysign(Vj)*(muC + fabs(Vj));
-                
+                X1help = mysign(x)*fabs(xdelta)*mysign(Vj)*(muC + fabs(Vj));
+                if (Vj >= 0){ x = x + X1help; }
+                else{
+                    if (x<0){ x = x + min(X1help, -x); }
+                    else{ x = x + max(X1help, -x); }
+                }
+
                 // j = 2, ..., topK
                 for (int j=2; j<=topK; j++){ // Only in case topK >=2
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
-                    xdelta = (xj >= z_s) ? xj*epsilon[j-1]*flexfunction(xj,z_s,s0,s1,z_f,q) : 1.0;
-                    cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
-                    Vj = LookUpVinptable(ptableL, dc->GetResp()/xdelta, cellKey);
-                    AddedValue += xdelta*Vj; // No muC in case j>=2
+                    if (fabs(xj) >= z_s){
+                        xdelta = xj*epsilon[j-1]*flexfunction(fabs(xj),z_s,s0,s1,z_f,q);
+                        if (fabs(x) < fabs(xdelta)){
+                            xdelta = x;
+                            xj = x/(epsilon[j-1]*s1);
+                        }
+                        if (fabs(xj) >= z_s){ // xj may have changed so need to check again
+                            cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
+                            Vj = LookUpVinptable(ptableL, fabs(x/xdelta), cellKey);
+                            x = x + mysign(x)*fabs(xdelta)*Vj;
+                        }// else add zero, i.e. do nothing
+                    }// else add zero, i.e. do nothing
+                    printf("j=%d x=%g ck=%g xj=%g xdelta=%g Vj=%g\n",j,x,cellKey,xj,xdelta,Vj);
                 }
-                
-                dc->SetCKMValue(dc->GetResp() + AddedValue);
+                dc->SetCKMValue(x);
             }
             else{ // if protected do nothing, i.e., original response value
                 dc->SetCKMValue(dc->GetResp());
@@ -6068,7 +6083,7 @@ double TauArgus::ShiftFirstDigit(double key, int nDec){
 double TauArgus::flexfunction(double z, double z_s, double s0, double s1, double z_f, double q){
     double result;
     if (z >= z_f){
-        result = s0 * (1.0 + ((s1*z - s0*z_f)/(s0*z_f))*pow(2*z_f/(z+z_f),q));
+        result = s0 * (1.0 + ((s1*z - s0*z_f)/(s0*z_f))*pow(((2*z_f)/(z+z_f)),q));
     }
     else{
         if (z > z_s){
@@ -6134,7 +6149,8 @@ double TauArgus::GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApp
     ASSERT (dc.GetStatus() != CS_EMPTY);
     
     if (strcmp(CKMType,"T")==0){
-        return  dc.MaxScoreCell[j-1]; // j = 1, ..., topK
+        double wj = WeightApplied ? dc.MaxScoreWeightCell[j-1] : 1.0;
+        return  wj*dc.MaxScoreCell[j-1]; // j = 1, ..., topK
     }
     if (strcmp(CKMType,"M")==0){
         return (WeightApplied ? dc.GetResp()/dc.GetWeight() : dc.GetResp()/dc.GetFreq());
