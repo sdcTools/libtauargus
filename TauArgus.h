@@ -259,6 +259,7 @@ public:
         									/*[in,out] */ double *CellRoundedResp, /*[in,out] */double *CellCTAResp, 
                                                                                 /*[in,out] */ double *CellCKMResp,
                                                                                 /*[in,out]*/ double *CellShadow, /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey,
+                                                                                /*[in,out]*/ double *CellKeyNoZeros,
 										/*[in,out]*/ long *CellFreq, /*[in,out]*/ long *CellStatus,
 										/*[in,out]*/  double *CellMaxScore, /*[in,out]*/ double *CellMaxScoreWeight,
                                                                                             long *HoldingFreq,

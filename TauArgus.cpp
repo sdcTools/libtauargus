@@ -43,7 +43,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 double mysign(double x){
-    return (x >= 0.0); // 1 in case x >= 0, 0 otherwise
+    return (x >= 0.0) ? 1.0 : -1.0; // 1 in case x >= 0, -1 otherwise
 }
 
 static Properties TauArgusErrors("TauArgus.properties");
@@ -1381,14 +1381,14 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 // Returns the information in a cell.
 bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
                                 double *CellCKMResp,
-                                double *CellShadow, double *CellCost, double *CellKey,
+                                double *CellShadow, double *CellCost, double *CellKey, double *CellKeyNoZeros,
 				long *CellFreq, long *CellStatus,
 				double *CellMaxScore,double *CellMAXScoreWeight,
 				long *HoldingFreq,
 				double *HoldingMaxScore, long *HoldingNrPerMaxScore,
-				double * PeepCell, double * PeepHolding, long * PeepSortCell, long * PeepSortHolding,
+				double *PeepCell, double *PeepHolding, long *PeepSortCell, long *PeepSortHolding,
 				double *Lower, double *Upper,
-				double *RealizedLower,double * RealizedUpper)
+				double *RealizedLower,double *RealizedUpper)
 {
 	int i;
 
@@ -1428,6 +1428,7 @@ bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellRespons
 	*CellShadow  = dc->GetShadow();
 	*CellCost    = dc->GetCost(table->Lambda);
         *CellKey     = dc->GetCellKey();
+        *CellKeyNoZeros = dc->GetCellKeyNoZeros();
 	*CellFreq    = dc->GetFreq();
 	*CellStatus  = dc->GetStatus();
 	*RealizedUpper = dc->GetRealizedUpperValue();
@@ -5948,7 +5949,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                                     double s0, double s1, double z_f, double q, double* epsilon, double muC){
     CDataCell *dc;
     int nDec;
-    double z_s, E;
+    double z_s, E, muCused, di;
     double xj, Vj, cellKey, x, xdelta, X1help;
     double m_one = 0;
     std::map<int, PTableDRow> ptableL, ptableS;
@@ -5974,11 +5975,12 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
         if (!ptableSmall.ReadFromFile(PTableFileSep)) return -91; // If SEPARATION=Y then need additional ptable
         //Calculate m1sqr from ptable
         ptablepos = ptableSmall.GetData("all").rbegin();
+        di = (double) ptablepos->first;
         for (pos=ptablepos->second.begin();pos!=ptablepos->second.end();++pos){
-            m_one += pow((pos->first - ptablepos->first),2)*pos->second[0];  // (j-i)^2 * pij
+            m_one += (pos->first - di)*(pos->first - di)*pos->second[0];  // (j-i)^2 * pij
         }
         m_one = sqrt(m_one);
-        z_s = sqrt(m_one)/(s1*sqrt(E));
+        z_s = m_one/(s1*sqrt(E));
 
         ptableS = ptableSmall.GetData("all"); // Will need additional ptable for small values
         if (ptableS.size()==0) return 92; // No small table with "all"
@@ -5990,11 +5992,12 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     
     nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
 
+    printf("E=%g m1=%g z_s=%g sigma0=%g sigma1=%g\n",E,m_one,z_s,s0,s1);
             
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
-        
+        printf("IncludeZeros=%d\n",(IncludeZeros ? 1 : 0));
         cellKey = IncludeZeros ? dc->GetCellKey() : dc->GetCellKeyNoZeros();
         
         if (dc->GetStatus() != CS_EMPTY){ // not empty
@@ -6013,10 +6016,12 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
 
                 // j = 1
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
-                // Use muC > 0 if unsafe cell and xj large enough
+                // Use muC > 0 only if unsafe cell and xj large enough
                 // otherwise set muC = 0
-                if (((dc->GetStatus() < CS_UNSAFE_RULE) || (dc->GetStatus() > CS_UNSAFE_MANUAL)) || (fabs(xj) < z_s)) muC = 0;
-
+                printf("muC=%g becomes",muC);
+                if (((dc->GetStatus() < CS_UNSAFE_RULE) || (dc->GetStatus() > CS_UNSAFE_MANUAL)) || (fabs(xj) < z_s)){ muCused = 0; }
+                else {muCused = muC;}
+                printf("%g\n",muCused);
                 x = dc->GetResp();
                 xdelta = (fabs(xj) >= z_s) ? xj*flexfunction(fabs(xj),z_s,s0,s1,z_f,q) : 1.0;
                 if (fabs(x) < fabs(xdelta)){
@@ -6026,15 +6031,17 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 }
                 Vj = LookUpVinptable( (fabs(xj) > z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
 
-                printf("j=%d x=%g ck=%g xj=%g xdelta=%g Vj=%g\n",1,x,cellKey,xj,xdelta,Vj);
+                X1help = mysign(x)*fabs(xdelta)*mysign(Vj)*(muCused + fabs(Vj));
+                printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g X1help=%g ",1,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj,X1help);                
                 
-                X1help = mysign(x)*fabs(xdelta)*mysign(Vj)*(muC + fabs(Vj));
                 if (Vj >= 0){ x = x + X1help; }
                 else{
                     if (x<0){ x = x + min(X1help, -x); }
                     else{ x = x + max(X1help, -x); }
                 }
-
+                printf("new x=%9lf\n",x);
+                
+                
                 // j = 2, ..., topK
                 for (int j=2; j<=topK; j++){ // Only in case topK >=2
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
@@ -6047,10 +6054,12 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                         if (fabs(xj) >= z_s){ // xj may have changed so need to check again
                             cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
                             Vj = LookUpVinptable(ptableL, fabs(x/xdelta), cellKey);
-                            x = x + mysign(x)*fabs(xdelta)*Vj;
+                            printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g ",j,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj);
+                            x = x + mysign(x)*fabs(xdelta)*Vj; // never use muC for j>=2
+                            printf("new x=%9lf\n",x);
                         }// else add zero, i.e. do nothing
                     }// else add zero, i.e. do nothing
-                    printf("j=%d x=%g ck=%g xj=%g xdelta=%g Vj=%g\n",j,x,cellKey,xj,xdelta,Vj);
+                    
                 }
                 dc->SetCKMValue(x);
             }
@@ -6112,20 +6121,20 @@ double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, doub
     if ((Jmin <= z) && (z < Jmax)){
         row1 = ptable.upper_bound(z);
         row0 = std::prev(row1);
-        a0 = row0->first;
-        a1 = row1->first;
+        a0 = (double) row0->first;
+        a1 = (double) row1->first;
         lambda = (z - a0)/(a1-a0); // By construction a0 <= z < a1
         
         for (PTRow=row0->second.begin();PTRow!=row0->second.end();++PTRow){
             if (RKey < PTRow->second[1]){
-                Diff0 = PTRow->first - row0->first;
+                Diff0 = (double) PTRow->first - (double) row0->first;
                 break;
             }
         }
         if (fabs(a0-z)>1E-8){ // Only needed if a0 != z, in practice if (a0 - z) > 1E-8
             for (PTRow=row1->second.begin();PTRow!=row1->second.end();++PTRow){
                 if (RKey < PTRow->second[1]){
-                    Diff1 = PTRow->first - row1->first;
+                    Diff1 = (double) PTRow->first - (double) row1->first;
                     break;
                 }
             }
@@ -6136,7 +6145,7 @@ double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, doub
     if (z >= Jmax){ // take difference from distribution of largest key in ptable
         for (PTRow=ptable.rbegin()->second.begin(); PTRow!=ptable.rbegin()->second.end(); ++PTRow){
             if (RKey < PTRow->second[1]) {
-                result = PTRow->first - ptable.rbegin()->first;
+                result = (double) PTRow->first - (double) ptable.rbegin()->first;
                 break;
             }
         }
