@@ -5992,12 +5992,12 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     
     nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
 
-    printf("E=%g m1=%g z_s=%g sigma0=%g sigma1=%g\n",E,m_one,z_s,s0,s1);
+    //printf("E=%g m1=%g z_s=%g sigma0=%g sigma1=%g\n",E,m_one,z_s,s0,s1);
             
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
-        printf("IncludeZeros=%d\n",(IncludeZeros ? 1 : 0));
+        //printf("IncludeZeros=%d\n",(IncludeZeros ? 1 : 0));
         cellKey = IncludeZeros ? dc->GetCellKey() : dc->GetCellKeyNoZeros();
         
         if (dc->GetStatus() != CS_EMPTY){ // not empty
@@ -6018,10 +6018,10 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
                 // Use muC > 0 only if unsafe cell and xj large enough
                 // otherwise set muC = 0
-                printf("muC=%g becomes",muC);
+                //printf("muC=%g becomes",muC);
                 if (((dc->GetStatus() < CS_UNSAFE_RULE) || (dc->GetStatus() > CS_UNSAFE_MANUAL)) || (fabs(xj) < z_s)){ muCused = 0; }
                 else {muCused = muC;}
-                printf("%g\n",muCused);
+                //printf("%g\n",muCused);
                 x = dc->GetResp();
                 xdelta = (fabs(xj) >= z_s) ? xj*flexfunction(fabs(xj),z_s,s0,s1,z_f,q) : 1.0;
                 if (fabs(x) < fabs(xdelta)){
@@ -6032,14 +6032,14 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 Vj = LookUpVinptable( (fabs(xj) > z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
 
                 X1help = mysign(x)*fabs(xdelta)*mysign(Vj)*(muCused + fabs(Vj));
-                printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g X1help=%g ",1,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj,X1help);                
+                //printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g X1help=%g ",1,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj,X1help);                
                 
                 if (Vj >= 0){ x = x + X1help; }
                 else{
                     if (x<0){ x = x + min(X1help, -x); }
                     else{ x = x + max(X1help, -x); }
                 }
-                printf("new x=%9lf\n",x);
+                //printf("new x=%9lf\n",x);
                 
                 
                 // j = 2, ..., topK
@@ -6054,9 +6054,9 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                         if (fabs(xj) >= z_s){ // xj may have changed so need to check again
                             cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
                             Vj = LookUpVinptable(ptableL, fabs(x/xdelta), cellKey);
-                            printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g ",j,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj);
+                            //printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g ",j,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj);
                             x = x + mysign(x)*fabs(xdelta)*Vj; // never use muC for j>=2
-                            printf("new x=%9lf\n",x);
+                            //printf("new x=%9lf\n",x);
                         }// else add zero, i.e. do nothing
                     }// else add zero, i.e. do nothing
                     
