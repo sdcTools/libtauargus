@@ -376,7 +376,7 @@ bool CDataCell::Compare(const CDataCell &a) const
                 && DBL_EQ(Cost, a.Cost);
 }
 
-double CDataCell::GetCost(double Lambda)
+/*double CDataCell::GetCost(double Lambda)
 {
 	if (Lambda > 0)	{
 		return pow(Cost, Lambda);
@@ -385,7 +385,7 @@ double CDataCell::GetCost(double Lambda)
 	{
 		return log(Cost + 1);
 	}
-}
+}*/
 
 void CDataCell::Write(){
     printf("NumberofMaxScoreCell = %d\n",nMaxScoreCell);

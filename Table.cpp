@@ -136,9 +136,9 @@ void CTable:: operator = (CTable & table2)
 CTable::CTable()
 {
 
-   nDim = 0;
-  // Cell = 0;
-   nCell = 0;
+        nDim = 0;
+        // Cell = 0;
+        nCell = 0;
 	HasRecode = 0;
 	SetMissingAsSafe = false;
 
@@ -441,17 +441,17 @@ bool CTable::PrepareTable()
 	
         NumberofMaxScoreCell= max(nScoreCellDom, nScoreCellPQ);
         // To be able to deal with CKMType = "T" with TopK
-        if (strcmp(CKMType, "T")==0) {
+        if (CKMType == "T"){
             NumberofMaxScoreCell = max(NumberofMaxScoreCell, CKMTopK);
         }
         else{
-            if (strcmp(CKMType, "N") != 0) {
+            if (CKMType != "N"){
                 NumberofMaxScoreCell = max(NumberofMaxScoreCell, 1L);
             }
         }
         
         // If CKMType = "D" we need to keep smallest value per cell
-        KeepMinScore = (strcmp(CKMType, "D") == 0);
+        KeepMinScore = (CKMType == "D");
 	
 	Prepared = true;
 	return true;

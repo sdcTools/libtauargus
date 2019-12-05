@@ -33,12 +33,12 @@ public:
 // Attributes
 public:
         long CKMTopK;           // defines number of largest values percell needed for CKMType = T 
-        const char* CKMType;    // defines multiplier to be used in CKM for magnitude tables
+        std::string CKMType;    // defines multiplier to be used in CKM for magnitude tables
         bool KeepMinScore;      // if true, save smallest value per cell
         
 	long NumberofMaxScoreCell; //Saves the number of MaxScore to be stored per cell--Cell Level
 	long NumberofMaxScoreHolding; //Saves the number of MaxScore to be stored per cell--Holding Level
-	bool Prepared;         // if table is already prepared
+	bool Prepared;          // if table is already prepared
 	long nDim;              // number of variables (= dimensions) in table
         int  SizeDim[MAXDIM];   // = nCode of corresponding variable
 

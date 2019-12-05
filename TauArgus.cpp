@@ -6043,6 +6043,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 
                 
                 // j = 2, ..., topK
+                // What if topK > number of contributions to the cell???
                 for (int j=2; j<=topK; j++){ // Only in case topK >=2
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
                     if (fabs(xj) >= z_s){

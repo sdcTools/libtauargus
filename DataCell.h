@@ -224,7 +224,7 @@ public:
         double GetCellKey()                     { return CellKey; }
         double GetCellKeyNoZeros()              { return CellKeyNoZeros;}
         double GetCKMValue()                    { return CKMValue; }
-	double GetCost(double Lambda);
+	double GetCost(double Lambda)           { return (Lambda > 0 ? pow(Cost,Lambda) : log(Cost + 1));}
 	long   GetFreq()			{ return Freq; }
 	double GetWeight()			{ return Weight; }
 	long   GetFreqHolding()			{ return FreqHolding; }
