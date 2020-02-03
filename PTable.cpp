@@ -82,11 +82,11 @@ void PTable::SetmaxDiff(){
      
     ptable_in = fopen(FileName,"r");
     if (ptable_in == NULL){
-        return false;
+        return false; // file does not exist
     }
     
-    fgets((char *)line, MAXRECORDLENGTH, ptable_in); // Disregard first line: contains only names
-    fgets((char *)line, MAXRECORDLENGTH, ptable_in);
+    if (!fgets((char *)line, MAXRECORDLENGTH, ptable_in)) return false; // Disregard first line: contains only column names
+    if (!fgets((char *)line, MAXRECORDLENGTH, ptable_in)) return false;
 
     row = PTableRow();
     
@@ -94,7 +94,7 @@ void PTable::SetmaxDiff(){
     j = atoi(strtok(NULL,";"));
     row[j] = atof(strtok(NULL,";"));
 
-    while (fgets((char *)line, MAXRECORDLENGTH, ptable_in) != NULL){
+    while (fgets((char *)line, MAXRECORDLENGTH, ptable_in)){
         i = atoi(strtok(line,";"));
         if (i != i0){
             bound = 0;

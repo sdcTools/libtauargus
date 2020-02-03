@@ -49,11 +49,11 @@ PTableCont::~PTableCont() {
      
     ptable_in = fopen(FileName,"r");
     if (ptable_in == NULL){
-        return false;
+        return false; // file does not exist
     }
     
-    fgets((char *)line, MAXRECORDLENGTH, ptable_in); // Disregard first line: contains only names
-    fgets((char *)line, MAXRECORDLENGTH, ptable_in);
+    if (!fgets((char *)line, MAXRECORDLENGTH, ptable_in)) return false; // Disregard first line: contains only column names
+    if (!fgets((char *)line, MAXRECORDLENGTH, ptable_in)) return false;
 
     //row = PTableDRow();
     row.clear();
@@ -62,14 +62,14 @@ PTableCont::~PTableCont() {
     i0 = atoi(strtok(line,";"));  // i
     j = atof(strtok(NULL,";"));   // j
     pij = atof(strtok(NULL,";"));  // p
-    p_lb = atof(strtok(NULL,";")); // p_kum_u
+    p_lb = atof(strtok(NULL,";")); // p_kum_u  // not used 
     p_ub = atof(strtok(NULL,";"));  // p_kum_o
-    diff = atof(strtok(NULL,";"));  // diff
+    diff = atof(strtok(NULL,";"));  // diff    // not used
     type = strtok(NULL,"\n");       // type: even, odd or all
     row[j][0] = pij;
     row[j][1] = p_ub;
     
-    while (fgets((char *)line, MAXRECORDLENGTH, ptable_in) != NULL){
+    while (fgets((char *)line, MAXRECORDLENGTH, ptable_in)){
         i = atoi(strtok(line,";"));  // i
         if (i != i0){ // New entry for lookup value, so start new row
             Data[type][i0] = row;

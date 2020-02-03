@@ -1263,7 +1263,7 @@ bool TauArgus::SetVariable(long VarIndex, long bPos,
 bool TauArgus::SetTable(long Index, long nDim, long *ExplanatoryVarList,
                         bool IsFrequencyTable,
 			long ResponseVar, long ShadowVar, long CostVar, long CellKeyVar,
-                        const char* CKMType, 
+                        std::string CKMType, 
                         long CKMTopK,
 			double Lambda,
 			double MaxScaledCost,
@@ -5944,7 +5944,7 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, const char* PTableFile, int *MinD
     return 1;
 }
 
-int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, const char* CKMType, 
+int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const char* PTableFileSep, std::string CKMType, 
                                     int topK, bool IncludeZeros, bool Parity, bool Separation, double m1sqr, const char* Scaling, 
                                     double s0, double s1, double z_f, double q, double* epsilon, double muC){
     CDataCell *dc;
@@ -5992,12 +5992,9 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
     
     nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
 
-    //printf("E=%g m1=%g z_s=%g sigma0=%g sigma1=%g\n",E,m_one,z_s,s0,s1);
-            
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);
-        //printf("IncludeZeros=%d\n",(IncludeZeros ? 1 : 0));
         cellKey = IncludeZeros ? dc->GetCellKey() : dc->GetCellKeyNoZeros();
         
         if (dc->GetStatus() != CS_EMPTY){ // not empty
@@ -6018,10 +6015,8 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 xj = GetXj(CKMType, 1, *dc, m_tab[TabNo].ApplyWeight);
                 // Use muC > 0 only if unsafe cell and xj large enough
                 // otherwise set muC = 0
-                //printf("muC=%g becomes",muC);
                 if (((dc->GetStatus() < CS_UNSAFE_RULE) || (dc->GetStatus() > CS_UNSAFE_MANUAL)) || (fabs(xj) < z_s)){ muCused = 0; }
                 else {muCused = muC;}
-                //printf("%g\n",muCused);
                 x = dc->GetResp();
                 xdelta = (fabs(xj) >= z_s) ? xj*flexfunction(fabs(xj),z_s,s0,s1,z_f,q) : 1.0;
                 if (fabs(x) < fabs(xdelta)){
@@ -6032,19 +6027,16 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                 Vj = LookUpVinptable( (fabs(xj) > z_s)? ptableL : ptableS, fabs(x/xdelta), cellKey);
 
                 X1help = mysign(x)*fabs(xdelta)*mysign(Vj)*(muCused + fabs(Vj));
-                //printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g X1help=%g ",1,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj,X1help);                
                 
                 if (Vj >= 0){ x = x + X1help; }
                 else{
                     if (x<0){ x = x + min(X1help, -x); }
                     else{ x = x + max(X1help, -x); }
                 }
-                //printf("new x=%9lf\n",x);
-                
                 
                 // j = 2, ..., topK
-                // What if topK > number of contributions to the cell???
-                for (int j=2; j<=topK; j++){ // Only in case topK >=2
+                // What if topK > number of contributions to the cell??? => only go up to number of contributions = dc.GetFreq() (if no holdings)
+                for (int j=2; ((j<=topK) && (j<=dc->GetFreq())); j++){ // Only in case topK >=2 
                     xj = GetXj(CKMType, j, *dc, m_tab[TabNo].ApplyWeight);
                     if (fabs(xj) >= z_s){
                         xdelta = xj*epsilon[j-1]*flexfunction(fabs(xj),z_s,s0,s1,z_f,q);
@@ -6055,9 +6047,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, const char* PTableFileCont, const
                         if (fabs(xj) >= z_s){ // xj may have changed so need to check again
                             cellKey = ShiftFirstDigit(cellKey,nDec); // always do this for j>=2
                             Vj = LookUpVinptable(ptableL, fabs(x/xdelta), cellKey);
-                            //printf("j=%d x=%9lf ck=%g xj=%g xdelta=%g |x/xdelta|=%g Vj=%g ",j,x,cellKey,xj,xdelta,fabs(x/xdelta),Vj);
                             x = x + mysign(x)*fabs(xdelta)*Vj; // never use muC for j>=2
-                            //printf("new x=%9lf\n",x);
                         }// else add zero, i.e. do nothing
                     }// else add zero, i.e. do nothing
                     
@@ -6155,22 +6145,19 @@ double TauArgus::LookUpVinptable(std::map<int,PTableDRow> ptable, double z, doub
     return result;
 }
 
-double TauArgus::GetXj(const char* CKMType, int j, CDataCell &dc, bool WeightApplied){
+double TauArgus::GetXj(std::string CKMType, int j, CDataCell &dc, bool WeightApplied){
     ASSERT (dc.GetStatus() != CS_EMPTY);
     
-    if (strcmp(CKMType,"T")==0){
+    if (CKMType == "T"){ // j = 1, ..., topK
         double wj = WeightApplied ? dc.MaxScoreWeightCell[j-1] : 1.0;
-        return  wj*dc.MaxScoreCell[j-1]; // j = 1, ..., topK
+        return  wj*dc.MaxScoreCell[j-1]; 
     }
-    if (strcmp(CKMType,"M")==0){
-        return (WeightApplied ? dc.GetResp()/dc.GetWeight() : dc.GetResp()/dc.GetFreq());
-    }
-    if (strcmp(CKMType,"D")==0){
-        return (dc.MaxScoreCell[0] - dc.MinScoreCell);
-    }
-    if (strcmp(CKMType,"V")==0){
-        return dc.GetResp();
-    }
-
+    
+    if (CKMType == "M") return (WeightApplied ? dc.GetResp()/dc.GetWeight() : dc.GetResp()/dc.GetFreq());
+    
+    if (CKMType == "D") return (dc.MaxScoreCell[0] - dc.MinScoreCell);
+    
+    if (CKMType == "V") return dc.GetResp();
+    
     return -1E42; // Should not happen
 }
