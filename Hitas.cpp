@@ -108,27 +108,32 @@ bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 { 
 	int i;
 //	string fname/*, varname*/;
-	char fname[MAX_PATH];
-	char varname[10];
+	//char fname[MAX_PATH];
+	//char varname[10];
+        string fname;
+        string varname;
 	fprintf(fd, "%ld\n", tab.nDim); // dimensies
 
 	// name files with codelists
 	for (i = 0; i < tab.nDim; i++) {
-		sprintf(fname, "%shitasv%d.txt", TempPath.c_str(), i + 1);
-		sprintf(varname, "Var_%d", i + 1);
-		fprintf(fd, "%s\n", fname);
-		var[tab.ExplVarnr[i]].WriteCodelist(fname, ".", varname, true);
+		//sprintf(fname, "%shitasv%d.txt", TempPath.c_str(), i + 1);
+                fname = TempPath + "hitasv" + to_string(i+1) + ".txt";
+                varname = "Var_" + to_string(i+1);
+		fprintf(fd, "%s\n", fname.c_str());
+		var[tab.ExplVarnr[i]].WriteCodelist(fname.c_str(), ".", varname.c_str(), true);
 	}
 
 	// name file with table
-	sprintf(fname, "%s%s", TempPath.c_str(), NameTabFile.c_str());
-	fprintf(fd, "%s\n", fname);
+	//sprintf(fname, "%s%s", TempPath.c_str(), NameTabFile.c_str());
+        fname = TempPath + NameTabFile;
+	fprintf(fd, "%s\n", fname.c_str());
 	// write cells
-	WriteCellFile(fname, tab, var);
+	WriteCellFile(fname.c_str(), tab, var);
 
 	// name file for result with secondary cell dimensions
-	sprintf(fname, "%s%s", TempPath.c_str(), NameSecFile.c_str());
-	fprintf(fd, "%s\n", fname);
+	//sprintf(fname, "%s%s", TempPath.c_str(), NameSecFile.c_str());
+        fname = TempPath + NameSecFile;
+	fprintf(fd, "%s\n", fname.c_str());
 
 	return true;
 }
