@@ -69,7 +69,8 @@ enum CountType {
 	CT_SHADOW,
 	CT_COST,
 	CT_ROUNDEDRESP,
-	CT_CTA
+	CT_CTA,
+        CT_CKM
 };
 
 enum SafetyType {

@@ -264,10 +264,10 @@ public:
 	bool GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
 	bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
 	bool UndoRecode(/*[in]*/ long VarIndex);
-	long GetMaxnUc();
+	//long GetMaxnUc();
 	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
 	bool UnsafeVariable( /*[in]*/ long VarIndex,/*[in,out]*/ long *Count, /*[in,out]*/ long * UCArray);
-	bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
+	//bool GetTableRow( /*[in]*/ long TableIndex, /*[in,out]*/ long *DimIndex, /*[in,out]*/ double * Cell, /*[in,out]*/ long *Status, /*[in]*/ long CountType);
 	bool SetHierarchicalDigits( /*[in]*/ long VarIndex, /*[in]*/ long nDigitPairs, /*[in]*/ long *nDigits);
 	void CleanAll();
 	void ApplyRecode();
@@ -278,16 +278,16 @@ public:
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(/*[in]*/ long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 	std::string GetErrorString(/*[in]*/ long ErrorNumber);
-        int SetCellKeyValuesFreq(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
-        int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ const char* PTableFileCont, /*[in]*/ const char* PTableFileSep, 
+        int SetCellKeyValuesFreq(/*[in]*/ long TabNo, /*[in]*/ std::string PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
+        int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ std::string PTableFileCont, /*[in]*/ std::string PTableFileSep, 
                                  /*[in]*/ std::string CKMType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 
-                                 /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ const char* Scaling, 
+                                 /*[in]*/ bool Separation, /*[in]*/ double m1sqr, /*[in]*/ std::string Scaling, 
                                  /*[in]*/ double s0, /*[in]*/ double s1, /*[in]*/ double z_f, /*[in]*/ double q, /*[in]*/ double* epsilon,
                                  /*[in]*/ double muC);
 
 private:
         double ShiftFirstDigit(double key, int nDec);
-        double flexfunction(double z, double z_s, double s0, double s1, double z_f, double q);
+        double flexfunction(double z, double z_s, double s0, double s1, double z_f, double q, std::string Scaling);
         double LookUpVinptable(std::map<int,PTableDRow> ptable, double z, double RKey);
         double GetXj(std::string CKMType, int j, CDataCell &dc, bool WeightApplied);
 };

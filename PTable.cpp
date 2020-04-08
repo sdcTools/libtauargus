@@ -68,11 +68,12 @@ void PTable::SetmaxDiff(){
  * File with ptable:
  *      free format with separator ";" 
  *      names on first line
- *      each next line starts with three values i, j and pij
+ *      each next line contains (in this order)
+ *      (int) i (int) j (double) pij (double) v (double) pij_ub
  * @param FileName
  * @return true if no error
  */    
- bool PTable::ReadFromFreqFile(const char* FileName){
+ bool PTable::ReadFromFreqFile(std::string FileName){
     char line[MAXRECORDLENGTH];
     int i=0, j=0, i0=0;
     double bound;
@@ -80,7 +81,7 @@ void PTable::SetmaxDiff(){
     PTableRow::iterator pos;
     FILE* ptable_in;
      
-    ptable_in = fopen(FileName,"r");
+    ptable_in = fopen(FileName.c_str(),"r");
     if (ptable_in == NULL){
         return false; // file does not exist
     }

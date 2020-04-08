@@ -21,7 +21,7 @@ public:
     PTableCont();
     PTableCont(const PTableCont& orig);
     virtual ~PTableCont();
-    bool ReadFromFile(const char* FileName);
+    bool ReadFromFile(std::string FileName);
     std::map<int, PTableDRow> GetData(std::string type) {return Data[type];}
     void Write(std::string type);
     

@@ -21,7 +21,7 @@ public:
     PTable();
     PTable(const PTable& orig);
     virtual ~PTable();
-    bool ReadFromFreqFile(const char* FileName);
+    bool ReadFromFreqFile(std::string FileName);
     int GetmaxNi() {return maxNi;}
     int GetminDiff() {return minDiff;}
     int GetmaxDiff() {return maxDiff;}

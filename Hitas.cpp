@@ -117,8 +117,8 @@ bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 	// name files with codelists
 	for (i = 0; i < tab.nDim; i++) {
 		//sprintf(fname, "%shitasv%d.txt", TempPath.c_str(), i + 1);
-                fname = TempPath + "hitasv" + to_string(i+1) + ".txt";
-                varname = "Var_" + to_string(i+1);
+                fname = TempPath + "hitasv" + std::to_string(i+1) + ".txt";
+                varname = "Var_" + std::to_string(i+1);
 		fprintf(fd, "%s\n", fname.c_str());
 		var[tab.ExplVarnr[i]].WriteCodelist(fname.c_str(), ".", varname.c_str(), true);
 	}
