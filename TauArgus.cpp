@@ -5947,7 +5947,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, std::string PTableFileCont, std::
         z_s = m_one/(s1*sqrt(E));
                 
         ptableS = ptableSmall.GetData("all"); // Will need additional ptable for small values
-        if (ptableS.size()==0) return 92; // No small table with "all"
+        if (ptableS.size()==0) return -92; // No small table with "all"
     }
     else{
         z_s = 0;
