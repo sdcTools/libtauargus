@@ -278,6 +278,7 @@ public:
 	double GetMinimumCellValue(/*[in]*/ long TableIndex, /*[in,out]*/ double *Maximum);
 	bool SetProtectionLevelsForResponseTable(/*[in]*/ long TableIndex,/*[in,out]*/ long * DimIndex,/*[in]*/ double LowerBound, /*[in]*/ double UpperBound);
 	std::string GetErrorString(/*[in]*/ long ErrorNumber);
+        std::string GetVersion();
         int SetCellKeyValuesFreq(/*[in]*/ long TabNo, /*[in]*/ std::string PTableFile, /*[out]*/ int *MinDiff, /*[out]*/ int *MaxDiff);
         int SetCellKeyValuesCont(/*[in]*/ long TabNo, /*[in]*/ std::string PTableFileCont, /*[in]*/ std::string PTableFileSep, 
                                  /*[in]*/ std::string CKMType, /*[in]*/ int topK, /*[in]*/ bool IncludeZeros, /*[in]*/ bool Parity, 

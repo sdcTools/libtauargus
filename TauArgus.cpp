@@ -3069,6 +3069,11 @@ bool TauArgus::SetAllNonStructuralAsEmpty(long TableIndex)
 	return true;
 }
 
+
+string TauArgus::GetVersion(){
+    return VERSIONNUMBER;
+}
+
 string TauArgus::GetErrorString(long ErrorNumber)
 {
 	char ErrorNumberString[10];
