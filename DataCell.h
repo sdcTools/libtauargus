@@ -88,6 +88,9 @@ public:
 	bool IsFilled;
 	void operator+=(CDataCell& a)
 	{ 
+            double pwr = pow(10,15); // Maximum number of significant digits in IEEE 754 standard
+            double dum;
+            
                 // When adding/merging two cells the minimum needs to be recalculated
                 if (a.MinScoreCell < MinScoreCell){
                     MinScoreCell = a.MinScoreCell;
@@ -100,8 +103,10 @@ public:
 		Shadow += a.Shadow;
 		Cost += a.Cost;
 		Weight += a.Weight;
-                CellKey += a.CellKey;
-                CellKeyNoZeros += a.CellKeyNoZeros;
+                //CellKey += a.CellKey;
+                CellKey = modf(floor((CellKey + a.CellKey)*pwr + 0.5)/pwr,&dum);
+                //CellKeyNoZeros += a.CellKeyNoZeros;
+                CellKeyNoZeros = modf(floor((CellKeyNoZeros + a.CellKeyNoZeros)*pwr + 0.5)/pwr,&dum);
 		// Not too sure about this
 		
 		// add frequencies only if holding number is different

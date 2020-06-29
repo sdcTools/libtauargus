@@ -90,7 +90,7 @@ PTableCont::~PTableCont() {
  }        
 
 // For debugging purposes 
-void PTableCont::Write(std::string type){
+/*void PTableCont::Write(std::string type){
     PTableDRow::iterator pos;
     std::map<int,PTableDRow>::iterator rowpos;
     
@@ -103,4 +103,4 @@ void PTableCont::Write(std::string type){
         }
         printf("\n");
     }
-}
+}*/
