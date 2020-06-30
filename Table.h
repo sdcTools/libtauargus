@@ -187,7 +187,7 @@ public:
 	bool SetExplVariables(int nDim, long* ExplVar);
 	bool SetProtectionLevelCell(CDataCell &datacell);
 	bool SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, long K);
-        bool ComputeCellKeyCell(CDataCell &datacell);
+        //bool ComputeCellKeyCell(CDataCell &datacell);
 	virtual ~CTable();
 };
 

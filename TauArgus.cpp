@@ -239,9 +239,10 @@ oke:
         
     // compute cellkey from added recordkeys
     // only if record key variable is present
-    for (i=0; i<m_ntab;i++){
+    // [30-06-2020] taking fractional part is already done when contructing tablecell, so no longer needed
+    /*for (i=0; i<m_ntab;i++){
         if (m_tab[i].CellKeyVarnr>=0){ ComputeCellKeys(m_tab[i]); }
-    }
+    }*/
 
 
 #ifdef _DEBUGG
@@ -4246,7 +4247,8 @@ bool TauArgus::ComputeRecodeTables()
 		m_tab[m_ntab + i].HasRecode = false;
 		ComputeCellStatuses(m_tab[m_ntab + i]);
 		SetProtectionLevels(m_tab[m_ntab + i]);
-                ComputeCellKeys(m_tab[m_ntab + i]);
+                // [30-06-2020] taking fractional part is already done when contructing tablecell, so no longer needed
+                // ComputeCellKeys(m_tab[m_ntab + i]);
 
 #ifdef _DEBUGG
 		{ int i;
@@ -4421,13 +4423,13 @@ void TauArgus::SetProtectionLevels(CTable &tab)
 	}
 }
 
-void TauArgus::ComputeCellKeys(CTable &tab)
+/*void TauArgus::ComputeCellKeys(CTable &tab)
 {
     for (int c=0; c<tab.nCell; c++){
         CDataCell *dc = tab.GetCell(c);
         tab.ComputeCellKeyCell(*dc);
     }
-}
+}*/
 
 // set that the table has been recoded
 void TauArgus::SetTableHasRecode()

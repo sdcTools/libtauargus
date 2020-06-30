@@ -1416,7 +1416,8 @@ bool CTable::SetProtectionLevelCellFrequency(CDataCell &datacell, long Base, lon
 	return true;
 }
 
-bool CTable::ComputeCellKeyCell(CDataCell &datacell)
+// [30-06-2020] taking fractional part is already done when contructing tablecell, so no longer needed
+/*bool CTable::ComputeCellKeyCell(CDataCell &datacell)
 {
     double CellKeyResult = 0;
     double intpart;
@@ -1427,4 +1428,4 @@ bool CTable::ComputeCellKeyCell(CDataCell &datacell)
     CellKeyResult = modf(datacell.GetCellKeyNoZeros(),&intpart); // = fractional part 
     datacell.SetCellKeyNoZeros(CellKeyResult);
     return true;
-}
+}*/
