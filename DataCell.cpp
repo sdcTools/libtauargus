@@ -38,77 +38,79 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 //	fd = fopen("E:/Temp/Debug.txt","a");
 //		fprintf(fd,"%Xh%s\n", this,"		CDatacell		Const		()  ");
 //	fclose(fd);
-	PeepSortCell = EMPTY;
-	PeepSortHolding = EMPTY;
-	TempPeepSort = EMPTY;
-	PeepCell = 0;
-	PeepHolding = 0;
 	Resp = 0;
         NWResp = 0;
-	RoundedResp = 0;
 	Cost = 0;
-	Weight = 0;
 	Shadow = 0;
         CellKey = 0;
         CellKeyNoZeros = 0;
 	Freq = 0;
+	Weight = 0;
 	FreqHolding = 0;
-	TempShadow = 0;
-	if (IsHolding) {
-		HoldingNr = WITH_HOLDING;
-	}
-	else {
-		HoldingNr = WITHOUT_HOLDING;
-	}
-	nMaxScoreCell = NumberMaxScoreCell;
-	nMaxScoreHolding = NumberMaxScoreHolding;
-	MaxScoreCell = 0;
-	MaxScoreWeightCell = 0;
-	MaxScoreHolding = 0;
-	MaxScoreWeightHolding = 0;
-	HoldingnrPerMaxScore = 0;
-	IsFilled = false;
-  
+	RoundedResp = 0;
+        CTAValue = 0;
+        CKMValue = 0;
+
 	Status = CS_EMPTY;
+	TempShadow = 0;
+        HoldingNr = IsHolding ? WITH_HOLDING : WITHOUT_HOLDING;
+	PeepSortCell = EMPTY;
+	PeepSortHolding = EMPTY;
+	TempPeepSort = EMPTY;
+
+	PeepCell = 0;
+	PeepHolding = 0;
+
   //set ini values for realized upper and lower.as 0
 	RealizedUpperValue = 0;
 	RealizedLowerValue = 0;
-	UpperProtectionLevel = 0;
 	LowerProtectionLevel = 0;
+	UpperProtectionLevel = 0;
         
         // Needed for CKMType = "D"
         // Set to large double 
         MinScoreCell = BIGNUMBER;
         MinScoreWeightCell = 0;
 
-	if (nMaxScoreCell > 0) {
-			// allocate memory for MaxScore and MaxScoreWeight
-			MaxScoreCell       = new double[nMaxScoreCell];
-			if (IsWeight)	{
-				MaxScoreWeightCell = new double[nMaxScoreCell];
-			}
-
-			memset( MaxScoreCell,       0, sizeof(double) * nMaxScoreCell);
-			if (IsWeight)	{
-				memset( MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
-			}
+	nMaxScoreCell = NumberMaxScoreCell;
+	if (nMaxScoreCell > 0){
+            // allocate memory for MaxScore and MaxScoreWeight
+            MaxScoreCell = new double[nMaxScoreCell];
+            if (IsWeight){
+		MaxScoreWeightCell = new double[nMaxScoreCell];
+            }
+            memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
+            if (IsWeight){
+		memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
+            }
 	}
+        else{
+            MaxScoreCell = 0;
+            MaxScoreWeightCell = 0;
+        }
+                
+	nMaxScoreHolding = NumberMaxScoreHolding;
+	if (IsHolding && nMaxScoreHolding > 0){
+            // allocate memory for MaxScore and MaxScoreWeight
+            MaxScoreHolding = new double[nMaxScoreHolding];
+            if (IsWeight){
+		MaxScoreWeightHolding = new double[nMaxScoreHolding];
+            }
+            // Allocate Memory for HoldingnrMaxScore
+            HoldingnrPerMaxScore = new int[nMaxScoreHolding];
 
-	if (IsHolding && nMaxScoreHolding > 0)	{
-			// allocate memory for MaxScore and MaxScoreWeight
-			MaxScoreHolding       = new double[nMaxScoreHolding];
-			if (IsWeight)	{
-				MaxScoreWeightHolding = new double[nMaxScoreHolding];
-			}
-			// Allocate Memory for HoldingnrMaxScore
-			HoldingnrPerMaxScore = new int[nMaxScoreHolding];
-
-			memset( MaxScoreHolding,       0, sizeof(double) * nMaxScoreHolding);
-			if (IsWeight)	{
-				memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
-			}
-			memset( HoldingnrPerMaxScore,       -1, sizeof(int) * nMaxScoreHolding);
+            memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
+            if (IsWeight){
+		memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
+            }
+            memset( HoldingnrPerMaxScore, -1, sizeof(int) * nMaxScoreHolding);
 	}
+	else{
+            MaxScoreHolding = 0;
+            MaxScoreWeightHolding = 0;
+            HoldingnrPerMaxScore = 0;
+        }
+	IsFilled = false;
 }
 
 // constructor used within functions. does not have the arrays for
@@ -119,48 +121,48 @@ CDataCell::CDataCell()
 //	fd = fopen("E:/Temp/Debug.txt","a");
 //	fprintf(fd,"%Xh%s\n", this,"		CDatacell		Const		()  ");
 //	fclose(fd);
-	PeepSortCell = EMPTY;
-	PeepSortHolding = EMPTY;
-	TempPeepSort = EMPTY;
-	Weight = 0;
-	PeepCell = 0;
-	PeepHolding = 0;
 	Resp = 0;
         NWResp = 0;
-	RoundedResp = 0;
-	CTAValue = 0;
 	Cost = 0;
 	Shadow = 0;
         CellKey = 0;
         CellKeyNoZeros = 0;
 	Freq = 0;
+	Weight = 0;
 	FreqHolding = 0;
+	RoundedResp = 0;
+	CTAValue = 0;
+        CKMValue = 0;
+
+	Status = CS_EMPTY;
 	TempShadow = 0;
 	HoldingNr = WITHOUT_HOLDING;
-	nMaxScoreCell = 0;
-	nMaxScoreHolding = 0;
-	MaxScoreCell = 0;
-	MaxScoreWeightCell = 0;
-	MaxScoreHolding = 0;
-	MaxScoreWeightHolding = 0;
-	HoldingnrPerMaxScore = 0;
-	IsFilled = false;
-  
-	Status = CS_EMPTY;
+	PeepSortCell = EMPTY;
+	PeepSortHolding = EMPTY;
+	TempPeepSort = EMPTY;
+
+	PeepCell = 0;
+	PeepHolding = 0;
+
   //set ini values for realized upper and lower.as 0
 	RealizedUpperValue = 0;
 	RealizedLowerValue = 0;
-	UpperProtectionLevel = 0;
 	LowerProtectionLevel = 0;
+	UpperProtectionLevel = 0;
+        
         // Needed for CKMType = "D"
         // Set to large double 
         MinScoreCell = BIGNUMBER;
         MinScoreWeightCell = 0;
 
-	//LowerProtectionLevel = 0;
-        //UpperProtectionLevel = 0;
-        //SlidingProtectionLevel = 0;
-        //ProtectionCapacity = 0;
+	nMaxScoreCell = 0;
+	MaxScoreCell = 0;
+	MaxScoreWeightCell = 0;
+	nMaxScoreHolding = 0;
+	MaxScoreHolding = 0;
+	MaxScoreWeightHolding = 0;
+	HoldingnrPerMaxScore = 0;
+	IsFilled = false;
 }
 
 // Destructor. All arrays that are created should be cleaned.

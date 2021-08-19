@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Hitas.o \
 	${OBJECTDIR}/JJFormat.o \
 	${OBJECTDIR}/PTable.o \
+	${OBJECTDIR}/PTableCont.o \
 	${OBJECTDIR}/Properties.o \
 	${OBJECTDIR}/SubCodeList.o \
 	${OBJECTDIR}/Table.o \
@@ -114,6 +115,11 @@ ${OBJECTDIR}/PTable.o: PTable.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTable.o PTable.cpp
+
+${OBJECTDIR}/PTableCont.o: PTableCont.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTableCont.o PTableCont.cpp
 
 ${OBJECTDIR}/Properties.o: Properties.cpp
 	${MKDIR} -p ${OBJECTDIR}

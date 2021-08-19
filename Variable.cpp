@@ -39,26 +39,53 @@ static char THIS_FILE[] = __FILE__;
 CVariable::CVariable()
 {
 	bPos= -1;
-	nCode = 0;
+        nPos=0; //Added
+        nDec=0; //Added
+        
+	IsPeeper = false;
+        IsCategorical = false; //Added
+        IsNumeric = false; //Added
+        IsWeight = false; //Added
+        IsHierarchical = false; //Added
+        IsHolding = false; //Added
+        IsRecordKey = false; //Added
+        
 	nMissing = 0;
 	Missing1 = "";
 	Missing2 = "";
 	TotalCode = "";
+
 	MinValue = 0;
 	MaxValue = 0;
-	HasRecode = false;
-	HasCodeList = false;
+
+	nCode = 0;
+
 	nDigitSplit = 0;
+        memset(DigitSplit, 0, sizeof(int) * MAXDIGITGROUP); //Added
 	hCode = 0;
-	nBogus = 0;
-	Recode.hCode = 0;
+
+        TableIndex = -1; //Added
+        ValueToggle = -1; //Added
+        Value = 0; //Added
+        HasRecode = false;
+	HasCodeList = false;
+        Recode.nCode = 0; //Addedd
+        Recode.Missing1 = ""; //Addedd
+        Recode.Missing2 = ""; //Addedd
+        Recode.nMissing = 0; //Addedd
 	Recode.DestCode = 0;
+        Recode.CodeWidth = 0; //Addedd
 	Recode.nBogus = 0;
-	PositionSet =  false;
-	IsPeeper = false;
+	Recode.hCode = 0;
 	PeepCode1 = "";
 	PeepCode2 = "";
+
+	PositionSet =  false;
+        NumSubCodes = 0; // Added
 	m_SubCodes = 0;
+
+       	nBogus = 0;
+        hfCodeWidth = 0; //Added
 }
 
 // memory allocated has to be destroyed
@@ -88,12 +115,11 @@ END_MESSAGE_MAP()
 // Set position for variables.
 bool CVariable::SetPosition(long lbPos, long lnPos, long lnDec)
 {
-
-	bPos = lbPos - 1;
-   nPos = lnPos;
-	nDec = lnDec;
-	PositionSet = true;
-	return true;
+    bPos = lbPos - 1;
+    nPos = lnPos;
+    nDec = lnDec;
+    PositionSet = true;
+    return true;
 }
 
 
@@ -124,29 +150,28 @@ bool CVariable::SetType(bool bIsCategorical, bool bIsNumeric, bool bIsWeight, bo
 // have missing strings
 bool CVariable::SetMissing(LPCTSTR sMissing1, LPCTSTR sMissing2, long NumMissing)
 {
+    if (NumMissing > 0)	{
+	Missing1 = sMissing1;
+	Missing2 = sMissing2;
 
-	if (NumMissing > 0)	{
-		Missing1 = sMissing1;
-		Missing2 = sMissing2;
+	if (Missing1.empty()) {
+            Missing1 = Missing2;
+	}
 
-		if (Missing1.empty()) {
-			Missing1 = Missing2;
-		}
-
-		if (Missing1.empty()) {
-			nMissing = 0;
-		}
-		else if (Missing2.empty()) {
-			nMissing = 1;
-		}
-		else {
-			nMissing = 2;
-		}
+	if (Missing1.empty()) {
+            nMissing = 0;
+	}
+	else if (Missing2.empty()) {
+            nMissing = 1;
 	}
 	else {
-		nMissing = 0;
+            nMissing = 2;
 	}
-	return true;
+    }
+    else {
+	nMissing = 0;
+    }
+    return true;
 }
 
 
@@ -363,7 +388,7 @@ void CVariable::GetGHMITERCode(int i, std::string &code)
 {
 	//string s;
 
-	ASSERT(i >= 0 && i < GetCodeList()->size() );
+	ASSERT(i >= 0 && i < (int) GetCodeList()->size() );
 	//s = GetCode(i);
         code = GetCode(i);
 	//ASSERT(s.length() < 9);

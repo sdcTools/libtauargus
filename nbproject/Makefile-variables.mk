@@ -15,13 +15,13 @@ CND_PACKAGE_DIR_Debug=dist/Debug/MinGW-Windows/package
 CND_PACKAGE_NAME_Debug=liblibtauargus.dll.tar
 CND_PACKAGE_PATH_Debug=dist/Debug/MinGW-Windows/package/liblibtauargus.dll.tar
 # Release configuration
-CND_PLATFORM_Release=MinGW_64-Windows
-CND_ARTIFACT_DIR_Release=dist/Release/MinGW_64-Windows
+CND_PLATFORM_Release=MinGW-Windows
+CND_ARTIFACT_DIR_Release=dist/Release/MinGW-Windows
 CND_ARTIFACT_NAME_Release=TauArgusJava.dll
-CND_ARTIFACT_PATH_Release=dist/Release/MinGW_64-Windows/TauArgusJava.dll
-CND_PACKAGE_DIR_Release=dist/Release/MinGW_64-Windows/package
+CND_ARTIFACT_PATH_Release=dist/Release/MinGW-Windows/TauArgusJava.dll
+CND_PACKAGE_DIR_Release=dist/Release/MinGW-Windows/package
 CND_PACKAGE_NAME_Release=liblibtauargus.dll.tar
-CND_PACKAGE_PATH_Release=dist/Release/MinGW_64-Windows/package/liblibtauargus.dll.tar
+CND_PACKAGE_PATH_Release=dist/Release/MinGW-Windows/package/liblibtauargus.dll.tar
 #
 # include compiler specific variables
 #

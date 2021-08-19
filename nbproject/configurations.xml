@@ -14,12 +14,12 @@
       <itemPath>IProgressListener.h</itemPath>
       <itemPath>JJFormat.h</itemPath>
       <itemPath>PTable.h</itemPath>
-      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h</itemPath>
+      <itemPath>PTableCont.h</itemPath>
       <itemPath>Properties.h</itemPath>
       <itemPath>SubCodeList.h</itemPath>
       <itemPath>Table.h</itemPath>
       <itemPath>TauArgus.h</itemPath>
-      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.h</itemPath>
+      <itemPath>TauArgusJava_wrap.h</itemPath>
       <itemPath>Variable.h</itemPath>
       <itemPath>defines.h</itemPath>
     </logicalFolder>
@@ -40,12 +40,12 @@
       <itemPath>Hitas.cpp</itemPath>
       <itemPath>JJFormat.cpp</itemPath>
       <itemPath>PTable.cpp</itemPath>
-      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp</itemPath>
+      <itemPath>PTableCont.cpp</itemPath>
       <itemPath>Properties.cpp</itemPath>
       <itemPath>SubCodeList.cpp</itemPath>
       <itemPath>Table.cpp</itemPath>
       <itemPath>TauArgus.cpp</itemPath>
-      <itemPath>C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.cpp</itemPath>
+      <itemPath>TauArgusJava_wrap.cpp</itemPath>
       <itemPath>Variable.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -92,26 +92,6 @@
       </item>
       <item path="AMPL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Code.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Code.h" ex="false" tool="3" flavor2="0">
@@ -144,6 +124,10 @@
       </item>
       <item path="PTable.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="PTableCont.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PTableCont.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Properties.h" ex="false" tool="3" flavor2="0">
@@ -166,6 +150,10 @@
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
       </item>
+      <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Variable.h" ex="false" tool="3" flavor2="0">
@@ -177,16 +165,23 @@
     </conf>
     <conf name="Release" type="2">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>MinGW|MinGW</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../build/include</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <incDir>
+            <pElem>../build/include</pElem>
+          </incDir>
           <warningLevel>2</warningLevel>
         </ccTool>
         <fortranCompilerTool>
@@ -204,26 +199,6 @@
       </item>
       <item path="AMPL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/PTableCont.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/pwof/Documents/Argus/libtauargus/TauArgusJava_wrap.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Code.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Code.h" ex="false" tool="3" flavor2="0">
@@ -256,6 +231,10 @@
       </item>
       <item path="PTable.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="PTableCont.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="PTableCont.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Properties.h" ex="false" tool="3" flavor2="0">
@@ -274,9 +253,13 @@
       </item>
       <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolCommandline>D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
           <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
         </customTool>
+      </item>
+      <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>

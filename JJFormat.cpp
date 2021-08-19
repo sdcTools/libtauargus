@@ -199,7 +199,7 @@ bool CJJFormat::WriteCells(FILE *fd, FILE *fdFrq, double LowerBound, double Uppe
 			//First lower levels Niet negativiteit is onzin nu, Anco
 			// if (LPL < 0 ) LPL = 0;
 			// if (LBound < 0) LBound = 0;
-            TB = RespValue - LPL;
+                        TB = RespValue - LPL;
 			if ((LBound > TB) || (TB > RespValue) ) {//Something is incorrect TB <= RespVar is always true because LPL >= 0
 			 if (LBound > TB)  LBound = TB;
 			}

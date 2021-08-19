@@ -135,20 +135,42 @@ void CTable:: operator = (CTable & table2)
 // Table constructor. All values are initialized.
 CTable::CTable()
 {
+	Prepared = false;
 
-        nDim = 0;
-        // Cell = 0;
-        nCell = 0;
+	IsFrequencyTable = false;
+	ApplyHolding = false;
+	ApplyWeight = false;
+	ApplyWeightOnSafetyRule = false;
+	ApplyPeeper = false;        
+	ApplyZeroRule = false;
+	EmptyCellsAsNSEmpty = false;
 	HasRecode = 0;
 	SetMissingAsSafe = false;
 
-	//SafetyRule = 0;
-	DominanceRule = false;
-	PQRule = false;
-
+        memset(ExplVarnr,0,sizeof(int)*MAXDIM); // Added
+        ResponseVarnr = -1; // Added
+        ShadowVarnr = -1; // Added
+        CostVarnr = -1; // Added
+        CellKeyVarnr = -1; // Added
+        PeepVarnr = -1;
+        
+        nDim = 0;
+        memset(SizeDim,0,sizeof(int)*MAXDIM); // Added
+        nCell = 0;
+        
 	NumberofMaxScoreCell = 0;
 	NumberofMaxScoreHolding = 0;
-	DominanceNumberCell_1 = 0;
+
+        CKMTopK = 1;
+        CKMType = "N";
+        KeepMinScore = false;
+
+	Lambda = 1;
+	MaxScaledCost = 20000;
+	MinLPL = 1;
+
+	DominanceRule = false;
+        DominanceNumberCell_1 = 0;
 	DominancePercCell_1 = 0;
 	DominanceNumberCell_2 = 0;
 	DominancePercCell_2 = 0;
@@ -156,51 +178,44 @@ CTable::CTable()
 	DominancePercHolding_1 = 0;
 	DominanceNumberHolding_2 = 0;
 	DominancePercHolding_2 = 0;
-//	TwoRulesForCell = false;
-//	TwoRulesForHolding = false;
-	PQ_PCell_1 =0; PQ_QCell_1 = 100;PQ_NCell_1 = 0; //AHNL initialiseer PQ_Q = 100 ipv 0
-	PQ_PCell_2 =0; PQ_QCell_2 = 100;PQ_NCell_2 = 0; //AHNL initialiseer PQ_Q = 100 ipv 0
-	PQ_PHolding_1 =0; PQ_QHolding_1 = 100;PQ_NHolding_1 = 0; //AHNL initialiseer PQ_Q = 100 ipv 0
-	PQ_PHolding_2 =0; PQ_QHolding_2 = 100;PQ_NHolding_2 = 0; //AHNL initialiseer PQ_Q = 100 ipv 0
-	PeepPercCell_1 = 0;PeepPercCell_2 = 0;
-	PeepPercHolding_1 = 0;PeepPercHolding_2 = 0;
-	PeepSafetyRangePercCell = 0;
+	
+        PQRule = false;
+        PQ_PCell_1 =0; 
+        PQ_QCell_1 = 100; //AHNL initialiseer PQ_Q = 100 ipv 0
+        PQ_NCell_1 = 0;
+	PQ_PCell_2 =0; 
+        PQ_QCell_2 = 100; //AHNL initialiseer PQ_Q = 100 ipv 0
+        PQ_NCell_2 = 0; 
+        
+	PQ_PHolding_1 =0; 
+        PQ_QHolding_1 = 100; //AHNL initialiseer PQ_Q = 100 ipv 0
+        PQ_NHolding_1 = 0;
+	PQ_PHolding_2 =0; 
+        PQ_QHolding_2 = 100; //AHNL initialiseer PQ_Q = 100 ipv 0
+        PQ_NHolding_2 = 0;
+	
+        PeepPercCell_1 = 0;
+        PeepPercCell_2 = 0;
+	
+        PeepPercHolding_1 = 0;
+        PeepPercHolding_2 = 0;
+	
+        PeepSafetyRangePercCell = 0;
 	PeepSafetyRangePercHolding = 0;
 
-	PeepMinFreqCell =0;
-	PeepMinFreqHold =0;
+	PeepMinFreqCell = 0;
+	PeepMinFreqHold = 0;
 
-	CellDistance = 0;
-
-	Prepared = false;
-
-	Lambda = 1;
-	MaxScaledCost = 20000;
-	MinLPL = 1;
-
-	PeepVarnr = -1;
-	SingletonSafetyRangePerc = 0;
-	NSEmptySafetyRange= 0;
 	SafeMinRec = 0;
 	SafeMinHoldings = 0;
-//	nMaxCellValues = 0;
 	CellFreqSafetyPerc = 0;
 	HoldingFreqSafetyPerc = 0;
-	ManualSafetyPerc = 0;
-	IsFrequencyTable = false;
-	ApplyHolding = false;
-	ApplyWeight = false;
-	ApplyWeightOnSafetyRule = false;
-	EmptyCellsAsNSEmpty = false;
-	ApplyPeeper = false;
-	ApplyZeroRule = false;
+	ManualSafetyPerc = 0;        
+	NSEmptySafetyRange= 0;
+	SingletonSafetyRangePerc = 0;
+        ZeroSafetyRange = 0; // Added
         
-        KeepMinScore = false;
-        CKMType = "N";
-        CKMTopK = 1;
-
-	//Not too sure what the consequences are if I add This
-	//CellPtr.RemoveAll();
+	CellDistance = 0;
 }
 
 CTable::~CTable()

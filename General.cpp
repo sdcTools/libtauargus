@@ -69,7 +69,7 @@ void QuickSortStringArray(vector<string> &s)
 // IsMissing on true if x = Missing1 or x = Missing2
 int BinSearchStringArray(vector<string> &s, const string &x, int nMissing, bool &IsMissing)
 {
-	ASSERT(s.size() > nMissing);
+	ASSERT((int) s.size() > nMissing);
 
 	IsMissing = false;
 

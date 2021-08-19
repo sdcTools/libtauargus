@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Hitas.o \
 	${OBJECTDIR}/JJFormat.o \
 	${OBJECTDIR}/PTable.o \
+	${OBJECTDIR}/PTableCont.o \
 	${OBJECTDIR}/Properties.o \
 	${OBJECTDIR}/SubCodeList.o \
 	${OBJECTDIR}/Table.o \
@@ -78,77 +79,82 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}: ${OBJEC
 ${OBJECTDIR}/AMPL.o: AMPL.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AMPL.o AMPL.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AMPL.o AMPL.cpp
 
 ${OBJECTDIR}/Code.o: Code.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Code.o Code.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Code.o Code.cpp
 
 ${OBJECTDIR}/DataCell.o: DataCell.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DataCell.o DataCell.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DataCell.o DataCell.cpp
 
 ${OBJECTDIR}/General.o: General.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/General.o General.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/General.o General.cpp
 
 ${OBJECTDIR}/Ghmiter.o: Ghmiter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
 
 ${OBJECTDIR}/Hitas.o: Hitas.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Hitas.o Hitas.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Hitas.o Hitas.cpp
 
 ${OBJECTDIR}/JJFormat.o: JJFormat.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
 
 ${OBJECTDIR}/PTable.o: PTable.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTable.o PTable.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTable.o PTable.cpp
+
+${OBJECTDIR}/PTableCont.o: PTableCont.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTableCont.o PTableCont.cpp
 
 ${OBJECTDIR}/Properties.o: Properties.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Properties.o Properties.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Properties.o Properties.cpp
 
 ${OBJECTDIR}/SubCodeList.o: SubCodeList.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
 
 ${OBJECTDIR}/Table.o: Table.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Table.o Table.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Table.o Table.cpp
 
 ${OBJECTDIR}/TauArgus.o: TauArgus.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
 
 .NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg
 	@echo Performing Custom Build Step
-	C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+	D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
 
 ${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
 
 ${OBJECTDIR}/Variable.o: Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Variable.o Variable.cpp
+	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Variable.o Variable.cpp
 
 # Subprojects
 .build-subprojects:

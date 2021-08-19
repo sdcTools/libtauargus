@@ -19,7 +19,7 @@
 #ifndef __TAUARGUSDEFINESH
 #define __TAUARGUSDEFINESH
 
-#define VERSIONNUMBER "1.1.4.6"
+#define VERSIONNUMBER "1.1.4.8"
 
 #define MAXCODEWIDTH 100
 #define MAXRECORDLENGTH 32000
@@ -100,13 +100,13 @@ enum SecondarySuppressInputParam {
 enum CellStatusItems {
 	CS_SAFE = 1,                // always first! (see check in function SetTableCellStatus), value irrelevant
 	CS_SAFE_MANUAL, 
-	CS_UNSAFE_RULE,              // make constants whatever you like
+	CS_UNSAFE_RULE,             // make constants whatever you like // should be first UNSAFE
 	CS_UNSAFE_PEEP,
 	CS_UNSAFE_FREQ,
 	CS_UNSAFE_ZERO,
 	CS_UNSAFE_SINGLETON,
 	CS_UNSAFE_SINGLETON_MANUAL,
-	CS_UNSAFE_MANUAL,
+	CS_UNSAFE_MANUAL,            // Should be last UNSAFE
 	CS_PROTECT_MANUAL,
 	CS_SECONDARY_UNSAFE,         // source: CS_SAFE
 	CS_SECONDARY_UNSAFE_MANUAL,  // source: CS_SAFE_MANUAL

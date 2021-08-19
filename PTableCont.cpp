@@ -42,7 +42,7 @@ PTableCont::~PTableCont() {
  bool PTableCont::ReadFromFile(std::string FileName){
     char line[MAXRECORDLENGTH];
     int  i0, i;
-    double j, p_ub, v, pij;
+    double j, p_ub, pij;
     std::string type;
     PTableDRow row;
     FILE* ptable_in;
@@ -62,7 +62,7 @@ PTableCont::~PTableCont() {
     i0 = atoi(strtok(line,";"));    // i
     j = atof(strtok(NULL,";"));     // j
     pij = atof(strtok(NULL,";"));   // p
-    v = atof(strtok(NULL,";"));     // diff    // not used    
+    p_ub = atof(strtok(NULL,";"));  // diff    // not used    
     p_ub = atof(strtok(NULL,";"));  // p_kum_o
     type = strtok(NULL,"\n");       // type: even, odd or all
     row[j][0] = pij;
@@ -77,7 +77,7 @@ PTableCont::~PTableCont() {
         }
         j = atof(strtok(NULL,";"));    // j
         pij = atof(strtok(NULL,";"));  // p
-        v = atof(strtok(NULL,";"));    // diff
+        p_ub = atof(strtok(NULL,";")); // diff    // not used
         p_ub = atof(strtok(NULL,";")); // p_kum_o
         type = strtok(NULL,"\n");      // type: even, odd or all
         row[j][0] = pij;

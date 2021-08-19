@@ -363,7 +363,7 @@ int CGhmiter::ComputeHierarchicalLevels(int VarNr, int *nGroup, CVariable *m_var
 	int i, n = m_var[VarNr].GetnCode();
 	int GroupExists[MAXLEVEL + 1];
 
-	memset(GroupExists, 0, sizeof(GroupExists) );
+	memset(GroupExists, 0, sizeof(GroupExists));
 	for (i = 0; i < n; i++) {
 		if (m_var[VarNr].IsHierarchical) {
 			GroupExists[m_var[VarNr].GethCode()[i].Level]++;

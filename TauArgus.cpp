@@ -3370,7 +3370,7 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 // str: content microdata record
 // fill tables from a micro record
 
-//TODO: add computation of cellkey
+
 void TauArgus::FillTables(char *str)
 {
 	int i, j;
@@ -3439,7 +3439,7 @@ void TauArgus::FillTables(char *str)
                                 		var->NormaliseCode(code);
 						code[var->nPos] = 0;
 					}
-				}
+                                 }
 				if (var->IsHierarchical && var->nDigitSplit == 0) {
 					var->TableIndex = var->FindHierarchicalCode(code);
 				}
@@ -3497,7 +3497,7 @@ void TauArgus::FillTables(char *str)
 		if (tab->CostVarnr >= 0) {
 			var = &(m_var[tab->CostVarnr]);
 			if (var->ValueToggle == 0) { // first time, so compute index
-				if (InFileIsFixedFormat) {
+                                if (InFileIsFixedFormat) {
 					strncpy(code, (char *)&str[var->bPos], var->nPos);
 					code[var->nPos] = 0;
 				}
@@ -3516,7 +3516,7 @@ void TauArgus::FillTables(char *str)
 		// RespVarnr
 		if ((tab->ResponseVarnr >= 0) && (tab->ResponseVarnr <m_nvar))	{
 			var = &(m_var[tab->ResponseVarnr]);
-			if (var->ValueToggle == 0) { // first time, so compute value
+                        if (var->ValueToggle == 0) { // first time, so compute value
 				if (InFileIsFixedFormat) {
 					strncpy(code, (char *)&str[var->bPos], var->nPos);
 					code[var->nPos] = 0;
@@ -3795,50 +3795,45 @@ void TauArgus::AddTableToTableCell(CTable &tabfrom, CTable &tabto, long ifrom, l
 // Frequencys and Topn are checked when holdings exist
 void TauArgus::MergeLastTempShadow()
 {
-	for (int i = 0; i < m_ntab; i++)
-	{
-		CTable *tab = &(m_tab[i]);
-		if (tab ->ApplyHolding)
-		{
-			for (int j = 0; j < tab->nCell;j++)
-			{
-				CDataCell *dc = tab->GetCell(j);
-				if (dc->GetHoldingNr() != -1){
-					if (tab->NumberofMaxScoreHolding > 0) {
-						double x = fabs(dc->GetTempShadow());
-						for (int k = 0; k < tab->NumberofMaxScoreHolding; k++) {
-							if (x > dc->MaxScoreHolding[k]) {
-							// shift rest
-								for (int l = tab->NumberofMaxScoreHolding - 2; l >= k; l--) {
-									dc->MaxScoreHolding[l + 1] = dc->MaxScoreHolding[l];
-									dc->HoldingnrPerMaxScore[l+1] =dc->HoldingnrPerMaxScore[l];
-								}
-								dc->MaxScoreHolding[k] = x;
-								dc->HoldingnrPerMaxScore[k]=dc->GetHoldingNr();
-								break;
-							}
-						}
-					}
-					// add Freq once more
-					dc->SetFreqHolding(dc->GetFreqHolding() + 1);
-//					if ((dc->GetPeepSortHolding() == PEEP1) || (dc->GetPeepSortHolding() == PEEP2)) { AHNL 5.1.2004: Fout Moet zijn TempSort
-					if ((dc->GetTempPeepSortCell() == PEEP1) || (dc->GetTempPeepSortCell() == PEEP2)) {
-
-						if (dc->GetPeepHolding() < dc->GetTempShadow()) {
-							dc->SetPeepHolding(dc->GetTempShadow());
-						}
-						if (dc->GetPeepSortHolding() == NOPEEP || dc->GetPeepSortHolding() == EMPTY) {
-						   dc->SetPeepSortHolding (dc->GetTempPeepSortCell()); // AHNL 5.1.2004 toegevoegd
-						}
-
-					}
-					if (tab->IsFrequencyTable)	{
-						dc->SetResp(dc->GetFreqHolding());
-					}
+    for (int i = 0; i < m_ntab; i++){
+	CTable *tab = &(m_tab[i]);
+	if (tab ->ApplyHolding){
+            for (int j = 0; j < tab->nCell;j++){
+		CDataCell *dc = tab->GetCell(j);
+		if (dc->GetHoldingNr() != -1){
+                    if (tab->NumberofMaxScoreHolding > 0) {
+			double x = fabs(dc->GetTempShadow());
+			for (int k = 0; k < tab->NumberofMaxScoreHolding; k++) {
+                            if (x > dc->MaxScoreHolding[k]) {
+                            // shift rest
+                                for (int l = tab->NumberofMaxScoreHolding - 2; l >= k; l--) {
+                                    dc->MaxScoreHolding[l + 1] = dc->MaxScoreHolding[l];
+                                    dc->HoldingnrPerMaxScore[l+1] =dc->HoldingnrPerMaxScore[l];
 				}
+				dc->MaxScoreHolding[k] = x;
+				dc->HoldingnrPerMaxScore[k]=dc->GetHoldingNr();
+				break;
+                            }
 			}
+                    }
+                    // add Freq once more
+                    dc->SetFreqHolding(dc->GetFreqHolding() + 1);
+//                  if ((dc->GetPeepSortHolding() == PEEP1) || (dc->GetPeepSortHolding() == PEEP2)) { AHNL 5.1.2004: Fout Moet zijn TempSort
+                    if ((dc->GetTempPeepSortCell() == PEEP1) || (dc->GetTempPeepSortCell() == PEEP2)) {
+			if (dc->GetPeepHolding() < dc->GetTempShadow()) {
+                            dc->SetPeepHolding(dc->GetTempShadow());
+			}
+			if (dc->GetPeepSortHolding() == NOPEEP || dc->GetPeepSortHolding() == EMPTY) {
+                            dc->SetPeepSortHolding (dc->GetTempPeepSortCell()); // AHNL 5.1.2004 toegevoegd
+			}
+                    }
+                    if (tab->IsFrequencyTable)	{
+			dc->SetResp(dc->GetFreqHolding());
+                    }
 		}
+            }
 	}
+    }
 }
 
 // All holding Tables need to get initialized.
@@ -4168,7 +4163,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 	}
 
 	// c1 and c2 now are correct, I assume
-	ASSERT(c1 >= 0 && c1 < v->sCode.size() && c2 >= c1 && c2 < v->sCode.size());
+	ASSERT(c1 >= 0 && c1 < (int) v->sCode.size() && c2 >= c1 && c2 < (int) v->sCode.size());
 
 	// search destcode in list
 	ASSERT(v->nMissing > 0 && v->nMissing < 3);
@@ -4181,7 +4176,7 @@ int TauArgus::SetCode2Recode(int VarIndex, char *DestCode, char *SrcCode1, char 
 		return R_MISSING2VALID;
 	}
 
-	ASSERT(DestIndex >= 0 && DestIndex < v->Recode.sCode.size() );
+	ASSERT(DestIndex >= 0 && DestIndex < (int) v->Recode.sCode.size() );
 	if (DestIndex < 0 || DestIndex >= ((int) v->Recode.sCode.size()) ) {
 		return PROGRAMERROR;
 	}
@@ -5644,7 +5639,7 @@ bool TauArgus::WriteTableSequenceHierarchyInAMPL(FILE *fd, long tabind,
 																	 long varind)
 {
 	long j, k;
-	long RowNum;
+	long RowNum=0;
 
 	CTable *tab = &(m_tab[tabind]);
 
@@ -5962,7 +5957,7 @@ int TauArgus::SetCellKeyValuesCont(long TabNo, std::string PTableFileCont, std::
     }
     
     nDec = m_var[m_tab[TabNo].CellKeyVarnr].nDec; // Number of decimals in recordkey
-
+    
     // Loop through all cells of the table
     for (long i=0; i < m_tab[TabNo].nCell; i++){
         dc = m_tab[TabNo].GetCell(i);

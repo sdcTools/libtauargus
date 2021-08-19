@@ -180,11 +180,11 @@ public:
                     MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
                     MergeScoreHolding(MaxScoreHolding, HoldingnrPerMaxScore, a.MaxScoreHolding, a.HoldingnrPerMaxScore, nMaxScoreHolding);
 		}
-                if (a.MinScoreCell < MinScoreCell)
-                {
-                    MinScoreCell = a.MinScoreCell;
-                    MinScoreWeightCell = a.MinScoreWeightCell;
-                }
+//                if (a.MinScoreCell < MinScoreCell)
+//                {
+//                    MinScoreCell = a.MinScoreCell;
+//                    MinScoreWeightCell = a.MinScoreWeightCell;
+//                }
 	}
 
 	CDataCell operator+(CDataCell &a)
