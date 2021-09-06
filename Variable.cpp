@@ -730,10 +730,12 @@ bool CVariable::SetHierarchicalRecode()
 	// free previous recode
 	if (HasRecode) {
 		if (Recode.hCode != 0) {
-			delete [] Recode.hCode;
+                    delete [] Recode.hCode;
+                    Recode.hCode = 0; //PWOF
 		}
 		if (Recode.DestCode != 0) {
-			free(Recode.DestCode);
+                    free(Recode.DestCode);
+                    Recode.DestCode = 0; // PWOF
 		}
 	}
 
@@ -809,8 +811,8 @@ void CVariable::UndoRecode()
 {
   if (HasRecode) {
 		if (Recode.DestCode != 0) {
-		  free(Recode.DestCode);
-			Recode.DestCode = 0;
+                    free(Recode.DestCode);
+                    Recode.DestCode = 0;
 		}
 
 		if (IsHierarchical) {
@@ -980,7 +982,7 @@ bool CVariable::CreateSubCodeForNonHierarchicalCode()
 	}
 	else	{
 
-		subcodes.resize(sCode.size() -1);
+		subcodes.resize(sCode.size()-1);
 		indices = new long [sCode.size()-1];
 		subcodelist = &(m_SubCodes[0]);
 		for (i=1; i<nCode; i++)	{

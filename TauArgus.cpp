@@ -3373,272 +3373,269 @@ bool TauArgus::FillInTable(long Index, string *sCodes, double Cost,
 
 void TauArgus::FillTables(char *str)
 {
-	int i, j;
-	char code[MAXCODEWIDTH];
-	bool IsMissing;
-	string tempcode;
-	CVariable *var;
-	CDataCell dc;
-	string  tempPeepCode;
-        vector<char *> VarCodes;
-        bool readingFreeFormatResult=false; // Just to initialize PWOF 20170127
+    int i, j;
+    char code[MAXCODEWIDTH];
+    bool IsMissing;
+    string tempcode;
+    CVariable *var;
+    CDataCell dc;
+    string  tempPeepCode;
+    vector<char *> VarCodes;
+    bool readingFreeFormatResult=false; // Just to initialize PWOF 20170127
 
-	if (!InFileIsFixedFormat) {
-            readingFreeFormatResult = ReadVariablesFreeFormat(str, VarCodes);
-        }
-	//find the holding code and correct Holding Nr
-	// if a new holding code is found.
-	for (i = 0; i < m_ntab; i++){
-		CTable *tab1 = &(m_tab[i]);
-		if (tab1->ApplyHolding) {
-			// find out what the current holding number is
-			ASSERT(m_VarNrHolding >= 0);
-			var = &(m_var[m_VarNrHolding]);
-			if (InFileIsFixedFormat) {
-				strncpy(code, (char *)&str[var->bPos], var->nPos);
-				code[var->nPos] = 0;
-			}
-			else {
-				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[var->bPos]);
-                        		var->NormaliseCode(code);
-					code[var->nPos] = 0;
-				}
-			}
-
-			if (LastHoldingCode != code){
-				CurrentHoldingNr++;
-				LastHoldingCode = code;
-			}
+    if (!InFileIsFixedFormat) {
+        readingFreeFormatResult = ReadVariablesFreeFormat(str, VarCodes);
+    }
+    //find the holding code and correct Holding Nr
+    // if a new holding code is found.
+    for (i = 0; i < m_ntab; i++){
+        CTable *tab1 = &(m_tab[i]);
+        if (tab1->ApplyHolding) {
+            // find out what the current holding number is
+            ASSERT(m_VarNrHolding >= 0);
+            var = &(m_var[m_VarNrHolding]);
+            if (InFileIsFixedFormat) {
+		strncpy(code, (char *)&str[var->bPos], var->nPos);
+		code[var->nPos] = 0;
+            }
+            else {
+		if (readingFreeFormatResult) {
+                    strcpy(code, VarCodes[var->bPos]);
+                    var->NormaliseCode(code);
+                    code[var->nPos] = 0;
 		}
-		break;
+            }
+
+            if (LastHoldingCode != code){
+		CurrentHoldingNr++;
+		LastHoldingCode = code;
+            }
+	}
+	break;
+    }
+
+    // set TableIndex and recode in VARIABLES as na
+    for (i = 0; i < m_nvar; i++) {
+	m_var[i].TableIndex = -1;
+	m_var[i].Recode.DestCode = 0;
+	m_var[i].ValueToggle = 0;
+    }
+
+// compute for each involved variable the table index
+    for (i = 0; i < m_ntab; i++) {
+	CTable *tab = &(m_tab[i]);
+
+	// explanation variables
+	for (j = 0; j < tab->nDim; j++) {
+            var = &(m_var[tab->ExplVarnr[j]]);
+            if (var->TableIndex < 0) { // first time, so compute index
+		if (InFileIsFixedFormat) {
+                    strncpy(code, (char *)&str[var->bPos], var->nPos);
+                    code[var->nPos] = 0;
+		}
+		else {
+                    if (readingFreeFormatResult) {
+			strcpy(code, VarCodes[var->bPos]);
+                	var->NormaliseCode(code);
+			code[var->nPos] = 0;
+                    }
+                }
+		if (var->IsHierarchical && var->nDigitSplit == 0) {
+                    var->TableIndex = var->FindHierarchicalCode(code);
+		}
+		else {
+                    var->TableIndex = BinSearchStringArray(var->sCode, code, var->nMissing, IsMissing);
+		}
+		ASSERT(var->TableIndex >= 0);
+            }
+	}
+	// PeepVarnr
+
+	//if Peep variables are set. Find Peep Code
+	if (tab->ApplyPeeper) {
+            var = &(m_var[tab->PeepVarnr]);
+            if (InFileIsFixedFormat) {
+		strncpy(code, (char *)&str[var->bPos], var->nPos);
+		code[var->nPos] = 0;
+            }
+            else {
+		if (readingFreeFormatResult) {
+                    strcpy(code, VarCodes[var->bPos]);
+                    var->NormaliseCode(code);
+                    code[var->nPos] = 0;
+		}
+            }
+            tempPeepCode = code;
 	}
 
-	// set TableIndex and recode in VARIABLES as na
-	for (i = 0; i < m_nvar; i++) {
-		m_var[i].TableIndex = -1;
-		m_var[i].Recode.DestCode = 0;
-		m_var[i].ValueToggle = 0;
+	// ShadowVarnr
+	if ((tab->ShadowVarnr > 0) && (tab->ShadowVarnr < m_nvar))	{
+            var = &(m_var[tab->ShadowVarnr]);
+            if (var->ValueToggle == 0) { // first time, so compute index
+		if (InFileIsFixedFormat) {
+                    strncpy(code, (char *)&str[var->bPos], var->nPos);
+                    code[var->nPos] = 0;
+		}
+		else {
+                    if (readingFreeFormatResult) {
+			strcpy(code, VarCodes[var->bPos]);
+                	var->NormaliseCode(code);
+			code[var->nPos] = 0;
+                    }
+		}
+		var->Value = atof(code);
+		var->ValueToggle = 1;
+            }
 	}
-
-	// compute for each involved variable the table index
-	for (i = 0; i < m_ntab; i++) {
-		CTable *tab = &(m_tab[i]);
-
-		// explanation variables
-		for (j = 0; j < tab->nDim; j++) {
-			var = &(m_var[tab->ExplVarnr[j]]);
-			if (var->TableIndex < 0) { // first time, so compute index
-				if (InFileIsFixedFormat) {
-					strncpy(code, (char *)&str[var->bPos], var->nPos);
-					code[var->nPos] = 0;
-				}
-				else {
-					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[var->bPos]);
-                                		var->NormaliseCode(code);
-						code[var->nPos] = 0;
-					}
-                                 }
-				if (var->IsHierarchical && var->nDigitSplit == 0) {
-					var->TableIndex = var->FindHierarchicalCode(code);
-				}
-				else {
-					var->TableIndex = BinSearchStringArray(var->sCode, code, var->nMissing, IsMissing);
-
-				}
-				ASSERT(var->TableIndex >= 0);
-			}
-		}
-		// PeepVarnr
-
-		//if Peep variables are set. Find Peep Code
-		if (tab->ApplyPeeper) {
-			var = &(m_var[tab->PeepVarnr]);
-			if (InFileIsFixedFormat) {
-				strncpy(code, (char *)&str[var->bPos], var->nPos);
-				code[var->nPos] = 0;
-			}
-			else {
-				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[var->bPos]);
-                        		var->NormaliseCode(code);
-					code[var->nPos] = 0;
-				}
-			}
-			tempPeepCode = code;
-		}
-
-		// ShadowVarnr
-		if ((tab->ShadowVarnr > 0) && (tab->ShadowVarnr < m_nvar))	{
-			var = &(m_var[tab->ShadowVarnr]);
-			if (var->ValueToggle == 0) { // first time, so compute index
-				if (InFileIsFixedFormat) {
-					strncpy(code, (char *)&str[var->bPos], var->nPos);
-					code[var->nPos] = 0;
-				}
-				else {
-					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[var->bPos]);
-                                		var->NormaliseCode(code);
-						code[var->nPos] = 0;
-					}
-				}
-				var->Value = atof(code);
-				var->ValueToggle = 1;
-			}
-		}
 	/*	else	{
 			var->Value = 1;
 			var ->ValueToggle = 1;
 		}*/
 
-		// CostVarnr
-		if (tab->CostVarnr >= 0) {
-			var = &(m_var[tab->CostVarnr]);
-			if (var->ValueToggle == 0) { // first time, so compute index
-                                if (InFileIsFixedFormat) {
-					strncpy(code, (char *)&str[var->bPos], var->nPos);
-					code[var->nPos] = 0;
-				}
-				else {
-					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[var->bPos]);
-                                		var->NormaliseCode(code);
-						code[var->nPos] = 0;
-					}
-				}
-				var->Value = atof(code);
-				var->ValueToggle = 1;
-			}
-		}
-
-		// RespVarnr
-		if ((tab->ResponseVarnr >= 0) && (tab->ResponseVarnr <m_nvar))	{
-			var = &(m_var[tab->ResponseVarnr]);
-                        if (var->ValueToggle == 0) { // first time, so compute value
-				if (InFileIsFixedFormat) {
-					strncpy(code, (char *)&str[var->bPos], var->nPos);
-					code[var->nPos] = 0;
-				}
-				else {
-					if (readingFreeFormatResult) {
-						strcpy(code, VarCodes[var->bPos]);
-                                		var->NormaliseCode(code);
-						code[var->nPos] = 0;
-					}
-				}
-				var->Value = atof(code);
-				var->ValueToggle = 1;
-			}
-		}
-                
-                // CellKeyVarnr
-                if ((tab->CellKeyVarnr >= 0) && (tab->CellKeyVarnr < m_nvar)) {
-                    var = &(m_var[tab->CellKeyVarnr]);
-                    if (var->ValueToggle == 0) { // first time, so compute value
-                        if (InFileIsFixedFormat) {
-                            strncpy(code, (char *)&str[var->bPos], var->nPos);
-                            code[var->nPos] = 0;
-                        }
-                        else {
-                            if (readingFreeFormatResult){
-                                strcpy(code, VarCodes[var->bPos]);
-                                var->NormaliseCode(code);
-                                code[var->nPos] = 0;
-                            }
-                        }
-                        var->Value = atof(code);
-                        var->ValueToggle = 1;
-                    }
-                }
-	}
-
-	// since there is only one weight var
-	// weight var
-	if (m_VarNrWeight >= 0) {
-		var = &(m_var[m_VarNrWeight]);
-		if (var->ValueToggle == 0) { // first time, so compute value
-			if (InFileIsFixedFormat) {
-				var = &(m_var[m_VarNrWeight]);
-				strncpy(code, (char *)&str[var->bPos], var->nPos);
-				code[var->nPos] = 0;
-			}
-			else {
-				if (readingFreeFormatResult) {
-					strcpy(code, VarCodes[var->bPos]);
-                                        var->NormaliseCode(code);
-					code[var->nPos] = 0;
-				}
-			}
-			var->Value = atof(code);
-			var->ValueToggle = 1;
-		}
-	}
-
-	// now tabulate all tables from list
-	for (i = 0; i < m_ntab; i++) {
-            CTable *table = &m_tab[i];
-		// set peeps to peep 1 and peep 2
-
-		if (table->ApplyPeeper) {
-
-			if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1 ||
-			  tempPeepCode == m_var[table->PeepVarnr].PeepCode2) {
-			  dc.SetPeepCell(m_var[table->ShadowVarnr].Value);
-			  dc.SetPeepHolding(m_var[table->ShadowVarnr].Value);
-			  if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1)	{
-					dc.SetPeepSortCell(PEEP1);
-					dc.SetPeepSortHolding(PEEP1);
-			  }
-			  else	{
-					dc.SetPeepSortCell(PEEP2);
-					dc.SetPeepSortHolding(PEEP2);
-			  }
-		  }
-		  else {
-			  dc.SetPeepCell(0);
-			  dc.SetPeepHolding(0);
-			  dc.SetPeepSortCell(NOPEEP);
-			  dc.SetPeepSortHolding(NOPEEP);
-		  }
-
-	  }
-
-		dc.SetWeight(m_var[m_VarNrWeight].Value);
-                if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar))	{
-			dc.SetResp(m_var[table->ResponseVarnr].Value);
-                        dc.SetNWResp(m_var[table->ResponseVarnr].Value);
-		}
-		else	{	//freq table
-				dc.SetResp(1);
-                                dc.SetNWResp(1);
-		}
-		if ((table->ShadowVarnr >= 0) && (table->ShadowVarnr < m_nvar))	{
- 			dc.SetShadow(m_var[table->ShadowVarnr].Value);
-		}
-                
-                if ((table->CellKeyVarnr >= 0) && (table->CellKeyVarnr < m_nvar)){
- 			// Standard cellkey: add all recordkeys
-                        dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
-                        
-                        // Special cellkey: only add recordkeys of |contributions| > 0 (in practice: > 1E-8)
-                        if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar)){
-                            if (fabs(m_var[table->ResponseVarnr].Value) > 1E-8){
-                                dc.SetCellKeyNoZeros(m_var[table->CellKeyVarnr].Value);
-                            }
-                        }
-		}
-                
-		if (table->CostVarnr >= 0) {
- 		  dc.SetCost(m_var[table->CostVarnr].Value);
+	// CostVarnr
+	if (tab->CostVarnr >= 0) {
+            var = &(m_var[tab->CostVarnr]);
+            if (var->ValueToggle == 0) { // first time, so compute index
+                if (InFileIsFixedFormat) {
+                    strncpy(code, (char *)&str[var->bPos], var->nPos);
+                    code[var->nPos] = 0;
 		}
 		else {
- 		  dc.SetCost(0); // later comes freq or constant 1 etc
+                    if (readingFreeFormatResult) {
+                        strcpy(code, VarCodes[var->bPos]);
+                        var->NormaliseCode(code);
+			code[var->nPos] = 0;
+                    }
 		}
-		dc.SetFreq(1);
-		AddTableCells(m_tab[i], dc, 0, 0);
+		var->Value = atof(code);
+		var->ValueToggle = 1;
+            }
 	}
+
+	// RespVarnr
+	if ((tab->ResponseVarnr >= 0) && (tab->ResponseVarnr <m_nvar))	{
+            var = &(m_var[tab->ResponseVarnr]);
+            if (var->ValueToggle == 0) { // first time, so compute value
+		if (InFileIsFixedFormat) {
+                    strncpy(code, (char *)&str[var->bPos], var->nPos);
+                    code[var->nPos] = 0;
+		}
+		else {
+                    if (readingFreeFormatResult) {
+			strcpy(code, VarCodes[var->bPos]);
+                	var->NormaliseCode(code);
+			code[var->nPos] = 0;
+                    }
+		}
+		var->Value = atof(code);
+		var->ValueToggle = 1;
+            }
+	}
+                
+        // CellKeyVarnr
+        if ((tab->CellKeyVarnr >= 0) && (tab->CellKeyVarnr < m_nvar)) {
+            var = &(m_var[tab->CellKeyVarnr]);
+            if (var->ValueToggle == 0) { // first time, so compute value
+                if (InFileIsFixedFormat) {
+                    strncpy(code, (char *)&str[var->bPos], var->nPos);
+                    code[var->nPos] = 0;
+                }
+                else {
+                    if (readingFreeFormatResult){
+                        strcpy(code, VarCodes[var->bPos]);
+                        var->NormaliseCode(code);
+                        code[var->nPos] = 0;
+                    }
+                }
+                var->Value = atof(code);
+                var->ValueToggle = 1;
+            }
+        }
+    }
+
+    // since there is only one weight var
+    // weight var
+    if (m_VarNrWeight >= 0) {
+	var = &(m_var[m_VarNrWeight]);
+	if (var->ValueToggle == 0) { // first time, so compute value
+            if (InFileIsFixedFormat) {
+		var = &(m_var[m_VarNrWeight]);
+		strncpy(code, (char *)&str[var->bPos], var->nPos);
+		code[var->nPos] = 0;
+            }
+            else {
+		if (readingFreeFormatResult) {
+                    strcpy(code, VarCodes[var->bPos]);
+                    var->NormaliseCode(code);
+                    code[var->nPos] = 0;
+		}
+            }
+            var->Value = atof(code);
+            var->ValueToggle = 1;
+	}
+    }
+
+    // now tabulate all tables from list
+    for (i = 0; i < m_ntab; i++) {
+        CTable *table = &m_tab[i];
+	// set peeps to peep 1 and peep 2
+
+	if (table->ApplyPeeper) {
+            if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1 || tempPeepCode == m_var[table->PeepVarnr].PeepCode2) {
+                dc.SetPeepCell(m_var[table->ShadowVarnr].Value);
+		dc.SetPeepHolding(m_var[table->ShadowVarnr].Value);
+		if (tempPeepCode == m_var[table->PeepVarnr].PeepCode1)	{
+                    dc.SetPeepSortCell(PEEP1);
+                    dc.SetPeepSortHolding(PEEP1);
+		}
+		else {
+                    dc.SetPeepSortCell(PEEP2);
+                    dc.SetPeepSortHolding(PEEP2);
+		}
+            }
+            else {
+                dc.SetPeepCell(0);
+		dc.SetPeepHolding(0);
+		dc.SetPeepSortCell(NOPEEP);
+		dc.SetPeepSortHolding(NOPEEP);
+            }
+        }
+
+        if ((m_VarNrWeight>=0))	dc.SetWeight(m_var[m_VarNrWeight].Value); // Why was this without the if-clause?
+        
+        if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar)) {
+            dc.SetResp(m_var[table->ResponseVarnr].Value);
+            dc.SetNWResp(m_var[table->ResponseVarnr].Value);
+	}
+	else {	//freq table
+            dc.SetResp(1);
+            dc.SetNWResp(1);
+	}
+	if ((table->ShadowVarnr >= 0) && (table->ShadowVarnr < m_nvar)){
+            dc.SetShadow(m_var[table->ShadowVarnr].Value);
+	}
+                
+        if ((table->CellKeyVarnr >= 0) && (table->CellKeyVarnr < m_nvar)){
+            // Standard cellkey: add all recordkeys
+            dc.SetCellKey(m_var[table->CellKeyVarnr].Value);
+                        
+            // Special cellkey: only add recordkeys of |contributions| > 0 (in practice: > 1E-8)
+            if ((table->ResponseVarnr >= 0) && (table->ResponseVarnr < m_nvar)){
+                if (fabs(m_var[table->ResponseVarnr].Value) > 1E-8){
+                    dc.SetCellKeyNoZeros(m_var[table->CellKeyVarnr].Value);
+                }
+            }
+	}
+                
+	if (table->CostVarnr >= 0) {
+            dc.SetCost(m_var[table->CostVarnr].Value);
+        }
+	else {
+            dc.SetCost(0); // later comes freq or constant 1 etc
+	}
+	dc.SetFreq(1);
+	AddTableCells(m_tab[i], dc, 0, 0);
+    }
 }
 
 
@@ -3694,7 +3691,7 @@ void TauArgus::AddTableCell(CTable &t, CDataCell AddCell, long cellindex)
 	CDataCell *dc = t.GetCell(cellindex);
 	// Does a new cell have to be created
 	if (!dc->IsFilled) {
-		CDataCell *dcempty = new CDataCell(t.NumberofMaxScoreCell,t.NumberofMaxScoreHolding,t.ApplyHolding, t.ApplyWeight);
+		CDataCell *dcempty = new CDataCell(t.NumberofMaxScoreCell,t.NumberofMaxScoreHolding,t.ApplyHolding,t.ApplyWeight);
 		t.CellPtr[cellindex] = dcempty;
 		dc = t.GetCell(cellindex);
 	}
@@ -5289,7 +5286,7 @@ long TauArgus::WriteCellInTempFile(long UnsafeCellNum, long TableIndex, long Cel
 	long *SubTableTuple = new long [tab->nDim];
 	long *TableCellIndex = new long [tab->nDim];
 	long *MarginalCellIndex = new long [tab->nDim];
-	long * SubTableCellIndex = new long [tab->nDim];
+	long *SubTableCellIndex = new long [tab->nDim];
 	long marginal;
 	long nsubtable = NumberOfSubTables(TableIndex);
 	for (i = 0; i<nsubtable; i++)	{

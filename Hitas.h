@@ -22,6 +22,7 @@
 #include "Table.h"
 #include "DataCell.h"
 
+//class __declspec(dllexport) CHitas
 class CHitas  
 {
 public:

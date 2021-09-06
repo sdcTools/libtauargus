@@ -34,6 +34,7 @@
 #include "IProgressListener.h"
 #include "PTableCont.h"
 
+//class __declspec(dllexport) TauArgus
 class TauArgus
 {
 private:
@@ -209,7 +210,7 @@ public:
 	bool CompletedTable(/*[in]*/ long Index, /*[in,out]*/ long * ErrorCode, /*[in]*/ const char* FileName, /*[in]*/ bool CalculateTotals,
                             /*[in]*/ bool SetCalculatedTotalsAsSafe,/*[in]*/ bool ForCoverTable);
 	bool SetInTable(/*[in]*/ long Index, /*[in]*/ char* sCode[], /*[in]*/ double Shadow, /*[in]*/ double Cost, /*[in]*/ double Resp, 
-                        /*[in]*/ long Freq, /*[in]*/ double* MaxScoreCell, double* MaxScoreHolding, /*[in]*/ long Status,double LowerProtectionLevel,
+                        /*[in]*/ long Freq, /*[in]*/ double* MaxScoreCell, /*[in]*/ double* MaxScoreHolding, /*[in]*/ long Status,double LowerProtectionLevel,
                         double UpperProtectionLevel, /*[in,out]*/ long * ErrorCode, /*[in,out]*/ long * ErrVNum);
 	void ThroughTable();
 	bool SetTotalsInCodeList(/*[in]*/ long NumberofVariables,/*[in]*/  long* VarIndex,/*[in,out]*/  long* ErrorCode, /*[in,out]*/  long*  ErrorInVarIndex);

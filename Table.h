@@ -134,7 +134,7 @@ public:
 
 	// have to make the operator =
 	// since it does not work with CPtrArray
-	void operator = (CTable & table2);
+	void operator = (CTable &table2);
 
 public:
 

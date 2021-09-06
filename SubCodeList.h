@@ -44,7 +44,8 @@ public:
 	~CSubCodeList()
 	{
 		if (m_colSubCodeCollection.size() != 0)	{
-			m_colSubCodeCollection.resize(0);
+                    m_colSubCodeCollection.clear();
+                    //m_colSubCodeCollection.resize(0);
 		}
 		if (m_lSubCodeIndex != 0)	{
 			delete[] m_lSubCodeIndex;

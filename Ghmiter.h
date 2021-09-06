@@ -21,6 +21,7 @@
 #include "Variable.h"
 #include "Table.h"
 
+//class __declspec(dllexport) CGhmiter
 class CGhmiter  
 {
 public:

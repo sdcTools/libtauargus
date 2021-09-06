@@ -56,15 +56,15 @@ OUTDIR          = $(DISTFILEDIR)
 # Non configurable items
 # ====================================================
 SFLAGS          = -c++ -I./src -java -package $(JAVAPACKAGE) -outdir $(OUTDIR) 
-CFLAGS          = -Wall -ggdb -g $(BITS) -std=c++11 -fPIC -Wno-unused-function#-fno-strict-aliasing
-CFLAGS          += -Og#-DNDEBUG -O2
+CFLAGS          = -Wall $(BITS) -std=c++11 -fPIC -Wno-unused-function -fno-strict-aliasing
+CFLAGS          += -O2 -g#-DNDEBUG -O2
 CFLAGS          += $(JAVAINC)
-LDFLAGS         = $(CFLAGS) -Wl,--subsystem,windows -Wl,--kill-at -shared#-static-libgcc -static-libstdc++
+LDFLAGS         = $(CFLAGS) -Wl,--subsystem,windows -Wl,--kill-at -shared -static-libgcc -static-libstdc++
 
 
 # Exclude source files needed for a COM dll for Visual Basic 6.0
 NOSOURCES        = $(SRCDIR)/GhmiterANCO.cpp $(SRCDIR)/TauArgCtrl.cpp $(SRCDIR)/StdAfx.cpp $(SRCDIR)/NewTauArgus.cpp
-SWIGSOURCES      = $(wildcard $(SRCDIR)/*.swg)
+SWIGSOURCES      = $(SRCDIR)/TauArgusJava.swg
 GENERATED_SOURCES= $(patsubst $(SRCDIR)/%.swg,$(SRCDIR)/%_wrap.cpp,$(SWIGSOURCES))
 SOURCES          = $(filter-out $(NOSOURCES),$(wildcard $(SRCDIR)/*.cpp))
 
@@ -89,8 +89,8 @@ $(CND_BUILDDIR) $(CND_BUILDDIR)/$(CND_CONF) $(OBJDIR) $(CND_DISTDIR) $(CND_DISTD
 
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LDFLAGS) -o $@ $^
-	$(CP) -p $(TARGET) $(SRCDIR)/../tauargus/$(LIBFILENAME)
-	$(CP) -p $(LIBDIR)/*.java $(SRCDIR)/../tauargus/src/tauargus/extern/dataengine
+	$(CP) $(TARGET) $(SRCDIR)/../tauargus/$(LIBFILENAME)
+	$(CP) $(LIBDIR)/*.java $(SRCDIR)/../tauargus/src/tauargus/extern/dataengine
 
 # pull in dependency info for *existing* .o files
 -include $(wildcard $(addsuffix .d, $(OBJECTS))) 

@@ -29,6 +29,7 @@ struct TabDimProp {
 	int nParent;
 };
 
+//class __declspec(dllexport) CJJFormat
 class CJJFormat
 {
 public:

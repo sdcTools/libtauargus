@@ -38,7 +38,7 @@ static char THIS_FILE[] = __FILE__;
 // This is an operator comparison. This is used in recoded tables.
 // The recoded table is the same as the original table. Only the cell ptr is empty.
 
-void CTable:: operator = (CTable & table2)
+void CTable:: operator = (CTable &table2)
 {
 	long  i;
 
@@ -118,7 +118,7 @@ void CTable:: operator = (CTable & table2)
 	SingletonSafetyRangePerc = table2.SingletonSafetyRangePerc;
         ZeroSafetyRange = table2.ZeroSafetyRange;        
         
-	CellPtr.resize(1);
+        CellPtr.resize(1);
 	nCell = 0 ;        
 
 	IsFrequencyTable = table2.IsFrequencyTable;
@@ -223,8 +223,9 @@ CTable::~CTable()
 	CleanUp();
 }
 
+// Not used????? PWOF
 // explanatory variables are set
-bool CTable::SetExplVariables(int inDim, long* ExplVar)
+/*bool CTable::SetExplVariables(int inDim, long* ExplVar)
 {
 	nDim = inDim;
 
@@ -237,7 +238,7 @@ bool CTable::SetExplVariables(int inDim, long* ExplVar)
 	ResponseVarnr = -1;
 	return true;
 
-}
+}*/
 
 
 // other variables are set. In case only frequency tables are created, this has to be changed
@@ -274,6 +275,7 @@ bool CTable::SetVariables(int inDim, long *ExplVar, long RespVar, long ShadVar, 
 
 	return true;
 }
+
 // cell_1 = LongArray[0], cell_2 = LongArray[1],
 //Holding_1 = LongArray[2],Holding_2,= LongArray[3];
 bool CTable::SetDominance(long *DominanceNumber, long *DominancePerc)
@@ -560,29 +562,27 @@ CDataCell* CTable::GetCell(long *VarValueList)
 // The empty cell is described in Prepare table.
 CDataCell* CTable::GetCell(long CellNr)
 {
-	CDataCell *dc;
+    CDataCell *dc;
 
-	if (CellPtr[CellNr] != NULL) {
-		dc = CellPtr[CellNr];
-		switch (CostVarnr) {
-		case CVT_DISTANCE:
-			dc->SetCost(1); // provisional solution, Anco
-			break;
-		case CVT_UNITY:  // always one
-			dc->SetCost(1);
-		  break;
-		case CVT_FREQ:  // frequency
-			dc->SetCost(dc->GetFreq());
-		  break;
-	  }
-
-		return dc;
+    if (CellPtr[CellNr] != NULL) {
+	dc = CellPtr[CellNr];
+	switch (CostVarnr) {
+            case CVT_DISTANCE:
+		dc->SetCost(1); // provisional solution, Anco
+		break;
+            case CVT_UNITY:  // always one
+		dc->SetCost(1);
+                break;
+            case CVT_FREQ:  // frequency
+		dc->SetCost(dc->GetFreq());
+                break;
 	}
-
-	else {
-		dc = CellPtr[nCell]; // return last empty cell;
-		return dc;
-	}
+	return dc;
+    }
+    else {
+	dc = CellPtr[nCell]; // return last empty cell;
+	return dc;
+    }
 }
 
 // given a cell and an array of dimension positions.

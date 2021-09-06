@@ -50,6 +50,10 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 	RoundedResp = 0;
         CTAValue = 0;
         CKMValue = 0;
+        // Needed for CKMType = "D"
+        // Set to large double 
+        MinScoreCell = BIGNUMBER;
+        MinScoreWeightCell = 0;        
 
 	Status = CS_EMPTY;
 	TempShadow = 0;
@@ -67,49 +71,41 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 	LowerProtectionLevel = 0;
 	UpperProtectionLevel = 0;
         
-        // Needed for CKMType = "D"
-        // Set to large double 
-        MinScoreCell = BIGNUMBER;
-        MinScoreWeightCell = 0;
+        MaxScoreCell = 0; //initialize to NULL
+        MaxScoreWeightCell = 0; //initialize to NULL
+        MaxScoreHolding = 0; //initialize to NULL
+        MaxScoreWeightHolding = 0; //initialize to NULL
+        HoldingnrPerMaxScore = 0; //initialize to NULL
 
 	nMaxScoreCell = NumberMaxScoreCell;
 	if (nMaxScoreCell > 0){
             // allocate memory for MaxScore and MaxScoreWeight
+            // and fill with values 0.0
             MaxScoreCell = new double[nMaxScoreCell];
+            memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
+
             if (IsWeight){
 		MaxScoreWeightCell = new double[nMaxScoreCell];
-            }
-            memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
-            if (IsWeight){
 		memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
             }
 	}
-        else{
-            MaxScoreCell = 0;
-            MaxScoreWeightCell = 0;
-        }
-                
+
 	nMaxScoreHolding = NumberMaxScoreHolding;
 	if (IsHolding && nMaxScoreHolding > 0){
             // allocate memory for MaxScore and MaxScoreWeight
             MaxScoreHolding = new double[nMaxScoreHolding];
+            memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
+            
             if (IsWeight){
 		MaxScoreWeightHolding = new double[nMaxScoreHolding];
-            }
-            // Allocate Memory for HoldingnrMaxScore
-            HoldingnrPerMaxScore = new int[nMaxScoreHolding];
-
-            memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
-            if (IsWeight){
 		memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
             }
+            
+            // Allocate Memory for HoldingnrMaxScore
+            HoldingnrPerMaxScore = new int[nMaxScoreHolding];
             memset( HoldingnrPerMaxScore, -1, sizeof(int) * nMaxScoreHolding);
 	}
-	else{
-            MaxScoreHolding = 0;
-            MaxScoreWeightHolding = 0;
-            HoldingnrPerMaxScore = 0;
-        }
+
 	IsFilled = false;
 }
 
@@ -185,75 +181,74 @@ CDataCell::~CDataCell()
 // this is used in recoded tables.
 void CDataCell::MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n)
 {
-	int i,j,ai = 0;
+    int i,j,ai = 0;
 	
-	if  (b == 0) return;
-	double  * tempbval = new double [n] ;
-	int * tempbhol = new int [n];
+    if  (b == 0) return;
+    double  *tempbval = new double [n] ;
+    int     *tempbhol = new int [n];
 
-	for (i= 0; i< n; i++)
-	{
-		tempbval[i] = b[i];
-		tempbhol[i] = bh[i];
-	}
+    for (i= 0; i< n; i++){
+        tempbval[i] = b[i];
+	tempbhol[i] = bh[i];
+    }
 
-	// add holdings that are equal with b and put a[i] in the temp
-	for (i=0; i<n; i ++){
-		for (j= 0; j<n; j++){
-			if ((ah[i] == tempbhol[j])) 
-			{a[i] = a[i] + tempbval[j];
-			 tempbval[j] = a[i] + tempbval[j];
-			}
-		}
+    // add holdings that are equal with b and put a[i] in the temp
+    for (i=0; i<n; i ++){
+	for (j= 0; j<n; j++){
+            if ((ah[i] == tempbhol[j])){
+		 a[i] = a[i] + tempbval[j];
+		 tempbval[j] = a[i] + tempbval[j];
+            }
 	}
+    }
 	
-	for (i = 0; i < n; i++) {
-		if (tempbval[i] > a[ai]) {
+    for (i = 0; i < n; i++){
+	if (tempbval[i] > a[ai]){
 			// shift down
-      for (j = n - 2; j >= ai; j--) {
-				a[j + 1] = a[j];
-				ah[j + 1] = ah[j];
-			}
-			a[ai] = tempbval[i];
-			ah[ai] = tempbhol[i];
-		} else {
-			ai++;
-			i--;
-		}
-		if (ai == n) break; // all elements from b smaller than a
+            for (j = n - 2; j >= ai; j--){
+		a[j + 1] = a[j];
+		ah[j + 1] = ah[j];
+            }
+            a[ai] = tempbval[i];
+            ah[ai] = tempbhol[i];
+	} 
+        else{
+            ai++;
+            i--;
 	}
-	delete [] tempbval;
-	delete [] tempbhol;
-
+	if (ai == n) break; // all elements from b smaller than a
+    }
+    delete [] tempbval;
+    delete [] tempbhol;
 }
 
 // merges two arrays when cells are merged. This is used in recoded tables
 void CDataCell::MergeScore(double *a, double *aw, double* b, double *bw, int n)  // for MaxScore and MaxScoreWeight
 { 
-	int i, j, ai = 0;
+    int i, j, ai = 0;
 
-	if (b == 0) return; // no scores
+    if (b == 0) return; // no scores
 
-	for (i = 0; i < n; i++) {
-		if (b[i] > a[ai]) {
-			// shift down
-			for (j = n - 2; j >= ai; j--) {
-				a[j + 1] = a[j];
-				if (aw != 0)	{
-					aw[j + 1] = aw[j];
-				}
-			}
-			a[ai] = b[i];
-			if ((aw != 0) && (bw != 0 ))	{
-				aw[ai++] = bw[i];
-			}
-		} 
-		else {
-			ai++;
-			i--;
+    for (i = 0; i < n; i++){
+	if (b[i] > a[ai]){
+            // shift down
+            for (j = n - 2; j >= ai; j--){
+		a[j + 1] = a[j];
+		if (aw != 0){
+                    aw[j + 1] = aw[j];
 		}
-		if (ai == n) break; // all elements from b smaller than a
+            }
+            a[ai] = b[i];
+            if ((aw != 0) && (bw != 0 )){
+		aw[ai++] = bw[i];
+            }
+	} 
+	else{
+            ai++;
+            i--;
 	}
+	if (ai == n) break; // all elements from b smaller than a
+    }
 }
 
 // Note the two functions below could be combined and made into one function with a boolean

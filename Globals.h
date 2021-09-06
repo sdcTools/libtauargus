@@ -18,7 +18,8 @@
 #if !defined  Globals_h
 #define Globals_h
 
+//int __declspec(dllexport) CurrentHoldingNr;
 int CurrentHoldingNr;
+//std::string __declspec(dllexport) LastHoldingCode;
 std::string LastHoldingCode;
-
 #endif // Globals_h
