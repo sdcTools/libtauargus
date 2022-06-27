@@ -2056,16 +2056,16 @@ bool TauArgus::WriteCellRecords(long TableIndex, const char* FileName,
 
 	int SBSCode = 0;
 	if (SBS > 0) {
-		if( (tab->NumberofMaxScoreCell == 0) && (tab->NumberofMaxScoreHolding == 0) )  {
-			SBSCode = 1;}
-    	if( (tab->NumberofMaxScoreCell == 1))  {
-			SBSCode = 2;}
-    	if( (tab->NumberofMaxScoreCell > 1))  {
-			SBSCode = 3;}
-    	if( (tab->NumberofMaxScoreHolding == 1))  {
-			SBSCode = 4;}
-    	if( (tab->NumberofMaxScoreHolding > 1))  {
-			SBSCode = 5;}
+            if( (tab->NumberofMaxScoreCell == 0) && (tab->NumberofMaxScoreHolding == 0) )  {
+                SBSCode = 1;}
+            if( (tab->NumberofMaxScoreCell == 1))  {
+                SBSCode = 2;}
+            if( (tab->NumberofMaxScoreCell > 1))  {
+                SBSCode = 3;}
+            if( (tab->NumberofMaxScoreHolding == 1))  {
+                SBSCode = 4;}
+            if( (tab->NumberofMaxScoreHolding > 1))  {
+                SBSCode = 5;}
 	}
 	long Dims[MAXDIM];
 	WriteCellRecord(fd, tab, Dims, 0, m_ValueSeparator, SBSCode, SBSLevel, SuppressEmpty, ShowUnsafe, EmbedQuotes, RespType);
@@ -4600,6 +4600,7 @@ void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, l
 	fprintf(fd, ",%d%c", f1, ValueSep);
 //		fprintf(fd, "%c", ValueSep);
 	bool UnsafeRule = false;
+//        printf("dc->GetResp() = %lf dc->GetStatus() = %ld SBSCode = %ld\n", dc->GetResp(), dc->GetStatus(), SBSCode);
 	switch (dc->GetStatus() ) {
 		case CS_SAFE:
 		case CS_SAFE_MANUAL:
@@ -4609,22 +4610,28 @@ void TauArgus::WriteSBSStaart(FILE *fd, CTable *tab, long *Dim, char ValueSep, l
 			break;
 		case CS_UNSAFE_FREQ:
 			fprintf(fd, "A");
+//                        printf("A\n");
 			break;
 		case CS_UNSAFE_PEEP:
 		case CS_UNSAFE_ZERO:
-    	case CS_UNSAFE_SINGLETON:
+                case CS_UNSAFE_SINGLETON:
 		case CS_UNSAFE_MANUAL:
 			fprintf(fd, "B");
+//                        printf("B\n");
 			UnsafeRule = true;
 			break;
 		case CS_UNSAFE_RULE:
 			if (PQRule) {
 				fprintf(fd, "F"); }
-			else
-			if ((SBSCode == 3) || (SBSCode == 5)) {
-				fprintf(fd, "C"); }
-			else {
+//                                printf("F\n");}
+			else{
+                            if ((SBSCode == 3) || (SBSCode == 5)) {
+				fprintf(fd, "C");} 
+//                                printf("C\n");}
+                            else {
 				fprintf(fd, "B"); }
+//                                printf("B\n");}
+                        }
 			UnsafeRule = true;
 			break;
 		case CS_SECONDARY_UNSAFE:
@@ -5876,8 +5883,8 @@ int TauArgus::SetCellKeyValuesFreq(long TabNo, std::string PTableFile, int *MinD
                 row = ptable.GetData()[RowNr];
                 Diff = 0;
                 for (pos=row.begin();pos!=row.end();++pos){
-                    if (dc->GetCellKey() < pos->second){
-                        Diff = pos->first - RowNr;
+                    if (dc->GetCellKey() < pos->p_ub){
+                        Diff = pos->j - RowNr;
                         break;
                     }
                 }

@@ -90,11 +90,11 @@ PTableCont::~PTableCont() {
  }        
 
 // For debugging purposes 
-/*void PTableCont::Write(std::string type){
+void PTableCont::Write(std::string type){
     PTableDRow::iterator pos;
     std::map<int,PTableDRow>::iterator rowpos;
     
-    printf("Data[%s].size() = %lld\n", type.c_str(),Data[type].size());
+    printf("Data[%s].size() = %u\n", type.c_str(),Data[type].size());
     
     for (rowpos=Data[type].begin();rowpos!=Data[type].end();++rowpos){
         printf("row %d:",rowpos->first);
@@ -103,4 +103,4 @@ PTableCont::~PTableCont() {
         }
         printf("\n");
     }
-}*/
+}
