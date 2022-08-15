@@ -241,6 +241,7 @@ public:
                             bool ApplyZeroRule, bool EmptyCellAsNonStructural, long NSEmptySafetyRange,	double ZeroSafetyRange,	long ManualSafetyPerc,
                             long* CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
+        bool GetTableCellStatus(/*[in]*/ long TableIndex, /*[in]*/ long CellIndex, /*[in,out]*/ long *CellStatus);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long* DimIndex, /*[in,out]*/ double *CellResponse, /*[in,out] */ double *CellRoundedResp,
                           /*[in,out] */double *CellCTAResp, /*[in,out] */ double *CellCKMResp, /*[in,out]*/ double *CellShadow, 
                           /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey, /*[in,out]*/ double *CellKeyNoZeros,

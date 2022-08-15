@@ -1344,6 +1344,21 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
     return true;
 }
 
+bool TauArgus::GetTableCellStatus(long TableIndex, long CellIndex, long *CellStatus)
+{	
+    if (!m_CompletedCodeList)  {
+        return false;
+    }
+
+    CTable *table = GetTable(TableIndex);
+
+    CDataCell *dc = table->GetCell(CellIndex);
+
+    *CellStatus = dc->GetStatus();
+
+    return true;
+}
+
 // Returns the information in a cell.
 bool TauArgus::GetTableCell(long TableIndex, long *DimIndex, double *CellResponse, double *CellRoundedResp, double *CellCTAResp,
                                 double *CellCKMResp,
