@@ -265,6 +265,7 @@ public:
 	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
 	bool GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
 	bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
+        bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long CellIndex, /*[in]*/ long CellStatus);
 	bool UndoRecode(/*[in]*/ long VarIndex);
 	//long GetMaxnUc();
 	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);
