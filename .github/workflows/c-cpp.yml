@@ -31,22 +31,22 @@ jobs:
         with:
           platform: x86
 
-#      - name: SetUp Java (Zulu 8)
-#        uses: actions/setup-java@v3      
-#        with:
-#          distribution: 'zulu'
-#          java-version: '8'
-#          architecture: x86
+      - name: SetUp Java (Zulu 8)
+        uses: actions/setup-java@v3      
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          architecture: x86
 
-#      - name: list
-#        run: |
-#          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\*.exe
+      - name: list
+        run: |
+          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\*.exe
 
-#      - name: Print versions
-#        run: |
-#          gcc --version
-#          java -version
-#          make -version
+      - name: Print versions
+        run: |
+          gcc --version
+          java -version
+          make -version
 
-#      - name: Make dll        
-#        run: make -f MakefileAction
+      - name: Make dll        
+        run: make -f MakefileAction
