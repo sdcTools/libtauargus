@@ -38,6 +38,10 @@ jobs:
           java-version: '8'
           architecture: x86
 
+      - name: list
+        run: |
+          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\*.exe
+
       - name: Print versions
         run: |
           gcc --version
