@@ -33,6 +33,7 @@ jobs:
         run: |
           gcc --version
           java -version
+          make -version
 
       - name: Make dll        
         run: make -f MakefileAction
