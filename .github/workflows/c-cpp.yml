@@ -22,8 +22,17 @@ jobs:
         id: cache-mingw
         uses: actions/cache@v3
         with:
-          path: C:\ProgramData\chocolatey\lib\mingw
-          key: ${{ env.CACHE_MONTH }}
+          path: |
+            C:\ProgramData\chocolatey\lib\mingw
+          key: ${{ env.CACHE_MONTH }}.minGW
+
+      - name: cache mingw setup
+        id: cache-Java-zulu
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\hostedtoolcache\windows\Java_Zulu_jdk\8.0.352-8\x86
+          key: ${{ env.CACHE_MONTH }}.Zulu
       
       - name: setup mingw
         if: steps.cache-mingw.outputs.cache-hit != 'true'
@@ -32,21 +41,22 @@ jobs:
           platform: x86
 
       - name: SetUp Java (Zulu 8)
+        if: steps.cache-Java-zulu.outputs.cache-hit != 'true'
         uses: actions/setup-java@v3      
         with:
           distribution: 'zulu'
           java-version: '8'
           architecture: x86
 
-      - name: list
-        run: |
-          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\*.exe
+#      - name: list
+#        run: |
+#          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\*.exe
 
-      - name: Print versions
-        run: |
-          gcc --version
-          java -version
-          make -version
+#      - name: Print versions
+#        run: |
+#          gcc --version
+#          java -version
+#          make -version
 
-      - name: Make dll        
-        run: make -f MakefileAction
+#      - name: Make dll        
+#        run: make -f MakefileAction
