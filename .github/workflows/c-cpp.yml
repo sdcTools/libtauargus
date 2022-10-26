@@ -11,17 +11,26 @@ jobs:
     runs-on: windows-latest
   
     steps:
-      - uses: actions/checkout@v3
-      - name: Print env
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: cache monthly
         run: |
-          echo github.event.action: ${{ github.event.action }}
-          echo github.event_name: ${{ github.event_name }}      
+          echo ("CACHE_MONTH=" + $(date '+%b %Y')) >> $env:GITHUB_ENV
+
+      - name: cache mingw setup
+        id: cache-mingw
+        uses: actions/cache@v3
+        with:
+          path: C:\ProgramData\chocolatey\lib\mingw
+          key: ${{ env.CACHE_MONTH }}
       
-      - name: SetUp MinGW
+      - name: setup mingw
+        if: steps.cache-mingw.outputs.cache-hit != 'true'
         uses: egor-tensin/setup-mingw@v2
         with:
           platform: x86
-          
+
       - name: SetUp Java (Zulu 8)
         uses: actions/setup-java@v3      
         with:
