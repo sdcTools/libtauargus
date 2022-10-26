@@ -35,4 +35,4 @@ jobs:
     steps:
         - uses: actions/checkout@v3
         - name: Make dll        
-          run: make MakefileAction
+          run: make -f MakefileAction
