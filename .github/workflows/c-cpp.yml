@@ -4,23 +4,24 @@ on:
   push:
    branches: [ "master" ]
   workflow_dispatch:
-   
 
 jobs:
-  setupMinGW:
+  build:
+    name: Build TauArgusJava.dll for Windows
     runs-on: windows-latest
-    
+  
     steps:
+      - uses: actions/checkout@v3
+      - name: Print env
+        run: |
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event_name: ${{ github.event_name }}      
+      
       - name: SetUp MinGW
         uses: egor-tensin/setup-mingw@v2
         with:
           platform: x86
-  
-  setupJava:
-    needs: setupMinGW
-    runs-on: windows-latest
-    
-    steps:
+          
       - name: SetUp Java (Zulu 8)
         uses: actions/setup-java@v3      
         with:
@@ -28,11 +29,10 @@ jobs:
           java-version: '8'
           architecture: x86
 
-  build:
-    needs: [setupMinGW, setupJava]
-    runs-on: windows-latest
+      - name: Print versions
+        run: |
+          gcc --version
+          java -version
 
-    steps:
-        - uses: actions/checkout@v3
-        - name: Make dll        
-          run: make -f MakefileAction
+      - name: Make dll        
+        run: make -f MakefileAction
