@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <cstring>
+#include <string>
 #include <vector>
 #include "defines.h"
 
