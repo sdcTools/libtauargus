@@ -13,20 +13,18 @@ ifeq ($(32BIT), false)  # 64 bit assumed
     BITS        = -m64 -D_LP64
     ARCH        = x86_64
     CND_PLATFORM= MinGW-Windows64
-    JAVADIR     = C:/hostedtoolcache/windows/Java_Zulu_jdk/8.0.352-8/x64
-    GNUDIR      = C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin/
+    JAVADIR     = $(JAVA_HOME)
 else                    # 32 bit assumed
     BITS        = -m32
     ARCH        = x86
     CND_PLATFORM= MinGW-Windows
-    JAVADIR     = C:/hostedtoolcache/windows/Java_Zulu_jdk/8.0.352-8/x86
-    GNUDIR      = C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin/
+    JAVADIR     = $(JAVA_HOME)
 endif
 
 JAVAINC         = -I$(JAVADIR)/include -I$(JAVADIR)/include/win32
-CXX             = $(GNUDIR)/g++
-LINK            = $(GNUDIR)/g++
-WINDRES         = $(GNUDIR)/windres
+CXX             = g++
+LINK            = g++
+WINDRES         = windres
 SWIG            = swig.exe
 
 # Macros
