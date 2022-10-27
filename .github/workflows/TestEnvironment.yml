@@ -49,5 +49,5 @@ jobs:
       - name: Echo environment variables
         run: |
           env
-          refreshenv
-          env
+          java -version
+          g++ --version
