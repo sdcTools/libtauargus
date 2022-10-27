@@ -32,9 +32,9 @@ jobs:
           java -version
           gcc --version
           windres --version
-#          make -version
+#          make --version          
 
       - name: Make dll
         run: |
-          refreshenv
+          dir C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin\
           make -f MakefileAction
