@@ -58,7 +58,7 @@ jobs:
           java -version
           gcc --version
           windres --version
-          '${{ steps.setup.outputs.prefix }}'/make -version
+          make -version
 
       - name: Make dll
         run: |
