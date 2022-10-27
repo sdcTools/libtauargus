@@ -32,13 +32,11 @@ jobs:
 
       - name: Print versions
         run: |
-          call refreshenv
           java -version
           gcc --version
           windres --version
-          make -version
+#          make -version
 
       - name: Make dll
         run: |
-          call refreshenv
           make -f MakefileAction
