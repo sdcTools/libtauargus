@@ -1,0 +1,37 @@
+name: Test Environment variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Echo:
+    name: Test Environment variables
+    runs-on: windows-latest
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache monthly
+        run: |
+          echo ("CACHE_MONTH=" + $(date '+%b %Y')) >> $env:GITHUB_ENV
+      
+      - name: Cache Java zulu setup
+        id: cache-Java-zulu
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\hostedtoolcache\windows\Java_Zulu_jdk\8.0.352-8\x86
+          key: ${{ env.CACHE_MONTH }}.Zulu
+          
+      - name: SetUp Java (Zulu 8)
+        if: steps.cache-Java-zulu.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v3      
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          architecture: x86
+
+      - name: Echo environment variables
+        run: |
+          env
