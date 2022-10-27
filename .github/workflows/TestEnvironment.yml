@@ -15,6 +15,14 @@ jobs:
       - name: Cache monthly
         run: |
           echo ("CACHE_MONTH=" + $(date '+%b %Y')) >> $env:GITHUB_ENV
+
+      - name: Cache mingw setup
+        id: cache-mingw
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\ProgramData\chocolatey\lib\mingw
+          key: ${{ env.CACHE_MONTH }}.minGW
       
       - name: Cache Java zulu setup
         id: cache-Java-zulu
@@ -23,7 +31,13 @@ jobs:
           path: |
             C:\hostedtoolcache\windows\Java_Zulu_jdk\8.0.352-8\x86
           key: ${{ env.CACHE_MONTH }}.Zulu
-          
+
+      - name: SetUp mingw
+        if: steps.cache-mingw.outputs.cache-hit != 'true'
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x86
+
       - name: SetUp Java (Zulu 8)
         if: steps.cache-Java-zulu.outputs.cache-hit != 'true'
         uses: actions/setup-java@v3      
@@ -34,4 +48,5 @@ jobs:
 
       - name: Echo environment variables
         run: |
+          call refreshenv
           env
