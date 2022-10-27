@@ -48,6 +48,6 @@ jobs:
 
       - name: Echo environment variables
         run: |
-          env
+          refreshenv
           java -version
           g++ --version
