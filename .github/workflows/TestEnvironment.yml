@@ -48,5 +48,6 @@ jobs:
 
       - name: Echo environment variables
         run: |
-          call refreshenv
+          env
+          refreshenv
           env
