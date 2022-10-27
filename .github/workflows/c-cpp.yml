@@ -31,12 +31,16 @@ jobs:
           architecture: x86
 
       - name: Print versions
+        shell: cmd
         run: |
+          call refreshenv
           java -version
           gcc --version
           windres --version
 #          make -version
 
       - name: Make dll
+        shell: cmd
         run: |
+          call refreshenv
           make -f MakefileAction
