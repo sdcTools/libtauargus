@@ -21,6 +21,6 @@ jobs:
       - name: Echo environment variables
         run: |
           refreshenv
-          dir ..\\lib\mingw\tools\install\mingw32\bin
-          dir ..\\lib\mingw\tools\install\mingw64\bin
           g++ --version
+          dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin
+          dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin
