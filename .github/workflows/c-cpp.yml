@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build TauArgusJava.dll for Windows
-    runs-on: windows-2019
+    runs-on: windows-latest
   
     steps:
       - name: Checkout
@@ -16,26 +16,17 @@ jobs:
         
       - name: SetUp MinGW
         uses: egor-tensin/setup-mingw@v2
-        #with:
-        #  platform: x86
+        with:
+          platform: x86
 
       - name: SetUp Java (Zulu 8)
         uses: actions/setup-java@v3      
         with:
           distribution: 'zulu'
           java-version: '8'
-          architecture: x86
-
-      - name: Print versions
-        run: |
-          refreshenv
-          env
-          java -version
-          gcc --version
-          windres --version
-          make --version          
+          architecture: x86        
 
       - name: Make dll
         run: |
           refreshenv
-          make -f MakefileAction
+          qmake -f MakefileAction
