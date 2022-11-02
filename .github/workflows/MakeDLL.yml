@@ -26,6 +26,9 @@ jobs:
         with:
           platform: x86
           
+      - name: Show Path
+        run: echo $GITHUB_PATH
+          
       - name: Make dll
         run: |
           refreshenv
