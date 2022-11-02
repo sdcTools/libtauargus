@@ -17,4 +17,4 @@ jobs:
       - name: Show version
         run: |
           refreshenv
-          make --version
+          Join-Path $mingw_bin 'make --version'
