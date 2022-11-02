@@ -10,7 +10,6 @@ jobs:
   
     steps:
       - name: SetUp mingw
-        if: steps.cache-mingw.outputs.cache-hit != 'true'
         uses: egor-tensin/setup-mingw@v2
         with:
           platform: x86
