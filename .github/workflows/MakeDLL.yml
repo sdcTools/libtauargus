@@ -26,8 +26,8 @@ jobs:
         with:
           platform: x86
           
-      - name: Show Path
-        run: echo $GITHUB_PATH
+      - name: Add MinGW to path
+        run: echo $mingw_bin >> $env:GITHUB_PATH
           
       - name: Make dll
         run: |
