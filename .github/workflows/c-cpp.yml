@@ -29,4 +29,4 @@ jobs:
       - name: Make dll
         run: |
           refreshenv
-          qmake -f MakefileAction
+          make -f MakefileAction
