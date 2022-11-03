@@ -25,4 +25,4 @@ jobs:
       - name: test
         shell: cmd
         run: |
-          dir c:\ProgramData\chocolatey\lib\mingw
+          dir c:\ProgramData\chocolatey\lib\mingw\tools\install
