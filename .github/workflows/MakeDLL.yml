@@ -8,7 +8,8 @@ on:
 jobs:
   build:
     name: Build TauArgusJava.dll for Windows
-    runs-on: windows-latest
+    #runs-on: windows-latest
+    runs-on: windows-2019 #latest more often leads to install error
   
     steps:
       - name: Checkout
@@ -26,10 +27,7 @@ jobs:
         with:
           platform: x86
           
-      - name: Add MinGW to path
-        run: echo $mingw_bin >> $env:GITHUB_PATH
-          
       - name: Make dll
         run: |
           refreshenv
-          make -f MakefileAction
+          c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
