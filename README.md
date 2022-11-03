@@ -1,3 +1,5 @@
+[![Test](https://github.com/sdcTools/libtauargus/actions/workflows/MakeDLL.yml/badge.svg)](https://github.com/sdcTools/libtauargus/actions/workflows/MakeDLL.yml/)
+
 ## Argus Open Source
 Software to apply Statistical Disclosure Control techniques
 
