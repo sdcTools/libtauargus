@@ -25,5 +25,4 @@ jobs:
       - name: test
         shell: cmd
         run: |
-          dir c:\ProgramData\chocolatey
-          dir c:\ProgramData\chocolatey\lib
+          dir c:\ProgramData\chocolatey\lib\mingw
