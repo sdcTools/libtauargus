@@ -17,4 +17,4 @@ jobs:
       - name: Show version
         run: |
           refreshenv
-          C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw32/make --version
+          C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\make --version
