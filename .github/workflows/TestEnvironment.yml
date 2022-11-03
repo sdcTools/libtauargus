@@ -17,4 +17,4 @@ jobs:
       - name: Show version
         run: |
           refreshenv
-          Join-Path $mingw_bin 'make --version'
+          Join-Path C: ProgramData chocolatey lib mingw tools install mingw32 'make --version'
