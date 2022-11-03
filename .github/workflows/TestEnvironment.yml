@@ -16,6 +16,9 @@ jobs:
           platform: x86
 
       - name: Show version
+        shell: cmd
         run: |
           refreshenv
+          dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32
+          dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin
           C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\make --version
