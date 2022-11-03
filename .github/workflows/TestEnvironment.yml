@@ -6,7 +6,8 @@ on:
 jobs:
   Echo:
     name: Test Environment variables
-    runs-on: windows-latest
+#    runs-on: windows-latest
+    runs-on: windows-2019
   
     steps:
       - name: SetUp mingw
