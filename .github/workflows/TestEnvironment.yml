@@ -24,4 +24,6 @@ jobs:
  #         C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\make --version
       - name: test
         shell: cmd
-        run: dir c:\ProgramData
+        run: |
+          dir c:\ProgramData\chocolatey
+          dir c:\ProgramData\chocolatey\lib
