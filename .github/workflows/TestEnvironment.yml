@@ -10,10 +10,10 @@ jobs:
     runs-on: windows-2019
   
     steps:
-#      - name: SetUp mingw
-#        uses: egor-tensin/setup-mingw@v2
-#        with:
-#          platform: x86
+      - name: SetUp mingw
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x86
 
  #     - name: Show version
  #       shell: cmd
