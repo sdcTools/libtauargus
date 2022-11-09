@@ -36,8 +36,13 @@ jobs:
         with:
           platform: x86
           
-      - name: Make library
+      - name: Make library Ubuntu
+        if: runner.os == 'Ubuntu'
+        run: make -f MakeFileAction
+      
+      - name: Make DLL Windows 32 bit
+        if: runner.os == 'Windows'
         run: |
           refreshenv
-          #c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
-          make -f MakeFileAction
+          c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
+
