@@ -6,8 +6,6 @@ on:
 
 jobs:
   build:
-    #runs-on: windows-latest
-    #runs-on: windows-2019 #latest more often leads to install error
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
