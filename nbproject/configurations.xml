@@ -19,7 +19,6 @@
       <itemPath>src/SubCodeList.h</itemPath>
       <itemPath>src/Table.h</itemPath>
       <itemPath>src/TauArgus.h</itemPath>
-      <itemPath>src/TauArgusJava_wrap.h</itemPath>
       <itemPath>src/Variable.h</itemPath>
       <itemPath>src/defines.h</itemPath>
     </logicalFolder>
@@ -45,8 +44,18 @@
       <itemPath>src/SubCodeList.cpp</itemPath>
       <itemPath>src/Table.cpp</itemPath>
       <itemPath>src/TauArgus.cpp</itemPath>
-      <itemPath>src/TauArgusJava_wrap.cpp</itemPath>
       <itemPath>src/Variable.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -61,6 +70,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>.</Elem>
     <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
