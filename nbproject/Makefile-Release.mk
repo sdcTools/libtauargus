@@ -48,7 +48,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/SubCodeList.o \
 	${OBJECTDIR}/src/Table.o \
 	${OBJECTDIR}/src/TauArgus.o \
-	${OBJECTDIR}/src/TauArgusJava_wrap.o \
 	${OBJECTDIR}/src/Variable.o
 
 
@@ -145,11 +144,6 @@ ${OBJECTDIR}/src/TauArgus.o: src/TauArgus.cpp
 TauArgusJava_wrap.cpp TauArgusJava_wrap.h: src/TauArgusJava.swg
 	@echo Performing Custom Build Step
 	D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.2/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CDN_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
-
-${OBJECTDIR}/src/TauArgusJava_wrap.o: src/TauArgusJava_wrap.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/TauArgusJava_wrap.o src/TauArgusJava_wrap.cpp
 
 ${OBJECTDIR}/src/Variable.o: src/Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

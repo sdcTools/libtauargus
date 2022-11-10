@@ -48,7 +48,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/SubCodeList.o \
 	${OBJECTDIR}/src/Table.o \
 	${OBJECTDIR}/src/TauArgus.o \
-	${OBJECTDIR}/src/TauArgusJava_wrap.o \
 	${OBJECTDIR}/src/Variable.o
 
 
@@ -140,11 +139,6 @@ ${OBJECTDIR}/src/TauArgus.o: src/TauArgus.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/TauArgus.o src/TauArgus.cpp
-
-${OBJECTDIR}/src/TauArgusJava_wrap.o: src/TauArgusJava_wrap.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/TauArgusJava_wrap.o src/TauArgusJava_wrap.cpp
 
 ${OBJECTDIR}/src/Variable.o: src/Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
