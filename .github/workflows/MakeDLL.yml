@@ -2,7 +2,9 @@ name: Build TauArgusJava.dll
 
 on:
   push:
-    branches: [ "master", "Keep_status" ]
+    branches: 
+      - master
+      - Keep_status
   workflow_dispatch:
 
 jobs:
