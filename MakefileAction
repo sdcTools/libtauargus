@@ -43,7 +43,7 @@ JAVAPACKAGE     = tauargus.extern.dataengine
 BUILDFILEDIR    = $(CND_BUILDDIR)/$(CND_CONF)/$(CND_PLATFORM)
 DISTFILEDIR     = $(CND_DISTDIR)/$(CND_CONF)/$(CND_PLATFORM)
 
-SRCDIR          = .
+SRCDIR          = ./src
 OBJDIR          = $(BUILDFILEDIR)
 LIBDIR          = $(DISTFILEDIR)
 OUTDIR          = $(DISTFILEDIR)
