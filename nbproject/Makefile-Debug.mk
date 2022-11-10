@@ -35,21 +35,20 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/AMPL.o \
-	${OBJECTDIR}/Code.o \
-	${OBJECTDIR}/DataCell.o \
-	${OBJECTDIR}/General.o \
-	${OBJECTDIR}/Ghmiter.o \
-	${OBJECTDIR}/Hitas.o \
-	${OBJECTDIR}/JJFormat.o \
-	${OBJECTDIR}/PTable.o \
-	${OBJECTDIR}/PTableCont.o \
-	${OBJECTDIR}/Properties.o \
-	${OBJECTDIR}/SubCodeList.o \
-	${OBJECTDIR}/Table.o \
-	${OBJECTDIR}/TauArgus.o \
-	${OBJECTDIR}/TauArgusJava_wrap.o \
-	${OBJECTDIR}/Variable.o
+	${OBJECTDIR}/src/AMPL.o \
+	${OBJECTDIR}/src/Code.o \
+	${OBJECTDIR}/src/DataCell.o \
+	${OBJECTDIR}/src/General.o \
+	${OBJECTDIR}/src/Ghmiter.o \
+	${OBJECTDIR}/src/Hitas.o \
+	${OBJECTDIR}/src/JJFormat.o \
+	${OBJECTDIR}/src/PTable.o \
+	${OBJECTDIR}/src/PTableCont.o \
+	${OBJECTDIR}/src/Properties.o \
+	${OBJECTDIR}/src/SubCodeList.o \
+	${OBJECTDIR}/src/Table.o \
+	${OBJECTDIR}/src/TauArgus.o \
+	${OBJECTDIR}/src/Variable.o
 
 
 # C Compiler Flags
@@ -76,85 +75,75 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT}: ${OBJEC
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/TauArgusJava.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -Wl,--kill-at -fno-strict-aliasing -shared
 
-${OBJECTDIR}/AMPL.o: AMPL.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/AMPL.o: src/AMPL.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/AMPL.o AMPL.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/AMPL.o src/AMPL.cpp
 
-${OBJECTDIR}/Code.o: Code.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Code.o: src/Code.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Code.o Code.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Code.o src/Code.cpp
 
-${OBJECTDIR}/DataCell.o: DataCell.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/DataCell.o: src/DataCell.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DataCell.o DataCell.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/DataCell.o src/DataCell.cpp
 
-${OBJECTDIR}/General.o: General.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/General.o: src/General.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/General.o General.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/General.o src/General.cpp
 
-${OBJECTDIR}/Ghmiter.o: Ghmiter.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Ghmiter.o: src/Ghmiter.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Ghmiter.o Ghmiter.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Ghmiter.o src/Ghmiter.cpp
 
-${OBJECTDIR}/Hitas.o: Hitas.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Hitas.o: src/Hitas.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Hitas.o Hitas.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Hitas.o src/Hitas.cpp
 
-${OBJECTDIR}/JJFormat.o: JJFormat.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/JJFormat.o: src/JJFormat.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/JJFormat.o JJFormat.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JJFormat.o src/JJFormat.cpp
 
-${OBJECTDIR}/PTable.o: PTable.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/PTable.o: src/PTable.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTable.o PTable.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/PTable.o src/PTable.cpp
 
-${OBJECTDIR}/PTableCont.o: PTableCont.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/PTableCont.o: src/PTableCont.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/PTableCont.o PTableCont.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/PTableCont.o src/PTableCont.cpp
 
-${OBJECTDIR}/Properties.o: Properties.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Properties.o: src/Properties.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Properties.o Properties.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Properties.o src/Properties.cpp
 
-${OBJECTDIR}/SubCodeList.o: SubCodeList.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/SubCodeList.o: src/SubCodeList.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SubCodeList.o SubCodeList.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/SubCodeList.o src/SubCodeList.cpp
 
-${OBJECTDIR}/Table.o: Table.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Table.o: src/Table.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Table.o Table.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Table.o src/Table.cpp
 
-${OBJECTDIR}/TauArgus.o: TauArgus.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/TauArgus.o: src/TauArgus.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgus.o TauArgus.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/TauArgus.o src/TauArgus.cpp
 
-.NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
-TauArgusJava_wrap.cpp TauArgusJava_wrap.h: TauArgusJava.swg
-	@echo Performing Custom Build Step
-	C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
-
-${OBJECTDIR}/TauArgusJava_wrap.o: TauArgusJava_wrap.cpp
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/src/Variable.o: src/Variable.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TauArgusJava_wrap.o TauArgusJava_wrap.cpp
-
-${OBJECTDIR}/Variable.o: Variable.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Variable.o Variable.cpp
+	$(COMPILE.cc) -g -Wall -D_DEBUG -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include -I/C/Program\ Files\ \(x86\)/Java/jdk1.7.0_79/include/win32  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Variable.o src/Variable.cpp
 
 # Subprojects
 .build-subprojects:
@@ -162,7 +151,6 @@ ${OBJECTDIR}/Variable.o: Variable.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} TauArgusJava_wrap.cpp TauArgusJava_wrap.h
 
 # Subprojects
 .clean-subprojects:

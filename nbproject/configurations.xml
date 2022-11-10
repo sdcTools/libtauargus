@@ -4,49 +4,47 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>AMPL.h</itemPath>
-      <itemPath>Code.h</itemPath>
-      <itemPath>DataCell.h</itemPath>
-      <itemPath>General.h</itemPath>
-      <itemPath>Ghmiter.h</itemPath>
-      <itemPath>Globals.h</itemPath>
-      <itemPath>Hitas.h</itemPath>
-      <itemPath>IProgressListener.h</itemPath>
-      <itemPath>JJFormat.h</itemPath>
-      <itemPath>PTable.h</itemPath>
-      <itemPath>PTableCont.h</itemPath>
-      <itemPath>Properties.h</itemPath>
-      <itemPath>SubCodeList.h</itemPath>
-      <itemPath>Table.h</itemPath>
-      <itemPath>TauArgus.h</itemPath>
-      <itemPath>TauArgusJava_wrap.h</itemPath>
-      <itemPath>Variable.h</itemPath>
-      <itemPath>defines.h</itemPath>
+      <itemPath>src/AMPL.h</itemPath>
+      <itemPath>src/Code.h</itemPath>
+      <itemPath>src/DataCell.h</itemPath>
+      <itemPath>src/General.h</itemPath>
+      <itemPath>src/Ghmiter.h</itemPath>
+      <itemPath>src/Globals.h</itemPath>
+      <itemPath>src/Hitas.h</itemPath>
+      <itemPath>src/IProgressListener.h</itemPath>
+      <itemPath>src/JJFormat.h</itemPath>
+      <itemPath>src/PTable.h</itemPath>
+      <itemPath>src/PTableCont.h</itemPath>
+      <itemPath>src/Properties.h</itemPath>
+      <itemPath>src/SubCodeList.h</itemPath>
+      <itemPath>src/Table.h</itemPath>
+      <itemPath>src/TauArgus.h</itemPath>
+      <itemPath>src/Variable.h</itemPath>
+      <itemPath>src/defines.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>TauArgusJava.swg</itemPath>
-      <itemPath>Versioninfo.rc</itemPath>
+      <itemPath>src/TauArgusJava.swg</itemPath>
+      <itemPath>src/Versioninfo.rc</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>AMPL.cpp</itemPath>
-      <itemPath>Code.cpp</itemPath>
-      <itemPath>DataCell.cpp</itemPath>
-      <itemPath>General.cpp</itemPath>
-      <itemPath>Ghmiter.cpp</itemPath>
-      <itemPath>Hitas.cpp</itemPath>
-      <itemPath>JJFormat.cpp</itemPath>
-      <itemPath>PTable.cpp</itemPath>
-      <itemPath>PTableCont.cpp</itemPath>
-      <itemPath>Properties.cpp</itemPath>
-      <itemPath>SubCodeList.cpp</itemPath>
-      <itemPath>Table.cpp</itemPath>
-      <itemPath>TauArgus.cpp</itemPath>
-      <itemPath>TauArgusJava_wrap.cpp</itemPath>
-      <itemPath>Variable.cpp</itemPath>
+      <itemPath>src/AMPL.cpp</itemPath>
+      <itemPath>src/Code.cpp</itemPath>
+      <itemPath>src/DataCell.cpp</itemPath>
+      <itemPath>src/General.cpp</itemPath>
+      <itemPath>src/Ghmiter.cpp</itemPath>
+      <itemPath>src/Hitas.cpp</itemPath>
+      <itemPath>src/JJFormat.cpp</itemPath>
+      <itemPath>src/PTable.cpp</itemPath>
+      <itemPath>src/PTableCont.cpp</itemPath>
+      <itemPath>src/Properties.cpp</itemPath>
+      <itemPath>src/SubCodeList.cpp</itemPath>
+      <itemPath>src/Table.cpp</itemPath>
+      <itemPath>src/TauArgus.cpp</itemPath>
+      <itemPath>src/Variable.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -88,79 +86,71 @@
           <commandLine>-Wl,--kill-at -fno-strict-aliasing</commandLine>
         </linkerTool>
       </compileType>
-      <item path="AMPL.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/AMPL.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="AMPL.h" ex="false" tool="3" flavor2="0">
+      <item path="src/AMPL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Code.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Code.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Code.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Code.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DataCell.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/DataCell.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="DataCell.h" ex="false" tool="3" flavor2="0">
+      <item path="src/DataCell.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="General.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/General.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="General.h" ex="false" tool="3" flavor2="0">
+      <item path="src/General.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Ghmiter.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Ghmiter.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Ghmiter.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Ghmiter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Globals.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Globals.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Hitas.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Hitas.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Hitas.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Hitas.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="IProgressListener.h" ex="false" tool="3" flavor2="0">
+      <item path="src/IProgressListener.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="JJFormat.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/JJFormat.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="JJFormat.h" ex="false" tool="3" flavor2="0">
+      <item path="src/JJFormat.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PTable.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/PTable.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PTable.h" ex="false" tool="3" flavor2="0">
+      <item path="src/PTable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PTableCont.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/PTableCont.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PTableCont.h" ex="false" tool="3" flavor2="0">
+      <item path="src/PTableCont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Properties.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Properties.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SubCodeList.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/SubCodeList.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="SubCodeList.h" ex="false" tool="3" flavor2="0">
+      <item path="src/SubCodeList.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Table.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Table.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Table.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Table.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TauArgus.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/TauArgus.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="TauArgus.h" ex="false" tool="3" flavor2="0">
+      <item path="src/TauArgus.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
-        <customTool>
-          <customToolCommandline>C:\swigwin-3.0.10\swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
-          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
-        </customTool>
+      <item path="src/TauArgusJava.swg" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Variable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Variable.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Versioninfo.rc" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Variable.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Versioninfo.rc" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="defines.h" ex="false" tool="3" flavor2="0">
+      <item path="src/defines.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="2">
@@ -195,79 +185,75 @@
           <commandLine>-Wl,--kill-at</commandLine>
         </linkerTool>
       </compileType>
-      <item path="AMPL.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/AMPL.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="AMPL.h" ex="false" tool="3" flavor2="0">
+      <item path="src/AMPL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Code.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Code.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Code.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Code.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DataCell.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/DataCell.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="DataCell.h" ex="false" tool="3" flavor2="0">
+      <item path="src/DataCell.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="General.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/General.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="General.h" ex="false" tool="3" flavor2="0">
+      <item path="src/General.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Ghmiter.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Ghmiter.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Ghmiter.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Ghmiter.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Globals.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Globals.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Hitas.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Hitas.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Hitas.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Hitas.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="IProgressListener.h" ex="false" tool="3" flavor2="0">
+      <item path="src/IProgressListener.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="JJFormat.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/JJFormat.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="JJFormat.h" ex="false" tool="3" flavor2="0">
+      <item path="src/JJFormat.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PTable.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/PTable.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PTable.h" ex="false" tool="3" flavor2="0">
+      <item path="src/PTable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="PTableCont.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/PTableCont.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="PTableCont.h" ex="false" tool="3" flavor2="0">
+      <item path="src/PTableCont.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Properties.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Properties.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Properties.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Properties.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="SubCodeList.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/SubCodeList.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="SubCodeList.h" ex="false" tool="3" flavor2="0">
+      <item path="src/SubCodeList.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Table.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Table.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Table.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Table.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TauArgus.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/TauArgus.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="TauArgus.h" ex="false" tool="3" flavor2="0">
+      <item path="src/TauArgus.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="TauArgusJava.swg" ex="false" tool="3" flavor2="0">
+      <item path="src/TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
           <customToolCommandline>D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
-          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
+          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h </customToolOutputs>
         </customTool>
       </item>
-      <item path="TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
+      <item path="src/Variable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Variable.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/Versioninfo.rc" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Variable.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Versioninfo.rc" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="defines.h" ex="false" tool="3" flavor2="0">
+      <item path="src/defines.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

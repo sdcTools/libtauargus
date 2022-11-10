@@ -47,7 +47,7 @@ JAVAPACKAGE     = tauargus.extern.dataengine
 BUILDFILEDIR    = $(CND_BUILDDIR)/$(CND_CONF)/$(CND_PLATFORM)
 DISTFILEDIR     = $(CND_DISTDIR)/$(CND_CONF)/$(CND_PLATFORM)
 
-SRCDIR          = .
+SRCDIR          = ./src
 OBJDIR          = $(BUILDFILEDIR)
 LIBDIR          = $(DISTFILEDIR)
 OUTDIR          = $(DISTFILEDIR)
@@ -89,8 +89,8 @@ $(CND_BUILDDIR) $(CND_BUILDDIR)/$(CND_CONF) $(OBJDIR) $(CND_DISTDIR) $(CND_DISTD
 
 $(TARGET) : $(OBJECTS)
 	$(LINK) $(LDFLAGS) -o $@ $^
-	$(CP) $(TARGET) $(SRCDIR)/../tauargus/$(LIBFILENAME)
-	$(CP) $(LIBDIR)/*.java $(SRCDIR)/../tauargus/src/tauargus/extern/dataengine
+	$(CP) $(TARGET) $(SRCDIR)/../../tauargus/$(LIBFILENAME)
+	$(CP) $(LIBDIR)/*.java $(SRCDIR)/../../tauargus/src/tauargus/extern/dataengine
 
 # pull in dependency info for *existing* .o files
 -include $(wildcard $(addsuffix .d, $(OBJECTS))) 
