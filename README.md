@@ -2,7 +2,7 @@
 
 [![Build Library](https://github.com/sdcTools/libtauargus/actions/workflows/MakeDLL.yml/badge.svg)](https://github.com/sdcTools/libtauargus/actions/workflows/MakeDLL.yml/)
 [![GitHub last
-commit](https://img.shields.io/github/last-commit/sdcTools/libtauargus.svg?logo=github)](https://github.com/sdcTools/libtauargus/commits/keep_status)
+commit](https://img.shields.io/github/last-commit/sdcTools/libtauargus.svg?logo=github)](https://github.com/sdcTools/libtauargus/commits/Keep_status)
 [![GitHub code size in
 bytes](https://img.shields.io/github/languages/code-size/sdcTools/libtauargus.svg?logo=github)](https://github.com/sdcTools/libtauargus)
 <!-- badges: end -->
