@@ -37,5 +37,6 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           refreshenv
-          c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
+          #c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
+          mingw32-make -f MakefileAction
 
