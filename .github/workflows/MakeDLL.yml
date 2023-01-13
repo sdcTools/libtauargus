@@ -1,0 +1,42 @@
+name: Build TauArgusJava.dll
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    
+    runs-on: '${{ matrix.os }}'
+    name: 'Build TauArgusJava library for ${{ matrix.os }}'
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: SetUp Java (Zulu 8)
+        uses: actions/setup-java@v3      
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          architecture: x86      
+          
+      - name: SetUp MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x86
+          
+      - name: Make library Ubuntu
+        if: runner.os == 'Ubuntu'
+        run: make -f MakeFileAction
+      
+      - name: Make DLL Windows 32 bit
+        if: runner.os == 'Windows'
+        run: |
+          refreshenv
+          #c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\mingw32-make -f MakefileAction
+          mingw32-make -f MakefileAction
+

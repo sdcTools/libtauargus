@@ -57,17 +57,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <logicalFolder name="TestFiles"
-                   displayName="Test Files"
-                   projectFiles="false"
-                   kind="TEST_LOGICAL_FOLDER">
-    </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false"
-                   kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>Makefile</itemPath>
-    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
@@ -155,10 +144,6 @@
       <item path="src/TauArgus.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/TauArgusJava.swg" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="src/TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -259,13 +244,9 @@
       </item>
       <item path="src/TauArgusJava.swg" ex="false" tool="3" flavor2="0">
         <customTool>
-          <customToolCommandline>D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.2/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CDN_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
-          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h</customToolOutputs>
+          <customToolCommandline>D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg</customToolCommandline>
+          <customToolOutputs>TauArgusJava_wrap.cpp TauArgusJava_wrap.h </customToolOutputs>
         </customTool>
-      </item>
-      <item path="src/TauArgusJava_wrap.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/TauArgusJava_wrap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Variable.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -241,7 +241,7 @@ public:
                             bool ApplyZeroRule, bool EmptyCellAsNonStructural, long NSEmptySafetyRange,	double ZeroSafetyRange,	long ManualSafetyPerc,
                             long* CellAndHoldingFreqSafetyPerc);
 	bool GetTableCellValue(/*[in]*/ long TableIndex, /*[in]*/  long CellIndex, /*[in,out]*/ double *CellResponse);
-        bool GetTableCellStatus(/*[in]*/ long TableIndex, /*[in]*/ long CellIndex, /*[in,out]*/ long *CellStatus);
+  bool GetTableCellStatus(/*[in]*/ long TableIndex, /*[in]*/ long CellIndex, /*[in,out]*/ long *CellStatus);
 	bool GetTableCell(/*[in]*/ long TableIndex, /*[in,out]*/ long* DimIndex, /*[in,out]*/ double *CellResponse, /*[in,out] */ double *CellRoundedResp,
                           /*[in,out] */double *CellCTAResp, /*[in,out] */ double *CellCKMResp, /*[in,out]*/ double *CellShadow, 
                           /*[in,out]*/ double *CellCost, /*[in,out]*/ double *CellKey, /*[in,out]*/ double *CellKeyNoZeros,
@@ -265,7 +265,7 @@ public:
 	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
 	bool GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
 	bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);
-        bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long CellIndex, /*[in]*/ long CellStatus);
+  bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long CellIndex, /*[in]*/ long CellStatus);
 	bool UndoRecode(/*[in]*/ long VarIndex);
 	//long GetMaxnUc();
 	bool ExploreFile(/*[in]*/ const char* FileName, /*[in,out]*/ long * ErrorCode,  /*[in,out]*/ long * LineNumber, /*[in,out]*/ long * ErrorVarIndex);

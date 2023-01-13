@@ -13,7 +13,7 @@
 /src/TopicHelp.h
 /src/TauArgusJava_wrap.cpp
 /src/TauArgusJava_wrap.h
-/.dep.inc
+/src/.dep.inc
 *.ncb
 *.opt
 *.plg

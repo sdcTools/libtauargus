@@ -1,0 +1,29 @@
+name: Test Environment variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Echo:
+    name: Test Environment variables
+#    runs-on: windows-latest
+    runs-on: windows-2019
+  
+    steps:
+      - name: SetUp mingw
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x86
+
+ #     - name: Show version
+ #       shell: cmd
+ #       run: |
+ #         refreshenv
+ #         dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32
+ #         dir C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin
+ #         C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin\make --version
+      - name: test
+        shell: cmd
+        run: |
+          dir c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32
+          dir c:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin
