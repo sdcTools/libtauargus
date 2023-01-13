@@ -955,6 +955,20 @@ bool TauArgus::UndoRecode(long VarIndex)
     return true;
 }
 
+bool TauArgus::SetTableCellStatus(long TableIndex, long CellIndex, long CellStatus)
+{
+        if (!m_CompletedCodeList)  {
+        return false;
+    }
+
+    CTable *table = GetTable(TableIndex);
+
+    CDataCell *dc = table->GetCell(CellIndex);
+
+    dc->SetStatus(CellStatus);
+
+    return true;
+}
 
 //Sets the status of a cell to a given status
 bool TauArgus::SetTableCellStatus(long TableIndex, long *DimIndex, long CelStatus)
@@ -1340,6 +1354,21 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
     CDataCell *dc = table->GetCell(CellIndex);
 
     *CellResponse = dc->GetResp();
+
+    return true;
+}
+
+bool TauArgus::GetTableCellStatus(long TableIndex, long CellIndex, long *CellStatus)
+{	
+    if (!m_CompletedCodeList)  {
+        return false;
+    }
+
+    CTable *table = GetTable(TableIndex);
+
+    CDataCell *dc = table->GetCell(CellIndex);
+
+    *CellStatus = dc->GetStatus();
 
     return true;
 }

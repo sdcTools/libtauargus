@@ -140,10 +140,11 @@ ${OBJECTDIR}/src/TauArgus.o: src/TauArgus.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -I../build/include -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/TauArgus.o src/TauArgus.cpp
 
-.NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h 
-TauArgusJava_wrap.cpp TauArgusJava_wrap.h : src/TauArgusJava.swg
-	@echo Performing Custom Build Step
-	D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
+.NO_PARALLEL:TauArgusJava_wrap.cpp TauArgusJava_wrap.h
+TauArgusJava_wrap.cpp TauArgusJava_wrap.h: src/TauArgusJava.swg
+
+@echo Performing Custom Build Step
+	D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.2/swig.exe -c++ -java -package tauargus.extern.dataengine -outdir ${CND_DISTDIR}/${CDN_CONF}/${CND_PLATFORM} -o TauArgusJava_wrap.cpp TauArgusJava.swg
 
 ${OBJECTDIR}/src/Variable.o: src/Variable.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
