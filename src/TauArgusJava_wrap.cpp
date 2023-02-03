@@ -3511,6 +3511,63 @@ SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauA
 }
 
 
+SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauArgus_1GetTableCellProtectionLevels(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3, jdoubleArray jarg4, jdoubleArray jarg5) {
+  jboolean jresult = 0 ;
+  TauArgus *arg1 = (TauArgus *) 0 ;
+  long arg2 ;
+  long arg3 ;
+  double *arg4 = (double *) 0 ;
+  double *arg5 = (double *) 0 ;
+  double temp4 ;
+  double temp5 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(TauArgus **)&jarg1; 
+  arg2 = (long)jarg2; 
+  arg3 = (long)jarg3; 
+  {
+    if (!jarg4) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if (jenv->GetArrayLength(jarg4) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    temp4 = (double)0;
+    arg4 = &temp4; 
+  }
+  {
+    if (!jarg5) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if (jenv->GetArrayLength(jarg5) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    temp5 = (double)0;
+    arg5 = &temp5; 
+  }
+  result = (bool)(arg1)->GetTableCellProtectionLevels(arg2,arg3,arg4,arg5);
+  jresult = (jboolean)result; 
+  {
+    jdouble jvalue = (jdouble)temp4;
+    jenv->SetDoubleArrayRegion(jarg4, 0, 1, &jvalue);
+  }
+  {
+    jdouble jvalue = (jdouble)temp5;
+    jenv->SetDoubleArrayRegion(jarg5, 0, 1, &jvalue);
+  }
+  
+  
+  return jresult;
+}
+
+
 SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauArgus_1GetTableCellStatus(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3, jintArray jarg4) {
   jboolean jresult = 0 ;
   TauArgus *arg1 = (TauArgus *) 0 ;
@@ -4205,6 +4262,29 @@ SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauA
   jresult = (jboolean)result; 
   SWIG_JavaArrayArgoutLong(jenv, jarr3, (long *)arg3, jarg3); 
   delete [] arg3; 
+  return jresult;
+}
+
+
+SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauArgus_1SetTableCellProtectionLevels(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3, jdouble jarg4, jdouble jarg5) {
+  jboolean jresult = 0 ;
+  TauArgus *arg1 = (TauArgus *) 0 ;
+  long arg2 ;
+  long arg3 ;
+  double arg4 ;
+  double arg5 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(TauArgus **)&jarg1; 
+  arg2 = (long)jarg2; 
+  arg3 = (long)jarg3; 
+  arg4 = (double)jarg4; 
+  arg5 = (double)jarg5; 
+  result = (bool)(arg1)->SetTableCellProtectionLevels(arg2,arg3,arg4,arg5);
+  jresult = (jboolean)result; 
   return jresult;
 }
 

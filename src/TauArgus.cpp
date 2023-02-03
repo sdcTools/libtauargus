@@ -955,6 +955,22 @@ bool TauArgus::UndoRecode(long VarIndex)
     return true;
 }
 
+bool TauArgus::SetTableCellProtectionLevels(long TableIndex, long CellIndex, double LPL, double UPL)
+{
+        if (!m_CompletedCodeList)  {
+        return false;
+    }
+
+    CTable *table = GetTable(TableIndex);
+
+    CDataCell *dc = table->GetCell(CellIndex);
+
+    dc->SetLowerProtectionLevel(LPL);
+    dc->SetUpperProtectionLevel(UPL);
+
+    return true;
+}
+
 bool TauArgus::SetTableCellStatus(long TableIndex, long CellIndex, long CellStatus)
 {
         if (!m_CompletedCodeList)  {
@@ -1355,6 +1371,22 @@ bool TauArgus::GetTableCellValue(long TableIndex, long CellIndex, double *CellRe
 
     *CellResponse = dc->GetResp();
 
+    return true;
+}
+
+bool TauArgus::GetTableCellProtectionLevels(long TableIndex, long CellIndex, double *lpl, double *upl)
+{
+    if (!m_CompletedCodeList)  {
+        return false;
+    }
+    
+    CTable *table = GetTable(TableIndex);
+
+    CDataCell *dc = table->GetCell(CellIndex);
+
+    *lpl = dc->GetLowerProtectionLevel();
+    *upl = dc->GetUpperProtectionLevel();
+    
     return true;
 }
 
