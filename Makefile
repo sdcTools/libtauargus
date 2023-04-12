@@ -57,7 +57,8 @@ OUTDIR          = $(DISTFILEDIR)
 # ====================================================
 SFLAGS          = -c++ -I./src -java -package $(JAVAPACKAGE) -outdir $(OUTDIR) 
 CFLAGS          = -Wall $(BITS) -std=c++11 -fPIC -Wno-unused-function -fno-strict-aliasing
-CFLAGS          += -O2 -g#-DNDEBUG -O2
+#CFLAGS          += -O2 -g#-DNDEBUG -O2
+CFLAGS          += -O2 -ggdb -g3#-DNDEBUG -O2
 CFLAGS          += $(JAVAINC)
 LDFLAGS         = $(CFLAGS) -Wl,--subsystem,windows -Wl,--kill-at -shared -static-libgcc -static-libstdc++
 

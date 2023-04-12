@@ -227,7 +227,7 @@ public:
 	long WriteGHMITERDataCell(/*[in]*/ const char* FileName, /*[in]*/ long TableIndex, bool IsSingleton);
 	long WriteGHMITERSteuer(/*[in]*/ const char* FileName, /*[in]*/ const char* EndString1, /*[in]*/ const char* EndString2, /*[in]*/ long TableIndex);
 	bool GetVarCodeProperties(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/  long * IsParent, /*[in,out]*/  long * IsActive, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level, /*[in,out]*/ long * nChildren, /*[in,out]*/ const char** Code);
-	//bool UnsafeVariableCodes(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ const char** Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray);
+        //bool UnsafeVariableCodes(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ const char** Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray);
         bool UnsafeVariableCodes(/*[in]*/  long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long *  Freq, /*[in,out]*/ std::string * Code, /*[in,out]*/ long * Count, /*[in,out]*/ long * UCArray);
 	//bool GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ const char ** CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
         bool GetVarCode(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in,out]*/ long * CodeType, /*[in,out]*/ std::string * CodeString, /*[in,out]*/ long * IsMissing, /*[in,out]*/ long * Level);
@@ -263,6 +263,7 @@ public:
 		/*[in]*/ bool IsHolding, /*[in]*/ bool IsRecordKey);
 	bool DoActiveRecode(/*[in]*/ long VarIndex);
 	bool GetVarNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes, /*[in,out]*/ long * NumberOfActiveCodes);
+        bool GetTotalNumberOfCodes(/*[in]*/ long VarIndex, /*[in,out]*/ long *NumberOfCodes);
 	bool SetVarCodeActive(/*[in]*/ long VarIndex, /*[in]*/ long CodeIndex, /*[in]*/ bool Active);
 	bool GetStatusAndCostPerDim(/*[in]*/ long TableIndex, /*[in,out]*/ long *Status, /*[in,out]*/ double *Cost);
 	bool SetTableCellStatus(/*[in]*/ long TableIndex, /*[in,out]*/ long * DimIndex, /*[in]*/ long CelStatus);

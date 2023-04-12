@@ -4194,6 +4194,42 @@ SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauA
 }
 
 
+SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauArgus_1GetTotalNumberOfCodes(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jintArray jarg3) {
+  jboolean jresult = 0 ;
+  TauArgus *arg1 = (TauArgus *) 0 ;
+  long arg2 ;
+  long *arg3 = (long *) 0 ;
+  long temp3 ;
+  bool result;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(TauArgus **)&jarg1; 
+  arg2 = (long)jarg2; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if (jenv->GetArrayLength(jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    temp3 = (long)0;
+    arg3 = &temp3; 
+  }
+  result = (bool)(arg1)->GetTotalNumberOfCodes(arg2,arg3);
+  jresult = (jboolean)result; 
+  {
+    jint jvalue = (jint)temp3;
+    jenv->SetIntArrayRegion(jarg3, 0, 1, &jvalue);
+  }
+  
+  return jresult;
+}
+
+
 SWIGEXPORT jboolean JNICALL Java_tauargus_extern_dataengine_TauArgusJavaJNI_TauArgus_1SetVarCodeActive(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jint jarg2, jint jarg3, jboolean jarg4) {
   jboolean jresult = 0 ;
   TauArgus *arg1 = (TauArgus *) 0 ;

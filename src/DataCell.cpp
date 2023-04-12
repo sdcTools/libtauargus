@@ -39,25 +39,25 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 //		fprintf(fd,"%Xh%s\n", this,"		CDatacell		Const		()  ");
 //	fclose(fd);
 	Resp = 0;
-        NWResp = 0;
+    NWResp = 0;
 	Cost = 0;
 	Shadow = 0;
-        CellKey = 0;
-        CellKeyNoZeros = 0;
+    CellKey = 0;
+    CellKeyNoZeros = 0;
 	Freq = 0;
 	Weight = 0;
 	FreqHolding = 0;
 	RoundedResp = 0;
-        CTAValue = 0;
-        CKMValue = 0;
-        // Needed for CKMType = "D"
-        // Set to large double 
-        MinScoreCell = BIGNUMBER;
-        MinScoreWeightCell = 0;        
+    CTAValue = 0;
+    CKMValue = 0;
+    // Needed for CKMType = "D"
+    // Set to large double 
+    MinScoreCell = BIGNUMBER;
+    MinScoreWeightCell = 0;        
 
 	Status = CS_EMPTY;
 	TempShadow = 0;
-        HoldingNr = IsHolding ? WITH_HOLDING : WITHOUT_HOLDING;
+    HoldingNr = IsHolding ? WITH_HOLDING : WITHOUT_HOLDING;
 	PeepSortCell = EMPTY;
 	PeepSortHolding = EMPTY;
 	TempPeepSort = EMPTY;
@@ -71,39 +71,39 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 	LowerProtectionLevel = 0;
 	UpperProtectionLevel = 0;
         
-        MaxScoreCell = 0; //initialize to NULL
-        MaxScoreWeightCell = 0; //initialize to NULL
-        MaxScoreHolding = 0; //initialize to NULL
-        MaxScoreWeightHolding = 0; //initialize to NULL
-        HoldingnrPerMaxScore = 0; //initialize to NULL
+    MaxScoreCell = 0; //initialize to NULL
+    MaxScoreWeightCell = 0; //initialize to NULL
+    MaxScoreHolding = 0; //initialize to NULL
+    MaxScoreWeightHolding = 0; //initialize to NULL
+    HoldingnrPerMaxScore = 0; //initialize to NULL
 
 	nMaxScoreCell = NumberMaxScoreCell;
 	if (nMaxScoreCell > 0){
-            // allocate memory for MaxScore and MaxScoreWeight
-            // and fill with values 0.0
-            MaxScoreCell = new double[nMaxScoreCell];
-            memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
+        // allocate memory for MaxScore and MaxScoreWeight
+        // and fill with values 0.0
+        MaxScoreCell = new double[nMaxScoreCell];
+        memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
 
-            if (IsWeight){
-		MaxScoreWeightCell = new double[nMaxScoreCell];
-		memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
-            }
+		if (IsWeight){
+			MaxScoreWeightCell = new double[nMaxScoreCell];
+			memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
+        }
 	}
 
 	nMaxScoreHolding = NumberMaxScoreHolding;
 	if (IsHolding && nMaxScoreHolding > 0){
-            // allocate memory for MaxScore and MaxScoreWeight
-            MaxScoreHolding = new double[nMaxScoreHolding];
-            memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
+        // allocate memory for MaxScore and MaxScoreWeight
+        MaxScoreHolding = new double[nMaxScoreHolding];
+        memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
             
-            if (IsWeight){
-		MaxScoreWeightHolding = new double[nMaxScoreHolding];
-		memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
-            }
+        if (IsWeight){
+			MaxScoreWeightHolding = new double[nMaxScoreHolding];
+			memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
+        }
             
-            // Allocate Memory for HoldingnrMaxScore
-            HoldingnrPerMaxScore = new int[nMaxScoreHolding];
-            memset( HoldingnrPerMaxScore, -1, sizeof(int) * nMaxScoreHolding);
+        // Allocate Memory for HoldingnrMaxScore
+        HoldingnrPerMaxScore = new int[nMaxScoreHolding];
+        memset( HoldingnrPerMaxScore, -1, sizeof(int) * nMaxScoreHolding);
 	}
 
 	IsFilled = false;
@@ -118,17 +118,17 @@ CDataCell::CDataCell()
 //	fprintf(fd,"%Xh%s\n", this,"		CDatacell		Const		()  ");
 //	fclose(fd);
 	Resp = 0;
-        NWResp = 0;
+    NWResp = 0;
 	Cost = 0;
 	Shadow = 0;
-        CellKey = 0;
-        CellKeyNoZeros = 0;
+    CellKey = 0;
+    CellKeyNoZeros = 0;
 	Freq = 0;
 	Weight = 0;
 	FreqHolding = 0;
 	RoundedResp = 0;
 	CTAValue = 0;
-        CKMValue = 0;
+    CKMValue = 0;
 
 	Status = CS_EMPTY;
 	TempShadow = 0;
@@ -146,10 +146,10 @@ CDataCell::CDataCell()
 	LowerProtectionLevel = 0;
 	UpperProtectionLevel = 0;
         
-        // Needed for CKMType = "D"
-        // Set to large double 
-        MinScoreCell = BIGNUMBER;
-        MinScoreWeightCell = 0;
+    // Needed for CKMType = "D"
+    // Set to large double 
+    MinScoreCell = BIGNUMBER;
+    MinScoreWeightCell = 0;
 
 	nMaxScoreCell = 0;
 	MaxScoreCell = 0;
@@ -189,34 +189,34 @@ void CDataCell::MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n)
 
     for (i= 0; i< n; i++){
         tempbval[i] = b[i];
-	tempbhol[i] = bh[i];
+		tempbhol[i] = bh[i];
     }
 
     // add holdings that are equal with b and put a[i] in the temp
     for (i=0; i<n; i ++){
-	for (j= 0; j<n; j++){
-            if ((ah[i] == tempbhol[j])){
-		 a[i] = a[i] + tempbval[j];
-		 tempbval[j] = a[i] + tempbval[j];
-            }
-	}
+		for (j= 0; j<n; j++){
+			if ((ah[i] == tempbhol[j])){
+				a[i] = a[i] + tempbval[j];
+				tempbval[j] = a[i] + tempbval[j];
+			}
+		}
     }
 	
     for (i = 0; i < n; i++){
-	if (tempbval[i] > a[ai]){
+		if (tempbval[i] > a[ai]){
 			// shift down
-            for (j = n - 2; j >= ai; j--){
-		a[j + 1] = a[j];
-		ah[j + 1] = ah[j];
-            }
-            a[ai] = tempbval[i];
-            ah[ai] = tempbhol[i];
-	} 
-        else{
+			for (j = n - 2; j >= ai; j--){
+				a[j + 1] = a[j];
+				ah[j + 1] = ah[j];
+			}
+			a[ai] = tempbval[i];
+			ah[ai] = tempbhol[i];
+		} 
+		else{
             ai++;
             i--;
-	}
-	if (ai == n) break; // all elements from b smaller than a
+		}
+		if (ai == n) break; // all elements from b smaller than a
     }
     delete [] tempbval;
     delete [] tempbhol;
@@ -230,24 +230,24 @@ void CDataCell::MergeScore(double *a, double *aw, double* b, double *bw, int n) 
     if (b == 0) return; // no scores
 
     for (i = 0; i < n; i++){
-	if (b[i] > a[ai]){
-            // shift down
+		if (b[i] > a[ai]){
+        // shift down
             for (j = n - 2; j >= ai; j--){
-		a[j + 1] = a[j];
-		if (aw != 0){
+				a[j + 1] = a[j];
+				if (aw != 0){
                     aw[j + 1] = aw[j];
-		}
+				}
             }
             a[ai] = b[i];
             if ((aw != 0) && (bw != 0 )){
-		aw[ai++] = bw[i];
+				aw[ai++] = bw[i];
             }
-	} 
-	else{
+		} 
+		else{
             ai++;
             i--;
-	}
-	if (ai == n) break; // all elements from b smaller than a
+		}
+		if (ai == n) break; // all elements from b smaller than a
     }
 }
 
@@ -284,11 +284,10 @@ double CDataCell::GetPQCell(double p, double q, long n, bool ApplyWeight, bool A
 			s += MaxScoreCell[i];
 		}
 		return (p / 100) * MaxScoreCell[0] + (q / 100) * (s - Shadow);
-  }
+	}
 
-  // Apply weight // Is this correct?
-	return (p / 100) * MaxScoreCell[0] + (q / 100) * 
-		(ComputeWeightedScoreCell(true,n+1) - Shadow);
+	// Apply weight // Is this correct?
+	return (p / 100) * MaxScoreCell[0] + (q / 100) * (ComputeWeightedScoreCell(true,n+1) - Shadow);
 }
 
 //  gets PQ holding

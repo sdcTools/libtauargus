@@ -1149,6 +1149,18 @@ bool TauArgus::GetVarNumberOfCodes(long VarIndex, long *NumberOfCodes, long *Num
     return true;
 }
 
+// Get the number of codes for the given variable, without any recode
+bool TauArgus::GetTotalNumberOfCodes(long VarIndex, long *NumberOfCodes)
+{
+    if (VarIndex < 0 || VarIndex >= m_nvar) {
+    	return false;
+    }
+
+    *NumberOfCodes = m_var[VarIndex].nCode;
+
+    return true;
+}
+
 // Do recode for all active codes
 bool TauArgus::DoActiveRecode(long VarIndex)
 {

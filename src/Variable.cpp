@@ -305,12 +305,11 @@ int CVariable::GetnCodeInActive()
 // be done for a categorical variable
 std::string CVariable::GetCode(int i)
 {
-	//string s; // not used?
-
-	if (HasRecode) {
-		return Recode.sCode[i];
-	}
-	return sCode[i];
+    //string s; // not used?
+    if (HasRecode) {
+	return Recode.sCode[i];
+    }
+    return sCode[i];
 }
 
 
@@ -327,30 +326,28 @@ int CVariable::GetLevel(int i)
 // returns number of missing
 int CVariable::GetnMissing()
 {
-  if (HasRecode) {
-		return Recode.nMissing;
-	}
-	return nMissing;
-
+    if (HasRecode) {
+	return Recode.nMissing;
+    }
+    return nMissing;
 }
 
 // returns codelist
 vector<string> * CVariable::GetCodeList()
 {
-  if (HasRecode) {
-		return &(Recode.sCode);
-	}
-	return &(sCode);
+    if (HasRecode) {
+	return &(Recode.sCode);
+    }
+    return &(sCode);
 }
 
 // returns hierarchical code
 CCode* CVariable::GethCode()
 {
-  if (HasRecode) {
-		return Recode.hCode;
-	}
-	return hCode;
-
+    if (HasRecode){
+	return Recode.hCode;
+    }
+    return hCode;
 }
 
 // only for non hierarchical variables

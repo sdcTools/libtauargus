@@ -29,18 +29,18 @@ class CDataCell
 {
 protected:
 	double	Resp;    // Response, weighted if needed
-        double  NWResp;  // Non-weighted response, needed to apply cell key method to weighted tables
+    double  NWResp;  // Non-weighted response, needed to apply cell key method to weighted tables
 	double	Cost;    // value depends on CostVarnr
 	double	Shadow;  // only relevant for primary suppression pattern
-        double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
-        double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
+    double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
+    double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
 	long	Freq;
 	double	Weight;
 	long	FreqHolding;
 	//long    RoundedResp;
-        double  RoundedResp;
+    double  RoundedResp;
 	double  CTAValue;
-        double  CKMValue;
+    double  CKMValue;
 
 	int	Status;
 	double	TempShadow;
@@ -63,18 +63,18 @@ protected:
         
 // Construction
 public:
-	CDataCell(int MaxScoreCell, int MaxScoreHolding, int IsHolding, int IsWeight );
+	CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHolding, int IsWeight );
 	CDataCell();
-        void Write();
+    void Write();
 
 // Operations
 public:
 
 // Implementation
 public:
-        // Needed for CKMType = "D"
-        double MinScoreCell;// Shadow, unweighted
-        double MinScoreWeightCell; // corresponding weight
+    // Needed for CKMType = "D"
+    double MinScoreCell;// Shadow, unweighted
+    double MinScoreWeightCell; // corresponding weight
         
 	int nMaxScoreCell;
 	double *MaxScoreCell;// Shadow, ongewogen!
