@@ -119,8 +119,8 @@ public:
 	long PeepMinFreqHold;
 
 
-	int SafeMinRec; //Minimaal aantal bijdragers
-	int SafeMinHoldings; // minimum aantal holdings
+	int SafeMinRec; // Minimum number of contributors
+	int SafeMinHoldings; // Minimum number of holdings
 /// Safety Margins
 
 	long CellFreqSafetyPerc;
@@ -129,7 +129,7 @@ public:
 	long NSEmptySafetyRange;
 	long SingletonSafetyRangePerc;
 	double ZeroSafetyRange;
-
+        
 	// Operations
 
 	// have to make the operator =

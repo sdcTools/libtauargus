@@ -67,7 +67,7 @@ public:
 	double MaxValue;        //                         maximum in data file
 
 
-	std::vector<std::string> sCode;			// For categorical variables: list of codes generated from microfile or from a file
+	std::vector<std::string> sCode;		// For categorical variables: list of codes generated from microfile or from a file
 	std::vector<unsigned char> hLevel;      // Levels hierarchical codelist, nCodes long
 	std::vector<unsigned char> hLevelBasic; // Basic code hierarchical codelist, nCodes long
 

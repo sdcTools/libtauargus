@@ -9,7 +9,7 @@ CP              = cp -p
 32BIT           = true
 #32BIT           = false
 
-SWIGDIR         = D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.1
+SWIGDIR         = D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.2
 
 ifeq ($(32BIT), false)  # 64 bit assumed
     BITS        = -m64 -D_LP64

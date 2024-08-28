@@ -31,7 +31,7 @@ public:
   bool WriteCellDim(FILE *fd, CTable &tab, CVariable *var, long *dimsCell, long *dimsCodeList, int niv);
 	bool WriteCellFile(LPCTSTR FileName, CTable &tab, CVariable *var);
 	bool WriteFilesFile(FILE *fd, CTable& tab, CVariable *var);
-	bool WriteParameterFile(FILE *fd, CTable& tab);
+	//bool WriteParameterFile(FILE *fd, CTable& tab);
 	std::string TempPath;
 	CHitas();
 	virtual ~CHitas();

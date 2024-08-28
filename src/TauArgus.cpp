@@ -362,8 +362,8 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
     m_var[v].Recode.sCode.push_back(""); // for Total
 
     // another time, now compute list of dest codes
-    ParseRecodeString(v, RecodeString, ErrorType, ErrorLine, ErrorPos, DESTCODE);
-    if (m_var[v].Recode.sCode.size() < 2){
+        ParseRecodeString(v, RecodeString, ErrorType, ErrorLine, ErrorPos, DESTCODE);
+        if (m_var[v].Recode.sCode.size() < 2){
 	*ErrorType = E_EMPTYSPEC;
 	*ErrorLine = 1;
 	*ErrorPos = 1;
@@ -377,8 +377,8 @@ bool TauArgus::DoRecode(long VarIndex, const char* RecodeString, long nMissing, 
     // m_var[v].Recode.nCode = m_var[v].Recode.sCode.GetSize();
 
     // again, now compute dest codes and link between dest and src
-    oke = ParseRecodeString(v, RecodeString, ErrorType, ErrorLine, ErrorPos, SRCCODE);
-    if (!oke){
+        oke = ParseRecodeString(v, RecodeString, ErrorType, ErrorLine, ErrorPos, SRCCODE);
+        if (!oke){
 	return false; // missing to valid codes, a terrible shame
     }
 
@@ -1627,7 +1627,7 @@ bool TauArgus::SetTableSafety(long Index, bool DominanceRule,
 //Hitas for secondary supressions
 bool TauArgus::PrepareHITAS(long TableIndex, const char* NameParameterFile, const char* NameFilesFile, const char* TauTemp)
 {
-    m_hitas.TempPath = TauTemp; // Temp doorgeven vanuit de TAU ipv zlf bepalen.
+    m_hitas.TempPath = TauTemp; // Use Temp directory passed by TAU
 
     long t = TableIndex;
 
@@ -1648,7 +1648,7 @@ bool TauArgus::PrepareHITAS(long TableIndex, const char* NameParameterFile, cons
 	return false;
     }
 
-    if (!m_hitas.WriteParameterFile(fdParameter, m_tab[t]) ) goto error;
+    //if (!m_hitas.WriteParameterFile(fdParameter, m_tab[t]) ) goto error; // Is now taken care of in tau-argus GUI (Java)
     if (!m_hitas.WriteFilesFile(fdFiles, m_tab[t], m_var) ) goto error;
 
     fclose(fdParameter);

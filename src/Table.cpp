@@ -128,7 +128,7 @@ void CTable:: operator = (CTable &table2)
 	ApplyPeeper = table2.ApplyPeeper;
         ApplyZeroRule = table2.ApplyZeroRule;
 	EmptyCellsAsNSEmpty = table2.EmptyCellsAsNSEmpty;
-
+        
 	HasRecode = table2.HasRecode ;
 }
 
@@ -941,60 +941,58 @@ bool CTable::GetIndicesFromCellNr(long CellNr, long *Indices)
 // cells that are secondary unsafe are reset to safe.
 void CTable::UndoSecondarySuppress(long SortSuppress)
 {
-	long i;
-	CDataCell *dc;
-// set realized upper and upper to initial values
-	for (i = 0; i < nCell; i++) {
-		dc = GetCell(i);
-		dc->SetRealizedUpperValue(0);
-		dc->SetRealizedLowerValue(0);
-		dc->SetCTAValue(0);
-		switch (SortSuppress)	{
-			case WITHOUT_SINGLETON:
-				switch (dc->GetStatus()) {
-					case CS_SECONDARY_UNSAFE:
-						if (dc->GetFreq() == 0 ) {
-							dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
-								else {
-								dc->SetStatus(CS_SAFE);};
-						break;
-					case CS_SECONDARY_UNSAFE_MANUAL:
-						dc->SetStatus(CS_SAFE_MANUAL);
-						break;
-				}
-				break;
-			case WITH_SINGLETON:
-				switch (dc->GetStatus()) {
-					case CS_UNSAFE_SINGLETON:
-						dc->SetStatus(CS_SAFE);
-						break;
-					case CS_UNSAFE_SINGLETON_MANUAL:
-						dc->SetStatus(CS_SAFE_MANUAL);
-						break;
-				}
-				break;
-
-				case BOTH:
-					switch (dc->GetStatus()) {
-						case CS_SECONDARY_UNSAFE:
-						if (dc->GetFreq() == 0 ) {
-							dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
-								else {
-								dc->SetStatus(CS_SAFE);};
-							break;
-						case CS_SECONDARY_UNSAFE_MANUAL:
-							dc->SetStatus(CS_SAFE_MANUAL);
-							break;
-						case CS_UNSAFE_SINGLETON:
-							dc->SetStatus(CS_SAFE);
-							break;
-						case CS_UNSAFE_SINGLETON_MANUAL:
-							dc->SetStatus(CS_SAFE_MANUAL);
-							break;
-				}
-
-			}
+    long i;
+    CDataCell *dc;
+    // set realized lower and upper to initial values
+    for (i = 0; i < nCell; i++) {
+	dc = GetCell(i);
+	dc->SetRealizedUpperValue(0);
+	dc->SetRealizedLowerValue(0);
+	dc->SetCTAValue(0);
+	switch (SortSuppress){
+            case WITHOUT_SINGLETON:
+		switch (dc->GetStatus()) {
+                    case CS_SECONDARY_UNSAFE:
+			if (dc->GetFreq() == 0 ) {
+                            dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
+			else {
+                            dc->SetStatus(CS_SAFE);};
+			break;
+                    case CS_SECONDARY_UNSAFE_MANUAL:
+                        dc->SetStatus(CS_SAFE_MANUAL);
+			break;
 		}
+		break;
+            case WITH_SINGLETON:
+		switch (dc->GetStatus()) {
+                    case CS_UNSAFE_SINGLETON:
+			dc->SetStatus(CS_SAFE);
+                        break;
+                    case CS_UNSAFE_SINGLETON_MANUAL:
+                        dc->SetStatus(CS_SAFE_MANUAL);
+                        break;
+		}
+		break;
+            case BOTH:
+		switch (dc->GetStatus()) {
+                    case CS_SECONDARY_UNSAFE:
+			if (dc->GetFreq() == 0 ) {
+                            dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
+			else {
+                            dc->SetStatus(CS_SAFE);};
+			break;
+                    case CS_SECONDARY_UNSAFE_MANUAL:
+                      	dc->SetStatus(CS_SAFE_MANUAL);
+			break;
+                    case CS_UNSAFE_SINGLETON:
+			dc->SetStatus(CS_SAFE);
+			break;
+                    case CS_UNSAFE_SINGLETON_MANUAL:
+			dc->SetStatus(CS_SAFE_MANUAL);
+			break;
+		}
+	}
+    }
 }
 
 // Get Status and Cost per Explanatory variable

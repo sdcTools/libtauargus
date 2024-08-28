@@ -43,80 +43,15 @@ CHitas::~CHitas()
 {
 }
 
-/*
-[Frequency rule]
-MINCOUNT=3    ; Cell should contain at least (MINCOUNT + 1) contributants  // SafeMinRec minus 1 in avdw's geval
-
-[Dominance rule] //  !!! is vervallen !!!!
-DOMCOUNT=1    ; Largest DOMCOUNT should contribute less than
-DOMPRO=0.7    ; DOMPRO times cellvalue
-
-[Safety ranges]
-LOWERMARG=0.99    ; lowerbound in case of marginal cell // zo laten
-UPPERMARG=1.01    ; same for upperbound                 // zo laten
-
-[Costs]
-DISTANCE=0    ; 0 if cost specified in BTab.dat, 1 if distance is to be used // 0 geen afstandsfunctie, 1 Anco
-D1=1 3 5 9 17   ; costs var1 distance=1, 2, 3, 4, 5 (=max cost)
-D2=1 3 5 9 17   ; costs var2 distance=1, 2, 3, 4, 5 (=max cost)
-D3=1 3 5 17 17    ; costs var3 distance=1, 2, 3, 4, 5 (=max cost)
-
-[Misc]
-MINTABVAL=0     ; Each cell is non-negative      // ondergrens 
-MAXTABVAL=150000000   ; and less than MAXTABVAL  // totaal generaal van Resp (Shadow? Anco)
-OUTDIR=c:/knb/hitas/test/  ; Will contain ouput-files (= TEMP-dir?) // werkdirectory
-*/
-
-
-bool CHitas::WriteParameterFile(FILE *fd, CTable& tab)
-{
-	fprintf(fd, "[Frequency rule]\n");
-	fprintf(fd, "MINCOUNT=%d\n\n", tab.SafeMinRec);
-
-	/*
-	fprintf(fd, "[Dominance rule]\n");
-	fprintf(fd, "DOMCOUNT=%d\n", tab.DominanceNumber);  
-	fprintf(fd, "DOMPRO=0.%d\n\n", tab.DominancePerc);   
-  */
-	
-	fprintf(fd, "[Safety ranges]\n");
-	fprintf(fd, "LOWERMARG=0.99\n");
-	fprintf(fd, "UPPERMARG=1.01\n\n");
-
-	fprintf(fd, "[Misc]\n");
-	fprintf(fd, "MINTABVAL=0\n");
-	fprintf(fd, "MAXTABVAL=%.0f\n\n", tab.GetCell(0L)->GetResp() * 1.5); // should be enough
-//	MakeTempPath(); Wordt nu door TAU doorgegeven.
-//	fprintf(fd, "OUTDIR=%s\n\n", (LPCTSTR) TempPath);
-
-	fprintf(fd, "[Costs]\n");
-	fprintf(fd, "DISTANCE=0\n");
-
-	return true;
-}
-
-/*
-3                                            // aantal dimensies tabel
-c:\knb\hitas\test3\data\SBI3.txt             // naam bestand met opspanvariabele 1
-c:\knb\hitas\test3\data\GK3.txt              // naam bestand met opspanvariabele 2
-c:\knb\hitas\test3\data\Regio3.txt           // naam bestand met opspanvariabele 3
-c:\knb\hitas\test3\data\BTab.dat             // naam bestand met basistabel
-c:\knb\hitas\test\status3.dat                // naam bestand met resultaat (alleen secundaire cellen)
-*/
-
 bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 { 
 	int i;
-//	string fname/*, varname*/;
-	//char fname[MAX_PATH];
-	//char varname[10];
         string fname;
         string varname;
-	fprintf(fd, "%ld\n", tab.nDim); // dimensies
+	fprintf(fd, "%ld\n", tab.nDim); // number of dimensions
 
 	// name files with codelists
 	for (i = 0; i < tab.nDim; i++) {
-		//sprintf(fname, "%shitasv%d.txt", TempPath.c_str(), i + 1);
                 fname = TempPath + "hitasv" + std::to_string(i+1) + ".txt";
                 varname = "Var_" + std::to_string(i+1);
 		fprintf(fd, "%s\n", fname.c_str());
@@ -124,14 +59,12 @@ bool CHitas::WriteFilesFile(FILE *fd, CTable &tab, CVariable *var)
 	}
 
 	// name file with table
-	//sprintf(fname, "%s%s", TempPath.c_str(), NameTabFile.c_str());
         fname = TempPath + NameTabFile;
 	fprintf(fd, "%s\n", fname.c_str());
 	// write cells
 	WriteCellFile(fname.c_str(), tab, var);
 
 	// name file for result with secondary cell dimensions
-	//sprintf(fname, "%s%s", TempPath.c_str(), NameSecFile.c_str());
         fname = TempPath + NameSecFile;
 	fprintf(fd, "%s\n", fname.c_str());
 
