@@ -5114,112 +5114,102 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 
 
 	if (niv == tab->nDim) {
-		CVariable *v = &(m_var[tab->ExplVarnr[TargetDim]]);
-		int nCode = v->GetnCode();
-		if (v->IsHierarchical) {
-			int i, j, k;
-
-			for (i = 0, k = 0; i < nCode; i++) {
-//				sum =0; test = 0;
-				int n = GetChildren(*v,i,Children);
-
-				if (n > 0) {
-          // count number of bogus codes before code i
-
-					DimNr[TargetDim] = k;
-					sum = 0;
-
-					tempDimNr = tab->GetCellNrFromIndices(DimNr);
-					dctemp = tab->GetCell(DimNr);
-					//test = dc->GetResp();
-					//fprintf(fd, "0.0 %d : %d (-1) ", n + 1, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
-					sum = 0;
-					addcell = new CDataCell(tab->NumberofMaxScoreCell,
-						tab->NumberofMaxScoreHolding, tab->ApplyHolding, tab->ApplyWeight );
-					addcell->SetStatus(0);
-					for (j = 0; j < n; j++) {
-						long RealCode = Children[j];
-  						DimNr[TargetDim] = RealCode;
-    					//fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp));
-						dc = tab-> GetCell(DimNr);
-						sum = sum + dc->GetResp();
-						*addcell += *dc;
-					}
-					if (!dctemp->Compare(*addcell))	{
-
-					//dctemp = addcell; //maybe I need a way to set equality
-					//delete[] dctemp;
-						if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
-							delete dctemp;
-						}
-						tab->CellPtr[tempDimNr] = addcell;
-					}
-					else {
-						delete addcell;
-					}
-				}
-				k++;
-			}
-			//now do the check
-
-		}
-		else {  // not hierarchical
-			DimNr[TargetDim] = 0;
+            CVariable *v = &(m_var[tab->ExplVarnr[TargetDim]]);
+            int nCode = v->GetnCode();
+            if (v->IsHierarchical) {
+		int i, j, k;
+		for (i = 0, k = 0; i < nCode; i++) {
+//                  sum =0; test = 0;
+                    int n = GetChildren(*v,i,Children);
+                    if (n > 0) {
+                    // count number of bogus codes before code i
+			DimNr[TargetDim] = k;
 			sum = 0;
 			tempDimNr = tab->GetCellNrFromIndices(DimNr);
 			dctemp = tab->GetCell(DimNr);
-			//test = dctemp->GetResp(); // Is not used ??? PWOF 20170127
-			//fprintf(fd, "0.0 %d : %d (-1) ", nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
-			addcell = new CDataCell(tab->NumberofMaxScoreCell, tab->NumberofMaxScoreCell,
-				tab->ApplyHolding, tab->ApplyWeight);
+			//test = dc->GetResp();
+			//fprintf(fd, "0.0 %d : %d (-1) ", n + 1, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+			sum = 0;
+			addcell = new CDataCell(tab->NumberofMaxScoreCell,
+                                                tab->NumberofMaxScoreHolding, tab->ApplyHolding, tab->ApplyWeight );
 			addcell->SetStatus(0);
-			for (int i = 1; i < nCode; i++) {
-				DimNr[TargetDim] = i;
-				//fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
-				dc = tab->GetCell(DimNr);
-				sum = sum + dc->GetResp();
-				*addcell += *dc;
+			for (j = 0; j < n; j++) {
+                            long RealCode = Children[j];
+                            DimNr[TargetDim] = RealCode;
+                            //fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp));
+                            dc = tab-> GetCell(DimNr);
+                            sum = sum + dc->GetResp();
+                            *addcell += *dc;
 			}
-
-			//if (test != sum) {
-			//	*IsGoodTable = false;
-			//}
 			if (!dctemp->Compare(*addcell))	{
-			//if (dctemp != addcell)	{
-				//dctemp = addcell; //maybe I need a way to set equality
-				//delete [] dctemp;
-				if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
-					delete dctemp;
-				}
-				tab->CellPtr[tempDimNr] = addcell;
+                            //dctemp = addcell; //maybe I need a way to set equality
+                            //delete[] dctemp;
+                            if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
+                                delete dctemp;
+                            }
+                            tab->CellPtr[tempDimNr] = addcell;
 			}
 			else {
-
-				delete addcell;
+                            delete addcell;
 			}
-                        // Does not do anything ??? PWOF 20170127
-			//dcramya = tab->GetCell(tempDimNr);
+                    }
+                    k++;
 		}
-
-	}
-	else {
-		if (niv != TargetDim) {
-			int i, j;
-			CVariable *v = &(m_var[tab->ExplVarnr[niv]]);
-			int nCode = v->GetnCode();
-  			for (i = 0, j = 0; i < nCode; i++) {
-				if (!v->IsHierarchical || !v->GethCode()[i].IsBogus) {
-					//) {
-					DimNr[niv] = j++;
-					//WriteRange(fd, tab, var, TargetDim, DimNr, niv + 1, WithBogus, tdp);
-					AdjustNonBasalCells(tab, TargetDim, DimNr, niv + 1);
-				}
-			}
+		//now do the check
+            }
+            else {  // not hierarchical
+		DimNr[TargetDim] = 0;
+		sum = 0;
+		tempDimNr = tab->GetCellNrFromIndices(DimNr);
+		dctemp = tab->GetCell(DimNr);
+		//test = dctemp->GetResp(); // Is not used ??? PWOF 20170127
+		//fprintf(fd, "0.0 %d : %d (-1) ", nCode, GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+		addcell = new CDataCell(tab->NumberofMaxScoreCell, tab->NumberofMaxScoreCell,
+				tab->ApplyHolding, tab->ApplyWeight);
+		addcell->SetStatus(0);
+		for (int i = 1; i < nCode; i++) {
+                    DimNr[TargetDim] = i;
+                    //fprintf(fd, "%d (1) ", GetCellNrFromIndices(tab->nDim, DimNr, tdp) );
+                    dc = tab->GetCell(DimNr);
+                    sum = sum + dc->GetResp();
+                    *addcell += *dc;
+		}
+		//if (test != sum) {
+		//	*IsGoodTable = false;
+		//}
+		if (!dctemp->Compare(*addcell))	{
+		//if (dctemp != addcell)	{
+                    //dctemp = addcell; //maybe I need a way to set equality
+                    //delete [] dctemp;
+                    if (!dctemp->Compare(*(tab->GetCell(tab->nCell))))	{
+                        delete dctemp;
+                    }
+                    tab->CellPtr[tempDimNr] = addcell;
 		}
 		else {
-			AdjustNonBasalCells(tab, TargetDim, DimNr, niv + 1);
-
+                    delete addcell;
 		}
+                // Does not do anything ??? PWOF 20170127
+		//dcramya = tab->GetCell(tempDimNr);
+            }
+	}
+	else {
+            if (niv != TargetDim) {
+                int i, j;
+		CVariable *v = &(m_var[tab->ExplVarnr[niv]]);
+		int nCode = v->GetnCode();
+  		for (i = 0, j = 0; i < nCode; i++) {
+                    if (!v->IsHierarchical || !v->GethCode()[i].IsBogus) {
+		//) {
+                        DimNr[niv] = j++;
+                        //WriteRange(fd, tab, var, TargetDim, DimNr, niv + 1, WithBogus, tdp);
+                        AdjustNonBasalCells(tab, TargetDim, DimNr, niv + 1);
+                    }
+		}
+            }
+            else {
+                AdjustNonBasalCells(tab, TargetDim, DimNr, niv + 1);
+            }
 	}
 }
 
