@@ -2319,11 +2319,8 @@ bool TauArgus::SetInTable(long Index, char *sCode[],
 // To state all the cells have been read and the table has to be built.
 // In some case the marginals (or sub totals are given ) in other cases they have to be
 // calculated
-bool TauArgus::CompletedTable(long Index, long *ErrorCode,
-										 const char* FileName,
-										 bool CalculateTotals,
-										 bool SetCalculatedTotalsAsSafe,
-										 bool ForCoverTable)
+bool TauArgus::CompletedTable(long Index, long *ErrorCode, const char* FileName, bool CalculateTotals,
+                                bool SetCalculatedTotalsAsSafe, bool ForCoverTable)
 {
 //	string sFileName;
 //	sFileName = FileName;
@@ -2335,159 +2332,138 @@ bool TauArgus::CompletedTable(long Index, long *ErrorCode,
 	bool IsAdditive = true;
 	int i = 1;
 	if (m_HasStatus)  {
+            for (i=0; i <m_tab[Index].nCell; i++)  {
+		// if not safe or unsafe set empty; all not entered cells
+		dc = m_tab[Index].GetCell(i);
+		if (dc->GetStatus() == 0)  {
+                    //m_tab[Index].CellPtr.SetAt(i,dcempty);
+                    //dc = m_tab[Index].GetCell(i);
+                    dc->SetStatus(CS_EMPTY);
+                    dc->IsFilled = false; //Why false,AncoJuly 2012
+		}
+            }
+            // Sub totals are given. Check if table is additive
+            // CoverTabel always has a status
+            if (!ForCoverTable){
+		if (!CalculateTotals){
+                    if (!IsTable(&(m_tab[Index]))) {
+		    	*ErrorCode = TABLENOTADDITIVE;
+                        WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
+			IsAdditive = false;
+//			return false;
+                    }
+		}
+		// other wise make sub totals
+		else{
+                    long tel = 0;
+                    long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
 
-//  WriteJJFormat(Index, FileName, -1000, 1000, true, false, false);
-//													double LowerBound, double UpperBound,
-//													bool WithBogus, bool AsPerc,
-//													bool ForRounding,
-
-		for (i=0; i <m_tab[Index].nCell; i++)  {
-			// if not safe or unsafe set empty; all not entered cells
+                    while (!IsTable(&(m_tab[Index]))){
+			AdjustTable(&(m_tab[Index]));
+    			// To preven an unending loop
+			tel++;
+			if (tel > maxdiepte + 6 ){break;}
+                    }
+                    
+                    if (tel > maxdiepte + 6){
+			*ErrorCode = CANNOTMAKETOTALS;
+			IsAdditive = false;
+//			return false;
+                    }
+		}
+            }
+            // Calculated totals to be set as safe
+            if (SetCalculatedTotalsAsSafe){
+		for (i=0; i <m_tab[Index].nCell; i++){
+		// if not safe or unsafe set empty
+                    dc = m_tab[Index].GetCell(i);
+                    if (dc->GetStatus() == 0)  {
+			dc->SetStatus(CS_SAFE_MANUAL);
+			dc->IsFilled = false;  //Why false,AncoJuly 2012
+                    }
+		}
+            }
+            // if status is not given. Either frequency or max score is given.
+            // to apply rules
+            else {
+		if (!((m_HasFreq) || (m_HasMaxScore))){
+                    *ErrorCode = CANNOTCALCULATESAFETY;
+                    return false;
+		}
+		else{
+                    for (i=0; i <m_tab[Index].nCell; i++){
+                    // if not safe or unsafe set empty
 			dc = m_tab[Index].GetCell(i);
 			if (dc->GetStatus() == 0)  {
-			//	m_tab[Index].CellPtr.SetAt(i,dcempty);
-			//	dc = m_tab[Index].GetCell(i);
-				dc->SetStatus(CS_EMPTY);
-				dc->IsFilled = false; //Why false,AncoJuly 2012
+                            //	m_tab[Index].CellPtr.SetAt(i,dcempty);
+                            //	dc = m_tab[Index].GetCell(i);
+                            dc->SetStatus(m_tab[Index].ComputeCellSafeCode(*dc));
+                            m_tab[Index].SetProtectionLevelCell(*dc);
+                            dc->IsFilled = false;  //Why false,AncoJuly 2012
 			}
+                    }
 		}
-		// Sub totals are given. Check if table is additive
-		// CoverTabel always has a status
-		if (!ForCoverTable){
-			if (!CalculateTotals)	{
-	    		if (!IsTable(&(m_tab[Index]))) {
-		    		*ErrorCode = TABLENOTADDITIVE;
-     			    WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
-					IsAdditive = false;
-//					return false;
-				}
-			}
+            }
 
-			// other wise make sub totals
-			else
-			{
-				long tel = 0;
-				long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
-
-				while (!IsTable(&(m_tab[Index])))	{
-					AdjustTable(&(m_tab[Index]));
-					// To preven an unending loop
-					tel++;
-					if (tel > maxdiepte + 6 )	{
-
-						break;
-					}
-				}
-
-
-				if (tel > maxdiepte + 6)	{
-					*ErrorCode = CANNOTMAKETOTALS;
-					IsAdditive = false;
-//					return false;
-				}
-			}
-		}
-		// Calculated totals to be set as safe
-		if (SetCalculatedTotalsAsSafe)	{
-			for (i=0; i <m_tab[Index].nCell; i++)  {
-			// if not safe or unsafe set empty
-				dc = m_tab[Index].GetCell(i);
-				if (dc->GetStatus() == 0)  {
-					dc->SetStatus(CS_SAFE_MANUAL);
-					dc->IsFilled = false;  //Why false,AncoJuly 2012
-				}
-			}
-		}
-		// if status is not given. Either frequency or max score is given.
-		// to apply rules
-		else {
-			if (!((m_HasFreq) || (m_HasMaxScore)))	{
-				*ErrorCode = CANNOTCALCULATESAFETY;
-				return false;
-			}
-			else
-			{
-				for (i=0; i <m_tab[Index].nCell; i++)  {
-			// if not safe or unsafe set empty
-					dc = m_tab[Index].GetCell(i);
-					if (dc->GetStatus() == 0)  {
-						//	m_tab[Index].CellPtr.SetAt(i,dcempty);
-						//	dc = m_tab[Index].GetCell(i);
-						dc->SetStatus(m_tab[Index].ComputeCellSafeCode(*dc));
-						m_tab[Index].SetProtectionLevelCell(*dc);
-						dc->IsFilled = false;  //Why false,AncoJuly 2012
-					}
-				}
-			}
-		}
-
-		/// check if is table
-		return IsAdditive;
-
+            /// check if is table
+            return IsAdditive;
 	} // End loop status is given
 
 	if ((m_HasFreq) || (m_HasMaxScore))  {
-		//ComputeCellStatuses(m_tab[Index]);
-
-		//Once more check all statuses are filled
-		for (i=0; i <m_tab[Index].nCell; i++)  {
-			// if not safe or unsafe set empty
-			dc = m_tab[Index].GetCell(i);
-			if (dc->GetStatus() == 0)  {
-				dc->SetStatus(CS_EMPTY);
-			}
+            //ComputeCellStatuses(m_tab[Index]);
+            //Once more check all statuses are filled
+            for (i=0; i <m_tab[Index].nCell; i++)  {
+            // if not safe or unsafe set empty
+                dc = m_tab[Index].GetCell(i);
+		if (dc->GetStatus() == 0)  {
+                    dc->SetStatus(CS_EMPTY);
 		}
-		if (!CalculateTotals)	{
-			if (!IsTable(&(m_tab[Index]))) {
-				// maybe error code shouls show that table is not ok.
-				*ErrorCode = TABLENOTADDITIVE;
-   			    WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
-                IsAdditive = false;
-//				return false;
-			}
+            }
+            if (!CalculateTotals){
+            	if (!IsTable(&(m_tab[Index]))) {
+		// maybe error code shouls show that table is not ok.
+                    *ErrorCode = TABLENOTADDITIVE;
+   		    WriteJJFormat(Index, FileName, -1000, 1000, false, false, false);
+                    IsAdditive = false;
+//                  return false;
 		}
-		else
-		{
-			long tel = 0;
-			long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
-			while (!IsTable(&(m_tab[Index])))	{
-				AdjustTable(&(m_tab[Index]));
-				// To prevent an unending loop
-				tel++;
-				if (tel > maxdiepte+6 )	{
-					break;
-				}
-			}
-
-
-			if (tel > maxdiepte +6)	{
-				*ErrorCode = CANNOTMAKETOTALS;
-				IsAdditive = false;
-//				return false;
-			}
+            }
+            else{
+		long tel = 0;
+		long maxdiepte = MaxDiepteVanSpanVariablen(&(m_tab[Index]));
+		while (!IsTable(&(m_tab[Index]))){
+                    AdjustTable(&(m_tab[Index]));
+                    // To prevent an unending loop
+                    tel++;
+                    if (tel > maxdiepte+6 ){break;}
 		}
-		//for each cell create safe code
-		ComputeCellStatuses(m_tab[Index]);
-		SetProtectionLevels(m_tab[Index]);
+		if (tel > maxdiepte +6)	{
+                    *ErrorCode = CANNOTMAKETOTALS;
+                    IsAdditive = false;
+//                  return false;
+		}
+            }
+            //for each cell create safe code
+            ComputeCellStatuses(m_tab[Index]);
+            SetProtectionLevels(m_tab[Index]);
 	} //end loop HasFreq or HasMaxScore
 
 	// finale check: alles met status = 0  wordt empty als leeg or safe als niet leeg
-    // Bijvoorbeeld als er niets bekend is over de status
+        // Bijvoorbeeld als er niets bekend is over de status
 	for (i=0; i <m_tab[Index].nCell; i++)  {
-		// if not safe or unsafe set empty
-		dc = m_tab[Index].GetCell(i);
-		if (dc->GetStatus() == 0)  {
-		//	m_tab[Index].CellPtr.SetAt(i,dcempty);
-		//	dc = m_tab[Index].GetCell(i);
-			if (dc->GetFreq() == 0) {
-				dc->SetStatus(CS_EMPTY);
-				dc->IsFilled = false;
-			}
-			else
-			{
-				dc->SetStatus(CS_SAFE_MANUAL);
-			}
+	// if not safe or unsafe set empty
+            dc = m_tab[Index].GetCell(i);
+            if (dc->GetStatus() == 0)  {
+            //	m_tab[Index].CellPtr.SetAt(i,dcempty);
+            //	dc = m_tab[Index].GetCell(i);
+                if (dc->GetFreq() == 0) {
+                    dc->SetStatus(CS_EMPTY);
+                    dc->IsFilled = false;
 		}
+		else {
+                    dc->SetStatus(CS_SAFE_MANUAL);
+		}
+            }
 	}
 
 	return IsAdditive;
