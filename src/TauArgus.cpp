@@ -4976,18 +4976,18 @@ void TauArgus::ShowTableLayer(FILE *fd, int var1, int var2, int cellnr, CTable& 
 // checks if the table is additive
 bool TauArgus::IsTable (CTable *tab)
 {
-        long DimNr[MAXDIM];
-	bool IsGoodTable = true;
+    long DimNr[MAXDIM];
+    bool IsGoodTable = true;
 
-	for (long d = 0; d < tab->nDim; d++) {
-		//WriteRange(fd, tab, var, d, DimNr, 0, WithBogus, tdp);
-		//long DimNr[MAXDIM];
-		TestTable(tab, d, DimNr, 0, &(IsGoodTable));
-		if (!IsGoodTable) {
-				return false;
-		}
+    for (long d = 0; d < tab->nDim; d++) {
+	//WriteRange(fd, tab, var, d, DimNr, 0, WithBogus, tdp);
+	//long DimNr[MAXDIM];
+	TestTable(tab, d, DimNr, 0, &(IsGoodTable));
+	if (!IsGoodTable) {
+            return false;
 	}
-	return true;
+    }
+    return true;
 }
 
 // to find subtotals from basal cells
@@ -5006,75 +5006,69 @@ void TauArgus::AdjustTable(CTable *tab)
 // Is good table is false if the table is not additive
 void TauArgus::TestTable(CTable *tab, long TargetDim, long *DimNr, long niv, bool *IsGoodTable)
 {
-	vector<unsigned int> Children;
-	CDataCell *dc;
-	double sum,test;
+    vector<unsigned int> Children;
+    CDataCell *dc;
+    double sum,test;
 
-	if (niv == tab->nDim) {
-		CVariable *v = &(m_var[tab->ExplVarnr[TargetDim]]);
-		int nCode = v->GetnCode();
-		// get hierarchical totals and compare them with
-		// sum of basal cells
-		if (v->IsHierarchical) {
-			int i, j, k;
-
-			for (i = 0, k = 0; i < nCode; i++) {
-				sum =0; test = 0;
-				int n = GetChildren(*v,i,Children);
-
-				if (n > 0) {
-					DimNr[TargetDim] = k;
-					sum = 0;
-					dc = tab->GetCell(DimNr);
-					test = dc->GetResp();
-					for (j = 0; j < n; j++) {
-						long RealCode = Children[j];
-  						DimNr[TargetDim] = RealCode;
-						dc = tab-> GetCell(DimNr);
-						sum = sum + dc->GetResp();
-					}
-
-					if (!DBL_EQ(sum,test))	{
-					    *IsGoodTable = false;
-					}
-				}
-				k++;
-			}
-
+    if (niv == tab->nDim) {
+	CVariable *v = &(m_var[tab->ExplVarnr[TargetDim]]);
+	int nCode = v->GetnCode();
+	// get hierarchical totals and compare them with
+	// sum of basal cells
+	if (v->IsHierarchical) {
+            int i, j, k;
+            for (i = 0, k = 0; i < nCode; i++) {
+		sum =0; test = 0;
+		int n = GetChildren(*v,i,Children);
+		if (n > 0) {
+                    DimNr[TargetDim] = k;
+                    sum = 0;
+                    dc = tab->GetCell(DimNr);
+                    test = dc->GetResp();
+                    for (j = 0; j < n; j++) {
+			long RealCode = Children[j];
+  			DimNr[TargetDim] = RealCode;
+			dc = tab-> GetCell(DimNr);
+			sum = sum + dc->GetResp();
+                    }
+                    if (!DBL_EQ(sum,test))	{
+                        *IsGoodTable = false;
+                    }
 		}
-		else {  // not hierarchical
-			DimNr[TargetDim] = 0;
-			sum = 0;
-			dc= tab->GetCell(DimNr);
-			test = dc->GetResp();
-			for (int i = 1; i < nCode; i++) {
-				DimNr[TargetDim] = i;
-				dc = tab->GetCell(DimNr);
-				sum = sum + dc->GetResp();
-			}
-			if (!DBL_EQ(sum,test))	{
-				*IsGoodTable = false;
-			}
+		k++;
+            }
+	}
+	else {  // not hierarchical
+            DimNr[TargetDim] = 0;
+            sum = 0;
+            dc= tab->GetCell(DimNr);
+            test = dc->GetResp();
+            for (int i = 1; i < nCode; i++) {
+		DimNr[TargetDim] = i;
+		dc = tab->GetCell(DimNr);
+		sum = sum + dc->GetResp();
+            }
+            if (!DBL_EQ(sum,test))	{
+		*IsGoodTable = false;
+            }
+	}
+    }
+    else {
+	if (niv != TargetDim) {
+            int i, j;
+            CVariable *v = &(m_var[tab->ExplVarnr[niv]]);
+            int nCode = v->GetnCode();
+            for (i = 0, j = 0; i < nCode; i++) {
+		if (!v->IsHierarchical || !v->GethCode()[i].IsBogus) {
+                    DimNr[niv] = j++;
+                    TestTable(tab, TargetDim, DimNr, niv + 1, IsGoodTable);
 		}
-
+            }
 	}
 	else {
-		if (niv != TargetDim) {
-			int i, j;
-			CVariable *v = &(m_var[tab->ExplVarnr[niv]]);
-			int nCode = v->GetnCode();
-  			for (i = 0, j = 0; i < nCode; i++) {
-				if (!v->IsHierarchical || !v->GethCode()[i].IsBogus) {
-					DimNr[niv] = j++;
-					TestTable(tab, TargetDim, DimNr, niv + 1, IsGoodTable);
-				}
-			}
-		}
-		else {
-			TestTable(tab, TargetDim, DimNr, niv + 1, IsGoodTable);
-
-		}
+            TestTable(tab, TargetDim, DimNr, niv + 1, IsGoodTable);
 	}
+    }
 }
 
 // Get Children for a code
