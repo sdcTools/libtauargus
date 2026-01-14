@@ -5112,7 +5112,6 @@ void TauArgus::AdjustNonBasalCells(CTable *tab, long TargetDim, long *DimNr, lon
 	long tempDimNr;
 	double sum;//,test;
 
-
 	if (niv == tab->nDim) {
             CVariable *v = &(m_var[tab->ExplVarnr[TargetDim]]);
             int nCode = v->GetnCode();
