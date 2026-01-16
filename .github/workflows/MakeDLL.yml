@@ -26,9 +26,10 @@ jobs:
           architecture: x86      
           
       - name: SetUp MinGW
-        uses: egor-tensin/setup-mingw@v2
+        uses: egor-tensin/setup-mingw@v3
         with:
           platform: x86
+          version: 12.2.0
           
       - name: Make library Ubuntu
         if: runner.os == 'Ubuntu'
