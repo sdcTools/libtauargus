@@ -38,16 +38,16 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
 //	fd = fopen("E:/Temp/Debug.txt","a");
 //		fprintf(fd,"%Xh%s\n", this,"		CDatacell		Const		()  ");
 //	fclose(fd);
-	Resp = 0;
+    Resp = 0;
     NWResp = 0;
-	Cost = 0;
-	Shadow = 0;
+    Cost = 0;
+    Shadow = 0;
     CellKey = 0;
     CellKeyNoZeros = 0;
-	Freq = 0;
-	Weight = 0;
-	FreqHolding = 0;
-	RoundedResp = 0;
+    Freq = 0;
+    Weight = 0;
+    FreqHolding = 0;
+    RoundedResp = 0;
     CTAValue = 0;
     CKMValue = 0;
     // Needed for CKMType = "D"
@@ -55,21 +55,21 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
     MinScoreCell = BIGNUMBER;
     MinScoreWeightCell = 0;        
 
-	Status = CS_EMPTY;
-	TempShadow = 0;
+    Status = CS_EMPTY;
+    TempShadow = 0;
     HoldingNr = IsHolding ? WITH_HOLDING : WITHOUT_HOLDING;
-	PeepSortCell = EMPTY;
-	PeepSortHolding = EMPTY;
-	TempPeepSort = EMPTY;
+    PeepSortCell = EMPTY;
+    PeepSortHolding = EMPTY;
+    TempPeepSort = EMPTY;
 
-	PeepCell = 0;
-	PeepHolding = 0;
+    PeepCell = 0;
+    PeepHolding = 0;
 
   //set ini values for realized upper and lower.as 0
-	RealizedUpperValue = 0;
-	RealizedLowerValue = 0;
-	LowerProtectionLevel = 0;
-	UpperProtectionLevel = 0;
+    RealizedUpperValue = 0;
+    RealizedLowerValue = 0;
+    LowerProtectionLevel = 0;
+    UpperProtectionLevel = 0;
         
     MaxScoreCell = 0; //initialize to NULL
     MaxScoreWeightCell = 0; //initialize to NULL
@@ -77,36 +77,36 @@ CDataCell::CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHo
     MaxScoreWeightHolding = 0; //initialize to NULL
     HoldingnrPerMaxScore = 0; //initialize to NULL
 
-	nMaxScoreCell = NumberMaxScoreCell;
-	if (nMaxScoreCell > 0){
+    nMaxScoreCell = NumberMaxScoreCell;
+    if (nMaxScoreCell > 0){
         // allocate memory for MaxScore and MaxScoreWeight
         // and fill with values 0.0
         MaxScoreCell = new double[nMaxScoreCell];
         memset(MaxScoreCell, 0, sizeof(double) * nMaxScoreCell);
 
-		if (IsWeight){
-			MaxScoreWeightCell = new double[nMaxScoreCell];
-			memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
+	if (IsWeight){
+            MaxScoreWeightCell = new double[nMaxScoreCell];
+            memset(MaxScoreWeightCell, 0, sizeof(double) * nMaxScoreCell);
         }
-	}
+    }
 
-	nMaxScoreHolding = NumberMaxScoreHolding;
-	if (IsHolding && nMaxScoreHolding > 0){
+    nMaxScoreHolding = NumberMaxScoreHolding;
+    if (IsHolding && nMaxScoreHolding > 0){
         // allocate memory for MaxScore and MaxScoreWeight
         MaxScoreHolding = new double[nMaxScoreHolding];
         memset( MaxScoreHolding, 0, sizeof(double) * nMaxScoreHolding);
             
         if (IsWeight){
-			MaxScoreWeightHolding = new double[nMaxScoreHolding];
-			memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
+            MaxScoreWeightHolding = new double[nMaxScoreHolding];
+            memset( MaxScoreWeightHolding, 0, sizeof(double) * nMaxScoreHolding);
         }
             
         // Allocate Memory for HoldingnrMaxScore
         HoldingnrPerMaxScore = new int[nMaxScoreHolding];
         memset( HoldingnrPerMaxScore, -1, sizeof(int) * nMaxScoreHolding);
-	}
+    }
 
-	IsFilled = false;
+    IsFilled = false;
 }
 
 // constructor used within functions. does not have the arrays for

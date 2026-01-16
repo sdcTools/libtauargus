@@ -28,43 +28,42 @@ extern std::string LastHoldingCode;
 class CDataCell
 {
 protected:
-	double	Resp;    // Response, weighted if needed
+    double  Resp;    // Response, weighted if needed
     double  NWResp;  // Non-weighted response, needed to apply cell key method to weighted tables
-	double	Cost;    // value depends on CostVarnr
-	double	Shadow;  // only relevant for primary suppression pattern
+    double  Cost;    // value depends on CostVarnr
+    double  Shadow;  // only relevant for primary suppression pattern
     double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
     double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
-	long	Freq;
-	double	Weight;
-	long	FreqHolding;
-	//long    RoundedResp;
+    long    Freq;
+    double  Weight;
+    long    FreqHolding;
+    //long    RoundedResp;
     double  RoundedResp;
-	double  CTAValue;
+    double  CTAValue;
     double  CKMValue;
 
-	int	Status;
-	double	TempShadow;
-	int	HoldingNr; //Holding number of the temp shadow
-	int	PeepSortCell;
-	int	PeepSortHolding;
-	int	TempPeepSort;
+    int     Status;
+    double  TempShadow;
+    int     HoldingNr; //Holding number of the temp shadow
+    int     PeepSortCell;
+    int     PeepSortHolding;
+    int     TempPeepSort;
 
-	double	PeepCell;
-	double	PeepHolding;
+    double  PeepCell;
+    double  PeepHolding;
 
-	double	RealizedUpperValue; // Anneke's upper value
-	double	RealizedLowerValue; // Anneke's lower value
+    double  RealizedUpperValue; // Anneke's upper value
+    double  RealizedLowerValue; // Anneke's lower value
 
-	double	LowerProtectionLevel;
-	double	UpperProtectionLevel;
-        //double  SlidingProtectionLevel;
-        //double  ProtectionCapacity;
-        
+    double  LowerProtectionLevel;
+    double  UpperProtectionLevel;
+    //double  SlidingProtectionLevel;
+    //double  ProtectionCapacity;
         
 // Construction
 public:
-	CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHolding, int IsWeight );
-	CDataCell();
+    CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHolding, int IsWeight );
+    CDataCell();
     void Write();
 
 // Operations
@@ -73,182 +72,180 @@ public:
 // Implementation
 public:
     // Needed for CKMType = "D"
-    double MinScoreCell;// Shadow, unweighted
-    double MinScoreWeightCell; // corresponding weight
+    double  MinScoreCell;// Shadow, unweighted
+    double  MinScoreWeightCell; // corresponding weight
         
-	int nMaxScoreCell;
-	double *MaxScoreCell;// Shadow, ongewogen!
-	double *MaxScoreWeightCell; // corresponding weight of unweighted MaxScores, 0 when not applicable or not to be applied
+    int     nMaxScoreCell;
+    double  *MaxScoreCell;// Shadow, ongewogen!
+    double  *MaxScoreWeightCell; // corresponding weight of unweighted MaxScores, 0 when not applicable or not to be applied
 	
-	int nMaxScoreHolding;
-	double *MaxScoreHolding;
-	double *MaxScoreWeightHolding;
-	int *HoldingnrPerMaxScore;// keeps de holding number per Maxscore
-	virtual ~CDataCell();
-	bool IsFilled;
-	void operator+=(CDataCell& a)
-	{ 
-            double pwr = pow(10,15); // Maximum number of significant digits in IEEE 754 standard
-            double dum;
+    int     nMaxScoreHolding;
+    double  *MaxScoreHolding;
+    double  *MaxScoreWeightHolding;
+    int     *HoldingnrPerMaxScore;// keeps de holding number per Maxscore
+    virtual ~CDataCell();
+    bool    IsFilled;
+    
+    void operator+=(CDataCell& a){ 
+        double pwr = pow(10,15); // Maximum number of significant digits in IEEE 754 standard
+        double dum;
             
-            IsFilled = true;
-            NWResp += a.NWResp;
-            Resp += a.Resp;
-            Shadow += a.Shadow;
-            Cost += a.Cost;
-            Weight += a.Weight;
-            //CellKey += a.CellKey;
-            CellKey = modf(floor((CellKey + a.CellKey)*pwr + 0.5)/pwr,&dum);
-            //CellKeyNoZeros += a.CellKeyNoZeros;
-            CellKeyNoZeros = modf(floor((CellKeyNoZeros + a.CellKeyNoZeros)*pwr + 0.5)/pwr,&dum);
-            // Not too sure about this
+        IsFilled = true;
+        NWResp += a.NWResp;
+        Resp += a.Resp;
+        Shadow += a.Shadow;
+        Cost += a.Cost;
+        Weight += a.Weight;
+        //CellKey += a.CellKey;
+        CellKey = modf(floor((CellKey + a.CellKey)*pwr + 0.5)/pwr,&dum);
+        //CellKeyNoZeros += a.CellKeyNoZeros;
+        CellKeyNoZeros = modf(floor((CellKeyNoZeros + a.CellKeyNoZeros)*pwr + 0.5)/pwr,&dum);
+        // Not too sure about this
 		
-            // add frequencies only if holding number is different
-            // How do I know that this cell comes from an apply holding
-            if(HoldingNr == WITHOUT_HOLDING){
-                Freq += a.Freq;
-                if (a.PeepCell > PeepCell) {
-                    PeepCell = a.PeepCell;
-                    if ((PeepSortCell == NOPEEP) || (a.PeepSortCell == NOPEEP)) {
-                        PeepSortCell = NOPEEP;
-                    }
-                    else {
-                        PeepSortCell = a.PeepSortCell;
-                    }
-                }
-            }
-            else {
-                Freq += a.Freq;
-                if (a.PeepCell > PeepCell) {
-                    PeepCell = a.PeepCell;
-                    if ((PeepSortCell == NOPEEP) || (a.PeepSortCell == NOPEEP)) {
-                        PeepSortCell = NOPEEP;
-                    }
-                    else {
-                        PeepSortCell = a.PeepSortCell;
-                    }
-                }
-			
-                // Now the Holdings
-                // First Holding
-                if ((HoldingNr == WITH_HOLDING) && (CurrentHoldingNr != -1)) {
-                    // same as a standard cell
-                    // 4 juni 2010 Freqholding toegevoegd AHNL
-                    FreqHolding += a.FreqHolding;					
-                    TempShadow = a.Shadow;
-                    HoldingNr = CurrentHoldingNr;
-                    TempPeepSort = a.PeepSortCell;
+        // add frequencies only if holding number is different
+        // How do I know that this cell comes from an apply holding
+        if(HoldingNr == WITHOUT_HOLDING){
+            Freq += a.Freq;
+            if (a.PeepCell > PeepCell) {
+                PeepCell = a.PeepCell;
+                if ((PeepSortCell == NOPEEP) || (a.PeepSortCell == NOPEEP)) {
+                    PeepSortCell = NOPEEP;
                 }
                 else {
-                    // New Holding
-                    if (CurrentHoldingNr != HoldingNr){
-                        FreqHolding ++; //????? ANCO 14 maart 2006
-                        if (TempPeepSort != NOPEEP)	{
-                            // Largest Holding
-                            //if (Peep < TempShadow) {
-                            if (PeepHolding < TempShadow)	{
-                                //Peep = TempShadow;
-                                PeepHolding = TempShadow;
-                                PeepSortHolding= TempPeepSort;
-                            }
-                        }
-                        TempPeepSort = a.PeepSortCell;
-                        TempShadow = a.Shadow;
-                        HoldingNr = CurrentHoldingNr;
-                    }
-                    else{
-                        TempShadow += a.Shadow;
-                        /*if ((a.PeepSortCell != 0) && (TempPeepSort == 0))	{
-                                TempPeepSort = a.PeepSortCell;
-			}*/
-                        TempPeepSort = a.PeepSortCell;
-                    }
+                    PeepSortCell = a.PeepSortCell;
                 }
             }
-            if (HoldingNr == WITHOUT_HOLDING){
-                MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
+        }
+        else {
+            Freq += a.Freq;
+            if (a.PeepCell > PeepCell) {
+                PeepCell = a.PeepCell;
+                if ((PeepSortCell == NOPEEP) || (a.PeepSortCell == NOPEEP)) {
+                    PeepSortCell = NOPEEP;
+                }
+                else {
+                    PeepSortCell = a.PeepSortCell;
+                }
             }
-            else{
-                MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
-                MergeScoreHolding(MaxScoreHolding, HoldingnrPerMaxScore, a.MaxScoreHolding, a.HoldingnrPerMaxScore, nMaxScoreHolding);
+			
+            // Now the Holdings
+            // First Holding
+            if ((HoldingNr == WITH_HOLDING) && (CurrentHoldingNr != -1)) {
+                // same as a standard cell
+                // 4 juni 2010 Freqholding toegevoegd AHNL
+                FreqHolding += a.FreqHolding;					
+                TempShadow = a.Shadow;
+                HoldingNr = CurrentHoldingNr;
+                TempPeepSort = a.PeepSortCell;
             }
-            // When adding/merging two cells the minimum needs to be recalculated
-            if (a.MinScoreCell < MinScoreCell){
-                MinScoreCell = a.MinScoreCell;
-                MinScoreWeightCell = a.MinScoreWeightCell;
+            else {
+                // New Holding
+                if (CurrentHoldingNr != HoldingNr){
+                    FreqHolding ++; //????? ANCO 14 maart 2006
+                    if (TempPeepSort != NOPEEP)	{
+                        // Largest Holding
+                        //if (Peep < TempShadow) {
+                        if (PeepHolding < TempShadow)	{
+                            //Peep = TempShadow;
+                            PeepHolding = TempShadow;
+                            PeepSortHolding= TempPeepSort;
+                        }
+                    }
+                    TempPeepSort = a.PeepSortCell;
+                    TempShadow = a.Shadow;
+                    HoldingNr = CurrentHoldingNr;
+                }
+                else{
+                    TempShadow += a.Shadow;
+                    /*if ((a.PeepSortCell != 0) && (TempPeepSort == 0))	{
+                            TempPeepSort = a.PeepSortCell;
+                    */
+                    TempPeepSort = a.PeepSortCell;
+                }
             }
-	}
+        }
+        if (HoldingNr == WITHOUT_HOLDING){
+            MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
+        }
+        else{
+            MergeScore(MaxScoreCell, MaxScoreWeightCell, a.MaxScoreCell, a.MaxScoreWeightCell, nMaxScoreCell);
+            MergeScoreHolding(MaxScoreHolding, HoldingnrPerMaxScore, a.MaxScoreHolding, a.HoldingnrPerMaxScore, nMaxScoreHolding);
+        }
+        // When adding/merging two cells the minimum needs to be recalculated
+        if (a.MinScoreCell < MinScoreCell){
+            MinScoreCell = a.MinScoreCell;
+            MinScoreWeightCell = a.MinScoreWeightCell;
+        }
+    }
 
-	CDataCell operator+(CDataCell &a)
-	{ 
-            CDataCell r = *this;
-            r += a;
-            return r;
-	}
+    CDataCell operator+(CDataCell &a)
+    { 
+        CDataCell r = *this;
+        r += a;
+        return r;
+    }
 
-        // set data
-	void SetResp(double Resp)			{ this->Resp = Resp; }
-        void SetNWResp(double NWResp)			{ this->NWResp = NWResp; }
-	void SetRoundedResponse(double roundedresp)	{ this->RoundedResp = roundedresp; }
-	void SetWeight(double weight)			{ this->Weight = weight; }
-	void SetFreq(long Freq) 			{ this->Freq = Freq; }
-	void SetFreqHolding(long FreqHolding)		{ this->FreqHolding = FreqHolding; }
-	void SetShadow(double Shadow)			{ this->Shadow = Shadow; }
-	void SetCost(double Cost)			{ this->Cost = Cost; }
-        void SetCellKey(double CellKey)                 { this->CellKey = CellKey; }
-        void SetCellKeyNoZeros(double CellKey)          { this->CellKeyNoZeros = CellKey; }        
-        void SetCKMValue(double CKMValue)               { this->CKMValue = CKMValue; }
-	void SetStatus(long Status)			{ this->Status = Status; }
-	void SetCTAValue(double CTAValue)               { this->CTAValue = CTAValue; }
-	void SetTempShadow(double TempShadow)		{ this->TempShadow = TempShadow; }
-	void SetHoldingNr(int HoldingNr)		{ this->HoldingNr = HoldingNr; }
-	void SetRealizedUpperValue(double UpperValue)	{ this->RealizedUpperValue = UpperValue; }
-	void SetRealizedLowerValue(double LowerValue)	{ this->RealizedLowerValue = LowerValue; }
-	void SetPeepCell(double PeepValue)		{ this->PeepCell = PeepValue; }
-	void SetPeepHolding(double PeepValue)		{ this->PeepHolding = PeepValue; }
-	void SetPeepSortCell(int iPeepsort)		{ this->PeepSortCell = iPeepsort; }
-	void SetPeepSortHolding(int iPeepsort)		{ this->PeepSortHolding = iPeepsort; }
-	void SetUpperProtectionLevel(double UPL)	{ this->UpperProtectionLevel = UPL; }
-	void SetLowerProtectionLevel(double LPL)	{ this->LowerProtectionLevel = LPL; }
-
+    // set data
+    void SetResp(double Resp)                       { this->Resp = Resp; }
+    void SetNWResp(double NWResp)                   { this->NWResp = NWResp; }
+    void SetRoundedResponse(double roundedresp)     { this->RoundedResp = roundedresp; }
+    void SetWeight(double weight)                   { this->Weight = weight; }
+    void SetFreq(long Freq)                         { this->Freq = Freq; }
+    void SetFreqHolding(long FreqHolding)           { this->FreqHolding = FreqHolding; }
+    void SetShadow(double Shadow)                   { this->Shadow = Shadow; }
+    void SetCost(double Cost)                       { this->Cost = Cost; }
+    void SetCellKey(double CellKey)                 { this->CellKey = CellKey; }
+    void SetCellKeyNoZeros(double CellKey)          { this->CellKeyNoZeros = CellKey; }        
+    void SetCKMValue(double CKMValue)               { this->CKMValue = CKMValue; }
+    void SetStatus(long Status)                     { this->Status = Status; }
+    void SetCTAValue(double CTAValue)               { this->CTAValue = CTAValue; }
+    void SetTempShadow(double TempShadow)           { this->TempShadow = TempShadow; }
+    void SetHoldingNr(int HoldingNr)                { this->HoldingNr = HoldingNr; }
+    void SetRealizedUpperValue(double UpperValue)   { this->RealizedUpperValue = UpperValue; }
+    void SetRealizedLowerValue(double LowerValue)   { this->RealizedLowerValue = LowerValue; }
+    void SetPeepCell(double PeepValue)              { this->PeepCell = PeepValue; }
+    void SetPeepHolding(double PeepValue)           { this->PeepHolding = PeepValue; }
+    void SetPeepSortCell(int iPeepsort)             { this->PeepSortCell = iPeepsort; }
+    void SetPeepSortHolding(int iPeepsort)          { this->PeepSortHolding = iPeepsort; }
+    void SetUpperProtectionLevel(double UPL)        { this->UpperProtectionLevel = UPL; }
+    void SetLowerProtectionLevel(double LPL)        { this->LowerProtectionLevel = LPL; }
 	
-	
-	// get data
-        double GetResp()			{ return Resp; }
-	double GetNWResp()			{ return NWResp; }
-        double GetRoundedResponse()		{ return RoundedResp; }
-	double GetShadow()			{ return Shadow; }
-        double GetCellKey()                     { return CellKey; }
-        double GetCellKeyNoZeros()              { return CellKeyNoZeros;}
-        double GetCKMValue()                    { return CKMValue; }
-	double GetCost(double Lambda)           { return (Lambda > 0 ? pow(Cost,Lambda) : log(Cost + 1));}
-	long   GetFreq()			{ return Freq; }
-	double GetWeight()			{ return Weight; }
-	long   GetFreqHolding()			{ return FreqHolding; }
-	long   GetStatus()			{ return Status; }
-	double GetCTAValue()                    { return CTAValue; }
-	double GetTempShadow()			{ return TempShadow; }
-	long   GetTempPeepSortCell()            { return TempPeepSort; } //AHNL 5.1.2004
-	int    GetHoldingNr()			{ return HoldingNr; }
-	double GetRealizedUpperValue()		{ return RealizedUpperValue; }
-	double GetRealizedLowerValue()		{ return RealizedLowerValue; }
-	double GetPeepCell()                    { return PeepCell; }
-	double GetPeepHolding()			{ return PeepHolding; }
-	long   GetPeepSortCell()		{ return PeepSortCell; }
-	long   GetPeepSortHolding()		{ return PeepSortHolding; }
-	double GetUpperProtectionLevel()	{ return UpperProtectionLevel; }
-	double GetLowerProtectionLevel()	{ return LowerProtectionLevel; }
+    // get data
+    double GetResp()			{ return Resp; }
+    double GetNWResp()			{ return NWResp; }
+    double GetRoundedResponse()		{ return RoundedResp; }
+    double GetShadow()			{ return Shadow; }
+    double GetCellKey()                 { return CellKey; }
+    double GetCellKeyNoZeros()          { return CellKeyNoZeros;}
+    double GetCKMValue()                { return CKMValue; }
+    double GetCost(double Lambda)       { return (Lambda > 0 ? pow(Cost,Lambda) : log(Cost + 1));}
+    long   GetFreq()			{ return Freq; }
+    double GetWeight()			{ return Weight; }
+    long   GetFreqHolding()		{ return FreqHolding; }
+    long   GetStatus()			{ return Status; }
+    double GetCTAValue()                { return CTAValue; }
+    double GetTempShadow()		{ return TempShadow; }
+    long   GetTempPeepSortCell()        { return TempPeepSort; } //AHNL 5.1.2004
+    int    GetHoldingNr()		{ return HoldingNr; }
+    double GetRealizedUpperValue()	{ return RealizedUpperValue; }
+    double GetRealizedLowerValue()	{ return RealizedLowerValue; }
+    double GetPeepCell()                { return PeepCell; }
+    double GetPeepHolding()		{ return PeepHolding; }
+    long   GetPeepSortCell()		{ return PeepSortCell; }
+    long   GetPeepSortHolding()		{ return PeepSortHolding; }
+    double GetUpperProtectionLevel()	{ return UpperProtectionLevel; }
+    double GetLowerProtectionLevel()	{ return LowerProtectionLevel; }
 
 
-	void MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n);
-	void MergeScore(double *a, double *aw, double* b, double *bw, int n);  // for MaxScore and MaxScoreWeight
-	double GetDominancePercCell(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
-	double GetDominancePercHolding(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
-	double GetPQCell(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
-	double GetPQHolding(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
-	double ComputeWeightedScoreCell(bool DoWeight, long NumberOfScores);
-	double ComputeWeightedScoreHolding(bool DoWeight, long NumberOfScores);
-	bool Compare(const CDataCell &a) const;
+    void MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n);
+    void MergeScore(double *a, double *aw, double* b, double *bw, int n);  // for MaxScore and MaxScoreWeight
+    double GetDominancePercCell(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
+    double GetDominancePercHolding(bool ApplyWeight, bool ApplyWeightOnSafetyRule, long DominanceNumber);
+    double GetPQCell(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
+    double GetPQHolding(double p, double q, long n, bool ApplyWeight, bool ApplyWeightOnSafetyRule);
+    double ComputeWeightedScoreCell(bool DoWeight, long NumberOfScores);
+    double ComputeWeightedScoreHolding(bool DoWeight, long NumberOfScores);
+    bool Compare(const CDataCell &a) const;
 };
 
 #endif // DataCell_h
