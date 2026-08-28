@@ -9,19 +9,22 @@ CP              = cp -p
 32BIT           = true
 #32BIT           = false
 
-SWIGDIR         = D:/Peter-Paul/Documents/Thuiswerk/Programmatuur/swigwin-4.0.2
+#SWIGDIR         = ../../Programmatuur/swigwin-4.0.2
+SWIGDIR         = ../../Programmatuur/swigwin-4.5.0
 
 ifeq ($(32BIT), false)  # 64 bit assumed
     BITS        = -m64 -D_LP64
     ARCH        = x86_64
     CND_PLATFORM= MinGW-Windows64
-    JAVADIR     = ../../../Java/zulu8.52.0.23-ca-jdk8.0.282-win_x64
+    #JAVADIR     = ../../../Java/zulu8.52.0.23-ca-jdk8.0.282-win_x64
+    JAVADIR     = ../../../Java/bellsoft-jdk21.0.12.1+1-windows-amd64/jdk-21.0.12.1
     GNUDIR      = C:/Progra~1/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin
 else                    # 32 bit assumed
     BITS        = -m32
     ARCH        = x86
     CND_PLATFORM= MinGW-Windows
-    JAVADIR     = ../../../Java/zulu8.52.0.23-ca-jdk8.0.282-win_i686
+    #JAVADIR     = ../../../Java/zulu8.52.0.23-ca-jdk8.0.282-win_i686
+    JAVADIR     = ../../../Java/bellsoft-jdk21.0.12.1+1-windows-i586/jdk-21.0.12.1
     GNUDIR      = C:/Progra~2/mingw-w64/i686-8.1.0-win32-sjlj-rt_v6-rev0/mingw32/bin
 endif
 

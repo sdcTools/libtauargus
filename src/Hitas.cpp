@@ -146,6 +146,7 @@ bool CHitas::WriteCellDim(FILE *fd, CTable &tab, CVariable *var,
 			break;
 		case CS_PROTECT_MANUAL:
 		case CS_EMPTY:
+		case CS_FROZEN:
 			fprintf(fd, "z ");
 			break;
 		case CS_SECONDARY_UNSAFE:

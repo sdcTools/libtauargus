@@ -150,7 +150,9 @@ public:
 	int  GetCellDistance(long *dim1, long *dim2);
 	void GetStatusStatistics(long *Freq,long *CellFreq, long *HoldingFreq, double *CellResp, double *CellCost);
 	void SetCellSecondaryUnsafe(long *dims);
+	void SetCellFrozen(long* dims);
 	void SetSecondary(CVariable *var, long *dims, long *CellDims, int niv, long *nSetSecondary);
+	void SetFrozen(CVariable* var, long* dims, long* CellDims, int niv, long* nSetSecondary);
 	bool SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary);
 	CDataCell * GetCell(long *VarValueList);
 	CDataCell * GetCell(long CellNr);

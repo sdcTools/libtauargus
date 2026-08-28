@@ -27,67 +27,68 @@ extern std::string LastHoldingCode;
 
 class CDataCell
 {
-protected:
-	double	Resp;    // Response, weighted if needed
-    double  NWResp;  // Non-weighted response, needed to apply cell key method to weighted tables
-	double	Cost;    // value depends on CostVarnr
-	double	Shadow;  // only relevant for primary suppression pattern
-    double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
-    double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
-	long	Freq;
-	double	Weight;
-	long	FreqHolding;
-	//long    RoundedResp;
-    double  RoundedResp;
-	double  CTAValue;
-    double  CKMValue;
+    protected:
+        double	Resp;    // Response, weighted if needed
+        double  NWResp;  // Non-weighted response, needed to apply cell key method to weighted tables
+        double	Cost;    // value depends on CostVarnr
+        double	Shadow;  // only relevant for primary suppression pattern
+        double  CellKey; // Total of record-keys of units in the cell, needed to apply cell key method
+        double  CellKeyNoZeros; // Total of record-keys of non-zero units in the cell
+        long	Freq;
+        double	Weight;
+        long	FreqHolding;
+        //long    RoundedResp;
+        double  RoundedResp;
+        double  CTAValue;
+        double  CKMValue;
 
-	int	Status;
-	double	TempShadow;
-	int	HoldingNr; //Holding number of the temp shadow
-	int	PeepSortCell;
-	int	PeepSortHolding;
-	int	TempPeepSort;
+        int	Status;
+        int OriginalStatus;
+        double	TempShadow;
+        int	HoldingNr; //Holding number of the temp shadow
+        int	PeepSortCell;
+        int	PeepSortHolding;
+        int	TempPeepSort;
+    
+        double	PeepCell;
+        double	PeepHolding;
 
-	double	PeepCell;
-	double	PeepHolding;
+        double	RealizedUpperValue; // Anneke's upper value
+        double	RealizedLowerValue; // Anneke's lower value
 
-	double	RealizedUpperValue; // Anneke's upper value
-	double	RealizedLowerValue; // Anneke's lower value
-
-	double	LowerProtectionLevel;
-	double	UpperProtectionLevel;
+        double	LowerProtectionLevel;
+        double	UpperProtectionLevel;
         //double  SlidingProtectionLevel;
         //double  ProtectionCapacity;
         
         
 // Construction
-public:
+    public:
 	CDataCell(int NumberMaxScoreCell, int NumberMaxScoreHolding, int IsHolding, int IsWeight );
 	CDataCell();
-    void Write();
+        void Write();
 
 // Operations
-public:
+    public:
 
 // Implementation
-public:
-    // Needed for CKMType = "D"
-    double MinScoreCell;// Shadow, unweighted
-    double MinScoreWeightCell; // corresponding weight
+    public:
+        // Needed for CKMType = "D"
+        double MinScoreCell;// Shadow, unweighted
+        double MinScoreWeightCell; // corresponding weight
         
-	int nMaxScoreCell;
-	double *MaxScoreCell;// Shadow, ongewogen!
-	double *MaxScoreWeightCell; // corresponding weight of unweighted MaxScores, 0 when not applicable or not to be applied
+        int nMaxScoreCell;
+        double *MaxScoreCell;// Shadow, ongewogen!
+        double *MaxScoreWeightCell; // corresponding weight of unweighted MaxScores, 0 when not applicable or not to be applied
 	
-	int nMaxScoreHolding;
-	double *MaxScoreHolding;
-	double *MaxScoreWeightHolding;
-	int *HoldingnrPerMaxScore;// keeps de holding number per Maxscore
-	virtual ~CDataCell();
-	bool IsFilled;
-	void operator+=(CDataCell& a)
-	{ 
+        int nMaxScoreHolding;
+        double *MaxScoreHolding;
+        double *MaxScoreWeightHolding;
+        int *HoldingnrPerMaxScore;// keeps de holding number per Maxscore
+        virtual ~CDataCell();
+        bool IsFilled;
+        void operator+=(CDataCell& a)
+        { 
             double pwr = pow(10,15); // Maximum number of significant digits in IEEE 754 standard
             double dum;
             
@@ -198,7 +199,7 @@ public:
         void SetCellKey(double CellKey)                 { this->CellKey = CellKey; }
         void SetCellKeyNoZeros(double CellKey)          { this->CellKeyNoZeros = CellKey; }        
         void SetCKMValue(double CKMValue)               { this->CKMValue = CKMValue; }
-	void SetStatus(long Status)			{ this->Status = Status; }
+        void SetStatus(long NewStatus)                  { this->Status = NewStatus; }
 	void SetCTAValue(double CTAValue)               { this->CTAValue = CTAValue; }
 	void SetTempShadow(double TempShadow)		{ this->TempShadow = TempShadow; }
 	void SetHoldingNr(int HoldingNr)		{ this->HoldingNr = HoldingNr; }
@@ -210,6 +211,7 @@ public:
 	void SetPeepSortHolding(int iPeepsort)		{ this->PeepSortHolding = iPeepsort; }
 	void SetUpperProtectionLevel(double UPL)	{ this->UpperProtectionLevel = UPL; }
 	void SetLowerProtectionLevel(double LPL)	{ this->LowerProtectionLevel = LPL; }
+        void SetOriginalStatus(long NewStatus)  { this->OriginalStatus = NewStatus; }
 
 	
 	
@@ -238,6 +240,7 @@ public:
 	long   GetPeepSortHolding()		{ return PeepSortHolding; }
 	double GetUpperProtectionLevel()	{ return UpperProtectionLevel; }
 	double GetLowerProtectionLevel()	{ return LowerProtectionLevel; }
+        long GetOriginalStatus()                { return OriginalStatus; }
 
 
 	void MergeScoreHolding(double *a, int *ah, double *b, int *bh, int n);

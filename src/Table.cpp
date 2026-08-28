@@ -20,6 +20,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cmath>
+#include <stdio.h>
 
 #include "General.h"
 #include "Table.h"
@@ -31,6 +32,25 @@ using namespace std;
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+int GetFCPMode() {
+    FILE* fcpFile = fopen("fcp_variant.txt", "r");
+    if (fcpFile) {
+        int mode = 0;
+        if (fscanf(fcpFile, "%d", &mode) == 1) {
+            fclose(fcpFile);
+            return mode;
+        }
+        fclose(fcpFile);
+    }
+    return -1; 
+}
+
+bool g_bFreezeOnlySafeCells = false; 
+
+extern "C" void SetFreezeModeCPP(bool mode) {
+    g_bFreezeOnlySafeCells = mode;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CTable
@@ -942,56 +962,90 @@ bool CTable::GetIndicesFromCellNr(long CellNr, long *Indices)
 void CTable::UndoSecondarySuppress(long SortSuppress)
 {
     long i;
-    CDataCell *dc;
+    CDataCell* dc;
+
+    long countFrozen = 0;
+    long countSecondary = 0;
+    long countSafe = 0;
+
     // set realized lower and upper to initial values
     for (i = 0; i < nCell; i++) {
-	dc = GetCell(i);
-	dc->SetRealizedUpperValue(0);
-	dc->SetRealizedLowerValue(0);
-	dc->SetCTAValue(0);
-	switch (SortSuppress){
-            case WITHOUT_SINGLETON:
-		switch (dc->GetStatus()) {
-                    case CS_SECONDARY_UNSAFE:
-			if (dc->GetFreq() == 0 ) {
-                            dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
-			else {
-                            dc->SetStatus(CS_SAFE);};
-			break;
-                    case CS_SECONDARY_UNSAFE_MANUAL:
-                        dc->SetStatus(CS_SAFE_MANUAL);
-			break;
-		}
-		break;
-            case WITH_SINGLETON:
-		switch (dc->GetStatus()) {
-                    case CS_UNSAFE_SINGLETON:
-			dc->SetStatus(CS_SAFE);
-                        break;
-                    case CS_UNSAFE_SINGLETON_MANUAL:
-                        dc->SetStatus(CS_SAFE_MANUAL);
-                        break;
-		}
-		break;
-            case BOTH:
-		switch (dc->GetStatus()) {
-                    case CS_SECONDARY_UNSAFE:
-			if (dc->GetFreq() == 0 ) {
-                            dc->SetStatus (CS_EMPTY_NONSTRUCTURAL);}
-			else {
-                            dc->SetStatus(CS_SAFE);};
-			break;
-                    case CS_SECONDARY_UNSAFE_MANUAL:
-                      	dc->SetStatus(CS_SAFE_MANUAL);
-			break;
-                    case CS_UNSAFE_SINGLETON:
-			dc->SetStatus(CS_SAFE);
-			break;
-                    case CS_UNSAFE_SINGLETON_MANUAL:
-			dc->SetStatus(CS_SAFE_MANUAL);
-			break;
-		}
-	}
+        dc = GetCell(i);
+        dc->SetRealizedUpperValue(0);
+        dc->SetRealizedLowerValue(0);
+        dc->SetCTAValue(0);
+
+        int currentStatus = dc->GetStatus();
+
+        if (currentStatus == CS_FROZEN) {
+            countFrozen++;
+            
+            int orig = dc->GetOriginalStatus();
+            
+            if (orig <= 0) {
+                orig = ComputeCellSafeCode(*dc);
+            }
+            
+            dc->SetStatus(orig);
+            currentStatus = dc->GetStatus(); 
+        }
+
+        if (currentStatus == CS_SECONDARY_UNSAFE) {
+            countSecondary++;
+        }
+        else if (currentStatus == CS_SAFE) {
+            countSafe++;
+        }
+
+        switch (SortSuppress) {
+        case WITHOUT_SINGLETON:
+            switch (currentStatus) {
+            case CS_SECONDARY_UNSAFE:
+                if (dc->GetFreq() == 0) {
+                    dc->SetStatus(CS_EMPTY_NONSTRUCTURAL);
+                }
+                else {
+                    dc->SetStatus(CS_SAFE);
+                };
+                break;
+            case CS_SECONDARY_UNSAFE_MANUAL:
+                dc->SetStatus(CS_SAFE_MANUAL);
+                break;
+            }
+            break;
+
+        case WITH_SINGLETON:
+            switch (currentStatus) {
+            case CS_UNSAFE_SINGLETON:
+                dc->SetStatus(CS_SAFE);
+                break;
+            case CS_UNSAFE_SINGLETON_MANUAL:
+                dc->SetStatus(CS_SAFE_MANUAL);
+                break;
+            }
+            break;
+
+        case BOTH:
+            switch (currentStatus) {
+            case CS_SECONDARY_UNSAFE:
+                if (dc->GetFreq() == 0) {
+                    dc->SetStatus(CS_EMPTY_NONSTRUCTURAL);
+                }
+                else {
+                    dc->SetStatus(CS_SAFE);
+                };
+                break;
+            case CS_SECONDARY_UNSAFE_MANUAL:
+                dc->SetStatus(CS_SAFE_MANUAL);
+                break;
+            case CS_UNSAFE_SINGLETON:
+                dc->SetStatus(CS_SAFE);
+                break;
+            case CS_UNSAFE_SINGLETON_MANUAL:
+                dc->SetStatus(CS_SAFE_MANUAL);
+                break;
+            }
+        }
     }
 }
 
@@ -1018,49 +1072,102 @@ void CTable::GetStatusAndCostPerDim(long *Status, double *Cost)
 }
 
 // The secondary unsafe cells are set as unsafe
-bool CTable::SetSecondaryHITAS(FILE *fd, CVariable *var, long *nSetSecondary)
+bool CTable::SetSecondaryHITAS(FILE* fd, CVariable* var, long* nSetSecondary)
 {
-	char *p, str[200];
-	long dims[MAXDIM];
-	long CellDims[MAXDIM];
+    char* p, str[200];
+    long dims[MAXDIM];
+    long CellDims[MAXDIM];
 
-	*nSetSecondary = 0;
+    *nSetSecondary = 0;
+
+    int n;
+    while (!feof(fd)) {
+        str[0] = 0;
+        fgets(str, 200, fd);
+        if (str[0] == 0) break;
+
+        n = 0;
+        p = str;
+        while (p != 0 && n < nDim) {
+            if (n < nDim) {
+                dims[n++] = strtol(p, &p, 10);
+            }
+        }
+        if (n != nDim) return false;
+
+        char statusChar = 'x';
+        if (strchr(str, 'f') != NULL) statusChar = 'f';
+        else if (strchr(str, 'b') != NULL) statusChar = 'b';
+        else if (strchr(str, 'm') != NULL) statusChar = 'm';
+
+        long cellnum = GetCellNrFromIndices(dims);
+        CDataCell* dc = GetCell(cellnum);
+
+        if (dc == NULL) continue;
 
 
-	int n;
-	while (!feof(fd) ) {
-		str[0] = 0;
-		fgets(str, 200, fd);
-		if (str[0] == 0) break;
+        if (statusChar == 'f') {
+            // NEU: FCP-Modus aus unserer Textdatei auslesen
+            int fcpMode = GetFCPMode();
+            
+            // Modus -1: FCP ist komplett deaktiviert. Wir ignorieren das 'f' aus der Datei!
+            if (fcpMode == -1) {
+                continue; 
+            }
 
-		n = 0;
-		p = str;
-		while (p != 0 && n < nDim) {
-			if (n < nDim) {
-				dims[n++] = strtol(p, &p, 10);
-			}
-		};
-		if (n != nDim) return false;
+            if (dc == CellPtr[nCell]) {
+                dc = new CDataCell(NumberofMaxScoreCell, NumberofMaxScoreHolding, ApplyHolding, ApplyWeight);
+                CellPtr[cellnum] = dc;
+                dc->SetStatus(ComputeCellSafeCode(*dc)); // Failsafe
+            }
 
-		SetSecondary(var, dims, CellDims, 0, nSetSecondary);
-  }
+            int currentStatus = dc->GetStatus();
+            bool allowFreeze = true;
 
-	return true;
+            // Modus 1: Nur sichere Zellen einfrieren
+            if (fcpMode == 1) {
+                allowFreeze = (currentStatus == CS_SAFE || currentStatus == CS_SAFE_MANUAL || currentStatus == CS_EMPTY_NONSTRUCTURAL);
+            }
+            // Modus 0 (Alle Zellen): allowFreeze bleibt true
+
+            // Wenn erlaubt und nicht schon Frozen -> Gedächtnis speichern und einfrieren
+            if (allowFreeze && currentStatus != CS_FROZEN) {
+                dc->SetOriginalStatus(currentStatus);
+                dc->SetStatus(CS_FROZEN);
+                (*nSetSecondary)++; 
+            }
+        }
+
+        else if (statusChar == 'm' || statusChar == 'b') {
+            if (dc->GetStatus() == CS_FROZEN) {
+                continue; 
+            }
+            SetSecondary(var, dims, CellDims, 0, nSetSecondary);
+        }
+    }
+
+    return true;
 }
 
-void CTable::SetSecondary(CVariable *var, long *dims, long *CellDims, int niv, long *nSetSecondary)
+void CTable::SetSecondary(CVariable* var, long* dims, long* CellDims, int niv, long* nSetSecondary)
 {
 	int i, j, c;
 
 	if (niv == nDim) {
+		long cellnum = GetCellNrFromIndices(CellDims);
+		CDataCell* dc = GetCell(cellnum);
+
+		if (dc != NULL && dc->GetStatus() == CS_FROZEN) {
+			return;
+		}
+
 		SetCellSecondaryUnsafe(CellDims);
 		(*nSetSecondary)++;
 		return;
 	}
 
-	CVariable *v = &(var[ExplVarnr[niv]]);
-	CCode *phCode = v->GethCode();
-
+	CVariable* v = &(var[ExplVarnr[niv]]);
+	CCode* phCode = v->GethCode();
 
 	ASSERT(dims[niv] >= 0 && dims[niv] < SizeDim[niv]);
 
@@ -1076,7 +1183,43 @@ void CTable::SetSecondary(CVariable *var, long *dims, long *CellDims, int niv, l
 					for (j = i - 1; j >= 0; j--) {
 						if (phCode[j].nChildren != 1) break;
 						CellDims[niv] = j;
-    					SetSecondary(var, dims, CellDims, niv + 1, nSetSecondary);  // bogus Cell
+						SetSecondary(var, dims, CellDims, niv + 1, nSetSecondary);  // bogus Cell
+					}
+				}
+				break;
+			}
+		}
+	}
+}
+
+void CTable::SetFrozen(CVariable* var, long* dims, long* CellDims, int niv, long* nSetSecondary)
+{
+	int i, j, c;
+
+	if (niv == nDim) {
+		SetCellFrozen(CellDims); 
+		(*nSetSecondary)++;
+		return;
+	}
+
+	CVariable* v = &(var[ExplVarnr[niv]]);
+	CCode* phCode = v->GethCode();
+
+	ASSERT(dims[niv] >= 0 && dims[niv] < SizeDim[niv]);
+
+	for (i = c = 0; i < SizeDim[niv]; i++, c++) {
+		if (v->IsHierarchical && phCode[i].nChildren == 1) { // bogus?
+			c--;
+		}
+		else {
+			if (c == dims[niv]) {
+				CellDims[niv] = i;
+				SetFrozen(var, dims, CellDims, niv + 1, nSetSecondary); 
+				if (v->IsHierarchical) { // set also higher bogus levels
+					for (j = i - 1; j >= 0; j--) {
+						if (phCode[j].nChildren != 1) break;
+						CellDims[niv] = j;
+						SetFrozen(var, dims, CellDims, niv + 1, nSetSecondary);  
 					}
 				}
 				break;
@@ -1086,9 +1229,9 @@ void CTable::SetSecondary(CVariable *var, long *dims, long *CellDims, int niv, l
 }
 
 // Set Secondary cells as unsafe
-void CTable::SetCellSecondaryUnsafe(long *dims)
+void CTable::SetCellSecondaryUnsafe(long* dims)
 {
-	CDataCell *dc;
+	CDataCell* dc;
 
 	dc = GetCell(dims);
 	switch (dc->GetStatus()) {
@@ -1098,10 +1241,40 @@ void CTable::SetCellSecondaryUnsafe(long *dims)
 	case CS_SAFE_MANUAL:
 		dc->SetStatus(CS_SECONDARY_UNSAFE_MANUAL);
 		break;
-    case CS_EMPTY_NONSTRUCTURAL:
-		dc->SetStatus (CS_SECONDARY_UNSAFE);
+	case CS_EMPTY_NONSTRUCTURAL:
+		dc->SetStatus(CS_SECONDARY_UNSAFE);
 		break;
 	}
+}
+
+void CTable::SetCellFrozen(long* dims)
+{
+    long cellnum = GetCellNrFromIndices(dims);
+    CDataCell* dc = GetCell(cellnum);
+
+    if (dc == CellPtr[nCell]) {
+        dc = new CDataCell(NumberofMaxScoreCell, NumberofMaxScoreHolding, ApplyHolding, ApplyWeight);
+        CellPtr[cellnum] = dc;
+        dc->SetStatus(ComputeCellSafeCode(*dc)); // Failsafe
+    }
+
+	int fcpMode = GetFCPMode();
+
+	if (fcpMode == -1) {
+		return;
+	}
+
+    int currentStatus = dc->GetStatus();
+    bool allowFreeze = true;
+
+    if (fcpMode == 1) {
+        allowFreeze = (currentStatus == CS_SAFE || currentStatus == CS_SAFE_MANUAL || currentStatus == CS_EMPTY_NONSTRUCTURAL);
+    }
+
+    if (allowFreeze && currentStatus != CS_FROZEN) {
+        dc->SetOriginalStatus(currentStatus);
+        dc->SetStatus(CS_FROZEN);
+    }
 }
 
 // Get information per status

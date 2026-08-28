@@ -19,7 +19,7 @@
 #ifndef __TAUARGUSDEFINESH
 #define __TAUARGUSDEFINESH
 
-#define VERSIONNUMBER "1.1.4.12"
+#define VERSIONNUMBER "1.1.5.1"
 
 #define MAXCODEWIDTH 100
 #define MAXRECORDLENGTH 32000
@@ -99,7 +99,7 @@ enum SecondarySuppressInputParam {
 // items should be a range, so don't use "= x" (except the first: always 1)
 enum CellStatusItems {
 	CS_SAFE = 1,                // always first! (see check in function SetTableCellStatus), value irrelevant
-	CS_SAFE_MANUAL, 
+	CS_SAFE_MANUAL,
 	CS_UNSAFE_RULE,             // make constants whatever you like // should be first UNSAFE
 	CS_UNSAFE_PEEP,
 	CS_UNSAFE_FREQ,
@@ -110,11 +110,12 @@ enum CellStatusItems {
 	CS_PROTECT_MANUAL,
 	CS_SECONDARY_UNSAFE,         // source: CS_SAFE
 	CS_SECONDARY_UNSAFE_MANUAL,  // source: CS_SAFE_MANUAL
+	CS_FROZEN,                   
 	CS_EMPTY_NONSTRUCTURAL,
 	CS_EMPTY                     // always last! (see check in function SetTableCellStatus)
 };
 
-#define NCELLSTATUS 14   // see above
+#define NCELLSTATUS 15   // see above = number of possible statusses
 
 
 enum RecodePhase {
